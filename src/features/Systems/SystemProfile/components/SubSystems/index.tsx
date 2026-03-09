@@ -22,15 +22,15 @@ import DataNotFound from '../DataNotFound';
 
 import './index.scss';
 
-const SystemSubSystems = ({ system }: SystemProfileSubviewProps) => {
+const SystemSubSystems = ({
+  system: { cedarSubSystems }
+}: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
-
-  const subsystems = system.cedarSubSystems;
 
   const systemsCountCap = 5;
   const [isSystemsExpanded, setSystemsExpanded] = useState<boolean>(false);
-  const showMoreSystemsToggle = subsystems
-    ? subsystems.length - systemsCountCap > 0
+  const showMoreSystemsToggle = cedarSubSystems
+    ? cedarSubSystems.length - systemsCountCap > 0
     : false;
 
   return (
@@ -39,14 +39,14 @@ const SystemSubSystems = ({ system }: SystemProfileSubviewProps) => {
         {t('singleSystem.subSystems.header')}
       </h2>
 
-      {!system.cedarSubSystems && <DataNotFound />}
-
-      {!!system.cedarSubSystems && (
+      {!cedarSubSystems ? (
+        <DataNotFound />
+      ) : (
         <>
-          {subsystems.length ? (
+          {cedarSubSystems.length > 0 ? (
             <>
               <CardGroup className="margin-0">
-                {subsystems
+                {cedarSubSystems
                   .slice(0, isSystemsExpanded ? undefined : systemsCountCap)
                   .map(sub => {
                     return (

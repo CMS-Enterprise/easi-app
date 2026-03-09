@@ -51,7 +51,9 @@ import {
 
 import '../index.scss';
 
-type CedarSystem = GetCedarSystemsQuery['cedarSystems'][number];
+type CedarSystem = NonNullable<
+  NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]
+>;
 
 export type SystemTableType =
   | 'all-systems'

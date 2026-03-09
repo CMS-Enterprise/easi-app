@@ -161,9 +161,9 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
           <div>
             <a
               class="usa-link usa-link--external"
-              href="https://share.cms.gov/cms-wide/Systems/TRB/Templates/Forms/AllItems.aspx"
+              href="https://cmsgovonline.sharepoint.com/sites/CMS-SharePoint-Systems-Classic/TRB/Templates/Forms/AllItems.aspx?InitialTabId=Ribbon%2ERead&VisibilityContext=WSSTabPersistence"
             >
-              Download deck templates (zip)
+              Download deck templates
             </a>
           </div>
         </div>

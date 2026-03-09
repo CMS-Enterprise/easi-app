@@ -10,7 +10,7 @@ import {
   Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { showAtoExpirationDate } from 'features/Systems/SystemProfile/util';
+import { showAtoExpirationDate } from 'features/Systems/SystemProfile/utils/util';
 
 import {
   DescriptionDefinition,

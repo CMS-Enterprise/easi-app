@@ -11175,25 +11175,25 @@ type Query {
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
-  cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]!
+  cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]
   cedarBudget(cedarSystemID: UUID!): [CedarBudget!]
   cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
-  cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]!
-  cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]!
+  cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]
+  cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]!
+  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]
   deployments(
     cedarSystemId: UUID!
     deploymentType: String
     state: String
     status: String
-  ): [CedarDeployment!]!
+  ): [CedarDeployment!]
   roleTypes: [CedarRoleType!]!
-  roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]!
-  exchanges(cedarSystemId: UUID!): [CedarExchange!]!
-  urls(cedarSystemId: UUID!): [CedarURL!]!
+  roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]
+  exchanges(cedarSystemId: UUID!): [CedarExchange!]
+  urls(cedarSystemId: UUID!): [CedarURL!]
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """
@@ -11603,7 +11603,7 @@ type CedarSystem {
   status: String
   businessOwnerOrg: String
   businessOwnerOrgComp: String
-  businessOwnerRoles: [CedarRole!]!
+  businessOwnerRoles: [CedarRole!]
   systemMaintainerOrg: String
   systemMaintainerOrgComp: String
   versionId: String
@@ -11617,13 +11617,13 @@ type CedarSystem {
 This is the Representation of Cedar system with additional related information
 """
 type CedarSystemDetails {
-  cedarSystem: CedarSystem!
-  systemMaintainerInformation: CedarSystemMaintainerInformation!
-  businessOwnerInformation: CedarBusinessOwnerInformation!
-  roles: [CedarRole!]!
-  deployments: [CedarDeployment!]!
-  threats: [CedarThreat!]!
-  urls: [CedarURL!]!
+  cedarSystem: CedarSystem
+  systemMaintainerInformation: CedarSystemMaintainerInformation
+  businessOwnerInformation: CedarBusinessOwnerInformation
+  roles: [CedarRole!]
+  deployments: [CedarDeployment!]
+  threats: [CedarThreat!]
+  urls: [CedarURL!]
   isMySystem: Boolean
   atoEffectiveDate: Time
   atoExpirationDate: Time
@@ -11631,8 +11631,8 @@ type CedarSystemDetails {
 
 extend type Query {
   cedarSystem(cedarSystemId: UUID!): CedarSystem
-  cedarSystems: [CedarSystem!]!
-  myCedarSystems: [CedarSystem!]!
+  cedarSystems: [CedarSystem!]
+  myCedarSystems: [CedarSystem!]
 
   """
   Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
@@ -20433,9 +20433,9 @@ func (ec *executionContext) _CedarSystem_businessOwnerRoles(ctx context.Context,
 			return ec.resolvers.CedarSystem().BusinessOwnerRoles(ctx, obj)
 		},
 		nil,
-		ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
+		ec.marshalOCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -21031,9 +21031,9 @@ func (ec *executionContext) _CedarSystemDetails_cedarSystem(ctx context.Context,
 			return obj.CedarSystem, nil
 		},
 		nil,
-		ec.marshalNCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem,
+		ec.marshalOCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -21098,9 +21098,9 @@ func (ec *executionContext) _CedarSystemDetails_systemMaintainerInformation(ctx 
 			return ec.resolvers.CedarSystemDetails().SystemMaintainerInformation(ctx, obj)
 		},
 		nil,
-		ec.marshalNCedarSystemMaintainerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemMaintainerInformation,
+		ec.marshalOCedarSystemMaintainerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemMaintainerInformation,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -21213,9 +21213,9 @@ func (ec *executionContext) _CedarSystemDetails_businessOwnerInformation(ctx con
 			return ec.resolvers.CedarSystemDetails().BusinessOwnerInformation(ctx, obj)
 		},
 		nil,
-		ec.marshalNCedarBusinessOwnerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBusinessOwnerInformation,
+		ec.marshalOCedarBusinessOwnerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBusinessOwnerInformation,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -21272,9 +21272,9 @@ func (ec *executionContext) _CedarSystemDetails_roles(ctx context.Context, field
 			return obj.Roles, nil
 		},
 		nil,
-		ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
+		ec.marshalOCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -21335,9 +21335,9 @@ func (ec *executionContext) _CedarSystemDetails_deployments(ctx context.Context,
 			return obj.Deployments, nil
 		},
 		nil,
-		ec.marshalNCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ,
+		ec.marshalOCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -21402,9 +21402,9 @@ func (ec *executionContext) _CedarSystemDetails_threats(ctx context.Context, fie
 			return obj.Threats, nil
 		},
 		nil,
-		ec.marshalNCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ,
+		ec.marshalOCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -21447,9 +21447,9 @@ func (ec *executionContext) _CedarSystemDetails_urls(ctx context.Context, field 
 			return obj.URLs, nil
 		},
 		nil,
-		ec.marshalNCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ,
+		ec.marshalOCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -33435,9 +33435,9 @@ func (ec *executionContext) _Query_cedarAuthorityToOperate(ctx context.Context, 
 			return ec.resolvers.Query().CedarAuthorityToOperate(ctx, fc.Args["cedarSystemID"].(uuid.UUID))
 		},
 		nil,
-		ec.marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ,
+		ec.marshalOCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -33766,9 +33766,9 @@ func (ec *executionContext) _Query_cedarSubSystems(ctx context.Context, field gr
 			return ec.resolvers.Query().CedarSubSystems(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
-		ec.marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ,
+		ec.marshalOCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -33817,9 +33817,9 @@ func (ec *executionContext) _Query_cedarContractsBySystem(ctx context.Context, f
 			return ec.resolvers.Query().CedarContractsBySystem(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
-		ec.marshalNCedarContract2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContractᚄ,
+		ec.marshalOCedarContract2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContractᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -33913,9 +33913,9 @@ func (ec *executionContext) _Query_cedarThreat(ctx context.Context, field graphq
 			return ec.resolvers.Query().CedarThreat(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
-		ec.marshalNCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ,
+		ec.marshalOCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -33970,9 +33970,9 @@ func (ec *executionContext) _Query_deployments(ctx context.Context, field graphq
 			return ec.resolvers.Query().Deployments(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["deploymentType"].(*string), fc.Args["state"].(*string), fc.Args["status"].(*string))
 		},
 		nil,
-		ec.marshalNCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ,
+		ec.marshalOCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -34088,9 +34088,9 @@ func (ec *executionContext) _Query_roles(ctx context.Context, field graphql.Coll
 			return ec.resolvers.Query().Roles(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["roleTypeID"].(*string))
 		},
 		nil,
-		ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
+		ec.marshalOCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -34163,9 +34163,9 @@ func (ec *executionContext) _Query_exchanges(ctx context.Context, field graphql.
 			return ec.resolvers.Query().Exchanges(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
-		ec.marshalNCedarExchange2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ,
+		ec.marshalOCedarExchange2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -34262,9 +34262,9 @@ func (ec *executionContext) _Query_urls(ctx context.Context, field graphql.Colle
 			return ec.resolvers.Query().Urls(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
-		ec.marshalNCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ,
+		ec.marshalOCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -35060,9 +35060,9 @@ func (ec *executionContext) _Query_cedarSystems(ctx context.Context, field graph
 			return ec.resolvers.Query().CedarSystems(ctx)
 		},
 		nil,
-		ec.marshalNCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ,
+		ec.marshalOCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -35127,9 +35127,9 @@ func (ec *executionContext) _Query_myCedarSystems(ctx context.Context, field gra
 			return ec.resolvers.Query().MyCedarSystems(ctx)
 		},
 		nil,
-		ec.marshalNCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ,
+		ec.marshalOCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -57201,16 +57201,13 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 		case "businessOwnerRoles":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._CedarSystem_businessOwnerRoles(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -57430,22 +57427,16 @@ func (ec *executionContext) _CedarSystemDetails(ctx context.Context, sel ast.Sel
 			out.Values[i] = graphql.MarshalString("CedarSystemDetails")
 		case "cedarSystem":
 			out.Values[i] = ec._CedarSystemDetails_cedarSystem(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "systemMaintainerInformation":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._CedarSystemDetails_systemMaintainerInformation(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -57472,16 +57463,13 @@ func (ec *executionContext) _CedarSystemDetails(ctx context.Context, sel ast.Sel
 		case "businessOwnerInformation":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._CedarSystemDetails_businessOwnerInformation(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -57507,24 +57495,12 @@ func (ec *executionContext) _CedarSystemDetails(ctx context.Context, sel ast.Sel
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "roles":
 			out.Values[i] = ec._CedarSystemDetails_roles(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "deployments":
 			out.Values[i] = ec._CedarSystemDetails_deployments(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "threats":
 			out.Values[i] = ec._CedarSystemDetails_threats(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "urls":
 			out.Values[i] = ec._CedarSystemDetails_urls(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "isMySystem":
 			out.Values[i] = ec._CedarSystemDetails_isMySystem(ctx, field, obj)
 		case "atoEffectiveDate":
@@ -59608,16 +59584,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "cedarAuthorityToOperate":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_cedarAuthorityToOperate(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -59709,16 +59682,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "cedarSubSystems":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_cedarSubSystems(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -59731,16 +59701,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "cedarContractsBySystem":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_cedarContractsBySystem(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -59775,16 +59742,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "cedarThreat":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_cedarThreat(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -59797,16 +59761,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "deployments":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_deployments(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -59841,16 +59802,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "roles":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_roles(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -59863,16 +59821,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "exchanges":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_exchanges(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -59885,16 +59840,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "urls":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_urls(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -60118,16 +60070,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "cedarSystems":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_cedarSystems(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -60140,16 +60089,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "myCedarSystems":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_myCedarSystems(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -67075,50 +67021,6 @@ func (ec *executionContext) unmarshalNCastSystemIntakeGRBReviewerVoteInput2githu
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperate(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperate(ctx context.Context, sel ast.SelectionSet, v *models.CedarAuthorityToOperate) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -67193,64 +67095,6 @@ func (ec *executionContext) marshalNCedarBudgetActualCost2ᚖgithubᚗcomᚋcms�
 	return ec._CedarBudgetActualCost(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCedarBusinessOwnerInformation2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBusinessOwnerInformation(ctx context.Context, sel ast.SelectionSet, v models.CedarBusinessOwnerInformation) graphql.Marshaler {
-	return ec._CedarBusinessOwnerInformation(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNCedarBusinessOwnerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBusinessOwnerInformation(ctx context.Context, sel ast.SelectionSet, v *models.CedarBusinessOwnerInformation) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._CedarBusinessOwnerInformation(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNCedarContract2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContractᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarContract) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarContract2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContract(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalNCedarContract2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContract(ctx context.Context, sel ast.SelectionSet, v *models.CedarContract) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -67261,50 +67105,6 @@ func (ec *executionContext) marshalNCedarContract2ᚖgithubᚗcomᚋcmsᚑenterp
 	return ec._CedarContract(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarDeployment) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarDeployment2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeployment(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalNCedarDeployment2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeployment(ctx context.Context, sel ast.SelectionSet, v *models.CedarDeployment) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -67313,50 +67113,6 @@ func (ec *executionContext) marshalNCedarDeployment2ᚖgithubᚗcomᚋcmsᚑente
 		return graphql.Null
 	}
 	return ec._CedarDeployment(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNCedarExchange2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarExchange) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarExchange2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchange(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) marshalNCedarExchange2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchange(ctx context.Context, sel ast.SelectionSet, v *models.CedarExchange) graphql.Marshaler {
@@ -67421,50 +67177,6 @@ func (ec *executionContext) marshalNCedarExchangeTypeOfDataItem2ᚖgithubᚗcom�
 		return graphql.Null
 	}
 	return ec._CedarExchangeTypeOfDataItem(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarRole) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarRole2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRole(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) marshalNCedarRole2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRole(ctx context.Context, sel ast.SelectionSet, v *models.CedarRole) graphql.Marshaler {
@@ -67585,50 +67297,6 @@ func (ec *executionContext) marshalNCedarSoftwareProductItem2ᚖgithubᚗcomᚋc
 	return ec._CedarSoftwareProductItem(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSubSystem) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarSubSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalNCedarSubSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSubSystem) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -67747,64 +67415,6 @@ func (ec *executionContext) marshalNCedarSystemBookmark2ᚖgithubᚗcomᚋcmsᚑ
 	return ec._CedarSystemBookmark(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCedarSystemMaintainerInformation2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemMaintainerInformation(ctx context.Context, sel ast.SelectionSet, v models.CedarSystemMaintainerInformation) graphql.Marshaler {
-	return ec._CedarSystemMaintainerInformation(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNCedarSystemMaintainerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemMaintainerInformation(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystemMaintainerInformation) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._CedarSystemMaintainerInformation(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarThreat) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarThreat2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreat(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalNCedarThreat2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreat(ctx context.Context, sel ast.SelectionSet, v *models.CedarThreat) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -67813,50 +67423,6 @@ func (ec *executionContext) marshalNCedarThreat2ᚖgithubᚗcomᚋcmsᚑenterpri
 		return graphql.Null
 	}
 	return ec._CedarThreat(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarURL) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarURL2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURL(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) marshalNCedarURL2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURL(ctx context.Context, sel ast.SelectionSet, v *models.CedarURL) graphql.Marshaler {
@@ -71770,6 +71336,53 @@ func (ec *executionContext) marshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsᚑen
 	return res
 }
 
+func (ec *executionContext) marshalOCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperate(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarBudget) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -71824,6 +71437,60 @@ func (ec *executionContext) marshalOCedarBudgetSystemCost2ᚖgithubᚗcomᚋcms�
 	return ec._CedarBudgetSystemCost(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCedarBusinessOwnerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBusinessOwnerInformation(ctx context.Context, sel ast.SelectionSet, v *models.CedarBusinessOwnerInformation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CedarBusinessOwnerInformation(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCedarContract2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContractᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarContract) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarContract2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContract(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalOCedarDataCenter2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDataCenter(ctx context.Context, sel ast.SelectionSet, v *models.CedarDataCenter) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -71831,11 +71498,246 @@ func (ec *executionContext) marshalOCedarDataCenter2ᚖgithubᚗcomᚋcmsᚑente
 	return ec._CedarDataCenter(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarDeployment) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarDeployment2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeployment(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCedarExchange2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarExchange) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarExchange2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchange(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarRole) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarRole2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRole(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalOCedarSoftwareProducts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSoftwareProducts(ctx context.Context, sel ast.SelectionSet, v *models.CedarSoftwareProducts) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CedarSoftwareProducts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSubSystem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarSubSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSystem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalOCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystem) graphql.Marshaler {
@@ -71857,6 +71759,107 @@ func (ec *executionContext) marshalOCedarSystemDetails2ᚖgithubᚗcomᚋcmsᚑe
 		return graphql.Null
 	}
 	return ec._CedarSystemDetails(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCedarSystemMaintainerInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemMaintainerInformation(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystemMaintainerInformation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CedarSystemMaintainerInformation(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarThreat) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarThreat2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreat(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarURL) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarURL2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURL(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalOCreateCedarSystemBookmarkPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, v *models.CreateCedarSystemBookmarkPayload) graphql.Marshaler {

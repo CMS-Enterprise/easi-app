@@ -5,42 +5,12 @@ import { Icon } from '@trussworks/react-uswds';
 import { IconProps } from '@trussworks/react-uswds/lib/components/Icon/Icon';
 import classnames from 'classnames';
 
-import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import { AtoStatus } from 'types/systemProfile';
-import { formatDateUtc, parseAsUTC } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 
 import Tag from '../Tag';
 
-/**
- * Get the ATO Status from a date property
- */
-export function getAtoStatus(
-  atoExpirationDate: string | null | undefined,
-  oaStatus: string | null | undefined
-): AtoStatus {
-  // override anything else if this system is an OA Member
-  if (oaStatus === 'OA Member') {
-    return 'Active';
-  }
-
-  // No ato if it doesn't exist or invalid empty string
-  if (typeof atoExpirationDate !== 'string' || atoExpirationDate === '')
-    return 'No ATO';
-
-  const expiry = parseAsUTC(atoExpirationDate).toString();
-
-  const date = new Date().toISOString();
-
-  if (date >= expiry) return 'Expired';
-
-  const soon = parseAsUTC(expiry)
-    .minus({ days: ATO_STATUS_DUE_SOON_DAYS })
-    .toString();
-
-  if (date >= soon) return 'Due Soon';
-
-  return 'Active';
-}
+import getAtoStatus from './getAtoStatus';
 
 const atoStatusTagClassNames: Record<AtoStatus, string> = {
   Active: 'text-white bg-success-dark',

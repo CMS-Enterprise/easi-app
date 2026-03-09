@@ -150,11 +150,12 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		}
 		lc.Cost = pStr(cost)
 
-		if line.Solution == models.LifecycleCostSolutionPREFERRED {
+		switch line.Solution {
+		case models.LifecycleCostSolutionPREFERRED:
 			preferredSolution.LifecycleCostLines = append(preferredSolution.LifecycleCostLines, lc)
-		} else if line.Solution == models.LifecycleCostSolutionA {
+		case models.LifecycleCostSolutionA:
 			alternativeASolution.LifecycleCostLines = append(alternativeASolution.LifecycleCostLines, lc)
-		} else if line.Solution == models.LifecycleCostSolutionB {
+		case models.LifecycleCostSolutionB:
 			alternativeBSolution.LifecycleCostLines = append(alternativeBSolution.LifecycleCostLines, lc)
 		}
 	}

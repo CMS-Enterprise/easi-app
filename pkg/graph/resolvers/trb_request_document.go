@@ -38,11 +38,12 @@ func GetStatusForTRBRequestDocument(ctx context.Context, s3Client *upload.S3Clie
 	}
 
 	// possible tag values come from virus scanning lambda
-	if avStatus == "CLEAN" {
+	switch avStatus {
+	case "CLEAN":
 		return models.TRBRequestDocumentStatusAvailable, nil
-	} else if avStatus == "INFECTED" {
+	case "INFECTED":
 		return models.TRBRequestDocumentStatusUnavailable, nil
-	} else {
+	default:
 		return models.TRBRequestDocumentStatusPending, nil
 	}
 }

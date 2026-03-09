@@ -14,7 +14,7 @@ import {
   Link
 } from '@trussworks/react-uswds';
 import { mockVendors } from 'features/Systems/SystemProfile/data/mockSystemData';
-import { getPersonFullName } from 'features/Systems/SystemProfile/util';
+import { getPersonFullName } from 'features/Systems/SystemProfile/utils/util';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';

@@ -1,9 +1,4 @@
 import {
-  tempATOProp,
-  tempSubSystemProp,
-  tempSystemDataProp
-} from 'features/Systems/SystemProfile/data/mockSystemData';
-import {
   CedarAssigneeType,
   CedarRole,
   GetSystemProfileQuery,
@@ -151,13 +146,15 @@ export type GetSystemProfileSystemCost = NonNullable<
 >;
 
 export type GetSystemProfileRoles = NonNullable<
-  NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['roles'][number]
+  NonNullable<
+    NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['roles']
+  >[number]
 >;
 
 export type GetSystemProfileStatus = NonNullable<
   NonNullable<
-    GetSystemProfileQuery['cedarSystemDetails']
-  >['cedarSystem']['status']
+    NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['cedarSystem']
+  >['status']
 >;
 
 export type GetSystemProfileSoftwareProducts = NonNullable<
@@ -179,7 +176,6 @@ export type GetSystemProfileExchanges = NonNullable<
 export interface SystemProfileData extends GetSystemProfileQuery {
   // The original id type can be null, in which case this object is not created
   id: string;
-  /* eslint-disable camelcase */
   ato?: GetSystemProfileATO;
   atoStatus?: AtoStatus;
   budgets?: GetSystemProfileBudget[];
@@ -194,15 +190,9 @@ export interface SystemProfileData extends GetSystemProfileQuery {
   personRoles?: CedarRoleAssigneePerson[];
   plannedRetirement?: string | null;
   productionLocation?: UrlLocation;
-  status: GetSystemProfileStatus;
+  status?: GetSystemProfileStatus;
   usernamesWithRoles?: UsernameWithRoles[];
-
-  // Remaining mock data stubs
-  activities?: tempATOProp[];
   toolsAndSoftware?: GetSystemProfileSoftwareProducts;
-  subSystems?: tempSubSystemProp[];
-  systemData?: tempSystemDataProp[];
-  /* eslint-enable camelcase */
 }
 
 export interface SystemProfileSubviewProps {

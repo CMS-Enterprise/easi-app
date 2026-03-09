@@ -12,7 +12,7 @@ import NotFound from 'features/Miscellaneous/NotFound';
 import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { getAtoStatus } from 'components/AtoStatus';
+import getAtoStatus from 'components/AtoStatus/getAtoStatus';
 import BookmarkButton from 'components/BookmarkButton';
 import Breadcrumbs from 'components/Breadcrumbs';
 import MainContent from 'components/MainContent';
@@ -44,7 +44,7 @@ export const SystemWorkspace = () => {
   });
 
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
-  const ato = data?.cedarAuthorityToOperate[0];
+  const ato = data?.cedarAuthorityToOperate?.[0];
   const atoStatus = getAtoStatus(
     ato?.dateAuthorizationMemoExpires,
     ato?.oaStatus
@@ -52,8 +52,8 @@ export const SystemWorkspace = () => {
 
   const { isso } = useMemo(
     () => ({
-      isso: data?.cedarSystemDetails?.roles.length
-        ? data.cedarSystemDetails.roles.find(
+      isso: data?.cedarSystemDetails?.roles?.length
+        ? data.cedarSystemDetails.roles?.find(
             role => role.roleTypeName === RoleTypeName.ISSO
           )
         : undefined
@@ -78,7 +78,7 @@ export const SystemWorkspace = () => {
     return <NotFound />;
   }
 
-  const { isBookmarked } = data.cedarSystemDetails.cedarSystem;
+  const { isBookmarked } = cedarSystem;
 
   // Redirect to system profile if not a team member for the system
   if (flags.systemWorkspace && !data.cedarSystemDetails.isMySystem) {
@@ -171,7 +171,7 @@ export const SystemWorkspace = () => {
         <div className="bg-base-lightest padding-top-6 padding-bottom-10">
           <GridContainer>
             <CardGroup>
-              <TeamCard roles={data.cedarSystemDetails.roles} />
+              <TeamCard roles={data.cedarSystemDetails.roles || []} />
             </CardGroup>
           </GridContainer>
         </div>

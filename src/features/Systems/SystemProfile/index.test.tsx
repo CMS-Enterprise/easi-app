@@ -16,7 +16,7 @@ import {
   result
 } from 'tests/mock/systemProfile';
 
-import { getAtoStatus } from 'components/AtoStatus';
+import getAtoStatus from 'components/AtoStatus/getAtoStatus';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import {
   GetSystemProfileRoles,

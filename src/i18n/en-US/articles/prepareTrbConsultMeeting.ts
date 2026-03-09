@@ -38,7 +38,7 @@ const prepareTrbConsultMeeting = {
     title: 'Download TRB presentation deck templates',
     description:
       'If you have any questions about the templates or would like help filling one out, you may contact the TRB at <a>{{email}}</a>.',
-    link: 'Download deck templates (zip)'
+    link: 'Download deck templates'
   },
   outcomes: {
     title: 'Potential outcomes',
