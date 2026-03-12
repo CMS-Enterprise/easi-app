@@ -68,6 +68,10 @@ type SystemSummary struct {
 	// Example: 326-1-0
 	NextVersionID string `json:"nextVersionId,omitempty"`
 
+	// Operating Authority status
+	// Example: Operational
+	OaStatus string `json:"oaStatus,omitempty"`
+
 	// previous version Id
 	// Example: 326-3-0
 	PreviousVersionID string `json:"previousVersionId,omitempty"`

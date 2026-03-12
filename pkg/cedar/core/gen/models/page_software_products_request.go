@@ -60,6 +60,12 @@ type PageSoftwareProductsRequest struct {
 	// Required: true
 	ApplicationID *string `json:"applicationId"`
 
+	// development stage
+	DevelopmentStage string `json:"developmentStage,omitempty"`
+
+	// product only
+	ProductOnly bool `json:"productOnly,omitempty"`
+
 	// system has Api gateway
 	SystemHasAPIGateway bool `json:"systemHasApiGateway,omitempty"`
 
