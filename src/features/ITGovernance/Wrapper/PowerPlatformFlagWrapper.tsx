@@ -18,16 +18,16 @@ function powerPlatformLink(id: string): string {
 export default function PowerPlatformFlagWrapper({
   children
 }: React.PropsWithChildren) {
-  const { id } = useParams<{ id: string }>();
+  const { intakeId } = useParams<{ intakeId: string }>();
   const flags = useFlags();
 
   if (flags.enablePowerPlatform) {
-    const link = powerPlatformLink(id);
+    const link = powerPlatformLink(intakeId);
     if (link.length < 1) {
       return null;
     }
 
-    window.location.href = `https://icpg-dev.crm9.dynamics.com/main.aspx?appid=bc878d88-0468-f011-bec2-001dd8062d4a&pagetype=entityrecord&etn=new_systemintake&id=${id}`;
+    window.location.href = `https://icpg-dev.crm9.dynamics.com/main.aspx?appid=bc878d88-0468-f011-bec2-001dd8062d4a&pagetype=entityrecord&etn=new_systemintake&id=${intakeId}`;
     return <PageLoading />;
   }
 
