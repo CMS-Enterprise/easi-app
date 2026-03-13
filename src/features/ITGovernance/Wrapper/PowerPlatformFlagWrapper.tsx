@@ -24,10 +24,11 @@ export default function PowerPlatformFlagWrapper({
   if (flags.enablePowerPlatform) {
     const link = powerPlatformLink(intakeId);
     if (link.length < 1) {
-      return null;
+      // if we fail to resolve a link, proceed as normal
+      return <>{children}</>;
     }
 
-    window.location.href = `https://icpg-dev.crm9.dynamics.com/main.aspx?appid=bc878d88-0468-f011-bec2-001dd8062d4a&pagetype=entityrecord&etn=new_systemintake&id=${intakeId}`;
+    window.location.href = link;
     return <PageLoading />;
   }
 
