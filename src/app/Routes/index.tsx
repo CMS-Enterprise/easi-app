@@ -272,7 +272,8 @@ const App = () => {
                       '/governance-overview/:intakeId(.*)',
                       '/governance-task-list/:intakeId(.*)',
                       '/it-governance/:intakeId(.*)',
-                      '/system/:intakeId(.*)'
+                      '/system/:intakeId(.*)',
+                      '/system/request-type'
                     ]}
                   >
                     <PowerPlatformFlagWrapper />

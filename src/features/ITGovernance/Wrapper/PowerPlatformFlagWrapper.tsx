@@ -9,7 +9,10 @@ function powerPlatformLink(id: string): string {
   switch (import.meta.env.NODE_ENV) {
     case 'production':
       return `https://itgovernance.crm9.dynamics.com/main.aspx?appid=941458af-d8eb-f011-8544-001dd80f20e8&id=${id}`;
+
+    // send local and dev to same spot
     case 'development':
+    case 'local':
       return `https://itgovernancedev.crm9.dynamics.com/main.aspx?appid=110e68fa-41bf-4a23-a577-e58b353d60c7&id=${id}`;
     default:
       return '';
