@@ -175,6 +175,7 @@ func newTestGQLServer(es graphql.ExecutableSchema) *handler.Server {
 
 	srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
 
+	// Introspection is enabled in tests to support gqlgen client behavior
 	srv.Use(extension.Introspection{})
 	srv.Use(extension.AutomaticPersistedQuery{
 		Cache: lru.New[string](100),
