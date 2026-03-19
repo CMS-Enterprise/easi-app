@@ -404,7 +404,11 @@ func newGQLServer(es graphql.ExecutableSchema, oktaMiddlewareFactory *okta.OktaM
 
 	srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
 
-	srv.Use(extension.Introspection{})
+	// Enable introspection only in local/dev
+	env := os.Getenv("APP_ENV")
+	if env == "local" || env == "dev" || env == "test" {
+	    srv.Use(extension.Introspection{})
+	}
 	srv.Use(extension.AutomaticPersistedQuery{
 		Cache: lru.New[string](100),
 	})
