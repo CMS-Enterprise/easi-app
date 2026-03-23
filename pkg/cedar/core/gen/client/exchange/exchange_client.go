@@ -126,9 +126,9 @@ func (a *Client) ExchangeDeleteList(params *ExchangeDeleteListParams, authInfo r
 }
 
 /*
-ExchangeFindByID retrieves a data exchange record from alfabet this interface takes in a system Id direction and version
+ExchangeFindByID retrieves a single data exchange record from alfabet by its exchange ID
 
-Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.
+Retrieve a single data exchange record from Alfabet by its exchange ID.
 */
 func (a *Client) ExchangeFindByID(params *ExchangeFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExchangeFindByIDOK, error) {
 	// TODO: Validate the params before sending

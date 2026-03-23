@@ -63,11 +63,11 @@ ContractAddParams contains all the parameters to send to the API endpoint
 */
 type ContractAddParams struct {
 
-	/* Body.
+	/* ContractAddRequest.
 
 	   An array of Contracts to be added to CEDAR Alfabet.
 	*/
-	Body *models.ContractAddRequest
+	ContractAddRequest *models.ContractAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *ContractAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the contract add params
-func (o *ContractAddParams) WithBody(body *models.ContractAddRequest) *ContractAddParams {
-	o.SetBody(body)
+// WithContractAddRequest adds the contractAddRequest to the contract add params
+func (o *ContractAddParams) WithContractAddRequest(contractAddRequest *models.ContractAddRequest) *ContractAddParams {
+	o.SetContractAddRequest(contractAddRequest)
 	return o
 }
 
-// SetBody adds the body to the contract add params
-func (o *ContractAddParams) SetBody(body *models.ContractAddRequest) {
-	o.Body = body
+// SetContractAddRequest adds the contractAddRequest to the contract add params
+func (o *ContractAddParams) SetContractAddRequest(contractAddRequest *models.ContractAddRequest) {
+	o.ContractAddRequest = contractAddRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *ContractAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.ContractAddRequest != nil {
+		if err := r.SetBodyParam(o.ContractAddRequest); err != nil {
 			return err
 		}
 	}

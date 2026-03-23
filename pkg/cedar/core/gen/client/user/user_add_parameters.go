@@ -63,11 +63,11 @@ UserAddParams contains all the parameters to send to the API endpoint
 */
 type UserAddParams struct {
 
-	/* Body.
+	/* UserAddRequest.
 
 	   User information to be added to a CEDAR application.
 	*/
-	Body *models.UserAddRequest
+	UserAddRequest *models.UserAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *UserAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the user add params
-func (o *UserAddParams) WithBody(body *models.UserAddRequest) *UserAddParams {
-	o.SetBody(body)
+// WithUserAddRequest adds the userAddRequest to the user add params
+func (o *UserAddParams) WithUserAddRequest(userAddRequest *models.UserAddRequest) *UserAddParams {
+	o.SetUserAddRequest(userAddRequest)
 	return o
 }
 
-// SetBody adds the body to the user add params
-func (o *UserAddParams) SetBody(body *models.UserAddRequest) {
-	o.Body = body
+// SetUserAddRequest adds the userAddRequest to the user add params
+func (o *UserAddParams) SetUserAddRequest(userAddRequest *models.UserAddRequest) {
+	o.UserAddRequest = userAddRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *UserAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regis
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.UserAddRequest != nil {
+		if err := r.SetBodyParam(o.UserAddRequest); err != nil {
 			return err
 		}
 	}

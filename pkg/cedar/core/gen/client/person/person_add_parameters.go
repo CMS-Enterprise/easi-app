@@ -63,11 +63,11 @@ PersonAddParams contains all the parameters to send to the API endpoint
 */
 type PersonAddParams struct {
 
-	/* Body.
+	/* PersonAddRequest.
 
 	   Person information to be added to Alfabet.
 	*/
-	Body *models.Person
+	PersonAddRequest *models.PersonAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *PersonAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the person add params
-func (o *PersonAddParams) WithBody(body *models.Person) *PersonAddParams {
-	o.SetBody(body)
+// WithPersonAddRequest adds the personAddRequest to the person add params
+func (o *PersonAddParams) WithPersonAddRequest(personAddRequest *models.PersonAddRequest) *PersonAddParams {
+	o.SetPersonAddRequest(personAddRequest)
 	return o
 }
 
-// SetBody adds the body to the person add params
-func (o *PersonAddParams) SetBody(body *models.Person) {
-	o.Body = body
+// SetPersonAddRequest adds the personAddRequest to the person add params
+func (o *PersonAddParams) SetPersonAddRequest(personAddRequest *models.PersonAddRequest) {
+	o.PersonAddRequest = personAddRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *PersonAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.PersonAddRequest != nil {
+		if err := r.SetBodyParam(o.PersonAddRequest); err != nil {
 			return err
 		}
 	}

@@ -63,17 +63,17 @@ UserIDUpdateParams contains all the parameters to send to the API endpoint
 */
 type UserIDUpdateParams struct {
 
-	/* Body.
-
-	   User information to be updated in CEDAR.
-	*/
-	Body *models.UserUpdateRequest
-
 	/* ID.
 
 	   ID of user to update.
 	*/
 	ID string
+
+	/* UserUpdateRequest.
+
+	   User information to be updated in CEDAR.
+	*/
+	UserUpdateRequest *models.UserUpdateRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -128,17 +128,6 @@ func (o *UserIDUpdateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the user Id update params
-func (o *UserIDUpdateParams) WithBody(body *models.UserUpdateRequest) *UserIDUpdateParams {
-	o.SetBody(body)
-	return o
-}
-
-// SetBody adds the body to the user Id update params
-func (o *UserIDUpdateParams) SetBody(body *models.UserUpdateRequest) {
-	o.Body = body
-}
-
 // WithID adds the id to the user Id update params
 func (o *UserIDUpdateParams) WithID(id string) *UserIDUpdateParams {
 	o.SetID(id)
@@ -150,6 +139,17 @@ func (o *UserIDUpdateParams) SetID(id string) {
 	o.ID = id
 }
 
+// WithUserUpdateRequest adds the userUpdateRequest to the user Id update params
+func (o *UserIDUpdateParams) WithUserUpdateRequest(userUpdateRequest *models.UserUpdateRequest) *UserIDUpdateParams {
+	o.SetUserUpdateRequest(userUpdateRequest)
+	return o
+}
+
+// SetUserUpdateRequest adds the userUpdateRequest to the user Id update params
+func (o *UserIDUpdateParams) SetUserUpdateRequest(userUpdateRequest *models.UserUpdateRequest) {
+	o.UserUpdateRequest = userUpdateRequest
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *UserIDUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -157,15 +157,15 @@ func (o *UserIDUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
-			return err
-		}
-	}
 
 	// path param id
 	if err := r.SetPathParam("id", o.ID); err != nil {
 		return err
+	}
+	if o.UserUpdateRequest != nil {
+		if err := r.SetBodyParam(o.UserUpdateRequest); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {

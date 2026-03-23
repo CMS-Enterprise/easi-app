@@ -63,11 +63,11 @@ PersonUpdateParams contains all the parameters to send to the API endpoint
 */
 type PersonUpdateParams struct {
 
-	/* Body.
+	/* Person.
 
 	   Person information to be updated in Alfabet.
 	*/
-	Body *models.Person
+	Person *models.Person
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *PersonUpdateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the person update params
-func (o *PersonUpdateParams) WithBody(body *models.Person) *PersonUpdateParams {
-	o.SetBody(body)
+// WithPerson adds the person to the person update params
+func (o *PersonUpdateParams) WithPerson(person *models.Person) *PersonUpdateParams {
+	o.SetPerson(person)
 	return o
 }
 
-// SetBody adds the body to the person update params
-func (o *PersonUpdateParams) SetBody(body *models.Person) {
-	o.Body = body
+// SetPerson adds the person to the person update params
+func (o *PersonUpdateParams) SetPerson(person *models.Person) {
+	o.Person = person
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *PersonUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.Person != nil {
+		if err := r.SetBodyParam(o.Person); err != nil {
 			return err
 		}
 	}

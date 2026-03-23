@@ -101,6 +101,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
 				ID:                      parsed,
 				UUID:                    zero.StringFrom(sys.UUID),
+				OaStatus:                zero.StringFrom(sys.OaStatus),
 			}
 			retVal = append(retVal, cedarSys)
 		}
@@ -167,7 +168,7 @@ func (systemSummaryOpts) WithEuaIDFilter(euaUserID string) systemSummaryParamFil
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
 func (systemSummaryOpts) WithSubSystems(cedarSystemID uuid.UUID) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
-		params.SetBelongsTo(helpers.PointerTo(cedarSystemID.String()))
+		params.SetBelongsTo(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
 
 		// we want all sub systems, not just ones included in the survey
 		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?

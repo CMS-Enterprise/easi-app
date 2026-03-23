@@ -43,6 +43,9 @@ type Products struct {
 	// software cost
 	SoftwareCost string `json:"software_cost,omitempty"`
 
+	// software name
+	SoftwareName string `json:"software_name,omitempty"`
+
 	// system software connection Guid
 	SystemSoftwareConnectionGUID string `json:"systemSoftwareConnectionGuid,omitempty"`
 

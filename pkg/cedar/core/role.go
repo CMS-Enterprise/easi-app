@@ -426,7 +426,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID uuid.UUID, newRoles
 
 	// construct the parameters
 	params := apiroles.NewRoleAddParams()
-	params.SetBody(body)
+	params.SetRoleAddRequest(body)
 	params.HTTPClient = c.hc
 
 	// Make the API call
