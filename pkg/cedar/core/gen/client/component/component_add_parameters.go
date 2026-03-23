@@ -63,11 +63,11 @@ ComponentAddParams contains all the parameters to send to the API endpoint
 */
 type ComponentAddParams struct {
 
-	/* Body.
+	/* ComponentAddRequest.
 
 	   Component record to be added to Alfabet.
 	*/
-	Body *models.ComponentAddRequest
+	ComponentAddRequest *models.ComponentAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *ComponentAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the component add params
-func (o *ComponentAddParams) WithBody(body *models.ComponentAddRequest) *ComponentAddParams {
-	o.SetBody(body)
+// WithComponentAddRequest adds the componentAddRequest to the component add params
+func (o *ComponentAddParams) WithComponentAddRequest(componentAddRequest *models.ComponentAddRequest) *ComponentAddParams {
+	o.SetComponentAddRequest(componentAddRequest)
 	return o
 }
 
-// SetBody adds the body to the component add params
-func (o *ComponentAddParams) SetBody(body *models.ComponentAddRequest) {
-	o.Body = body
+// SetComponentAddRequest adds the componentAddRequest to the component add params
+func (o *ComponentAddParams) SetComponentAddRequest(componentAddRequest *models.ComponentAddRequest) {
+	o.ComponentAddRequest = componentAddRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *ComponentAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.ComponentAddRequest != nil {
+		if err := r.SetBodyParam(o.ComponentAddRequest); err != nil {
 			return err
 		}
 	}

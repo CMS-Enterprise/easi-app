@@ -63,11 +63,11 @@ UserNameUpdateParams contains all the parameters to send to the API endpoint
 */
 type UserNameUpdateParams struct {
 
-	/* Body.
+	/* User.
 
 	   User information to be updated in CEDAR.
 	*/
-	Body *models.UserUpdateRequest
+	User *models.UserUpdateRequest
 
 	/* Username.
 
@@ -128,15 +128,15 @@ func (o *UserNameUpdateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the user name update params
-func (o *UserNameUpdateParams) WithBody(body *models.UserUpdateRequest) *UserNameUpdateParams {
-	o.SetBody(body)
+// WithUser adds the user to the user name update params
+func (o *UserNameUpdateParams) WithUser(user *models.UserUpdateRequest) *UserNameUpdateParams {
+	o.SetUser(user)
 	return o
 }
 
-// SetBody adds the body to the user name update params
-func (o *UserNameUpdateParams) SetBody(body *models.UserUpdateRequest) {
-	o.Body = body
+// SetUser adds the user to the user name update params
+func (o *UserNameUpdateParams) SetUser(user *models.UserUpdateRequest) {
+	o.User = user
 }
 
 // WithUsername adds the username to the user name update params
@@ -157,8 +157,8 @@ func (o *UserNameUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.User != nil {
+		if err := r.SetBodyParam(o.User); err != nil {
 			return err
 		}
 	}

@@ -63,11 +63,11 @@ BudgetAddParams contains all the parameters to send to the API endpoint
 */
 type BudgetAddParams struct {
 
-	/* Body.
+	/* BudgetAddRequest.
 
 	   Budget(s) to be added to CEDAR.  This required input in a list of Budget documents.
 	*/
-	Body *models.BudgetAddRequest
+	BudgetAddRequest *models.BudgetAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *BudgetAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the budget add params
-func (o *BudgetAddParams) WithBody(body *models.BudgetAddRequest) *BudgetAddParams {
-	o.SetBody(body)
+// WithBudgetAddRequest adds the budgetAddRequest to the budget add params
+func (o *BudgetAddParams) WithBudgetAddRequest(budgetAddRequest *models.BudgetAddRequest) *BudgetAddParams {
+	o.SetBudgetAddRequest(budgetAddRequest)
 	return o
 }
 
-// SetBody adds the body to the budget add params
-func (o *BudgetAddParams) SetBody(body *models.BudgetAddRequest) {
-	o.Body = body
+// SetBudgetAddRequest adds the budgetAddRequest to the budget add params
+func (o *BudgetAddParams) SetBudgetAddRequest(budgetAddRequest *models.BudgetAddRequest) {
+	o.BudgetAddRequest = budgetAddRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *BudgetAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.BudgetAddRequest != nil {
+		if err := r.SetBodyParam(o.BudgetAddRequest); err != nil {
 			return err
 		}
 	}

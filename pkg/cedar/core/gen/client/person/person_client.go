@@ -42,9 +42,9 @@ type ClientService interface {
 }
 
 /*
-PersonAdd adds a person record to alfabet this interface takes in id user name first name last name phone and email
+PersonAdd adds person records to alfabet
 
-Add a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+Add person records to Alfabet. Accepts an application discriminator and an array of Users to create.
 */
 func (a *Client) PersonAdd(params *PersonAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonAddOK, error) {
 	// TODO: Validate the params before sending
@@ -83,9 +83,9 @@ func (a *Client) PersonAdd(params *PersonAddParams, authInfo runtime.ClientAuthI
 }
 
 /*
-PersonFindByID retrieves an existing person or a sigle person record based on the users e u a id
+PersonFindByID retrieves a single person record by e u a id
 
-Retrieve an existing person or a sigle person record based on the users EUA id.
+Retrieve a single person record based on the person's EUA id.
 */
 func (a *Client) PersonFindByID(params *PersonFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonFindByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -165,9 +165,9 @@ func (a *Client) PersonFindList(params *PersonFindListParams, authInfo runtime.C
 }
 
 /*
-PersonUpdate updates a person record to alfabet this interface takes in id user name first name last name phone and email
+PersonUpdate updates a person record in alfabet
 
-Update a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
+Update a person record in Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.
 */
 func (a *Client) PersonUpdate(params *PersonUpdateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PersonUpdateOK, error) {
 	// TODO: Validate the params before sending

@@ -63,11 +63,11 @@ DeploymentAddParams contains all the parameters to send to the API endpoint
 */
 type DeploymentAddParams struct {
 
-	/* Body.
+	/* DeploymentAddRequest.
 
 	   Deployment list to be added to CEDAR
 	*/
-	Body *models.DeploymentAddRequest
+	DeploymentAddRequest *models.DeploymentAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *DeploymentAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the deployment add params
-func (o *DeploymentAddParams) WithBody(body *models.DeploymentAddRequest) *DeploymentAddParams {
-	o.SetBody(body)
+// WithDeploymentAddRequest adds the deploymentAddRequest to the deployment add params
+func (o *DeploymentAddParams) WithDeploymentAddRequest(deploymentAddRequest *models.DeploymentAddRequest) *DeploymentAddParams {
+	o.SetDeploymentAddRequest(deploymentAddRequest)
 	return o
 }
 
-// SetBody adds the body to the deployment add params
-func (o *DeploymentAddParams) SetBody(body *models.DeploymentAddRequest) {
-	o.Body = body
+// SetDeploymentAddRequest adds the deploymentAddRequest to the deployment add params
+func (o *DeploymentAddParams) SetDeploymentAddRequest(deploymentAddRequest *models.DeploymentAddRequest) {
+	o.DeploymentAddRequest = deploymentAddRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *DeploymentAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.DeploymentAddRequest != nil {
+		if err := r.SetBodyParam(o.DeploymentAddRequest); err != nil {
 			return err
 		}
 	}

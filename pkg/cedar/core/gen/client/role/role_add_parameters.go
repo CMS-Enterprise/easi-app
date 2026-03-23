@@ -63,11 +63,11 @@ RoleAddParams contains all the parameters to send to the API endpoint
 */
 type RoleAddParams struct {
 
-	/* Body.
+	/* RoleAddRequest.
 
 	   Role assignment information to be added to a CEDAR application.
 	*/
-	Body *models.RoleAddRequest
+	RoleAddRequest *models.RoleAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *RoleAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the role add params
-func (o *RoleAddParams) WithBody(body *models.RoleAddRequest) *RoleAddParams {
-	o.SetBody(body)
+// WithRoleAddRequest adds the roleAddRequest to the role add params
+func (o *RoleAddParams) WithRoleAddRequest(roleAddRequest *models.RoleAddRequest) *RoleAddParams {
+	o.SetRoleAddRequest(roleAddRequest)
 	return o
 }
 
-// SetBody adds the body to the role add params
-func (o *RoleAddParams) SetBody(body *models.RoleAddRequest) {
-	o.Body = body
+// SetRoleAddRequest adds the roleAddRequest to the role add params
+func (o *RoleAddParams) SetRoleAddRequest(roleAddRequest *models.RoleAddRequest) {
+	o.RoleAddRequest = roleAddRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *RoleAddParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regis
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.RoleAddRequest != nil {
+		if err := r.SetBodyParam(o.RoleAddRequest); err != nil {
 			return err
 		}
 	}

@@ -106,8 +106,7 @@ type SystemDetail struct {
 
 	// version
 	// Example: 1.0
-	// Required: true
-	Version *string `json:"version"`
+	Version string `json:"version,omitempty"`
 }
 
 // Validate validates this system detail
@@ -147,10 +146,6 @@ func (m *SystemDetail) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateVersion(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -281,15 +276,6 @@ func (m *SystemDetail) validateID(formats strfmt.Registry) error {
 func (m *SystemDetail) validateName(formats strfmt.Registry) error {
 
 	if err := validate.Required("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *SystemDetail) validateVersion(formats strfmt.Registry) error {
-
-	if err := validate.Required("version", "body", m.Version); err != nil {
 		return err
 	}
 

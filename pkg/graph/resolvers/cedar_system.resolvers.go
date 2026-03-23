@@ -6,7 +6,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"slices"
 	"sync"
 
@@ -123,13 +122,8 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID
 	if err != nil {
 		return nil, err
 	}
-	withOA := AttachOAStatus(ctx, r.cedarCoreClient, []*models.CedarSystem{cedarSystem})
 
-	if len(withOA) < 1 {
-		return nil, fmt.Errorf("expected 1 system back when attaching OA status, got %[1]d for system %[2]s", len(withOA), cedarSystemID)
-	}
-
-	return withOA[0], nil
+	return cedarSystem, nil
 }
 
 // CedarSystems is the resolver for the cedarSystems field.
@@ -139,7 +133,7 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 		return nil, err
 	}
 
-	return AttachOAStatus(ctx, r.cedarCoreClient, systems), nil
+	return systems, nil
 }
 
 // MyCedarSystems is the resolver for the myCedarSystems field.
@@ -150,7 +144,7 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 		return nil, err
 	}
 
-	return AttachOAStatus(ctx, r.cedarCoreClient, systems), nil
+	return systems, nil
 }
 
 // CedarSystemDetails is the resolver for the cedarSystemDetails field.
