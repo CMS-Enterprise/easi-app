@@ -112,63 +112,61 @@ const AppRoutes = () => {
         <LinkedSystemsForm />
       </SecureRoute>
 
-      <Switch>
-        <SecureRoute
-          path="/governance-overview/:systemId?"
-          component={GovernanceOverview}
-        />
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskList}
-        />
-        <SecureRoute
-          path="/governance-task-list/:systemId/feedback"
-          exact
-          component={GovernanceFeedback}
-        />
-        <SecureRoute
-          exact
-          path="/governance-task-list/:systemId/prepare-for-grt"
-          component={PrepareForGRT}
-        />
-        <SecureRoute
-          exact
-          path="/governance-task-list/:systemId/prepare-for-grb"
-          component={PrepareForGRB}
-        />
-        <SecureRoute
-          exact
-          path="/governance-task-list/:systemId/request-decision"
-          component={RequestDecision}
-        />
-        <SecureRoute
-          exact
-          path="/governance-task-list/:systemId/lcid-info"
-          component={LcidInfo}
-        />
-        <SecureRoute
-          exact
-          path="/governance-task-list/:systemId/presentation-deck-upload"
-          render={() => (
-            <MainContent>
-              <GridContainer>
-                <PresentationDeckUpload type="requester" />
-              </GridContainer>
-            </MainContent>
-          )}
-        />
-        <Redirect
-          exact
-          from="/system/:systemId"
-          to="/system/:systemId/contact-details"
-        />
-        <SecureRoute
-          path="/system/:systemId/:formPage/:subPage?"
-          component={SystemIntake}
-        />
-      </Switch>
+      <SecureRoute
+        path="/governance-overview/:systemId?"
+        component={GovernanceOverview}
+      />
+      <SecureRoute
+        path="/governance-task-list/:systemId"
+        exact
+        component={GovernanceTaskList}
+      />
+      <SecureRoute
+        path="/governance-task-list/:systemId/feedback"
+        exact
+        component={GovernanceFeedback}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grt"
+        component={PrepareForGRT}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grb"
+        component={PrepareForGRB}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/request-decision"
+        component={RequestDecision}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/lcid-info"
+        component={LcidInfo}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/presentation-deck-upload"
+        render={() => (
+          <MainContent>
+            <GridContainer>
+              <PresentationDeckUpload type="requester" />
+            </GridContainer>
+          </MainContent>
+        )}
+      />
 
+      <Redirect
+        exact
+        from="/system/:systemId"
+        to="/system/:systemId/contact-details"
+      />
+      <SecureRoute
+        path="/system/:systemId/:formPage/:subPage?"
+        component={SystemIntake}
+      />
       <SecureRoute exact path="/systems" component={SystemList} />
 
       <Route
