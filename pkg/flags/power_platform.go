@@ -9,6 +9,6 @@ import (
 const key = "enablePowerPlatform"
 
 func PowerPlatformEnabled(ctx context.Context, client *ld.LDClient) (bool, error) {
-	return false, nil
-	//return client.BoolVariation(key, Principal(ctx), false)
+	//return false, nil
+	return client.BoolVariation(key, Principal(ctx), false)
 }
