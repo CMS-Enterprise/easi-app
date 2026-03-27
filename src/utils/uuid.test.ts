@@ -44,4 +44,19 @@ describe('isValidUUID', () => {
   it('returns false for an empty string', () => {
     expect(isValidUUID('')).toBe(false);
   });
+
+  it('returns false for a valid UUID with trailing whitespace', () => {
+    const uuidWithTrailing = '550e8400-e29b-41d4-a716-446655440000 ';
+    expect(isValidUUID(uuidWithTrailing)).toBe(false);
+  });
+
+  it('returns false for a valid UUID with leading whitespace', () => {
+    const uuidWithLeading = ' 550e8400-e29b-41d4-a716-446655440000';
+    expect(isValidUUID(uuidWithLeading)).toBe(false);
+  });
+
+  it('returns false for a valid UUID wrapped in curly braces', () => {
+    const uuidWithBraces = '{550e8400-e29b-41d4-a716-446655440000}';
+    expect(isValidUUID(uuidWithBraces)).toBe(false);
+  });
 });
