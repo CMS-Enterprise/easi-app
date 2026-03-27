@@ -6,6 +6,8 @@ import { Mock, vi } from 'vitest';
 
 import PowerPlatformFlagWrapper from './PowerPlatformFlagWrapper';
 
+const validUUID = '550e8400-e29b-41d4-a716-446655440000';
+
 // mock launchdarkly with a function created inside the factory to avoid hoisting errors
 vi.mock('launchdarkly-react-client-sdk', () => ({
   useFlags: vi.fn()
@@ -44,7 +46,7 @@ describe('PowerPlatformFlagWrapper', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/it-governance/12345']}>
+      <MemoryRouter initialEntries={[`/it-governance/${validUUID}`]}>
         <Route path="/it-governance/:intakeId">
           <PowerPlatformFlagWrapper />
         </Route>
@@ -76,13 +78,32 @@ describe('PowerPlatformFlagWrapper', () => {
     expect(window.location.href).not.toBe('');
   });
 
+  it('does nothing when an invalid uuid is passed, even when the flag is enabled', () => {
+    (useFlags as Mock).mockReturnValue({
+      enablePowerPlatform: true
+    });
+
+    render(
+      <MemoryRouter initialEntries={[`/it-governance/123`]}>
+        <Route path="/it-governance/:intakeId">
+          <PowerPlatformFlagWrapper />
+        </Route>
+      </MemoryRouter>
+    );
+
+    // should not render loading screen when invalid id
+    expect(screen.queryByTestId('page-loading')).toBeNull();
+    // location href should be empty
+    expect(window.location.href).toBe('');
+  });
+
   it('does nothing when flag disabled', () => {
     (useFlags as Mock).mockReturnValue({
       enablePowerPlatform: false
     });
 
     render(
-      <MemoryRouter initialEntries={['/it-governance/12345']}>
+      <MemoryRouter initialEntries={[`/it-governance/${validUUID}`]}>
         <Route path="/it-governance/:intakeId">
           <PowerPlatformFlagWrapper />
         </Route>

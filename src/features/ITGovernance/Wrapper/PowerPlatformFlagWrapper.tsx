@@ -16,11 +16,11 @@ function PowerPlatformFlagWrapper({ match }: RouteComponentProps<params>) {
   const location = useLocation();
 
   const shouldRedirect =
-    (intakeId.length > 0 && isValidUUID(intakeId)) ||
+    (intakeId?.length > 0 && isValidUUID(intakeId)) ||
     location.pathname === '/system/request-type';
 
   if (flags.enablePowerPlatform && shouldRedirect) {
-    const link = powerPlatformLink(intakeId.length > 0 ? intakeId : undefined);
+    const link = powerPlatformLink(intakeId?.length > 0 ? intakeId : undefined);
     if (link.length > 0) {
       window.location.href = link;
       return <PageLoading fullScreen />;
