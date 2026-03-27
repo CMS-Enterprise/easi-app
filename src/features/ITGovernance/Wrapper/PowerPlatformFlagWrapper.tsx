@@ -5,9 +5,13 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import PageLoading from 'components/PageLoading';
 
 function powerPlatformLink(id?: string): string {
-  let env = process.env.NODE_ENV;
-  if (import.meta.env.NODE_ENV.length > 0) {
-    env = import.meta.env.NODE_ENV.length;
+  let env: string = process.env.NODE_ENV || '';
+  if (import.meta?.env?.NODE_ENV?.length > 0) {
+    env = import.meta.env.NODE_ENV;
+  }
+
+  if (env.length < 1) {
+    return '';
   }
 
   let idSuffix = '';
