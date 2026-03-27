@@ -6,12 +6,12 @@ import { Mock, vi } from 'vitest';
 
 import PowerPlatformFlagWrapper from './PowerPlatformFlagWrapper';
 
-// Mock launchdarkly with a function created inside the factory to avoid hoisting errors
+// mock launchdarkly with a function created inside the factory to avoid hoisting errors
 vi.mock('launchdarkly-react-client-sdk', () => ({
   useFlags: vi.fn()
 }));
 
-// Mock the powerPlatformLink util so tests don't rely on NODE_ENV or environment
+// mock the powerPlatformLink util so tests don't rely on NODE_ENV or environment
 vi.mock('../../../utils/powerPlatformLink', () => ({
   default: () => 'https://example.com'
 }));
@@ -91,6 +91,7 @@ describe('PowerPlatformFlagWrapper', () => {
 
     // should not render loader
     expect(screen.queryByTestId('page-loading')).toBeNull();
+    // location href should be empty
     expect(window.location.href).toBe('');
   });
 });

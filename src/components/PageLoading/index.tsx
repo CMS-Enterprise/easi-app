@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 import Spinner from 'components/Spinner';
@@ -53,7 +53,7 @@ const PageLoading: React.FC<PageLoadingProps> = ({ fullScreen = false }) => {
   );
 
   if (fullScreen && portalEl) {
-    return ReactDOM.createPortal(content, portalEl);
+    return createPortal(content, portalEl);
   }
 
   return content;
