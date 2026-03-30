@@ -8,14 +8,9 @@ describe('PageLoading', () => {
     cleanup();
   });
 
-  it('renders inline without errors', () => {
-    render(<PageLoading />);
-    expect(screen.getByTestId('page-loading')).toBeInTheDocument();
-  });
-
-  it('renders fullScreen into document.body and locks body scroll while mounted', () => {
+  it('renders into document.body and locks body scroll while mounted', () => {
     const prevOverflow = document.body.style.overflow;
-    const { unmount } = render(<PageLoading fullScreen />);
+    const { unmount } = render(<PageLoading />);
 
     const el = screen.getByTestId('page-loading');
     expect(el).toBeInTheDocument();

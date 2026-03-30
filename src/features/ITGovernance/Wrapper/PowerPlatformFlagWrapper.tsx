@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteComponentProps, useLocation, withRouter } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
@@ -10,8 +10,8 @@ interface params {
   intakeId: string;
 }
 
-function PowerPlatformFlagWrapper({ match }: RouteComponentProps<params>) {
-  const { intakeId } = match.params;
+function PowerPlatformFlagWrapper() {
+  const { intakeId } = useParams<params>();
   const flags = useFlags();
   const location = useLocation();
 
@@ -23,11 +23,11 @@ function PowerPlatformFlagWrapper({ match }: RouteComponentProps<params>) {
     const link = powerPlatformLink(intakeId?.length > 0 ? intakeId : undefined);
     if (link.length > 0) {
       window.location.href = link;
-      return <PageLoading fullScreen />;
+      return <PageLoading />;
     }
   }
 
   return null;
 }
 
-export default withRouter(PowerPlatformFlagWrapper);
+export default PowerPlatformFlagWrapper;
