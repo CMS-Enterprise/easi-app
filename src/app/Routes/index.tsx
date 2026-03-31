@@ -25,7 +25,6 @@ import GovernanceFeedback from 'features/ITGovernance/Requester/TaskList/Feedbac
 import LcidInfo from 'features/ITGovernance/Requester/TaskList/LcidInfo';
 import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import RequestDecision from 'features/ITGovernance/Requester/TaskList/RequestDecision';
-import PowerPlatformFlagWrapper from 'features/ITGovernance/Wrapper/PowerPlatformFlagWrapper';
 import LinkedSystems from 'features/LinkedSystems';
 import LinkedSystemsForm from 'features/LinkedSystems/LinkedSystemsForm';
 import Login from 'features/Login';
@@ -58,6 +57,7 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 
+import PowerPlatformRedirect from '../../features/ITGovernance/Wrapper/PowerPlatformRedirect';
 import SystemIDWrapper from '../../features/Systems/Wrapper/SystemIDWrapper';
 import shouldScroll from '../../utils/scrollConfig';
 
@@ -83,17 +83,22 @@ const AppRoutes = () => {
 
   return (
     <Switch>
-      <SecureRoute
-        path={[
-          '/governance-overview/:intakeId(.*)',
-          '/governance-task-list/:intakeId(.*)',
-          '/it-governance/:intakeId(.*)',
-          '/system/:intakeId(.*)',
-          '/system/request-type'
-        ]}
-      >
-        <PowerPlatformFlagWrapper />
-      </SecureRoute>
+      {flags.enablePowerPlatform && (
+        <Route
+          path={[
+            // must put this first to avoid matching `request-type` to the `:intakeId` variable
+            '/system/request-type',
+
+            // routes with the variable must remain at the bottom of the list
+            '/linked-systems-form/:intakeId(.*)',
+            '/governance-overview/:intakeId(.*)',
+            '/governance-task-list/:intakeId(.*)',
+            '/it-governance/:intakeId(.*)',
+            '/system/:intakeId(.*)'
+          ]}
+          component={PowerPlatformRedirect}
+        />
+      )}
       {/* General Routes */}
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />

@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { Mock, vi } from 'vitest';
 
-import PowerPlatformFlagWrapper from './PowerPlatformFlagWrapper';
+import PowerPlatformRedirect from './PowerPlatformRedirect';
 
 const validUUID = '550e8400-e29b-41d4-a716-446655440000';
 
@@ -48,7 +48,7 @@ describe('PowerPlatformFlagWrapper', () => {
     render(
       <MemoryRouter initialEntries={[`/it-governance/${validUUID}`]}>
         <Route path="/it-governance/:intakeId">
-          <PowerPlatformFlagWrapper />
+          <PowerPlatformRedirect />
         </Route>
       </MemoryRouter>
     );
@@ -67,7 +67,7 @@ describe('PowerPlatformFlagWrapper', () => {
     render(
       <MemoryRouter initialEntries={['/system/request-type']}>
         <Route path="/system/request-type">
-          <PowerPlatformFlagWrapper />
+          <PowerPlatformRedirect />
         </Route>
       </MemoryRouter>
     );
@@ -86,7 +86,7 @@ describe('PowerPlatformFlagWrapper', () => {
     render(
       <MemoryRouter initialEntries={[`/it-governance/123`]}>
         <Route path="/it-governance/:intakeId">
-          <PowerPlatformFlagWrapper />
+          <PowerPlatformRedirect />
         </Route>
       </MemoryRouter>
     );
@@ -105,7 +105,7 @@ describe('PowerPlatformFlagWrapper', () => {
     render(
       <MemoryRouter initialEntries={[`/it-governance/${validUUID}`]}>
         <Route path="/it-governance/:intakeId">
-          <PowerPlatformFlagWrapper />
+          <PowerPlatformRedirect />
         </Route>
       </MemoryRouter>
     );
