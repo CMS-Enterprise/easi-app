@@ -14,11 +14,7 @@ function PowerPlatformRedirect() {
 
   const validIntakeID = intakeId?.length > 0 && isValidUUID(intakeId);
 
-  if (!validIntakeID) {
-    return null;
-  }
-
-  const link = powerPlatformLink(intakeId?.length > 0 ? intakeId : undefined);
+  const link = powerPlatformLink(validIntakeID ? intakeId : undefined);
   if (link.length > 0) {
     window.location.href = link;
     return <PageLoading />;

@@ -94,7 +94,7 @@ const AppRoutes = () => {
             '/governance-overview/:intakeId(.*)',
             '/governance-task-list/:intakeId(.*)',
             '/it-governance/:intakeId(.*)',
-            '/system/:intakeId(.*)'
+            '/system/:intakeId([0-9a-fA-F]{8}-.*)'
           ]}
           component={PowerPlatformRedirect}
         />
