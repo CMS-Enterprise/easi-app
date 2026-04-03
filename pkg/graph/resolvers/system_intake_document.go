@@ -72,12 +72,8 @@ func CreateSystemIntakeDocument(
 		return nil, err
 	}
 
-	uploaderRole, err := getUploaderRole(ctx, intake)
+	uploaderRole, err := verifyCreateRequest(ctx, intake)
 	if err != nil {
-		return nil, err
-	}
-
-	if err := allowCreate(ctx, uploaderRole, intake); err != nil {
 		return nil, err
 	}
 
@@ -202,23 +198,28 @@ func getUploaderRole(ctx context.Context, intake *models.SystemIntake) (models.D
 		return models.AdminUploaderRole, nil
 	}
 
-	appcontext.ZLogger(ctx).Warn("unauthorized user attempted to create system intake document",
+	appcontext.ZLogger(ctx).Warn("unable to get uploader role",
 		zap.String("username", user.Username),
 		zap.String("system_intake.id", intake.ID.String()))
 
-	return "", errors.New("unauthorized attempt to create system intake document")
+	return "", errors.New("unable to get uploader role")
 }
 
-func allowCreate(ctx context.Context, role models.DocumentUploaderRole, intake *models.SystemIntake) error {
+func verifyCreateRequest(ctx context.Context, intake *models.SystemIntake) (models.DocumentUploaderRole, error) {
+	role, err := getUploaderRole(ctx, intake)
+	if err != nil {
+		return "", err
+	}
+
 	if role == models.RequesterUploaderRole || role == models.AdminUploaderRole {
-		return nil
+		return role, nil
 	}
 
 	appcontext.ZLogger(ctx).Warn("unauthorized user attempted to create system intake document",
 		zap.String("username", appcontext.Principal(ctx).Account().Username),
 		zap.String("system_intake.id", intake.ID.String()))
 
-	return errors.New("unauthorized attempt to create system intake document")
+	return "", errors.New("unauthorized attempt to create system intake document")
 }
 
 // CanDeleteDocument determines if a user can delete a document
