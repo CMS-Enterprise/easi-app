@@ -72,7 +72,7 @@ func CreateSystemIntakeDocument(
 		return nil, err
 	}
 
-	uploaderRole, err := verifyCreateRequest(ctx, intake)
+	uploaderRole, err := allowCreate(ctx, intake)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +214,7 @@ func getUploaderRole(ctx context.Context, intake *models.SystemIntake) (models.D
 	return "", errors.New("unable to get uploader role")
 }
 
-func verifyCreateRequest(ctx context.Context, intake *models.SystemIntake) (models.DocumentUploaderRole, error) {
+func allowCreate(ctx context.Context, intake *models.SystemIntake) (models.DocumentUploaderRole, error) {
 	role, err := getUploaderRole(ctx, intake)
 	if err != nil {
 		return "", err

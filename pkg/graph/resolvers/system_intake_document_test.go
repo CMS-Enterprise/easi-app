@@ -9,17 +9,13 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
-	ctx := s.testConfigs.Context
-
 	// Create a system intake
-	intake, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &models.SystemIntake{
-		RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
+	intake := s.createNewIntakeWithResolver(func(si *models.SystemIntake) {
+		si.RequestType = models.SystemIntakeRequestTypeMAJORCHANGES
 	})
-	s.NoError(err)
 	s.NotNil(intake)
 
 	// Check that there are no docs by default
@@ -37,7 +33,6 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 		S3Key:              uuid.NewString(),
 		UploaderRole:       models.RequesterUploaderRole,
 	}
-	// documentToCreate.CreatedBy will be set based on principal in test config
 
 	createdDocument := createSystemIntakeDocumentSubtest(s, intake.ID, documentToCreate)
 	getSystemIntakeDocumentsByRequestIDSubtest(s, intake.ID, createdDocument)
