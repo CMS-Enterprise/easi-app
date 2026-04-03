@@ -190,7 +190,16 @@ func allowView(ctx context.Context, store *storage.Store, s3Key string) error {
 func getUploaderRole(ctx context.Context, intake *models.SystemIntake) (models.DocumentUploaderRole, error) {
 	// check requester first as that role takes precedence over admin role for uploader roles
 	user := appcontext.Principal(ctx).Account()
-	if intake.EUAUserID.String == user.Username {
+	requester, err := dataloaders.SystemIntakeContactGetRequester(ctx, intake.ID)
+	if err != nil {
+		return "", err
+	}
+
+	if requester == nil {
+		return "", errors.New("unable to get requester for uploader role")
+	}
+
+	if requester.UserID == user.ID {
 		return models.RequesterUploaderRole, nil
 	}
 
