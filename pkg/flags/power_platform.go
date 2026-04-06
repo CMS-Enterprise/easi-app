@@ -7,8 +7,10 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
 
-const key = "enablePowerPlatform"
-const PowerPlatformSystemIntakeEditingDeniedMessage = "system intake editing from directly within EASi is not permitted to Power Platform enabled users"
+const (
+	key                                           = "enablePowerPlatform"
+	PowerPlatformSystemIntakeEditingDeniedMessage = "system intake editing from directly within EASi is not permitted to Power Platform enabled users"
+)
 
 var ErrPowerPlatformSystemIntakeEditingDenied = errors.New(PowerPlatformSystemIntakeEditingDeniedMessage)
 
