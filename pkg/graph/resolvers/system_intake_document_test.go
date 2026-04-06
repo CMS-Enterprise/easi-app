@@ -3,6 +3,9 @@ package resolvers
 import (
 	"bytes"
 	"context"
+	"errors"
+	"strings"
+	"testing"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
@@ -15,6 +18,53 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
+
+func newResolveUploaderRoleContext(principalID uuid.UUID, isAdmin bool, contacts []*models.SystemIntakeContact, loadErr error) context.Context {
+	ctx := context.Background()
+	principal := &authentication.EUAPrincipal{
+		EUAID:      "TEST",
+		JobCodeGRT: isAdmin,
+		UserAccount: &authentication.UserAccount{
+			ID:       principalID,
+			Username: "TEST",
+		},
+	}
+	ctx = appcontext.WithPrincipal(ctx, principal)
+
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		dl := dataloaders.NewDataloaders(
+			nil,
+			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+		)
+		dl.SystemIntakeContactsBySystemIntakeID = dataloadgen.NewLoader(func(ctx context.Context, ids []uuid.UUID) ([][]*models.SystemIntakeContact, []error) {
+			if loadErr != nil {
+				return nil, []error{loadErr}
+			}
+			results := make([][]*models.SystemIntakeContact, len(ids))
+			for i := range ids {
+				results[i] = contacts
+			}
+			return results, nil
+		})
+		return dl
+	}
+
+	return dataloaders.CTXWithLoaders(ctx, buildDataloaders)
+}
+
+func newResolveUploaderRoleContextWithoutDataloaders(principalID uuid.UUID, isAdmin bool) context.Context {
+	ctx := context.Background()
+	principal := &authentication.EUAPrincipal{
+		EUAID:      "TEST",
+		JobCodeGRT: isAdmin,
+		UserAccount: &authentication.UserAccount{
+			ID:       principalID,
+			Username: "TEST",
+		},
+	}
+	return appcontext.WithPrincipal(ctx, principal)
+}
 
 func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	// Create a system intake
@@ -44,24 +94,58 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	deleteSystemIntakeDocumentSubtest(s, createdDocument)
 }
 
-func (s *ResolverSuite) TestShouldSend() {
-	// only admins can send, and only if admin selected "Yes" for sending notification
-	s.True(shouldSend(models.AdminUploaderRole, helpers.PointerTo(true)))
+func TestShouldSend(t *testing.T) {
+	testCases := []struct {
+		name         string
+		role         models.DocumentUploaderRole
+		send         *bool
+		expectResult bool
+	}{
+		{
+			name:         "admin selected yes",
+			role:         models.AdminUploaderRole,
+			send:         helpers.PointerTo(true),
+			expectResult: true,
+		},
+		{
+			name:         "admin selected no",
+			role:         models.AdminUploaderRole,
+			send:         helpers.PointerTo(false),
+			expectResult: false,
+		},
+		{
+			name:         "admin did not make a selection",
+			role:         models.AdminUploaderRole,
+			send:         nil,
+			expectResult: false,
+		},
+		{
+			name:         "requester selected yes",
+			role:         models.RequesterUploaderRole,
+			send:         helpers.PointerTo(true),
+			expectResult: false,
+		},
+		{
+			name:         "requester selected no",
+			role:         models.RequesterUploaderRole,
+			send:         helpers.PointerTo(false),
+			expectResult: false,
+		},
+		{
+			name:         "requester did not make a selection",
+			role:         models.RequesterUploaderRole,
+			send:         nil,
+			expectResult: false,
+		},
+	}
 
-	// admin has selected "No"
-	s.False(shouldSend(models.AdminUploaderRole, helpers.PointerTo(false)))
-
-	// admin did not make a selection (currently not a possible path via UI, but just in case that changes)
-	s.False(shouldSend(models.AdminUploaderRole, nil))
-
-	// a requester has selected to send (currently not a possible path via UI - only admins can make this choice)
-	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(true)))
-
-	// a requester has selected not to send (currently not a possible path via UI, but will still result in no-send)
-	s.False(shouldSend(models.RequesterUploaderRole, helpers.PointerTo(false)))
-
-	// normal path for a requester, no selection would be made (only allowed path via UI)
-	s.False(shouldSend(models.RequesterUploaderRole, nil))
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := shouldSend(tc.role, tc.send); got != tc.expectResult {
+				t.Fatalf("expected shouldSend(%q) to be %t, got %t", tc.role, tc.expectResult, got)
+			}
+		})
+	}
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
@@ -110,154 +194,94 @@ func getSystemIntakeDocumentsByRequestIDSubtest(s *ResolverSuite, systemIntakeID
 	// TODO - try downloading fetchedDocument.URL? compare content to fileToUpload from create subtest?
 }
 
-func (s *ResolverSuite) setupContext(principalID uuid.UUID, isAdmin bool, contacts []*models.SystemIntakeContact) context.Context {
-	ctx := context.Background()
-	principal := &authentication.EUAPrincipal{
-		EUAID:      "TEST",
-		JobCodeGRT: isAdmin,
-		UserAccount: &authentication.UserAccount{
-			ID:       principalID,
-			Username: "TEST",
+func TestResolveUploaderRole(t *testing.T) {
+	intakeID := uuid.New()
+	userID := uuid.New()
+
+	intake := &models.SystemIntake{
+		ID: intakeID,
+	}
+
+	requesterContact := models.NewSystemIntakeContact(userID, uuid.New())
+	requesterContact.SystemIntakeID = intakeID
+	requesterContact.IsRequester = true
+
+	otherRequesterContact := models.NewSystemIntakeContact(uuid.New(), uuid.New())
+	otherRequesterContact.SystemIntakeID = intakeID
+	otherRequesterContact.IsRequester = true
+
+	testCases := []struct {
+		name              string
+		ctx               context.Context
+		expectRole        models.DocumentUploaderRole
+		expectErrContains string
+	}{
+		{
+			name:       "user is requester",
+			ctx:        newResolveUploaderRoleContext(userID, false, []*models.SystemIntakeContact{requesterContact}, nil),
+			expectRole: models.RequesterUploaderRole,
+		},
+		{
+			name:       "user is not requester but is admin",
+			ctx:        newResolveUploaderRoleContext(userID, true, []*models.SystemIntakeContact{otherRequesterContact}, nil),
+			expectRole: models.AdminUploaderRole,
+		},
+		{
+			name:       "user is requester and admin",
+			ctx:        newResolveUploaderRoleContext(userID, true, []*models.SystemIntakeContact{requesterContact}, nil),
+			expectRole: models.AdminUploaderRole,
+		},
+		{
+			name:       "admin short-circuits before requester lookup",
+			ctx:        newResolveUploaderRoleContextWithoutDataloaders(userID, true),
+			expectRole: models.AdminUploaderRole,
+		},
+		{
+			name:              "user is neither requester nor admin",
+			ctx:               newResolveUploaderRoleContext(userID, false, []*models.SystemIntakeContact{otherRequesterContact}, nil),
+			expectErrContains: "user is not authorized to upload system intake documents",
+		},
+		{
+			name:       "requester not found for admin",
+			ctx:        newResolveUploaderRoleContext(userID, true, []*models.SystemIntakeContact{}, nil),
+			expectRole: models.AdminUploaderRole,
+		},
+		{
+			name:              "requester not found and user is not admin",
+			ctx:               newResolveUploaderRoleContext(userID, false, []*models.SystemIntakeContact{}, nil),
+			expectErrContains: "system intake requester not found",
+		},
+		{
+			name:              "requester lookup error",
+			ctx:               newResolveUploaderRoleContext(userID, false, nil, errors.New("boom")),
+			expectErrContains: "fetching system intake requester",
 		},
 	}
-	ctx = appcontext.WithPrincipal(ctx, principal)
 
-	buildDataloaders := func() *dataloaders.Dataloaders {
-		dl := dataloaders.NewDataloaders(
-			nil,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
-		)
-		// Mock the SystemIntakeContactsBySystemIntakeID dataloader
-		dl.SystemIntakeContactsBySystemIntakeID = dataloadgen.NewLoader(func(ctx context.Context, ids []uuid.UUID) ([][]*models.SystemIntakeContact, []error) {
-			results := make([][]*models.SystemIntakeContact, len(ids))
-			for i := range ids {
-				results[i] = contacts
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			role, err := resolveUploaderRole(tc.ctx, intake)
+			if tc.expectErrContains != "" {
+				if err == nil {
+					t.Fatalf("expected error containing %q, got nil", tc.expectErrContains)
+				}
+				if !strings.Contains(err.Error(), tc.expectErrContains) {
+					t.Fatalf("expected error containing %q, got %q", tc.expectErrContains, err.Error())
+				}
+				if role != models.DocumentUploaderRole("") {
+					t.Fatalf("expected empty role, got %q", role)
+				}
+				return
 			}
-			return results, nil
+
+			if err != nil {
+				t.Fatalf("expected no error, got %v", err)
+			}
+			if role != tc.expectRole {
+				t.Fatalf("expected role %q, got %q", tc.expectRole, role)
+			}
 		})
-		return dl
 	}
-	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
-	return ctx
-}
-
-func (s *ResolverSuite) TestGetUploaderRole() {
-	intakeID := uuid.New()
-	userID := uuid.New()
-
-	intake := &models.SystemIntake{
-		ID: intakeID,
-	}
-
-	s.Run("User is requester", func() {
-		contact := models.NewSystemIntakeContact(userID, uuid.New())
-		contact.SystemIntakeID = intakeID
-		contact.IsRequester = true
-
-		contacts := []*models.SystemIntakeContact{contact}
-		ctx := s.setupContext(userID, false, contacts)
-
-		role, err := getUploaderRole(ctx, intake)
-		s.NoError(err)
-		s.Equal(models.RequesterUploaderRole, role)
-	})
-
-	s.Run("User is not requester but is admin", func() {
-		contact := models.NewSystemIntakeContact(uuid.New(), uuid.New())
-		contact.SystemIntakeID = intakeID
-		contact.IsRequester = true
-
-		contacts := []*models.SystemIntakeContact{contact}
-		ctx := s.setupContext(userID, true, contacts)
-
-		role, err := getUploaderRole(ctx, intake)
-		s.NoError(err)
-		s.Equal(models.AdminUploaderRole, role)
-	})
-
-	s.Run("User is neither requester nor admin", func() {
-		contact := models.NewSystemIntakeContact(uuid.New(), uuid.New())
-		contact.SystemIntakeID = intakeID
-		contact.IsRequester = true
-
-		contacts := []*models.SystemIntakeContact{contact}
-		ctx := s.setupContext(userID, false, contacts)
-
-		role, err := getUploaderRole(ctx, intake)
-		s.Error(err)
-		s.Equal(models.DocumentUploaderRole(""), role)
-		s.Contains(err.Error(), "unable to get uploader role")
-	})
-
-	s.Run("Requester not found", func() {
-		contacts := []*models.SystemIntakeContact{}
-		ctx := s.setupContext(userID, true, contacts)
-
-		role, err := getUploaderRole(ctx, intake)
-		s.Error(err)
-		s.Equal(models.DocumentUploaderRole(""), role)
-		s.Contains(err.Error(), "unable to get requester for uploader role")
-	})
-}
-
-func (s *ResolverSuite) TestAllowCreate() {
-	intakeID := uuid.New()
-	userID := uuid.New()
-
-	intake := &models.SystemIntake{
-		ID: intakeID,
-	}
-
-	s.Run("User is requester", func() {
-		contact := models.NewSystemIntakeContact(userID, uuid.New())
-		contact.SystemIntakeID = intakeID
-		contact.IsRequester = true
-
-		contacts := []*models.SystemIntakeContact{contact}
-		ctx := s.setupContext(userID, false, contacts)
-
-		role, err := allowCreate(ctx, intake)
-		s.NoError(err)
-		s.Equal(models.RequesterUploaderRole, role)
-	})
-
-	s.Run("User is not requester but is admin", func() {
-		contact := models.NewSystemIntakeContact(uuid.New(), uuid.New())
-		contact.SystemIntakeID = intakeID
-		contact.IsRequester = true
-
-		contacts := []*models.SystemIntakeContact{contact}
-		ctx := s.setupContext(userID, true, contacts)
-
-		role, err := allowCreate(ctx, intake)
-		s.NoError(err)
-		s.Equal(models.AdminUploaderRole, role)
-	})
-
-	s.Run("User is neither requester nor admin", func() {
-		contact := models.NewSystemIntakeContact(uuid.New(), uuid.New())
-		contact.SystemIntakeID = intakeID
-		contact.IsRequester = true
-
-		contacts := []*models.SystemIntakeContact{contact}
-		ctx := s.setupContext(userID, false, contacts)
-
-		role, err := allowCreate(ctx, intake)
-		s.Error(err)
-		s.Equal(models.DocumentUploaderRole(""), role)
-		s.Contains(err.Error(), "unable to get uploader role")
-	})
-
-	s.Run("Requester not found", func() {
-		contacts := []*models.SystemIntakeContact{}
-		ctx := s.setupContext(userID, true, contacts)
-
-		role, err := allowCreate(ctx, intake)
-		s.Error(err)
-		s.Equal(models.DocumentUploaderRole(""), role)
-		s.Contains(err.Error(), "unable to get requester for uploader role")
-	})
 }
 
 func deleteSystemIntakeDocumentSubtest(s *ResolverSuite, createdDocument *models.SystemIntakeDocument) {
