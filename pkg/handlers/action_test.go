@@ -23,6 +23,15 @@ func newMockCreateAction(err error) createAction {
 	}
 }
 
+func newMockCreateActionCapture(captured **models.Action, err error) createAction {
+	return func(ctx context.Context, action *models.Action) error {
+		if captured != nil {
+			*captured = action
+		}
+		return err
+	}
+}
+
 func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
@@ -93,5 +102,63 @@ func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusUnprocessableEntity, rr.Code)
+	})
+
+	s.Run("POST passes submit business case action payload through to service", func() {
+		body, err := json.Marshal(map[string]string{
+			"actionType": string(models.ActionTypeSUBMITBIZCASE),
+		})
+		s.NoError(err)
+
+		rr := httptest.NewRecorder()
+		req, reqErr := http.NewRequestWithContext(
+			requestContext,
+			"POST",
+			fmt.Sprintf("/system_intake/%s/actions", id.String()),
+			bytes.NewBuffer(body),
+		)
+		s.NoError(reqErr)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
+
+		var capturedAction *models.Action
+		ActionHandler{
+			HandlerBase:  s.base,
+			CreateAction: newMockCreateActionCapture(&capturedAction, nil),
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusCreated, rr.Code)
+		s.NotNil(capturedAction)
+		s.NotNil(capturedAction.IntakeID)
+		s.Equal(id, *capturedAction.IntakeID)
+		s.Equal(models.ActionTypeSUBMITBIZCASE, capturedAction.ActionType)
+	})
+
+	s.Run("POST passes submit final business case action payload through to service", func() {
+		body, err := json.Marshal(map[string]string{
+			"actionType": string(models.ActionTypeSUBMITFINALBIZCASE),
+		})
+		s.NoError(err)
+
+		rr := httptest.NewRecorder()
+		req, reqErr := http.NewRequestWithContext(
+			requestContext,
+			"POST",
+			fmt.Sprintf("/system_intake/%s/actions", id.String()),
+			bytes.NewBuffer(body),
+		)
+		s.NoError(reqErr)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
+
+		var capturedAction *models.Action
+		ActionHandler{
+			HandlerBase:  s.base,
+			CreateAction: newMockCreateActionCapture(&capturedAction, nil),
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusCreated, rr.Code)
+		s.NotNil(capturedAction)
+		s.NotNil(capturedAction.IntakeID)
+		s.Equal(id, *capturedAction.IntakeID)
+		s.Equal(models.ActionTypeSUBMITFINALBIZCASE, capturedAction.ActionType)
 	})
 }

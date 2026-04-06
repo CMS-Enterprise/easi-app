@@ -62,9 +62,14 @@ export const BusinessCase = () => {
   const location = useLocation<any>();
   const { t } = useTranslation('taskList');
 
-  const businessCase = useSelector(
-    (state: AppState) => state.businessCase.form
+  const businessCaseState = useSelector(
+    (state: AppState) => state.businessCase
   );
+  const {
+    form: businessCase,
+    isLoading: isBusinessCaseLoading,
+    isSaving
+  } = businessCaseState;
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
@@ -130,12 +135,29 @@ export const BusinessCase = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitting]);
 
-  if (flags.enablePowerPlatform) {
-    const validUUID =
-      businessCase?.systemIntakeId && isValidUUID(businessCase.systemIntakeId);
+  const validSystemIntakeId = isValidUUID(businessCase.systemIntakeId);
+  const isResolvingBusinessCase =
+    businessCaseId === 'new'
+      ? isSaving || !businessCase.id
+      : isBusinessCaseLoading === true ||
+        (isBusinessCaseLoading === null && !businessCase.id);
+
+  useEffect(() => {
+    if (!flags.enablePowerPlatform || isResolvingBusinessCase) {
+      return;
+    }
+
     window.location.href = powerPlatformLink(
-      validUUID ? businessCase.systemIntakeId : undefined
+      validSystemIntakeId ? businessCase.systemIntakeId : undefined
     );
+  }, [
+    flags.enablePowerPlatform,
+    businessCase.systemIntakeId,
+    isResolvingBusinessCase,
+    validSystemIntakeId
+  ]);
+
+  if (flags.enablePowerPlatform) {
     return <PageLoading />;
   }
 

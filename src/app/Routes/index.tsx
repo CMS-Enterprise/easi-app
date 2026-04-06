@@ -63,7 +63,7 @@ import shouldScroll from '../../utils/scrollConfig';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-const AppRoutes = () => {
+export const AppRoutes = () => {
   const location = useLocation();
   const flags = useFlags();
 
