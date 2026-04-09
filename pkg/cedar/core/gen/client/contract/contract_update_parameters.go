@@ -64,17 +64,17 @@ ContractUpdateParams contains all the parameters to send to the API endpoint
 */
 type ContractUpdateParams struct {
 
-	/* Body.
-
-	   An array of contracts to be updated in Alfabet.
-	*/
-	Body *models.ContractUpdateRequest
-
 	/* BudgetsOnly.
 
 	   Whether only the budgets portion of the contract should be updated or if set to false, the Contract Deliverable records will also be updated.
 	*/
 	BudgetsOnly *bool
+
+	/* ContractUpdateRequest.
+
+	   An array of contracts to be updated in Alfabet.
+	*/
+	ContractUpdateRequest *models.ContractUpdateRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -129,17 +129,6 @@ func (o *ContractUpdateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the contract update params
-func (o *ContractUpdateParams) WithBody(body *models.ContractUpdateRequest) *ContractUpdateParams {
-	o.SetBody(body)
-	return o
-}
-
-// SetBody adds the body to the contract update params
-func (o *ContractUpdateParams) SetBody(body *models.ContractUpdateRequest) {
-	o.Body = body
-}
-
 // WithBudgetsOnly adds the budgetsOnly to the contract update params
 func (o *ContractUpdateParams) WithBudgetsOnly(budgetsOnly *bool) *ContractUpdateParams {
 	o.SetBudgetsOnly(budgetsOnly)
@@ -151,6 +140,17 @@ func (o *ContractUpdateParams) SetBudgetsOnly(budgetsOnly *bool) {
 	o.BudgetsOnly = budgetsOnly
 }
 
+// WithContractUpdateRequest adds the contractUpdateRequest to the contract update params
+func (o *ContractUpdateParams) WithContractUpdateRequest(contractUpdateRequest *models.ContractUpdateRequest) *ContractUpdateParams {
+	o.SetContractUpdateRequest(contractUpdateRequest)
+	return o
+}
+
+// SetContractUpdateRequest adds the contractUpdateRequest to the contract update params
+func (o *ContractUpdateParams) SetContractUpdateRequest(contractUpdateRequest *models.ContractUpdateRequest) {
+	o.ContractUpdateRequest = contractUpdateRequest
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ContractUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -158,11 +158,6 @@ func (o *ContractUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
-			return err
-		}
-	}
 
 	if o.BudgetsOnly != nil {
 
@@ -178,6 +173,11 @@ func (o *ContractUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 			if err := r.SetQueryParam("budgetsOnly", qBudgetsOnly); err != nil {
 				return err
 			}
+		}
+	}
+	if o.ContractUpdateRequest != nil {
+		if err := r.SetBodyParam(o.ContractUpdateRequest); err != nil {
+			return err
 		}
 	}
 

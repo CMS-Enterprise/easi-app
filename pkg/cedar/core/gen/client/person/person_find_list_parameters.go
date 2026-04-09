@@ -61,6 +61,12 @@ PersonFindListParams contains all the parameters to send to the API endpoint
 */
 type PersonFindListParams struct {
 
+	/* Application.
+
+	   Application where the object or role exists.
+	*/
+	Application string
+
 	/* Email.
 
 	   A person's email.
@@ -150,6 +156,17 @@ func (o *PersonFindListParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithApplication adds the application to the person find list params
+func (o *PersonFindListParams) WithApplication(application string) *PersonFindListParams {
+	o.SetApplication(application)
+	return o
+}
+
+// SetApplication adds the application to the person find list params
+func (o *PersonFindListParams) SetApplication(application string) {
+	o.Application = application
+}
+
 // WithEmail adds the email to the person find list params
 func (o *PersonFindListParams) WithEmail(email *string) *PersonFindListParams {
 	o.SetEmail(email)
@@ -223,6 +240,16 @@ func (o *PersonFindListParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
+
+	// query param application
+	qrApplication := o.Application
+	qApplication := qrApplication
+	if qApplication != "" {
+
+		if err := r.SetQueryParam("application", qApplication); err != nil {
+			return err
+		}
+	}
 
 	if o.Email != nil {
 

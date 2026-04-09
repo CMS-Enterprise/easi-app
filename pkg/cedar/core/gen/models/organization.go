@@ -20,12 +20,12 @@ import (
 // swagger:model Organization
 type Organization struct {
 
-	// organization
-	Organization []*Organization `json:"Organization"`
+	// Child organizations in the hierarchy.
+	Organizations []*Organization `json:"Organizations"`
 
-	// acronymn
+	// acronym
 	// Example: CMS
-	Acronymn string `json:"acronymn,omitempty"`
+	Acronym string `json:"acronym,omitempty"`
 
 	// component
 	// Example: OFM
@@ -44,12 +44,6 @@ type Organization struct {
 	// Required: true
 	ID *string `json:"id"`
 
-	// is component
-	IsComponent bool `json:"isComponent,omitempty"`
-
-	// level
-	Level int32 `json:"level,omitempty"`
-
 	// name
 	// Example: Centers for Medicare and Medicaid Services
 	// Required: true
@@ -64,7 +58,7 @@ type Organization struct {
 func (m *Organization) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateOrganization(formats); err != nil {
+	if err := m.validateOrganizations(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -82,22 +76,22 @@ func (m *Organization) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Organization) validateOrganization(formats strfmt.Registry) error {
-	if swag.IsZero(m.Organization) { // not required
+func (m *Organization) validateOrganizations(formats strfmt.Registry) error {
+	if swag.IsZero(m.Organizations) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.Organization); i++ {
-		if swag.IsZero(m.Organization[i]) { // not required
+	for i := 0; i < len(m.Organizations); i++ {
+		if swag.IsZero(m.Organizations[i]) { // not required
 			continue
 		}
 
-		if m.Organization[i] != nil {
-			if err := m.Organization[i].Validate(formats); err != nil {
+		if m.Organizations[i] != nil {
+			if err := m.Organizations[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("Organization" + "." + strconv.Itoa(i))
+					return ve.ValidateName("Organizations" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Organization" + "." + strconv.Itoa(i))
+					return ce.ValidateName("Organizations" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -130,7 +124,7 @@ func (m *Organization) validateName(formats strfmt.Registry) error {
 func (m *Organization) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateOrganization(ctx, formats); err != nil {
+	if err := m.contextValidateOrganizations(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -140,21 +134,21 @@ func (m *Organization) ContextValidate(ctx context.Context, formats strfmt.Regis
 	return nil
 }
 
-func (m *Organization) contextValidateOrganization(ctx context.Context, formats strfmt.Registry) error {
+func (m *Organization) contextValidateOrganizations(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.Organization); i++ {
+	for i := 0; i < len(m.Organizations); i++ {
 
-		if m.Organization[i] != nil {
+		if m.Organizations[i] != nil {
 
-			if swag.IsZero(m.Organization[i]) { // not required
+			if swag.IsZero(m.Organizations[i]) { // not required
 				return nil
 			}
 
-			if err := m.Organization[i].ContextValidate(ctx, formats); err != nil {
+			if err := m.Organizations[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("Organization" + "." + strconv.Itoa(i))
+					return ve.ValidateName("Organizations" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Organization" + "." + strconv.Itoa(i))
+					return ce.ValidateName("Organizations" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

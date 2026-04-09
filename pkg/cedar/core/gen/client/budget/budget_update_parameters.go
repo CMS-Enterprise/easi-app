@@ -63,11 +63,11 @@ BudgetUpdateParams contains all the parameters to send to the API endpoint
 */
 type BudgetUpdateParams struct {
 
-	/* Body.
+	/* BudgetUpdateRequest.
 
 	   Budgets to be updated in CEDAR. This required input in a list of Budget documents (id, projectId, systemId, fundingId and funding).
 	*/
-	Body *models.BudgetUpdateRequest
+	BudgetUpdateRequest *models.BudgetUpdateRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *BudgetUpdateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the budget update params
-func (o *BudgetUpdateParams) WithBody(body *models.BudgetUpdateRequest) *BudgetUpdateParams {
-	o.SetBody(body)
+// WithBudgetUpdateRequest adds the budgetUpdateRequest to the budget update params
+func (o *BudgetUpdateParams) WithBudgetUpdateRequest(budgetUpdateRequest *models.BudgetUpdateRequest) *BudgetUpdateParams {
+	o.SetBudgetUpdateRequest(budgetUpdateRequest)
 	return o
 }
 
-// SetBody adds the body to the budget update params
-func (o *BudgetUpdateParams) SetBody(body *models.BudgetUpdateRequest) {
-	o.Body = body
+// SetBudgetUpdateRequest adds the budgetUpdateRequest to the budget update params
+func (o *BudgetUpdateParams) SetBudgetUpdateRequest(budgetUpdateRequest *models.BudgetUpdateRequest) {
+	o.BudgetUpdateRequest = budgetUpdateRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *BudgetUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.BudgetUpdateRequest != nil {
+		if err := r.SetBodyParam(o.BudgetUpdateRequest); err != nil {
 			return err
 		}
 	}
