@@ -1,5 +1,20 @@
 {
-  "flags": {},
+  "flags": {
+    "enablePowerPlatform": {
+      "key": "enablePowerPlatform",
+      "version": 1,
+      "on": false,
+      "variations": [
+        true,
+        false
+      ],
+      "fallthrough": {
+        "variation": 1
+      },
+      "offVariation": 1
+    }
+  },
+  "segments": {},
   "flagValues": {
   }
 }
