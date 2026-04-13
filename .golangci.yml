@@ -51,6 +51,10 @@ linters:
         linters: [staticcheck]
       - text: 'shadow: declaration of "err" shadows declaration at'
         linters: [govet]
+    rules:
+      - text: "SA1019" # Exclude deprecated usage warnings in go-swagger generated code; newer go-swagger still generates these calls
+        linters: [staticcheck]
+        path: "pkg/cedar/(core|intake)/gen/"
     paths:
       - "pkg/graph/generated/generated.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically
       - "pkg/models/models_gen.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically

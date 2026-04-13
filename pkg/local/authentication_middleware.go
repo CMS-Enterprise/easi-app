@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/99designs/gqlgen/graphql/handler/transport"
-	"github.com/go-openapi/swag"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -77,8 +77,8 @@ func devUserContext(ctx context.Context, authHeader string, store *storage.Store
 	princ := &authentication.EUAPrincipal{
 		EUAID:           strings.ToUpper(config.EUA),
 		JobCodeEASi:     true,
-		JobCodeGRT:      swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
-		JobCodeTRBAdmin: swag.ContainsStrings(config.JobCodes, "EASI_TRB_ADMIN_D"),
+		JobCodeGRT:      slices.Contains(config.JobCodes, "EASI_D_GOVTEAM"),
+		JobCodeTRBAdmin: slices.Contains(config.JobCodes, "EASI_TRB_ADMIN_D"),
 	}
 	localOktaClient := NewOktaAPIClient()
 
