@@ -20,6 +20,7 @@ import {
   SystemIntakeStep,
   useGetGovernanceTaskListQuery
 } from 'gql/generated/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
 import MainContent from 'components/MainContent';
@@ -32,6 +33,8 @@ import {
   postBusinessCase,
   putBusinessCase
 } from 'types/routines';
+import powerPlatformLink from 'utils/powerPlatformLink';
+import isValidUUID from 'utils/uuid';
 
 import AlternativeAnalysis from './AlternativeAnalysis';
 import {
@@ -48,6 +51,7 @@ import BusinessCaseView from './ViewOnly';
 import './index.scss';
 
 export const BusinessCase = () => {
+  const flags = useFlags();
   const history = useHistory();
   const { businessCaseId, formPage } = useParams<{
     businessCaseId: string;
@@ -58,9 +62,14 @@ export const BusinessCase = () => {
   const location = useLocation<any>();
   const { t } = useTranslation('taskList');
 
-  const businessCase = useSelector(
-    (state: AppState) => state.businessCase.form
+  const businessCaseState = useSelector(
+    (state: AppState) => state.businessCase
   );
+  const {
+    form: businessCase,
+    isLoading: isBusinessCaseLoading,
+    isSaving
+  } = businessCaseState;
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
@@ -125,6 +134,32 @@ export const BusinessCase = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitting]);
+
+  const validSystemIntakeId = isValidUUID(businessCase.systemIntakeId);
+  const isResolvingBusinessCase =
+    businessCaseId === 'new'
+      ? isSaving || !businessCase.id
+      : isBusinessCaseLoading === true ||
+        (isBusinessCaseLoading === null && !businessCase.id);
+
+  useEffect(() => {
+    if (!flags.enablePowerPlatform || isResolvingBusinessCase) {
+      return;
+    }
+
+    window.location.href = powerPlatformLink(
+      validSystemIntakeId ? businessCase.systemIntakeId : undefined
+    );
+  }, [
+    flags.enablePowerPlatform,
+    businessCase.systemIntakeId,
+    isResolvingBusinessCase,
+    validSystemIntakeId
+  ]);
+
+  if (flags.enablePowerPlatform) {
+    return <PageLoading />;
+  }
 
   return (
     <MainContent className="business-case margin-bottom-5">

@@ -248,6 +248,7 @@ func (s *Server) routes() {
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 	api.Use(requirePrincipalMiddleware)
+	api.Use(authorization.NewRequirePowerPlatformSystemIntakeEditingMiddleware(base, ldClient))
 
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,
@@ -282,6 +283,9 @@ func (s *Server) routes() {
 		services.NewTakeAction(
 			store.FetchSystemIntakeByID,
 			map[models.ActionType]services.ActionExecuter{
+				// These business case submit actions remain wired here for non-Power Platform users.
+				// When enablePowerPlatform is on, the REST middleware on /api/v1 blocks this route
+				// before the handler runs.
 				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
 					services.AuthorizeUserIsIntakeRequester,
