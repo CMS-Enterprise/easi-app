@@ -7,6 +7,7 @@ import (
 
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/flags"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -57,4 +58,8 @@ func NewResolver(
 		cedarCoreClient: cedarCoreClient,
 		pubsub:          ps,
 	}
+}
+
+func (r *Resolver) guardSystemIntakeEditing(ctx context.Context) error {
+	return flags.GuardSystemIntakeEditing(ctx, r.ldClient)
 }

@@ -47,6 +47,29 @@ func (s *ServicesTestSuite) TestNewTakeAction() {
 		s.Equal(submitError, err)
 	})
 
+	s.Run("routes submit final business case action to its executor", func() {
+		called := false
+		executor := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
+			called = true
+			s.Equal(models.ActionTypeSUBMITFINALBIZCASE, action.ActionType)
+			return nil
+		}
+
+		createAction := NewTakeAction(fetch, map[models.ActionType]ActionExecuter{
+			models.ActionTypeSUBMITFINALBIZCASE: executor,
+		})
+
+		id := uuid.New()
+		action := models.Action{
+			IntakeID:   &id,
+			ActionType: models.ActionTypeSUBMITFINALBIZCASE,
+		}
+
+		err := createAction(ctx, &action)
+		s.NoError(err)
+		s.True(called)
+	})
+
 	s.Run("returns ResourceConflictError if invalid action type", func() {
 		createAction := NewTakeAction(fetch, map[models.ActionType]ActionExecuter{})
 		id := uuid.New()
@@ -755,6 +778,75 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
+	})
+
+	s.Run("does not submit final business case data to CEDAR", func() {
+		sendRequesterEmailCount := 0
+		sendReviewerEmailCount := 0
+		validateForSubmitCount := 0
+		submitToCEDARCount := 0
+
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendRequesterEmailCount++
+			s.False(isDraft)
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendReviewerEmailCount++
+			s.False(isDraft)
+			return nil
+		}
+
+		validateFinalSubmit := func(businessCase *models.BusinessCaseWithCosts) error {
+			validateForSubmitCount++
+			return nil
+		}
+
+		submitToCEDARMock := func(ctx context.Context, bc models.BusinessCaseWithCosts) error {
+			submitToCEDARCount++
+			return nil
+		}
+
+		intake := models.SystemIntake{
+			Step: models.SystemIntakeStepFINALBIZCASE,
+		}
+		action := models.Action{ActionType: models.ActionTypeSUBMITFINALBIZCASE}
+
+		submitBusinessCase := NewSubmitBusinessCase(
+			serviceConfig,
+			authorized,
+			fetchOpenBusinessCase,
+			validateFinalSubmit,
+			saveAction,
+			updateIntake,
+			updateBusinessCase,
+			sendRequesterEmail,
+			sendReviewerEmail,
+			submitToCEDARMock,
+		)
+
+		err := submitBusinessCase(ctx, &intake, &action)
+
+		s.NoError(err)
+		s.Equal(1, validateForSubmitCount)
+		s.Equal(0, submitToCEDARCount)
+		s.Equal(1, sendRequesterEmailCount)
+		s.Equal(1, sendReviewerEmailCount)
+		s.Equal(models.SIRFSSubmitted, intake.FinalBusinessCaseState)
 	})
 }
 

@@ -57,12 +57,13 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 
+import PowerPlatformRedirect from '../../features/ITGovernance/Wrapper/PowerPlatformRedirect';
 import SystemIDWrapper from '../../features/Systems/Wrapper/SystemIDWrapper';
 import shouldScroll from '../../utils/scrollConfig';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-const AppRoutes = () => {
+export const AppRoutes = () => {
   const location = useLocation();
   const flags = useFlags();
 
@@ -82,6 +83,22 @@ const AppRoutes = () => {
 
   return (
     <Switch>
+      {flags.enablePowerPlatform && (
+        <Route
+          path={[
+            // must put this first to avoid matching `request-type` to the `:intakeId` variable
+            '/system/request-type',
+
+            // routes with the variable must remain at the bottom of the list
+            '/linked-systems-form/:intakeId(.*)',
+            '/governance-overview/:intakeId(.*)',
+            '/governance-task-list/:intakeId(.*)',
+            '/it-governance/:intakeId(.*)',
+            '/system/:intakeId([0-9a-fA-F]{8}-.*)'
+          ]}
+          component={PowerPlatformRedirect}
+        />
+      )}
       {/* General Routes */}
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
