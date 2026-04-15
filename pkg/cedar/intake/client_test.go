@@ -76,6 +76,39 @@ func TestClientTestSuite(t *testing.T) {
 	suite.Run(t, tests)
 }
 
+func TestPublishEveryWeekdayOnScheduleStopsWhenContextCanceled(t *testing.T) {
+	ctx, cancel := context.WithCancel(appcontext.WithLogger(context.Background(), zap.NewNop()))
+	cancel()
+
+	built := make(chan struct{}, 1)
+	done := make(chan struct{})
+
+	go func() {
+		defer close(done)
+		NewClient("fake", "fake", false, true).PublishEveryWeekdayOnSchedule(
+			ctx,
+			nil,
+			2,
+			func() *dataloaders.Dataloaders {
+				built <- struct{}{}
+				return nil
+			},
+		)
+	}()
+
+	select {
+	case <-done:
+	case <-time.After(100 * time.Millisecond):
+		t.Fatal("expected publish schedule to stop after context cancellation")
+	}
+
+	select {
+	case <-built:
+		t.Fatal("expected no dataloaders to be built after context cancellation")
+	default:
+	}
+}
+
 func (s *ClientTestSuite) TestClient() {
 	ctx := appcontext.WithLogger(s.ctx, s.logger)
 

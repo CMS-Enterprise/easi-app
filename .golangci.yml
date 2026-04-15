@@ -6,7 +6,8 @@ formatters:
     - goimports
   settings:
     goimports:
-      local-prefixes: github.com/cms-enterprise/easi-app
+      local-prefixes:
+        - github.com/cms-enterprise/easi-app
 
 linters:
   default: none
@@ -31,10 +32,10 @@ linters:
       settings:
         printf:
           funcs:
-            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
-            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
-            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
-            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+            - (github.com/golangci/golangci-lint/v2/pkg/logutils.Log).Infof
+            - (github.com/golangci/golangci-lint/v2/pkg/logutils.Log).Warnf
+            - (github.com/golangci/golangci-lint/v2/pkg/logutils.Log).Errorf
+            - (github.com/golangci/golangci-lint/v2/pkg/logutils.Log).Fatalf
     revive:
       confidence: 0.1 # Default is 0.8. We want to ignore things that have an extremely low confidence level
     exhaustive:
