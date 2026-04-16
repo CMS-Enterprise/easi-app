@@ -92,9 +92,8 @@ func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 		err := BusinessCaseForCreation(&businessCase, &intake)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
-		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCaseWithCosts : " +
-			"{\"SystemIntake\":\"must have already been submitted\"}",
-		)
+		expectedErrMessage := "Could not validate *models.BusinessCaseWithCosts : " +
+			"{\"SystemIntake\":\"must have already been submitted\"}"
 		s.Equal(expectedErrMessage, err.Error())
 	})
 

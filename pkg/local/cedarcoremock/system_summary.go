@@ -1,7 +1,7 @@
 package cedarcoremock
 
 import (
-	"fmt"
+	"errors"
 	"sort"
 	"time"
 
@@ -176,5 +176,5 @@ func IsMockSystem(systemID uuid.UUID) bool {
 
 // NoSystemFoundError returns the error generated from the CEDAR core client's GetSystem method
 func NoSystemFoundError() *apperrors.ResourceNotFoundError {
-	return &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
+	return &apperrors.ResourceNotFoundError{Err: errors.New("no system found"), Resource: models.CedarSystem{}}
 }

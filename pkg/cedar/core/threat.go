@@ -2,7 +2,7 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
@@ -58,7 +58,7 @@ func (c *Client) GetThreat(ctx context.Context, cedarSystemID uuid.UUID) ([]*mod
 	}
 
 	if resp.Payload == nil {
-		return []*models.CedarThreat{}, fmt.Errorf("no body received")
+		return []*models.CedarThreat{}, errors.New("no body received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct

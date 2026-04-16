@@ -53,6 +53,9 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		s.Equal(http.StatusUnauthorized, resp.StatusCode)
 	})
 
@@ -64,7 +67,9 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
 		actualBody, err := io.ReadAll(resp.Body)
@@ -91,6 +96,9 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		s.Equal(http.StatusUnauthorized, resp.StatusCode)
 	})
 
@@ -111,7 +119,9 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
 		actualBody, err := io.ReadAll(resp.Body)

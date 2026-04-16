@@ -17,7 +17,6 @@ import (
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -358,11 +357,11 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	// create 3 documents we can reference in admin notes
 	documentIDs := []uuid.UUID{}
 	scanStatus := "CLEAN"
-	for i := 0; i < 3; i++ {
+	for range 3 {
 		// new error variable to avoid issues with shadowing err from outer scope
 		doc, errAddDocument := s.addDocument(ctx, trb, &scanStatus)
 		if errAddDocument != nil {
-			return err
+			return errAddDocument
 		}
 		documentIDs = append(documentIDs, doc.ID)
 	}
@@ -619,11 +618,11 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 			// create 3 documents we can reference in admin notes
 			documentIDs := []uuid.UUID{}
 			scanStatus := "CLEAN"
-			for i := 0; i < 3; i++ {
+			for range 3 {
 				// new error variable to avoid issues with shadowing err from outer scope
 				doc, errAddDocument := s.addDocument(ctx, trbRequest, &scanStatus)
 				if errAddDocument != nil {
-					return err
+					return errAddDocument
 				}
 				documentIDs = append(documentIDs, doc.ID)
 			}
@@ -745,7 +744,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 		return nil, err
 	}
 
-	_, err = s.updateTRBRequestForm(ctx, map[string]interface{}{
+	_, err = s.updateTRBRequestForm(ctx, map[string]any{
 		"trbRequestId":             trb.ID,
 		"isSubmitted":              isSubmitted,
 		"component":                "Center for Medicare",
@@ -842,7 +841,7 @@ func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBReques
 	if err != nil {
 		return nil, err
 	}
-	attendee.Component = helpers.PointerTo("Center for Medicare (CM)")
+	attendee.Component = new("Center for Medicare (CM)")
 	_, err = resolvers.UpdateTRBRequestAttendee(ctx, s.store, attendee)
 	if err != nil {
 		return nil, err
@@ -856,7 +855,7 @@ func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBReques
 	return trb, nil
 }
 
-func (s *seederConfig) updateTRBRequestForm(ctx context.Context, changes map[string]interface{}) (*models.TRBRequestForm, error) {
+func (s *seederConfig) updateTRBRequestForm(ctx context.Context, changes map[string]any) (*models.TRBRequestForm, error) {
 	form, err := resolvers.UpdateTRBRequestForm(ctx, s.store, nil, mock.FetchUserInfoMock, changes)
 	if err != nil {
 		return nil, err
@@ -945,7 +944,7 @@ func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBReq
 		return nil, outsideErr
 	}
 
-	guidanceLetterChanges := map[string]interface{}{
+	guidanceLetterChanges := map[string]any{
 		"trbRequestId":          trb.ID,
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": isFollowUpRequested,

@@ -19,7 +19,7 @@ type IBaseStruct interface {
 	SetModifiedBy(principal authentication.Principal) error
 }
 
-// BaseStruct represents the shared data in common betwen all models
+// BaseStruct represents the shared data in common between all models
 type BaseStruct struct {
 	ID         uuid.UUID  `json:"id" db:"id"`
 	CreatedBy  string     `json:"createdBy" db:"created_by"`

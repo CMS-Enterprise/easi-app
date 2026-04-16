@@ -20,7 +20,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -944,7 +943,7 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 		return nil, errors.New("user is unauthorized to archive system intake")
 	}
 
-	now := helpers.PointerTo(time.Now())
+	now := new(time.Now())
 
 	// close out any associated Business Case
 	if intake.BusinessCaseID != nil {
@@ -1087,7 +1086,7 @@ func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, c
 
 // CreateTRBRequestAttendee is the resolver for the createTRBRequestAttendee field.
 func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input models.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
-	role := models.PersonRole(input.Role)
+	role := input.Role
 	return CreateTRBRequestAttendee(
 		ctx,
 		r.store,
@@ -1104,7 +1103,7 @@ func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input m
 
 // UpdateTRBRequestAttendee is the resolver for the updateTRBRequestAttendee field.
 func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input models.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
-	role := models.PersonRole(input.Role)
+	role := input.Role
 	attendee := &models.TRBRequestAttendee{
 		Component: &input.Component,
 		Role:      &role,
@@ -1211,7 +1210,7 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		r.service.FetchUserInfos,
 		&models.TRBRequestFeedback{
 			TRBRequestID:    input.TrbRequestID,
-			FeedbackMessage: models.HTML(input.FeedbackMessage),
+			FeedbackMessage: input.FeedbackMessage,
 			CopyTRBMailbox:  input.CopyTrbMailbox,
 			NotifyEUAIDs:    notifyEuas,
 			Action:          input.Action,
@@ -2117,12 +2116,12 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ct
 
 // VotingRole is the resolver for the votingRole field.
 func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error) {
-	return models.SystemIntakeGRBReviewerVotingRole(obj.GRBVotingRole), nil
+	return obj.GRBVotingRole, nil
 }
 
 // GrbRole is the resolver for the grbRole field.
 func (r *systemIntakeGRBReviewerResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerRole, error) {
-	return models.SystemIntakeGRBReviewerRole(obj.GRBReviewerRole), nil
+	return obj.GRBReviewerRole, nil
 }
 
 // Author is the resolver for the author field.

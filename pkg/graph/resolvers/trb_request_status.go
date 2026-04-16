@@ -38,10 +38,10 @@ func getTRBFeedbackStatus(ctx context.Context, trbRequestID uuid.UUID) (*models.
 		case models.TRBFeedbackActionRequestEdits:
 			if form.Status == models.TRBFormStatusCompleted {
 				// If the form is completed, that means the edits were made
-				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInReview)
+				status = models.TRBFeedbackStatusInReview
 			} else {
 				// If the form isn't complete, then "edits requested" still applies
-				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusEditsRequested)
+				status = models.TRBFeedbackStatusEditsRequested
 			}
 		case models.TRBFeedbackActionReadyForConsult:
 			// If latest feedback action is "ready for consult", return "completed" status
@@ -50,7 +50,7 @@ func getTRBFeedbackStatus(ctx context.Context, trbRequestID uuid.UUID) (*models.
 	} else if form.Status == models.TRBFormStatusCompleted {
 		// If feedback is nil (there are no feedback yet), calculate the status based on
 		// form status (defaults to "cannot start yet" above)
-		status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInReview)
+		status = models.TRBFeedbackStatusInReview
 	}
 
 	return &status, nil

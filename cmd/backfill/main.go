@@ -49,9 +49,12 @@ func execute(cfg *config) error {
 	url := fmt.Sprintf(healthcheck, cfg.host)
 
 	// #nosec G107 - we need to have the URL for the API be provided at runtime
-	_, err := http.Get(url)
+	resp, err := http.Get(url)
 	if err != nil {
 		return fmt.Errorf("failed healthcheck for [%s]: %w", url, err)
+	}
+	if err := resp.Body.Close(); err != nil {
+		return fmt.Errorf("failed to close healthcheck response for [%s]: %w", url, err)
 	}
 
 	f, err := os.Open(cfg.file)
@@ -72,7 +75,7 @@ func execute(cfg *config) error {
 	for err == nil {
 		row, err = src.Read()
 		if err != nil {
-			if err != io.EOF {
+			if !errors.Is(err, io.EOF) {
 				errs = append(errs, err)
 			}
 			continue
@@ -100,7 +103,7 @@ func execute(cfg *config) error {
 	fmt.Printf("%d rows processed with %d errors.\n%d creates and %d updates.\n\n", rowCount, len(errs), createCount, updateCount)
 
 	if len(errs) != 0 {
-		fmt.Fprintf(os.Stdout, "problems processing file: %v", errs)
+		fmt.Printf("problems processing file: %v", errs)
 		return fmt.Errorf("problems processing file: %v", errs)
 	}
 	return nil
@@ -112,13 +115,13 @@ func upload(host string, auth string, item *entry) (didCreate bool, err error) {
 		return false, err
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/backfill", host), bytes.NewReader(body))
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/api/v1/backfill", host), bytes.NewReader(body))
 	if err != nil {
 		return false, err
 	}
 
 	if ok, perr := strconv.ParseBool(os.Getenv(envDrop)); ok && perr == nil {
-		req, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/system_intake/%s?remove=true", host, item.Intake.ID.String()), nil)
+		req, err = http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/api/v1/system_intake/%s?remove=true", host, item.Intake.ID.String()), nil)
 		if err != nil {
 			return false, err
 		}
@@ -128,12 +131,15 @@ func upload(host string, auth string, item *entry) (didCreate bool, err error) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return false, fmt.Errorf("request failed: %v", err)
+		return false, fmt.Errorf("request failed: %w", err)
 	}
-	defer resp.Body.Close()
 	content, err := io.ReadAll(resp.Body)
+	closeErr := resp.Body.Close()
 	if err != nil {
-		return false, fmt.Errorf("could not read reasponse: %v", err)
+		return false, fmt.Errorf("could not read response: %w", err)
+	}
+	if closeErr != nil {
+		return false, fmt.Errorf("could not close response: %w", closeErr)
 	}
 
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusCreated {
@@ -146,7 +152,7 @@ func upload(host string, auth string, item *entry) (didCreate bool, err error) {
 	} else {
 		message = "updated"
 	}
-	fmt.Fprintf(os.Stdout, "%s %s\n", message, item.Intake.LifecycleID.String)
+	fmt.Printf("%s %s\n", message, item.Intake.LifecycleID.String)
 	return resp.StatusCode == http.StatusCreated, nil
 }
 
@@ -195,7 +201,7 @@ func convert(row []string) (*entry, error) {
 
 	// skipping items that were marked as "Draft" in the spreadsheet
 	if strings.EqualFold("draft", row[colStatus]) {
-		fmt.Fprintf(os.Stdout, "skipping %v: status - %s\n", id, row[colStatus])
+		fmt.Printf("skipping %v: status - %s\n", id, row[colStatus])
 		return nil, nil
 	}
 

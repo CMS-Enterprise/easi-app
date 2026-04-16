@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/facebookgo/clock"
@@ -70,8 +71,18 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 	// get code and response
 	var code int
 	var response errorResponse
-	switch appErr := appErr.(type) {
-	case *apperrors.UnauthorizedError:
+	var unauthorizedErr *apperrors.UnauthorizedError
+	var queryErr *apperrors.QueryError
+	var externalAPIErr *apperrors.ExternalAPIError
+	var contextErr *apperrors.ContextError
+	var validationErr *apperrors.ValidationError
+	var methodNotAllowedErr *apperrors.MethodNotAllowedError
+	var resourceConflictErr *apperrors.ResourceConflictError
+	var badRequestErr *apperrors.BadRequestError
+	var unknownRouteErr *apperrors.UnknownRouteError
+	var resourceNotFoundErr *apperrors.ResourceNotFoundError
+	switch {
+	case errors.As(appErr, &unauthorizedErr):
 		// 4XX errors are not logged as errors, but are for client
 		logger.Info("Returning unauthorized response from handler", zap.Error(appErr))
 		code = http.StatusUnauthorized
@@ -80,17 +91,16 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Unauthorized",
 			traceID,
 		)
-	case *apperrors.QueryError:
+	case errors.As(appErr, &queryErr):
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		switch appErr.Unwrap().(type) {
-		case *apperrors.ResourceNotFoundError:
+		if errors.As(queryErr.Unwrap(), &resourceNotFoundErr) {
 			code = http.StatusNotFound
 			response = newErrorResponse(
 				code,
 				"Resource not found",
 				traceID,
 			)
-		default:
+		} else {
 			code = http.StatusInternalServerError
 			response = newErrorResponse(
 				code,
@@ -98,7 +108,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 				traceID,
 			)
 		}
-	case *apperrors.ExternalAPIError:
+	case errors.As(appErr, &externalAPIErr):
 		logger.Error("Returning service unavailable error response from handler", zap.Error(appErr))
 		code = http.StatusServiceUnavailable
 		response = newErrorResponse(
@@ -106,7 +116,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Service unavailable",
 			traceID,
 		)
-	case *apperrors.ContextError:
+	case errors.As(appErr, &contextErr):
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
 		response = newErrorResponse(
@@ -114,7 +124,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Something went wrong",
 			traceID,
 		)
-	case *apperrors.ValidationError:
+	case errors.As(appErr, &validationErr):
 		logger.Info("Returning unprocessable entity error from handler", zap.Error(appErr))
 		code = http.StatusUnprocessableEntity
 		response = newErrorResponse(
@@ -122,8 +132,8 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Entity unprocessable",
 			traceID,
 		)
-		response.withMap(appErr.Validations.Map())
-	case *apperrors.MethodNotAllowedError:
+		response.withMap(validationErr.Validations.Map())
+	case errors.As(appErr, &methodNotAllowedErr):
 		logger.Info("Returning method not allowed error from handler", zap.Error(appErr))
 		code = http.StatusMethodNotAllowed
 		response = newErrorResponse(
@@ -131,7 +141,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Method not allowed",
 			traceID,
 		)
-	case *apperrors.ResourceConflictError:
+	case errors.As(appErr, &resourceConflictErr):
 		logger.Info("Returning resource conflict error from handler", zap.Error(appErr))
 		code = http.StatusConflict
 		response = newErrorResponse(
@@ -139,7 +149,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Resource conflict",
 			traceID,
 		)
-	case *apperrors.BadRequestError:
+	case errors.As(appErr, &badRequestErr):
 		logger.Info("Returning bad request error from handler", zap.Error(appErr))
 		code = http.StatusBadRequest
 		response = newErrorResponse(
@@ -147,7 +157,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Bad request",
 			traceID,
 		)
-	case *apperrors.UnknownRouteError:
+	case errors.As(appErr, &unknownRouteErr):
 		logger.Info("Returning status not found error from handler", zap.Error(appErr))
 		code = http.StatusNotFound
 		response = newErrorResponse(
@@ -155,7 +165,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Not found",
 			traceID,
 		)
-	case *apperrors.ResourceNotFoundError:
+	case errors.As(appErr, &resourceNotFoundErr):
 		code = http.StatusNotFound
 		response = newErrorResponse(
 			code,

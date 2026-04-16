@@ -67,7 +67,10 @@ func fetchOktaAccessToken(
 		"username": username,
 		"password": password,
 	}
-	postJSONValues, _ := json.Marshal(postValues)
+	postJSONValues, err := json.Marshal(postValues)
+	if err != nil {
+		return "", err
+	}
 	/* #nosec */
 	resp, err := http.Post(requestURI, "application/json", bytes.NewReader(postJSONValues))
 	if err != nil {
@@ -75,11 +78,24 @@ func fetchOktaAccessToken(
 		return "", err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("bad response from authentication request: %v", resp.Status)
+		err = fmt.Errorf("bad response from authentication request: %v", resp.Status)
+		if authCloseErr := resp.Body.Close(); authCloseErr != nil {
+			return "", fmt.Errorf("%w; failed to close authentication response body: %w", err, authCloseErr)
+		}
+		return "", err
 	}
 
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	authCloseErr := resp.Body.Close()
+	if err != nil {
+		if authCloseErr != nil {
+			return "", fmt.Errorf("failed to read authentication response body: %w; failed to close authentication response body: %w", err, authCloseErr)
+		}
+		return "", err
+	}
+	if authCloseErr != nil {
+		return "", fmt.Errorf("failed to close authentication response body: %w", authCloseErr)
+	}
 
 	var authn AuthnResponse
 	err = json.Unmarshal(body, &authn)
@@ -104,7 +120,10 @@ func fetchOktaAccessToken(
 		"passCode":   passCode,
 		"stateToken": authn.StateToken,
 	}
-	postJSONValues, _ = json.Marshal(postValues)
+	postJSONValues, err = json.Marshal(postValues)
+	if err != nil {
+		return "", err
+	}
 	/* #nosec */
 	factorResp, err := http.Post(factorURI, "application/json", bytes.NewReader(postJSONValues))
 	if err != nil {
@@ -112,11 +131,24 @@ func fetchOktaAccessToken(
 		return "", err
 	}
 	if factorResp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
+		err = fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
+		if mfaCloseErr := factorResp.Body.Close(); mfaCloseErr != nil {
+			return "", fmt.Errorf("%w; failed to close MFA response body: %w", err, mfaCloseErr)
+		}
+		return "", err
 	}
 
-	defer factorResp.Body.Close()
-	body, _ = io.ReadAll(factorResp.Body)
+	body, err = io.ReadAll(factorResp.Body)
+	mfaCloseErr := factorResp.Body.Close()
+	if err != nil {
+		if mfaCloseErr != nil {
+			return "", fmt.Errorf("failed to read MFA response body: %w; failed to close MFA response body: %w", err, mfaCloseErr)
+		}
+		return "", err
+	}
+	if mfaCloseErr != nil {
+		return "", fmt.Errorf("failed to close MFA response body: %w", mfaCloseErr)
+	}
 	err = json.Unmarshal(body, &authn)
 	if err != nil {
 		fmt.Println("could not marshall mfa response")
@@ -157,11 +189,17 @@ func fetchOktaAccessToken(
 		return "", err
 	}
 	if resp.StatusCode != http.StatusFound {
-		return "", fmt.Errorf("bad response from access request: %v", resp.Status)
+		err = fmt.Errorf("bad response from access request: %v", resp.Status)
+		if authzCloseErr := resp.Body.Close(); authzCloseErr != nil {
+			return "", fmt.Errorf("%w; failed to close authorization response body: %w", err, authzCloseErr)
+		}
+		return "", err
 	}
 
-	defer resp.Body.Close()
 	location := resp.Header.Get("Location")
+	if err := resp.Body.Close(); err != nil {
+		return "", fmt.Errorf("failed to close authorization response body: %w", err)
+	}
 	locParts, _ := url.Parse(location)
 	fragmentParts, _ := url.ParseQuery(locParts.Fragment)
 

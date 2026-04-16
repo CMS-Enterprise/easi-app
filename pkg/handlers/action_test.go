@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -45,7 +46,7 @@ func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 		rr := httptest.NewRecorder()
 		req, reqErr := http.NewRequestWithContext(
 			requestContext,
-			"POST",
+			http.MethodPost,
 			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBuffer(body),
 		)
@@ -63,7 +64,7 @@ func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 		rr := httptest.NewRecorder()
 		req, reqErr := http.NewRequestWithContext(
 			requestContext,
-			"POST",
+			http.MethodPost,
 			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBufferString(""),
 		)
@@ -85,7 +86,7 @@ func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequestWithContext(
 			requestContext,
-			"POST",
+			http.MethodPost,
 			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBuffer(body),
 		)
@@ -94,7 +95,7 @@ func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 		expectedErr := apperrors.ValidationError{
 			Model:   models.Action{},
 			ModelID: "",
-			Err:     fmt.Errorf("failed validations"),
+			Err:     errors.New("failed validations"),
 		}
 		ActionHandler{
 			HandlerBase:  s.base,
@@ -113,7 +114,7 @@ func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 		rr := httptest.NewRecorder()
 		req, reqErr := http.NewRequestWithContext(
 			requestContext,
-			"POST",
+			http.MethodPost,
 			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBuffer(body),
 		)
@@ -142,7 +143,7 @@ func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 		rr := httptest.NewRecorder()
 		req, reqErr := http.NewRequestWithContext(
 			requestContext,
-			"POST",
+			http.MethodPost,
 			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBuffer(body),
 		)

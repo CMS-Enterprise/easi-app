@@ -55,7 +55,7 @@ func (s *SystemProfileLockChangedSubscriber) GetPrincipal() authentication.Princ
 }
 
 // Notify will be called by the PubSub service when an event this Subscriber is registered for is dispatched
-func (s *SystemProfileLockChangedSubscriber) Notify(payload interface{}) {
+func (s *SystemProfileLockChangedSubscriber) Notify(payload any) {
 	typedPayload, ok := payload.(models.SystemProfileSectionLockStatusChanged)
 
 	// Log error if invalid payload type

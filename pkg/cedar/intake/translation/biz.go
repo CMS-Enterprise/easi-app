@@ -30,7 +30,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 	obj := intakemodels.EASIBizCase{
 		UserEUA:                bc.EUAUserID,
 		BusinessCaseID:         bc.ID.String(),
-		IntakeID:               pStr(bc.SystemIntakeID.String()),
+		IntakeID:               new(bc.SystemIntakeID.String()),
 		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft Business Case is submitted
 		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
@@ -43,7 +43,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		ProjectAcronym:         bc.ProjectAcronym.Ptr(),
 		ResponseToGRTFeedback:  bc.ResponseToGRTFeedback.Ptr(),
 
-		ArchivedAt: pStr(strDateTime(bc.ArchivedAt)),
+		ArchivedAt: new(strDateTime(bc.ArchivedAt)),
 
 		BusinessSolutions: []*intakemodels.EASIBusinessSolution{},
 	}
@@ -74,8 +74,8 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		Cons:                    bc.PreferredCons.Ptr(),
 		CostSavings:             bc.PreferredCostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
-		TargetContractAward:     pStr(strDateTime(bc.PreferredTargetContractAwardDate)),
-		TargetCompletionDate:    pStr(strDateTime(bc.PreferredTargetCompletionDate)),
+		TargetContractAward:     new(strDateTime(bc.PreferredTargetContractAwardDate)),
+		TargetCompletionDate:    new(strDateTime(bc.PreferredTargetCompletionDate)),
 		WorkforceTrainingReqs:   bc.PreferredWorkforceTrainingReqs.Ptr(),
 		ZeroTrustAlignment:      bc.PreferredZeroTrustAlignment.Ptr(),
 	}
@@ -100,8 +100,8 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		Cons:                    bc.AlternativeACons.Ptr(),
 		CostSavings:             bc.AlternativeACostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
-		TargetContractAward:     pStr(strDateTime(bc.AlternativeATargetContractAwardDate)),
-		TargetCompletionDate:    pStr(strDateTime(bc.AlternativeATargetCompletionDate)),
+		TargetContractAward:     new(strDateTime(bc.AlternativeATargetContractAwardDate)),
+		TargetCompletionDate:    new(strDateTime(bc.AlternativeATargetCompletionDate)),
 		WorkforceTrainingReqs:   bc.AlternativeAWorkforceTrainingReqs.Ptr(),
 		ZeroTrustAlignment:      bc.AlternativeAZeroTrustAlignment.Ptr(),
 	}
@@ -123,8 +123,8 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		Cons:                    bc.AlternativeBCons.Ptr(),
 		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
-		TargetContractAward:     pStr(strDateTime(bc.AlternativeBTargetContractAwardDate)),
-		TargetCompletionDate:    pStr(strDateTime(bc.AlternativeBTargetCompletionDate)),
+		TargetContractAward:     new(strDateTime(bc.AlternativeBTargetContractAwardDate)),
+		TargetCompletionDate:    new(strDateTime(bc.AlternativeBTargetCompletionDate)),
 		WorkforceTrainingReqs:   bc.AlternativeBWorkforceTrainingReqs.Ptr(),
 		ZeroTrustAlignment:      bc.AlternativeBZeroTrustAlignment.Ptr(),
 	}
@@ -142,13 +142,13 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		if line.Phase != nil {
 			phase = string(*line.Phase)
 		}
-		lc.Phase = pStr(phase)
+		lc.Phase = new(phase)
 
 		cost := ""
 		if line.Cost != nil {
 			cost = strconv.FormatInt(*line.Cost, 10)
 		}
-		lc.Cost = pStr(cost)
+		lc.Cost = new(cost)
 
 		switch line.Solution {
 		case models.LifecycleCostSolutionPREFERRED:
@@ -171,11 +171,11 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 	}
 
 	result := &wire.IntakeInput{
-		ClientID: pStr(bcID),
-		Body:     pStr(string(blob)),
+		ClientID: new(bcID),
+		Body:     new(string(blob)),
 
 		// invariants for this type
-		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
+		BodyFormat: new(wire.IntakeInputBodyFormatJSON),
 		Type:       typeStr(intakeInputBizCase),
 		Schema:     versionStr(IntakeInputSchemaEASIBizCaseVersion),
 	}

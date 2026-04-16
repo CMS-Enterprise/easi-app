@@ -10,6 +10,6 @@ import (
 type Subscriber interface {
 	GetID() string
 	GetPrincipal() authentication.Principal
-	Notify(payload interface{})
+	Notify(payload any)
 	NotifyUnsubscribed(ps *ServicePubSub, sessionID uuid.UUID)
 }

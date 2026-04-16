@@ -1,6 +1,7 @@
 package loaders
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/graph-gophers/dataloader/v7"
@@ -39,7 +40,7 @@ func oneToManyWithCustomKeyDataLoader[K comparable, V any, mapKey comparable, ma
 	return functionalhelpers.OneToManyWithCustomKey(keys, values, getKey, getRes, transformToDataLoaderResultAllowNils)
 }
 func oneToManyDataLoader[K comparable, V any](keys []K, values []V, getKey func(V) K) []*dataloader.Result[[]V] {
-	return functionalhelpers.OneToMany[K, V, V](keys, values, getKey, transformToDataLoaderResultAllowNils)
+	return functionalhelpers.OneToMany(keys, values, getKey, transformToDataLoaderResultAllowNils)
 }
 
 func errorPerEachKey[K comparable, V any](keys []K, err error) []*dataloader.Result[V] {
@@ -58,5 +59,5 @@ func DoNotUsePlaceholder() {
 	oneToOneDataLoader([]int{}, []string{}, func(s string) int { return 0 })
 	oneToOneWithCustomKeyDataLoaderAllowNil([]int{}, []string{}, func(s string) int { return 0 }, func(i int, m map[int]string) (string, bool) { return "", false })
 	oneToManyWithCustomKeyDataLoader([]int{}, []string{}, func(s string) int { return 0 }, func(i int, m map[int][]string) ([]string, bool) { return nil, false })
-	errorPerEachKey[int, string]([]int{}, fmt.Errorf("this is just a placeholder"))
+	errorPerEachKey[int, string]([]int{}, errors.New("this is just a placeholder"))
 }

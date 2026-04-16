@@ -6,7 +6,6 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -202,7 +201,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 				GrbReviewAsyncEndDate: &futureTime,
 			},
-			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress),
+			expected: new(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress),
 		},
 		{
 			name: "Status - Past Due (End date is in the past, no quorum)",
@@ -211,7 +210,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 				GrbReviewAsyncEndDate: &pastTime,
 			},
-			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypePastDue),
+			expected: new(models.SystemIntakeGRBReviewAsyncStatusTypePastDue),
 		},
 	}
 
@@ -266,7 +265,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewStandardStatus() {
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				GRBDate:       &futureTime,
 			},
-			expected: helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeScheduled),
+			expected: new(models.SystemIntakeGRBReviewStandardStatusTypeScheduled),
 		},
 		{
 			name: "Status - Completed (GRB date is in the past)",
@@ -275,7 +274,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewStandardStatus() {
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				GRBDate:       &pastTime,
 			},
-			expected: helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeCompleted),
+			expected: new(models.SystemIntakeGRBReviewStandardStatusTypeCompleted),
 		},
 	}
 

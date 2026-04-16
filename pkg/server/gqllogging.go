@@ -53,8 +53,7 @@ func countIgnoredErrors(errorList gqlerror.List) int {
 	for _, err := range errorList {
 		if err != nil {
 			// Ignore any errors that wrap an apperrors.UnauthorizedError somewhere in their chain
-			var unauthorizedError *apperrors.UnauthorizedError
-			if errors.As(err, &unauthorizedError) {
+			if _, ok := errors.AsType[*apperrors.UnauthorizedError](err); ok {
 				numIgnored++
 			}
 

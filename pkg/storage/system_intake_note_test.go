@@ -47,7 +47,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 		notes := map[uuid.UUID]*models.SystemIntakeNote{}
 
 		// populate a set of notes for the given SystemIntake
-		for ix := 0; ix < 3; ix++ {
+		for range 3 {
 			ts := time.Now().UTC()
 			in := &models.SystemIntakeNote{
 				SystemIntakeID: intake.ID,

@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -556,7 +557,7 @@ func CreateSystemIntakeActionReopenRequest(
 
 	if intake.State == models.SystemIntakeStateOpen {
 		return nil, &apperrors.BadRequestError{
-			Err: fmt.Errorf("intake is already open"),
+			Err: errors.New("intake is already open"),
 		}
 	}
 	intake.State = models.SystemIntakeStateOpen
@@ -633,7 +634,7 @@ func CreateSystemIntakeActionCloseRequest(
 	}
 	if intake.State == models.SystemIntakeStateClosed {
 		return nil, &apperrors.BadRequestError{
-			Err: fmt.Errorf("intake is already closed"),
+			Err: errors.New("intake is already closed"),
 		}
 	}
 	intake.State = models.SystemIntakeStateClosed

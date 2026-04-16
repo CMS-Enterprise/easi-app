@@ -264,7 +264,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	})
 
 	s.Run("exhaust lifecycleID generation", func() {
-		for ix := 0; ix < 10; ix++ {
+		for ix := range 10 {
 			original := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
 				RequestType: models.SystemIntakeRequestTypeNEW,
@@ -440,7 +440,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakes() {
 
 		// seed the db with intakes that we DO expect to be returned
 		expected := map[string]bool{}
-		for ix := 0; ix < 5; ix++ {
+		for range 5 {
 			intake := testhelpers.NewSystemIntake()
 			result, err := CreateSystemIntake(ctx, s.store, &intake)
 			s.NoError(err)

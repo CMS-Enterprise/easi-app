@@ -83,7 +83,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 			SystemIntakeID:                      intake.ID,
 			Status:                              models.BusinessCaseStatusOPEN,
 			EUAUserID:                           "TEST",
-			AlternativeAAcquisitionApproach:     null.StringFrom("Aquisition Approach"),
+			AlternativeAAcquisitionApproach:     null.StringFrom("Acquisition Approach"),
 			AlternativeACons:                    null.StringFrom("Cons"),
 			AlternativeACostSavings:             null.StringFrom("Savings"),
 			AlternativeAHasUI:                   null.StringFrom("Has UI"),
@@ -154,7 +154,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
 
 	respAlternativeA := respBusinessCase.AlternativeASolution
-	s.Equal(respAlternativeA.AcquisitionApproach, "Aquisition Approach")
+	s.Equal(respAlternativeA.AcquisitionApproach, "Acquisition Approach")
 	s.Equal(respAlternativeA.Cons, "Cons")
 	s.Equal(respAlternativeA.CostSavings, "Savings")
 	s.Equal(respAlternativeA.HasUI, "Has UI")

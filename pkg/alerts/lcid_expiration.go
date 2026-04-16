@@ -2,6 +2,7 @@ package alerts
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -36,14 +37,10 @@ func getAlertRecipients(
 
 	// Only return an error if we hit an "unexpected" error
 	if err != nil {
-		switch err.(type) {
-		case *apperrors.InvalidParametersError: // Invalid Parameters error - log warning but do not return error
-			appcontext.ZLogger(ctx).Warn(
-				"Failed to fetch requester info while checking for LCID Expiration",
-				zap.String("SystemIntakeID", intake.ID.String()),
-				zap.Error(err),
-			)
-		case *apperrors.InvalidEUAIDError: // Invalid EUA ID error - log warning but do not return error
+		var invalidParametersErr *apperrors.InvalidParametersError
+		var invalidEUAIDErr *apperrors.InvalidEUAIDError
+		switch {
+		case errors.As(err, &invalidParametersErr), errors.As(err, &invalidEUAIDErr):
 			appcontext.ZLogger(ctx).Warn(
 				"Failed to fetch requester info while checking for LCID Expiration",
 				zap.String("SystemIntakeID", intake.ID.String()),
@@ -71,7 +68,7 @@ func getAlertRecipients(
 	return &recipients, nil
 }
 
-var day = time.Duration(time.Hour * 24)
+var day = time.Hour * 24
 
 // alertsInAdvance is the variable used to determine how many days
 // before each LCID expiration date an alert should be sent
@@ -79,9 +76,9 @@ var day = time.Duration(time.Hour * 24)
 // NOTE: It's best to keep the values in descending order to keep the logic simple
 // in shouldSendAlertForIntake(). Keep this in mind when adding new values.
 var alertsInAdvance = []time.Duration{
-	time.Duration(day * 120), // 120 days
-	time.Duration(day * 60),  // 60 days
-	time.Duration(day * 46),  // 46 days
+	day * 120, // 120 days
+	day * 60,  // 60 days
+	day * 46,  // 46 days
 }
 
 // shouldSendAlertForIntake determines if it's valid to send an LCID expiration alert for a given System Intake

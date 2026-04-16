@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -25,10 +24,10 @@ func (s *StoreTestSuite) TestSystemIntakeGRBPresentationLinks() {
 	// build links
 	links := models.NewSystemIntakeGRBPresentationLinks(appcontext.Principal(ctx).Account().ID)
 	links.SystemIntakeID = intake.ID
-	links.RecordingLink = helpers.PointerTo("test recording link")
-	links.RecordingPasscode = helpers.PointerTo("secret password")
-	links.PresentationDeckS3Key = helpers.PointerTo("prez deck s3 key")
-	links.PresentationDeckFileName = helpers.PointerTo("prez file name")
+	links.RecordingLink = new("test recording link")
+	links.RecordingPasscode = new("secret password")
+	links.PresentationDeckS3Key = new("prez deck s3 key")
+	links.PresentationDeckFileName = new("prez file name")
 
 	// set initial links
 	s.Run("handle link operations on a system intake", func() {
@@ -52,7 +51,7 @@ func (s *StoreTestSuite) TestSystemIntakeGRBPresentationLinks() {
 
 		// update the links and save, confirming the upsert functions as expected
 		newRecordingLink := "new recording link"
-		links.RecordingLink = helpers.PointerTo(newRecordingLink)
+		links.RecordingLink = new(newRecordingLink)
 		out, err = s.store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 		s.NoError(err)
 		s.NotNil(out)
@@ -67,9 +66,9 @@ func (s *StoreTestSuite) TestSystemIntakeGRBPresentationLinks() {
 		s.Equal(*data[0].RecordingLink, newRecordingLink)
 
 		// update links to something they are not allowed to be (i.e., containing fields that cannot both be set
-		links.TranscriptLink = helpers.PointerTo("transcript link should not be allowed")
-		links.TranscriptFileName = helpers.PointerTo("transcript file name should not be allowed")
-		links.TranscriptS3Key = helpers.PointerTo("transcript s3 key should not be allowed")
+		links.TranscriptLink = new("transcript link should not be allowed")
+		links.TranscriptFileName = new("transcript file name should not be allowed")
+		links.TranscriptS3Key = new("transcript s3 key should not be allowed")
 
 		out, err = s.store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 		s.Error(err)

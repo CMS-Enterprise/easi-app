@@ -38,7 +38,7 @@ func NewScheduler(panicOnError bool) (*Scheduler, error) {
 	scheduler, err := gocron.NewScheduler()
 	if err != nil {
 		if panicOnError {
-			log.Panic(fmt.Errorf("error creating scheduler: %v", err))
+			log.Panic(fmt.Errorf("error creating scheduler: %w", err))
 		}
 		return nil, err
 

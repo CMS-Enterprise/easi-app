@@ -212,7 +212,7 @@ func (s *Server) routes() {
 		coreClient,
 		pubsubService,
 	)
-	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
+	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj any, next graphql.Resolver, role models.Role) (res any, err error) {
 		if !services.HasRole(ctx, role) {
 			// don't need to log here - services.HasRole() handles logging
 			return nil, &apperrors.UnauthorizedError{

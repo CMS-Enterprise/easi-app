@@ -32,7 +32,7 @@ type UnsubscribeCall struct {
 type PublishCall struct {
 	SessionID uuid.UUID
 	EventType pubsub.EventType
-	Payload   interface{}
+	Payload   any
 }
 
 // NewMockPubSub creates a new mock PubSub instance for testing
@@ -64,7 +64,7 @@ func (m *MockPubSub) Unsubscribe(sessionID uuid.UUID, eventType pubsub.EventType
 }
 
 // Publish mocks the Publish method and records the call
-func (m *MockPubSub) Publish(sessionID uuid.UUID, eventType pubsub.EventType, payload interface{}) {
+func (m *MockPubSub) Publish(sessionID uuid.UUID, eventType pubsub.EventType, payload any) {
 	m.PublishCalls = append(m.PublishCalls, PublishCall{
 		SessionID: sessionID,
 		EventType: eventType,

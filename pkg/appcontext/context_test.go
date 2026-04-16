@@ -30,8 +30,9 @@ func (s *ContextTestSuite) TestWithLogger() {
 	expectedLogger := zap.NewNop()
 
 	ctx = WithLogger(ctx, expectedLogger)
-	logger := ctx.Value(loggerKey).(*zap.Logger)
+	logger, ok := ctx.Value(loggerKey).(*zap.Logger)
 
+	s.True(ok)
 	s.Equal(expectedLogger, logger)
 }
 
@@ -49,8 +50,9 @@ func TestZLogger(t *testing.T) {
 
 func (s *ContextTestSuite) TestWithTrace() {
 	ctx, tID := WithTrace(context.Background())
-	traceID := ctx.Value(traceKey).(uuid.UUID)
+	traceID, ok := ctx.Value(traceKey).(uuid.UUID)
 
+	s.True(ok)
 	s.NotEqual(uuid.UUID{}, traceID)
 	s.Equal(tID, traceID)
 }

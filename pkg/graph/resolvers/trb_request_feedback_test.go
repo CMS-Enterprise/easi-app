@@ -89,7 +89,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 
 	s.Run("create/update/fetch TRB request feedback", func() {
 		// Update the TRB form status to in 'completed' since we're testing the feedback step
-		formChanges := map[string]interface{}{
+		formChanges := map[string]any{
 			"status": models.TRBFormStatusCompleted,
 		}
 		err = BaseStructPreUpdate(formChanges, form, appcontext.Principal(ctx), true)
@@ -108,7 +108,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 			FeedbackMessage: "I dislike the TRB request",
 			CopyTRBMailbox:  true,
 			NotifyEUAIDs:    notifyEUAIDs,
-			Action:          models.TRBFeedbackAction(models.TRBFeedbackActionRequestEdits),
+			Action:          models.TRBFeedbackActionRequestEdits,
 		}
 		created, err := CreateTRBRequestFeedback(
 			ctx,
@@ -136,7 +136,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		s.EqualValues(models.TRBFormStatusInProgress, form.Status)
 
 		// Update the TRB form status to in 'completed' since we're testing the feedback step again
-		formChanges = map[string]interface{}{
+		formChanges = map[string]any{
 			"status": models.TRBFormStatusCompleted,
 		}
 		err = BaseStructPreUpdate(formChanges, form, appcontext.Principal(ctx), true)
@@ -150,7 +150,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 			FeedbackMessage: "I like the TRB request",
 			CopyTRBMailbox:  true,
 			NotifyEUAIDs:    notifyEUAIDs,
-			Action:          models.TRBFeedbackAction(models.TRBFeedbackActionReadyForConsult),
+			Action:          models.TRBFeedbackActionReadyForConsult,
 		}
 		created2, err := CreateTRBRequestFeedback(
 			ctx,

@@ -2,14 +2,13 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 
@@ -33,7 +32,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID uuid.U
 
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
-	params.SetSystemID(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
+	params.SetSystemID(new(formatIDForCEDAR(cedarSystemID)))
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -43,7 +42,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID uuid.U
 	}
 
 	if resp.Payload == nil {
-		return []*models.CedarAuthorityToOperate{}, fmt.Errorf("no body received")
+		return []*models.CedarAuthorityToOperate{}, errors.New("no body received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct

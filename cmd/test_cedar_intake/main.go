@@ -260,8 +260,6 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 	for _, solution := range possibleSolutions {
 		for _, year := range possibleYears {
 			for _, phase := range possiblePhases {
-				phase := phase
-
 				// make a copy, so when we increment costAmount, previously created lifecycleCost.Cost's don't point to the updated value
 				cost := int64(increasingCost)
 

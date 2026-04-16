@@ -31,7 +31,7 @@ func CreateTRBGuidanceLetter(ctx context.Context, store *storage.Store, trbReque
 }
 
 // UpdateTRBGuidanceLetter handles general updates to a TRB guidance letter
-func UpdateTRBGuidanceLetter(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBGuidanceLetter, error) {
+func UpdateTRBGuidanceLetter(ctx context.Context, store *storage.Store, input map[string]any) (*models.TRBGuidanceLetter, error) {
 	idIface, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")

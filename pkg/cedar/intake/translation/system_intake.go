@@ -10,7 +10,6 @@ import (
 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -38,7 +37,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		})
 	}
 
-	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, helpers.PointerTo(models.SystemIntake(*si)))
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, new(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +75,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		CostIncreaseAmount:              si.CostIncreaseAmount.Ptr(),
 		Contractor:                      si.Contractor.Ptr(),
 		ContractVehicle:                 si.ContractVehicle.Ptr(),
-		ContractNumber:                  helpers.PointerTo(strings.Join(numbers, ", ")),
+		ContractNumber:                  new(strings.Join(numbers, ", ")),
 		RequesterEmailAddress:           si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                     si.LifecycleID.Ptr(),
 		LifecycleScope:                  si.LifecycleScope.StringPointer(),
@@ -93,16 +92,16 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		CurrentAnnualSpendingITPortion:  si.CurrentAnnualSpendingITPortion.Ptr(),
 		PlannedYearOneSpending:          si.PlannedYearOneSpending.Ptr(),
 		PlannedYearOneSpendingITPortion: si.PlannedYearOneSpendingITPortion.Ptr(),
-		ContractStartDate:               pStr(strDate(si.ContractStartDate)),
-		ContractEndDate:                 pStr(strDate(si.ContractEndDate)),
+		ContractStartDate:               new(strDate(si.ContractStartDate)),
+		ContractEndDate:                 new(strDate(si.ContractEndDate)),
 		SubmittedAt:                     strDateTime(si.SubmittedAt),
-		DecidedAt:                       pStr(strDateTime(si.DecidedAt)),
-		ArchivedAt:                      pStr(strDateTime(si.ArchivedAt)),
-		GrbDate:                         pStr(strDate(si.GRBDate)),
-		GrtDate:                         pStr(strDate(si.GRTDate)),
-		LifecycleExpiresAt:              pStr(strDate(si.LifecycleExpiresAt)),
+		DecidedAt:                       new(strDateTime(si.DecidedAt)),
+		ArchivedAt:                      new(strDateTime(si.ArchivedAt)),
+		GrbDate:                         new(strDate(si.GRBDate)),
+		GrtDate:                         new(strDate(si.GRTDate)),
+		LifecycleExpiresAt:              new(strDate(si.LifecycleExpiresAt)),
 		LifecycleCostBaseline:           si.LifecycleCostBaseline.Ptr(),
-		// ScheduledProductionDate:         pStr(""), // TODO: fill this out after field is added to intake
+		// ScheduledProductionDate:         new(""), // TODO: fill this out after field is added to intake
 	}
 
 	coreContacts, err := GetCoreTranslatableContactInfo(ctx, si.ID)
@@ -122,14 +121,14 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 	}
 
 	result := wire.IntakeInput{
-		ClientID:     pStr(si.ID.String()),
-		Body:         pStr(string(blob)),
-		ClientStatus: pStr(string(clientStatus)),
+		ClientID:     new(si.ID.String()),
+		Body:         new(string(blob)),
+		ClientStatus: new(string(clientStatus)),
 
 		// invariants for this type
 		Type:       typeStr(intakeInputSystemIntake),
 		Schema:     versionStr(IntakeInputSchemaEASIIntakeVersion),
-		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
+		BodyFormat: new(wire.IntakeInputBodyFormatJSON),
 	}
 
 	if si.CreatedAt != nil {

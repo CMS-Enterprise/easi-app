@@ -17,7 +17,7 @@ type Person struct {
 func TestApplyChanges(t *testing.T) {
 	clay := Person{"Clay", 27, []string{"Clayboy", "Claysadilla"}}
 
-	clayChanges := map[string]interface{}{
+	clayChanges := map[string]any{
 		"age": 28,
 	}
 	err := ApplyChanges(clayChanges, &clay)
@@ -28,7 +28,7 @@ func TestApplyChanges(t *testing.T) {
 	assert.Equal(t, 28, clay.Age)
 	assert.Equal(t, []string{"Clayboy", "Claysadilla"}, clay.Nicknames)
 
-	clayChanges = map[string]interface{}{
+	clayChanges = map[string]any{
 		"nicknames": []string{},
 	}
 	err = ApplyChanges(clayChanges, &clay)
@@ -39,7 +39,7 @@ func TestApplyChanges(t *testing.T) {
 	assert.Equal(t, 28, clay.Age)
 	assert.Equal(t, []string{}, clay.Nicknames)
 
-	clayChanges = map[string]interface{}{
+	clayChanges = map[string]any{
 		"nicknames": []string{"Clayson the Wise"},
 		"age":       50,
 	}
@@ -61,7 +61,7 @@ func TestApplyChangesEmptyString(t *testing.T) {
 	mom := "Mom"
 	son := PersonWithPointer{Name: "Son", Parent: &mom}
 
-	sonChanges := map[string]interface{}{
+	sonChanges := map[string]any{
 		"parent": "",
 	}
 	err := ApplyChanges(sonChanges, &son)
@@ -85,7 +85,7 @@ func TestApplyChangesWithTime(t *testing.T) {
 		DidHaveFun:  false,
 	}
 
-	fdChanges := map[string]interface{}{
+	fdChanges := map[string]any{
 		"whenStarted": time.Date(2022, 5, 8, 18, 0, 0, 0, time.UTC), // should work with 'time.Time's
 		"whenEnded":   "2022-05-08T21:00:00Z",                       // and should work with strings in time.RFC3339Nano format
 	}
@@ -97,7 +97,7 @@ func TestApplyChangesWithTime(t *testing.T) {
 	assert.Equal(t, time.Date(2022, 5, 8, 21, 0, 0, 0, time.UTC), fd.WhenEnded)
 	assert.Equal(t, false, fd.DidHaveFun)
 
-	fdChanges = map[string]interface{}{
+	fdChanges = map[string]any{
 		"didHaveFun": true,
 	}
 	err = ApplyChanges(fdChanges, &fd)
@@ -124,7 +124,7 @@ func TestApplyChangesUUID(t *testing.T) {
 	// if decodeErr != nil {
 	// 	t.Errorf("Failed to decode UUID: %s", decodeErr)
 	// }
-	clayChanges := map[string]interface{}{
+	clayChanges := map[string]any{
 		"id": []byte{0x2, 0xa9, 0x92, 0xe, 0xb0, 0x15, 0x4d, 0xe3, 0x8e, 0x32, 0xfb, 0x96, 0x5a, 0xc4, 0x65, 0x3c},
 	}
 	err := ApplyChanges(clayChanges, &clay)

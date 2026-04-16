@@ -24,7 +24,7 @@ func CreateTRBRequest(
 	requestType models.TRBRequestType,
 	store *storage.Store,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		princ := appcontext.Principal(ctx)
 
 		trb := models.NewTRBRequest(princ.ID())
@@ -62,7 +62,7 @@ func CreateTRBRequest(
 }
 
 // UpdateTRBRequest updates a TRB request
-func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}, store *storage.Store) (*models.TRBRequest, error) {
+func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]any, store *storage.Store) (*models.TRBRequest, error) {
 	// if we are archiving, we must check if the TRB form status is completed, in which case archiving is not allowed
 	val, ok := changes["archived"]
 	if ok {
@@ -163,7 +163,7 @@ func UpdateTRBRequestConsultMeetingTime(
 		return nil, err
 	}
 
-	changes := map[string]interface{}{
+	changes := map[string]any{
 		"consultMeetingTime": &meetingTime,
 	}
 	err = BaseStructPreUpdate(changes, trb, appcontext.Principal(ctx), true)
@@ -221,7 +221,7 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
-	changes := map[string]interface{}{
+	changes := map[string]any{
 		"trbLead": &trbLead,
 	}
 
@@ -286,12 +286,12 @@ func CloseTRBRequest(
 		return nil, err
 	}
 
-	// Check if request is already closed so an unnecesary email won't be sent
+	// Check if request is already closed so an unnecessary email won't be sent
 	if trb.State != models.TRBRequestStateOpen {
 		return nil, errors.New("cannot close a TRB request that is not open")
 	}
 
-	trbChanges := map[string]interface{}{
+	trbChanges := map[string]any{
 		"state": models.TRBRequestStateClosed,
 	}
 
@@ -359,12 +359,12 @@ func ReopenTRBRequest(
 		return nil, err
 	}
 
-	// Check if request is already open so an unnecesary email won't be sent
+	// Check if request is already open so an unnecessary email won't be sent
 	if trb.State != models.TRBRequestStateClosed {
 		return nil, errors.New("cannot re-open a TRB request that is not closed")
 	}
 
-	trbChanges := map[string]interface{}{
+	trbChanges := map[string]any{
 		"state": models.TRBRequestStateOpen,
 	}
 

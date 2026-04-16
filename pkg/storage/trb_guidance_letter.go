@@ -48,7 +48,9 @@ func (s *Store) CreateTRBGuidanceLetter(ctx context.Context, createdBy string, t
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer func() {
+		_ = stmt.Close()
+	}()
 
 	retLetter := models.TRBGuidanceLetter{}
 
@@ -89,10 +91,12 @@ func (s *Store) UpdateTRBGuidanceLetterStatus(ctx context.Context, id uuid.UUID,
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer func() {
+		_ = stmt.Close()
+	}()
 
 	updated := models.TRBGuidanceLetter{}
-	arg := map[string]interface{}{
+	arg := map[string]any{
 		"id":          id,
 		"status":      status,
 		"modified_by": appcontext.Principal(ctx).ID(),
@@ -149,7 +153,9 @@ func (s *Store) UpdateTRBGuidanceLetter(ctx context.Context, letter *models.TRBG
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer func() {
+		_ = stmt.Close()
+	}()
 
 	updated := models.TRBGuidanceLetter{}
 

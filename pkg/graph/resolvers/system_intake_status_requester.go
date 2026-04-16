@@ -48,7 +48,7 @@ func CalculateSystemIntakeRequesterStatus(ctx context.Context, intake *models.Sy
 	case models.SystemIntakeStepDECISION:
 		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
-		return "", fmt.Errorf("issue calculating the requester intake status, no valid step")
+		return "", errors.New("issue calculating the requester intake status, no valid step")
 	}
 }
 
@@ -63,7 +63,7 @@ func calcSystemIntakeInitialFormStatusRequester(intakeFormState models.SystemInt
 	case models.SIRFSSubmitted:
 		return models.SISRInitialRequestFormSubmitted, nil
 	default:
-		return "", fmt.Errorf("issue calculating the requester intake status, no valid intakeFormState")
+		return "", errors.New("issue calculating the requester intake status, no valid intakeFormState")
 	}
 }
 
@@ -76,7 +76,7 @@ func calcSystemIntakeDraftBusinessCaseStatusRequester(draftBusinessCaseState mod
 	case models.SIRFSSubmitted:
 		return models.SISRDraftBusinessCaseSubmitted, nil
 	default:
-		return "", fmt.Errorf("issue calculating the requester intake status, no valid draftBusinessCaseState")
+		return "", errors.New("issue calculating the requester intake status, no valid draftBusinessCaseState")
 	}
 }
 
@@ -97,7 +97,7 @@ func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState mod
 	case models.SIRFSSubmitted:
 		return models.SISRFinalBusinessCaseSubmitted, nil
 	default:
-		return "", fmt.Errorf("issue calculating the requester intake status, no valid finalBusinessCaseState")
+		return "", errors.New("issue calculating the requester intake status, no valid finalBusinessCaseState")
 	}
 }
 
@@ -160,7 +160,7 @@ func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDe
 		return "", errors.New(noDecisionInvalidStateErrMsg)
 	}
 
-	return "", fmt.Errorf("issue calculating the requester intake status, no valid decisionState")
+	return "", errors.New("issue calculating the requester intake status, no valid decisionState")
 }
 
 // calcLCIDIssuedDecisionStatusRequester checks an LCID status and appropriately converts it to a SystemIntakeStatusRequester

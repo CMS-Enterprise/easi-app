@@ -10,7 +10,6 @@ import (
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -75,10 +74,10 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 
 		intake := s.createNewIntake()
 		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
-		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now().AddDate(0, 0, -4))
+		intake.GRBReviewStartedAt = new(time.Now().AddDate(0, 0, -4))
 
 		// set (temp) future end date
-		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, 1))
+		intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, 1))
 
 		var err error
 		intake, err = store.UpdateSystemIntake(ctx, intake)
@@ -132,7 +131,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		_ = s.getOrCreateUserAccts(reviewerEUA)
 
 		// set end date in the past
-		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+		intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, -1))
 		intake, err = store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err)
 
@@ -256,9 +255,9 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		s.NotEmpty(res.Reviewers)
 
 		// set a start time in the past
-		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+		intake.GRBReviewStartedAt = new(time.Now().AddDate(0, 0, -1))
 		// set (temp) future time for this request
-		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, 10))
+		intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, 10))
 		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
 		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 		s.NoError(err)
@@ -275,7 +274,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		}
 
 		// set back to time in the past
-		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+		intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, -1))
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 		s.NoError(err)
 
@@ -359,9 +358,9 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		s.NotEmpty(res.Reviewers)
 
 		// set a start time in the past
-		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+		intake.GRBReviewStartedAt = new(time.Now().AddDate(0, 0, -1))
 		// set (temp) future time for this request
-		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, 10))
+		intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, 10))
 		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
 		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 		s.NoError(err)
@@ -378,7 +377,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		}
 
 		// set back to time in the past
-		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+		intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, -1))
 		intake, err = store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err)
 
@@ -545,7 +544,7 @@ func (s *ResolverSuite) TestValidateCanSendReminder() {
 		{
 			name: "previous reminder sent within last 24 hours",
 			intake: &models.SystemIntake{
-				GrbReviewReminderLastSent: helpers.PointerTo(time.Now().Add(-time.Hour)),
+				GrbReviewReminderLastSent: new(time.Now().Add(-time.Hour)),
 			},
 			expectErr: true,
 		},
@@ -557,25 +556,25 @@ func (s *ResolverSuite) TestValidateCanSendReminder() {
 		{
 			name: "missing end date",
 			intake: &models.SystemIntake{
-				GRBReviewStartedAt: helpers.PointerTo(time.Now().AddDate(0, 0, -1)),
+				GRBReviewStartedAt: new(time.Now().AddDate(0, 0, -1)),
 			},
 			expectErr: true,
 		},
 		{
 			name: "manually ended review",
 			intake: &models.SystemIntake{
-				GRBReviewStartedAt:          helpers.PointerTo(time.Now().AddDate(0, 0, -1)),
-				GrbReviewAsyncEndDate:       helpers.PointerTo(time.Now().AddDate(0, 0, 1)),
-				GrbReviewAsyncManualEndDate: helpers.PointerTo(time.Now()),
+				GRBReviewStartedAt:          new(time.Now().AddDate(0, 0, -1)),
+				GrbReviewAsyncEndDate:       new(time.Now().AddDate(0, 0, 1)),
+				GrbReviewAsyncManualEndDate: new(time.Now()),
 			},
 			expectErr: true,
 		},
 		{
 			name: "happy path",
 			intake: &models.SystemIntake{
-				GRBReviewStartedAt:        helpers.PointerTo(time.Now().AddDate(0, 0, -1)),
-				GrbReviewAsyncEndDate:     helpers.PointerTo(time.Now().AddDate(0, 0, 1)),
-				GrbReviewReminderLastSent: helpers.PointerTo(time.Now().AddDate(0, 0, -2)),
+				GRBReviewStartedAt:        new(time.Now().AddDate(0, 0, -1)),
+				GrbReviewAsyncEndDate:     new(time.Now().AddDate(0, 0, 1)),
+				GrbReviewReminderLastSent: new(time.Now().AddDate(0, 0, -2)),
 			},
 			expectErr: false,
 		},

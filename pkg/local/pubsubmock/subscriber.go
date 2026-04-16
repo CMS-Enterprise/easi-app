@@ -11,7 +11,7 @@ import (
 type MockSubscriber struct {
 	ID                       string
 	Principal                authentication.Principal
-	NotifyCalls              []interface{}
+	NotifyCalls              []any
 	NotifyUnsubscribedCalls  []NotifyUnsubscribedCall
 	ShouldNotify             bool
 	ShouldNotifyUnsubscribed bool
@@ -28,7 +28,7 @@ func NewMockSubscriber(id string, principal authentication.Principal) *MockSubsc
 	return &MockSubscriber{
 		ID:                       id,
 		Principal:                principal,
-		NotifyCalls:              []interface{}{},
+		NotifyCalls:              []any{},
 		NotifyUnsubscribedCalls:  []NotifyUnsubscribedCall{},
 		ShouldNotify:             true,
 		ShouldNotifyUnsubscribed: true,
@@ -46,7 +46,7 @@ func (m *MockSubscriber) GetPrincipal() authentication.Principal {
 }
 
 // Notify records the notification payload
-func (m *MockSubscriber) Notify(payload interface{}) {
+func (m *MockSubscriber) Notify(payload any) {
 	if m.ShouldNotify {
 		m.NotifyCalls = append(m.NotifyCalls, payload)
 	}

@@ -9,7 +9,7 @@ import (
 func (s *HandlerTestSuite) TestCatchAllHandler() {
 	s.Run("catch all handler always returns 404", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("GET", "/notAURL", bytes.NewBufferString(""))
+		req, err := http.NewRequest(http.MethodGet, "/notAURL", bytes.NewBufferString(""))
 		s.NoError(err)
 		CatchAllHandler{
 			HandlerBase: s.base,

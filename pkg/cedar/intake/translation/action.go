@@ -37,12 +37,12 @@ func (action *TranslatableAction) CreateIntakeModel(ctx context.Context) (*wire.
 	}
 
 	result := wire.IntakeInput{
-		ClientID: pStr(action.ID.String()),
-		Body:     pStr(string(blob)),
+		ClientID: new(action.ID.String()),
+		Body:     new(string(blob)),
 
 		// invariants for this type
 		ClientStatus: statusStr(inputStatusFinal),
-		BodyFormat:   pStr(wire.IntakeInputBodyFormatJSON),
+		BodyFormat:   new(wire.IntakeInputBodyFormatJSON),
 		Type:         typeStr(intakeInputAction),
 		Schema:       versionStr(IntakeInputSchemaEASIActionVersion),
 	}

@@ -24,7 +24,7 @@ func UpdateTRBRequestForm(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input map[string]interface{},
+	input map[string]any,
 ) (*models.TRBRequestForm, error) {
 	idIface, idFound := input["trbRequestId"]
 	if !idFound {

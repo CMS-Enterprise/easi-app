@@ -30,7 +30,7 @@ func (s *EmailTestSuite) TestSendNotApprovedNotification() {
 	)
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
-	reason := models.HTML("inumerable reasons, literally so many reasons")
+	reason := models.HTML("enumerable reasons, literally so many reasons")
 	nextSteps := models.HTML("first we waltz, then we cha-cha")
 
 	sender := mockSender{}

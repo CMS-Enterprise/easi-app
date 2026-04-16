@@ -15,7 +15,7 @@ func MarshalZeroString(zs zero.String) graphql.Marshaler {
 	return graphql.MarshalString(zs.String)
 }
 
-func UnmarshalZeroString(v interface{}) (zero.String, error) {
+func UnmarshalZeroString(v any) (zero.String, error) {
 	if v == nil {
 		return zero.NewString("", false), nil
 	}
@@ -30,7 +30,7 @@ func MarshalNullString(ns null.String) graphql.Marshaler {
 	return graphql.MarshalString(ns.String)
 }
 
-func UnmarshalNullString(v interface{}) (null.String, error) {
+func UnmarshalNullString(v any) (null.String, error) {
 	if v == nil {
 		return null.NewString("", false), nil
 	}
@@ -45,7 +45,7 @@ func MarshalZeroTime(zt zero.Time) graphql.Marshaler {
 	return graphql.MarshalTime(zt.Time)
 }
 
-func UnmarshalZeroTime(v interface{}) (zero.Time, error) {
+func UnmarshalZeroTime(v any) (zero.Time, error) {
 	if v == nil {
 		return zero.NewTime(time.Time{}, false), nil
 	}
@@ -60,7 +60,7 @@ func MarshalZeroBool(zb zero.Bool) graphql.Marshaler {
 	return graphql.MarshalBoolean(zb.Bool)
 }
 
-func UnmarshalZeroBool(v interface{}) (zero.Bool, error) {
+func UnmarshalZeroBool(v any) (zero.Bool, error) {
 	if v == nil {
 		return zero.NewBool(false, false), nil
 	}
@@ -75,7 +75,7 @@ func MarshalZeroInt(zi zero.Int) graphql.Marshaler {
 	return graphql.MarshalInt64(zi.Int64)
 }
 
-func UnmarshalZeroInt(v interface{}) (zero.Int, error) {
+func UnmarshalZeroInt(v any) (zero.Int, error) {
 	if v == nil {
 		return zero.NewInt(0, false), nil
 	}
@@ -90,7 +90,7 @@ func MarshalNullInt(ni null.Int) graphql.Marshaler {
 	return graphql.MarshalInt64(ni.Int64)
 }
 
-func UnmarshalNullInt(v interface{}) (null.Int, error) {
+func UnmarshalNullInt(v any) (null.Int, error) {
 	if v == nil {
 		return null.NewInt(0, false), nil
 	}
@@ -105,7 +105,7 @@ func MarshalNullBool(nb null.Bool) graphql.Marshaler {
 	return graphql.MarshalBoolean(nb.Bool)
 }
 
-func UnmarshalNullBool(v interface{}) (null.Bool, error) {
+func UnmarshalNullBool(v any) (null.Bool, error) {
 	if v == nil {
 		return null.NewBool(false, false), nil
 	}
@@ -120,7 +120,7 @@ func MarshalZeroFloat(zf zero.Float) graphql.Marshaler {
 	return graphql.MarshalFloat(zf.Float64)
 }
 
-func UnmarshalZeroFloat(v interface{}) (zero.Float, error) {
+func UnmarshalZeroFloat(v any) (zero.Float, error) {
 	if v == nil {
 		return zero.NewFloat(0, false), nil
 	}
@@ -135,7 +135,7 @@ func MarshalNullFloat(zf null.Float) graphql.Marshaler {
 	return graphql.MarshalFloat(zf.Float64)
 }
 
-func UnmarshalNullFloat(v interface{}) (null.Float, error) {
+func UnmarshalNullFloat(v any) (null.Float, error) {
 	if v == nil {
 		return null.NewFloat(0, false), nil
 	}

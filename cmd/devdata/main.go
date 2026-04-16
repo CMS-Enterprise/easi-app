@@ -17,7 +17,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -50,7 +49,9 @@ func main() {
 		zapcore.Lock(os.Stdout),
 		atom,
 	))
-	defer logger.Sync()
+	defer func() {
+		_ = logger.Sync()
+	}()
 
 	// This prevents the seed script from dumping unnecessary logs
 	atom.SetLevel(zap.ErrorLevel)
@@ -143,9 +144,9 @@ func main() {
 			[]string{"111111", "111112"},
 			[]*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      helpers.PointerTo(uuid.MustParse("11AB1A00-1234-5678-ABC1-1A001B00CC6F")),
+					CedarSystemID:                      new(uuid.MustParse("11AB1A00-1234-5678-ABC1-1A001B00CC6F")),
 					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
+					OtherSystemRelationshipDescription: new("other description"),
 				},
 			},
 		)
@@ -442,7 +443,7 @@ func main() {
 	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionObjection,
-		VoteComment:    helpers.PointerTo("I object to this request because it is terrible."),
+		VoteComment:    new("I object to this request because it is terrible."),
 	})
 
 	intakeID = uuid.MustParse("61efa6eb-1976-4431-a158-d89cc00ce31d")
@@ -560,10 +561,10 @@ func main() {
 	// create one with recording link and presentation file
 	links := models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
 	links.SystemIntakeID = intakeID
-	links.RecordingLink = helpers.PointerTo("test recording link")
-	links.RecordingPasscode = helpers.PointerTo("secret password")
-	links.PresentationDeckS3Key = helpers.PointerTo("prez deck s3 key")
-	links.PresentationDeckFileName = helpers.PointerTo("prez file name")
+	links.RecordingLink = new("test recording link")
+	links.RecordingPasscode = new("secret password")
+	links.PresentationDeckS3Key = new("prez deck s3 key")
+	links.PresentationDeckFileName = new("prez file name")
 
 	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
 
@@ -617,10 +618,10 @@ func main() {
 	// create one with recording link and transcript link
 	links = models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
 	links.SystemIntakeID = intakeID
-	links.RecordingLink = helpers.PointerTo("test recording link")
-	links.RecordingPasscode = helpers.PointerTo("secret password")
-	links.TranscriptFileName = helpers.PointerTo("transcript file name")
-	links.TranscriptS3Key = helpers.PointerTo("transcript s3 key")
+	links.RecordingLink = new("test recording link")
+	links.RecordingPasscode = new("secret password")
+	links.TranscriptFileName = new("transcript file name")
+	links.TranscriptS3Key = new("transcript s3 key")
 
 	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
 
@@ -1045,12 +1046,12 @@ func main() {
 		[]string{"00001", "00002"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:                      helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
+				CedarSystemID:                      new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
 				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
+				OtherSystemRelationshipDescription: new("other description"),
 			},
 			{
-				CedarSystemID:          helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
+				CedarSystemID:          new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
@@ -1066,12 +1067,12 @@ func main() {
 		[]string{"00003", "00004"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:                      helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")),
+				CedarSystemID:                      new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")),
 				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
+				OtherSystemRelationshipDescription: new("other description"),
 			},
 			{
-				CedarSystemID:          helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}")),
+				CedarSystemID:          new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}")),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
@@ -1087,12 +1088,12 @@ func main() {
 		[]string{"00003", "00004"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:                      helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
+				CedarSystemID:                      new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
 				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
+				OtherSystemRelationshipDescription: new("other description"),
 			},
 			{
-				CedarSystemID:          helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")),
+				CedarSystemID:          new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
@@ -1108,12 +1109,12 @@ func main() {
 		[]string{"00005", "00001"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:                      helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}")),
+				CedarSystemID:                      new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}")),
 				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
+				OtherSystemRelationshipDescription: new("other description"),
 			},
 			{
-				CedarSystemID:          helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC6F}")),
+				CedarSystemID:          new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC6F}")),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
@@ -1140,12 +1141,12 @@ func main() {
 		[]string{"12345", "67890"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:                      helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")),
+				CedarSystemID:                      new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")),
 				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
+				OtherSystemRelationshipDescription: new("other description"),
 			},
 			{
-				CedarSystemID:          helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
+				CedarSystemID:          new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
@@ -1163,12 +1164,12 @@ func main() {
 		[]string{"12345", "67890"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:                      helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}")),
+				CedarSystemID:                      new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}")),
 				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
+				OtherSystemRelationshipDescription: new("other description"),
 			},
 			{
-				CedarSystemID:          helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC6F}")),
+				CedarSystemID:          new(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC6F}")),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
@@ -1376,7 +1377,7 @@ func main() {
 	retireLCID(ctx, store, intake, time.Now().AddDate(0, 0, -4))
 }
 
-func must(_ interface{}, err error) {
+func must(_ any, err error) {
 	if err != nil {
 		panic(err)
 	}

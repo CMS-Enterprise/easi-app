@@ -7,6 +7,7 @@ package intake
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -78,7 +79,7 @@ func (c *Client) CheckConnection(ctx context.Context) error {
 		return err
 	}
 	if resp.Payload == nil {
-		return fmt.Errorf("no response body received")
+		return errors.New("no response body received")
 	}
 	return nil
 }

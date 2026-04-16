@@ -49,7 +49,7 @@ var mockContracts = []*models.CedarContract{
 	{
 		EndDate:         zero.TimeFrom(time.Time{}),
 		StartDate:       zero.TimeFrom(time.Time{}),
-		ContractName:    zero.StringFrom("Cautionary Security Occurences and Training (Cloud SecOops)"),
+		ContractName:    zero.StringFrom("Cautionary Security Occurrences and Training (Cloud SecOops)"),
 		ContractNumber:  zero.StringFrom("12ABCD34E0005"),
 		Description:     zero.StringFromPtr(nil),
 		IsDeliveryOrg:   false,

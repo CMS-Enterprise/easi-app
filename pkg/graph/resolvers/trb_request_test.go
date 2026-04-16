@@ -35,7 +35,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	s.NoError(err)
 	s.NotNil(trb)
 
-	changes := map[string]interface{}{
+	changes := map[string]any{
 		"Name":     "Testing",
 		"state":    models.TRBRequestStateClosed,
 		"archived": false,
@@ -95,7 +95,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.NoError(err)
 	s.Len(col, 2)
 
-	changes := map[string]interface{}{
+	changes := map[string]any{
 		"state":    models.TRBRequestStateClosed,
 		"archived": true,
 	}
@@ -156,7 +156,7 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 	s.Len(col, 1)
 	s.EqualValues(trb2, col[0])
 
-	changes := map[string]interface{}{
+	changes := map[string]any{
 		"state":    models.TRBRequestStateClosed,
 		"archived": true,
 	}
@@ -192,7 +192,7 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 	}
 
 	fetchUserInfos := func(ctx context.Context, euas []string) ([]*models.UserInfo, error) {
-		userInfos := make([]*models.UserInfo, len(euas))
+		userInfos := make([]*models.UserInfo, 0, len(euas))
 		for _, eua := range euas {
 			userInfos = append(userInfos, &models.UserInfo{
 				Username:    eua,
@@ -252,7 +252,7 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 	// check that you cannot change the TRB lead on a closed TRB request
 	_, err = UpdateTRBRequest(s.testConfigs.Context,
 		trb.ID,
-		map[string]interface{}{
+		map[string]any{
 			"state": models.TRBRequestStateClosed,
 		},
 		s.testConfigs.Store)

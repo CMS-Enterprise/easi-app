@@ -72,7 +72,7 @@ func (s *mockFailedSender) Send(ctx context.Context, email Email) error {
 
 type mockFailedTemplateCaller struct{}
 
-func (c mockFailedTemplateCaller) Execute(wr io.Writer, data interface{}) error {
+func (c mockFailedTemplateCaller) Execute(wr io.Writer, data any) error {
 	return errors.New("template caller had an error")
 }
 

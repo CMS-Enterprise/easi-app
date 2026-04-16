@@ -50,6 +50,9 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
 
@@ -63,7 +66,9 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
 		actualBody, err := io.ReadAll(resp.Body)
@@ -87,6 +92,9 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
 
@@ -129,6 +137,9 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
 
@@ -142,7 +153,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		intakeToUpdate.Requester = "Test Requester"
 		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
-		var intakeWithWrongInfo map[string]interface{}
+		var intakeWithWrongInfo map[string]any
 		err = json.Unmarshal(body, &intakeWithWrongInfo)
 		s.NoError(err)
 		intakeWithWrongInfo["component"] = false
@@ -155,6 +166,9 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 		s.Equal(http.StatusBadRequest, resp.StatusCode)
 	})
 
@@ -166,7 +180,9 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
 		actualBody, err := io.ReadAll(resp.Body)

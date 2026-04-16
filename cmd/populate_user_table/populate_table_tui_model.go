@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -95,10 +96,12 @@ func (tm populateUserTableTuiModel) Init() tea.Cmd {
 }
 
 func (tm populateUserTableTuiModel) View() string {
+	var s strings.Builder
+
 	// The header
-	s := "Which commands would you like to execute?\n\n"
+	s.WriteString("Which commands would you like to execute?\n\n")
 	if tm.lastCmnd != "" {
-		s += fmt.Sprintf("%s\n\n", tm.lastCmnd)
+		fmt.Fprintf(&s, "%s\n\n", tm.lastCmnd)
 	}
 
 	// Iterate over our options
@@ -117,14 +120,14 @@ func (tm populateUserTableTuiModel) View() string {
 		}
 
 		// Render the row
-		s += fmt.Sprintf("%s [%s] %s\n", cursor, checked, option)
+		fmt.Fprintf(&s, "%s [%s] %s\n", cursor, checked, option)
 	}
 
 	// The footer
-	s += "\nPress q to quit.\n"
+	s.WriteString("\nPress q to quit.\n")
 
 	// Send the UI for rendering
-	return s
+	return s.String()
 }
 
 func (tm populateUserTableTuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

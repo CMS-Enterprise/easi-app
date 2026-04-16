@@ -1,6 +1,7 @@
 package sqlutils
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/lib/pq"
@@ -59,7 +60,8 @@ func (e *baseDBError) Unwrap() error {
 }
 
 func ProcessDataBaseErrors(message string, err error) error {
-	if pqErr, ok := err.(*pq.Error); ok {
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) {
 
 		switch pqErr.Code.Name() {
 		case "unique_violation":

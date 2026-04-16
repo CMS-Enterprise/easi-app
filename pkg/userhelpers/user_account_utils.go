@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -341,7 +342,7 @@ func GetOktaAccountInfo(ctx context.Context, _ string) (*OktaAccountInfo, error)
 	}
 	url := *oktaBaseURL + userEndpoint
 	authorization := authPrefix + enhancedJWT.AuthToken
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -354,11 +355,15 @@ func GetOktaAccountInfo(ctx context.Context, _ string) (*OktaAccountInfo, error)
 	}
 
 	jsonDataFromHTTP, err := io.ReadAll(resp.Body)
+	closeErr := resp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
+	if closeErr != nil {
+		return nil, fmt.Errorf("failed to close Okta account response body: %w", closeErr)
+	}
 
 	ret := OktaAccountInfo{}
-	err = json.Unmarshal([]byte(jsonDataFromHTTP), &ret)
+	err = json.Unmarshal(jsonDataFromHTTP, &ret)
 	return &ret, err
 }

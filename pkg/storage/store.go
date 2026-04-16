@@ -144,7 +144,9 @@ func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlSt
 	if err != nil {
 		return err
 	}
-	defer stmt.Close()
+	defer func() {
+		_ = stmt.Close()
+	}()
 
 	return stmt.SelectContext(ctx, dest, arguments)
 }
@@ -165,7 +167,9 @@ func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlState
 	if err != nil {
 		return err
 	}
-	defer stmt.Close()
+	defer func() {
+		_ = stmt.Close()
+	}()
 
 	return stmt.GetContext(ctx, dest, arguments)
 }

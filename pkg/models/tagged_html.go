@@ -29,7 +29,7 @@ type TaggedHTML struct {
 }
 
 // UnmarshalGQLContext unmarshals the data from graphql to the TaggedHTML type
-func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v interface{}) error {
+func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v any) error {
 	rawHTML, ok := v.(string)
 	if !ok {
 		return errors.New("invalid TaggedHTML")
@@ -39,7 +39,7 @@ func (th *TaggedHTML) UnmarshalGQLContext(_ context.Context, v interface{}) erro
 	if err != nil {
 		return err
 	}
-	*th = TaggedHTML(tc)
+	*th = tc
 
 	return nil
 }
@@ -158,7 +158,7 @@ func extractAttributes(match string) map[string]string {
 	return attributes
 }
 
-func (th *TaggedHTML) Scan(src interface{}) error {
+func (th *TaggedHTML) Scan(src any) error {
 	switch t := src.(type) {
 	case string:
 		tagHTML, err := NewTaggedHTMLFromString(t)

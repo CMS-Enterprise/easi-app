@@ -60,7 +60,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			models.TRBSubjectAreaOptionCloudMigration,
 		}
 
-		formChanges := map[string]interface{}{
+		formChanges := map[string]any{
 			"isSubmitted":                      false,
 			"trbRequestId":                     trbRequest.ID,
 			"component":                        "Taco Cart",
@@ -120,7 +120,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		// confirm we don't yet have a submission date
 		s.Nil(updatedForm.SubmittedAt)
 
-		submitChanges := map[string]interface{}{
+		submitChanges := map[string]any{
 			"trbRequestId": trbRequest.ID,
 			"isSubmitted":  true,
 		}

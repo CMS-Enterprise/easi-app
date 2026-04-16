@@ -132,7 +132,7 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 	// since this isn't a "search", but a lookup by EUA ID
 	if len(searchedUsers) == 0 {
 		appcontext.ZLogger(ctx).Error("no users found when calling FetchUserInfos", zap.String("usernames", strings.Join(usernames, ",")))
-		return users, fmt.Errorf("no users found")
+		return users, errors.New("no users found")
 	}
 
 	for _, user := range searchedUsers {

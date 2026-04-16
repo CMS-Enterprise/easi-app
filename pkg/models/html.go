@@ -46,7 +46,7 @@ func (h *HTML) StringPointer() *string {
 }
 
 // UnmarshalGQLContext unmarshals the data from graphql to the HTML type
-func (h *HTML) UnmarshalGQLContext(ctx context.Context, v interface{}) error {
+func (h *HTML) UnmarshalGQLContext(ctx context.Context, v any) error {
 
 	// Check if the value is a string
 	htmlString, ok := v.(string)

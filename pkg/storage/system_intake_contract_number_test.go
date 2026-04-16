@@ -29,7 +29,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 
 	s.Run("sets contracts on a system intake", func() {
 		// create three intakes
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
 				RequestType: models.SystemIntakeRequestTypeNEW,

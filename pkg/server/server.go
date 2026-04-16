@@ -79,7 +79,11 @@ func NewServer(config *viper.Viper) *Server {
 func Serve(config *viper.Viper) {
 	s := NewServer(config)
 	// TODO: (scheduler) is there another way to structure this so we can defer in the same location as starting the server?
-	defer scheduler.SharedScheduler.Stop()
+	defer func() {
+		if err := scheduler.SharedScheduler.Stop(); err != nil {
+			s.logger.Error("Failed to stop scheduler", zap.Error(err))
+		}
+	}()
 
 	useTLS := config.GetBool("USE_TLS")
 	if useTLS {

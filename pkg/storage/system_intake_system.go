@@ -22,7 +22,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
-	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
+	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]any{
 		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {

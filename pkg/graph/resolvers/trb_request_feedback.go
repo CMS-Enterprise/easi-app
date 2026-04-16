@@ -72,7 +72,7 @@ func CreateTRBRequestFeedback(
 		}
 
 		// Update the TRB form status to in progress
-		formChanges := map[string]interface{}{
+		formChanges := map[string]any{
 			"status": models.TRBFormStatusInProgress,
 		}
 

@@ -107,7 +107,7 @@ func newDB(dbConfig storage.DBConfig) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func writeObjectToJSONFile(object interface{}, path string) {
+func writeObjectToJSONFile(object any, path string) {
 	entryBytes, err := json.Marshal(object)
 	if err != nil {
 		panic("Can't serialize the object")
@@ -125,14 +125,16 @@ func writeObjectToJSONFile(object interface{}, path string) {
 	}
 }
 
-func readJSONFromFile[anyType interface{}](file string, obj *anyType) error {
+func readJSONFromFile[anyType any](file string, obj *anyType) error {
 
 	f, err := os.Open(file) //nolint
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
-	defer f.Close() //nolint
+	defer func() {
+		_ = f.Close()
+	}()
 
 	byteValue, _ := io.ReadAll(f)
 	err = json.Unmarshal(byteValue, &obj)

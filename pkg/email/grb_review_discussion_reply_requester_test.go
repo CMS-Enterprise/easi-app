@@ -41,10 +41,7 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionReplyRequesterEmail() {
 	s.NoError(err)
 
 	// -------- Subject ----------
-	expectedSubject := fmt.Sprintf(
-		"New reply to your discussion in the GRB review for %s",
-		requestName,
-	)
+	expectedSubject := fmt.Sprintf("New reply to your discussion in the GRB review for %s", requestName)
 	s.Equal(expectedSubject, sender.subject)
 
 	// -------- Expected HTML ----------

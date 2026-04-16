@@ -80,7 +80,7 @@ func (ps *ServicePubSub) Unsubscribe(sessionID uuid.UUID, eventType EventType, s
 }
 
 // Publish dispatches an event and corresponding payload to all registered Subscriber entities
-func (ps *ServicePubSub) Publish(sessionID uuid.UUID, eventType EventType, payload interface{}) {
+func (ps *ServicePubSub) Publish(sessionID uuid.UUID, eventType EventType, payload any) {
 	ps.lock.Lock()
 
 	session, wasSessionFound := ps.sessions[sessionID]

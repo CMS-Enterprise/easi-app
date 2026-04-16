@@ -17,7 +17,7 @@ func OneTimeJob[input comparable](ctx context.Context, scheduler gocron.Schedule
 	)
 
 	if err != nil {
-		return nil, fmt.Errorf("error scheduling job: %v", err)
+		return nil, fmt.Errorf("error scheduling job: %w", err)
 	}
 	return retJob, nil
 }

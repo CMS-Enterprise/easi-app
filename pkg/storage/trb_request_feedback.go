@@ -22,7 +22,7 @@ import (
 
 // CreateTRBRequestFeedback creates a new TRB request feedback record in the database
 func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.TRBRequestFeedback, formToUpdate *models.TRBRequestForm) (*models.TRBRequestFeedback, error) {
-	return sqlutils.WithTransactionRet[*models.TRBRequestFeedback](ctx, s.db, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
 		if feedback.ID == uuid.Nil {
 			feedback.ID = uuid.New()
 		}
@@ -61,7 +61,9 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			)
 			return nil, err
 		}
-		defer stmt.Close()
+		defer func() {
+			_ = stmt.Close()
+		}()
 
 		createdFeedback := models.TRBRequestFeedback{}
 		err = stmt.Get(&createdFeedback, feedback)
@@ -86,19 +88,21 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			RETURNING *;`)
 			if formErr != nil {
 				appcontext.ZLogger(ctx).Error(
-					fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
+					fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", formErr),
 					zap.String("user", formToUpdate.CreatedBy),
 				)
 				return nil, formErr
 			}
-			defer formStmt.Close()
+			defer func() {
+				_ = formStmt.Close()
+			}()
 
 			updatedForm := models.TRBRequestForm{}
 			formErr = formStmt.Get(&updatedForm, formToUpdate)
 
 			if formErr != nil {
 				appcontext.ZLogger(ctx).Error(
-					fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
+					fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", formErr),
 					zap.String("user", formToUpdate.CreatedBy),
 				)
 				return nil, formErr

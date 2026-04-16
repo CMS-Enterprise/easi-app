@@ -112,7 +112,7 @@ func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
 			gocron.WithContext(ctx),
 		)
 		if err != nil {
-			return nil, fmt.Errorf("error scheduling job: %v", err)
+			return nil, fmt.Errorf("error scheduling job: %w", err)
 		}
 		sjw.job = retJob
 		return retJob, nil

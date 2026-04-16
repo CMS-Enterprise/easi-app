@@ -24,9 +24,11 @@ func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.U
 	if err != nil {
 		return nil, err
 	}
-	defer stmt.Close()
+	defer func() {
+		_ = stmt.Close()
+	}()
 
-	arg := map[string]interface{}{
+	arg := map[string]any{
 		"common_name": commonName,
 	}
 
@@ -93,7 +95,7 @@ func (s *Store) UserAccountGetByID(ctx context.Context, np sqlutils.NamedPrepare
 
 // UserAccountsByIDs gets user accounts by user ID
 func (s *Store) UserAccountsByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
-	return sqlutils.WithTransactionRet[[]*authentication.UserAccount](ctx, s, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
+	return sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
 		return s.UserAccountsByIDsNP(ctx, tx, userIDs)
 	})
 }

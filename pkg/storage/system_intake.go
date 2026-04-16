@@ -206,7 +206,7 @@ func CreateSystemIntake(ctx context.Context, np sqlutils.NamedPreparer, intake *
 // was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
 // using UpdateSystemIntakeNP directly (and that function renamed).
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		return s.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
@@ -304,7 +304,9 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 	if err != nil {
 		return nil, err
 	}
-	defer updateStmt.Close()
+	defer func() {
+		_ = updateStmt.Close()
+	}()
 
 	_, err = updateStmt.Exec(intake)
 	if err != nil {
@@ -342,7 +344,7 @@ const fetchSystemIntakeSQL = `
 // was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
 // using FetchSystemIntakeByIDNP directly (and that function renamed).
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		return FetchSystemIntakeByIDNP(ctx, tx, id)
 	})
 }
@@ -361,10 +363,12 @@ func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id 
 	if err != nil {
 		return nil, err
 	}
-	defer intakeStmt.Close()
+	defer func() {
+		_ = intakeStmt.Close()
+	}()
 
 	intake := models.SystemIntake{}
-	err = intakeStmt.Get(&intake, map[string]interface{}{
+	err = intakeStmt.Get(&intake, map[string]any{
 		"id": id.String(),
 	})
 
@@ -406,10 +410,12 @@ func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id 
 	if err != nil {
 		return nil, err
 	}
-	defer fundingSourcesStmt.Close()
+	defer func() {
+		_ = fundingSourcesStmt.Close()
+	}()
 
 	sources := []*models.SystemIntakeFundingSource{}
-	err = fundingSourcesStmt.Select(&sources, map[string]interface{}{
+	err = fundingSourcesStmt.Select(&sources, map[string]any{
 		"id": id.String(),
 	})
 
@@ -622,7 +628,7 @@ func (s *Store) GetMySystemIntakes(ctx context.Context, userID uuid.UUID) ([]*mo
 func GetSystemIntakesWithGRBReviewHalfwayThrough(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
 
-	err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBReviewIsHalfwayThrough, map[string]interface{}{})
+	err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBReviewIsHalfwayThrough, map[string]any{})
 	if err != nil {
 		logger.Error("Failed to fetch system intakes with GRB review halfway through", zap.Error(err))
 	}

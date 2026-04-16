@@ -45,7 +45,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.True(len(recommendations) == 1)
 
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
-		changes := map[string]interface{}{
+		changes := map[string]any{
 			"id":           created.ID,
 			"trbRequestId": trbRequest.ID.String(),
 			"title":        "Restart your PC",
@@ -95,7 +95,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 
 		// Attempt to update the recommendation
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
-		changes := map[string]interface{}{
+		changes := map[string]any{
 			"id":           created.ID,
 			"trbRequestId": trbRequest.ID.String(),
 			"title":        "Restart your PC",
@@ -116,7 +116,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.NoError(err)
 
 		createdRecommendations := []*models.TRBGuidanceLetterInsight{}
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			toCreate := models.TRBGuidanceLetterInsight{
 				TRBRequestID: trbRequest.ID,
 				Title:        "Restart your computer",
@@ -481,7 +481,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		// let's try moving consideration 2 to requirements
 		// we should expect it to be number 3 in requirements after the move
 		// we should expect consideration 3 to bump up to consideration 2 to fill in the gap
-		updated, err := UpdateTRBGuidanceLetterInsight(ctx, store, map[string]interface{}{
+		updated, err := UpdateTRBGuidanceLetterInsight(ctx, store, map[string]any{
 			"id":       createdConsideration2.ID,
 			"category": models.TRBGuidanceLetterInsightCategoryRequirement.String(),
 		})
@@ -522,7 +522,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 		s.EqualValues(createdRecommendation1.Category, models.TRBGuidanceLetterInsightCategoryRecommendation)
 
 		// try to update the category to `uncategorized`
-		_, err = UpdateTRBGuidanceLetterInsight(ctx, store, map[string]interface{}{
+		_, err = UpdateTRBGuidanceLetterInsight(ctx, store, map[string]any{
 			"id":       createdRecommendation1.ID,
 			"category": models.TRBGuidanceLetterInsightCategoryUncategorized.String(),
 		})
