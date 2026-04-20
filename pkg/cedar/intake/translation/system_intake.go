@@ -144,8 +144,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 	} else if si.CreatedAt != nil {
 		result.ClientLastUpdatedDate = pStrfmtDateTime(si.CreatedAt)
 	} else {
-		now := time.Now()
-		result.ClientLastUpdatedDate = pStrfmtDateTime(&now)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(new(time.Now()))
 	}
 
 	return &result, nil

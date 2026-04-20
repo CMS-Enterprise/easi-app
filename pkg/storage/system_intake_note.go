@@ -20,8 +20,7 @@ import (
 func (s *Store) CreateSystemIntakeNote(ctx context.Context, note *models.SystemIntakeNote) (*models.SystemIntakeNote, error) {
 	note.ID = uuid.New()
 	if note.CreatedAt == nil {
-		ts := s.clock.Now()
-		note.CreatedAt = &ts
+		note.CreatedAt = new(s.clock.Now())
 	}
 	const createSystemIntakeNoteSQL = `
 		INSERT INTO notes (

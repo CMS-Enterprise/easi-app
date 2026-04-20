@@ -107,8 +107,7 @@ func UpdateTRBRequestForm(
 
 	if isSubmitted && previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusCompleted
-		now := time.Now()
-		form.SubmittedAt = &now
+		form.SubmittedAt = new(time.Now())
 	} else if previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusInProgress
 	}

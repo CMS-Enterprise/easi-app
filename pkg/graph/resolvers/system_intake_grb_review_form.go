@@ -243,15 +243,13 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 	emailClient *email.Client,
 	systemIntakeID uuid.UUID,
 ) (*models.UpdateSystemIntakePayload, error) {
-	currentTime := time.Now()
-
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}
 
-	intake.GrbReviewAsyncManualEndDate = &currentTime
+	intake.GrbReviewAsyncManualEndDate = new(time.Now())
 
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)

@@ -55,11 +55,6 @@ func getCedarBusinessOwnerRoleTypeID(ctx context.Context, c *Client) (string, er
 	return "", errors.New("no Business Owner role type found")
 }
 
-func cedarRoleApplicationPtr() *string {
-	str := cedarRoleApplication
-	return &str
-}
-
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
 	lowered := strings.ToLower(rawAssigneeType)
 
@@ -407,20 +402,17 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID uuid.UUID, newRoles
 	rolesToCreate := []*apimodels.Role{}
 
 	for _, newRole := range newRoles {
-		// create by-value copy of roleTypeID so it doesn't change as newRole iterates through newRoles
-		roleTypeID := newRole.roleTypeID
-
 		roleToCreate := &apimodels.Role{
-			Application:      cedarRoleApplicationPtr(),
+			Application:      new(cedarRoleApplication),
 			ObjectID:         cedarSystem.VersionID.Ptr(),
 			AssigneeUserName: newRole.euaUserID,
-			RoleTypeID:       &roleTypeID,
+			RoleTypeID:       &newRole.roleTypeID,
 		}
 		rolesToCreate = append(rolesToCreate, roleToCreate)
 	}
 
 	body := &apimodels.RoleAddRequest{
-		Application: cedarRoleApplicationPtr(),
+		Application: new(cedarRoleApplication),
 		Roles:       rolesToCreate,
 	}
 

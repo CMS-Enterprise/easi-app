@@ -53,6 +53,5 @@ func pStrfmtDateTime(t *time.Time) *strfmt.DateTime {
 		return nil
 	}
 
-	strfmtDatetime := strfmt.DateTime(*t)
-	return &strfmtDatetime
+	return new(strfmt.DateTime(*t))
 }

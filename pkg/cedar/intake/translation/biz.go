@@ -199,8 +199,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 	} else if bc.CreatedAt != nil {
 		result.ClientLastUpdatedDate = pStrfmtDateTime(bc.CreatedAt)
 	} else {
-		now := time.Now()
-		result.ClientLastUpdatedDate = pStrfmtDateTime(&now)
+		result.ClientLastUpdatedDate = pStrfmtDateTime(new(time.Now()))
 	}
 
 	return result, nil

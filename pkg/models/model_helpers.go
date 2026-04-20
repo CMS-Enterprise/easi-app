@@ -26,8 +26,7 @@ func ConvertEnumsToStringArray[EnumType ~string](arr []EnumType) pq.StringArray 
 
 // HTMLPointer returns a pointer to an HTML type from a string input
 func HTMLPointer(input string) *HTML {
-	html := HTML(input)
-	return &html
+	return new(HTML(input))
 }
 
 func ZeroStringsFrom(strs []string) []zero.String {

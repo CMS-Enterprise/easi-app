@@ -68,14 +68,13 @@ func ProgressIntake(
 
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
-		stepForAction := models.SystemIntakeStep(input.NewStep)
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypePROGRESSTONEWSTEP,
 			ActorName:      adminUserInfo.DisplayName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
-			Step:           &stepForAction,
+			Step:           new(models.SystemIntakeStep(input.NewStep)),
 		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
@@ -212,8 +211,7 @@ func CreateSystemIntakeActionRequestEdits(
 		}
 	}
 
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
+	intake.UpdatedAt = new(time.Now())
 
 	// save intake, action, feedback, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -562,8 +560,7 @@ func CreateSystemIntakeActionReopenRequest(
 	}
 	intake.State = models.SystemIntakeStateOpen
 
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
+	intake.UpdatedAt = new(time.Now())
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -810,16 +807,13 @@ func UpdateLCID(
 	var prevCostBaseline string
 	var newCostBaseline string
 	if intake.LifecycleScope != nil {
-		scope := *intake.LifecycleScope
-		prevScope = &scope
+		prevScope = new(*intake.LifecycleScope)
 	}
 	if intake.LifecycleExpiresAt != nil {
-		expirationTime := *intake.LifecycleExpiresAt
-		prevExpiration = &expirationTime
+		prevExpiration = new(*intake.LifecycleExpiresAt)
 	}
 	if intake.DecisionNextSteps != nil {
-		steps := *intake.DecisionNextSteps
-		prevSteps = &steps
+		prevSteps = new(*intake.DecisionNextSteps)
 	}
 	prevCostBaseline = intake.LifecycleCostBaseline.ValueOrZero()
 
@@ -947,8 +941,7 @@ func ConfirmLCID(ctx context.Context,
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
 	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
 
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
+	intake.UpdatedAt = new(time.Now())
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION

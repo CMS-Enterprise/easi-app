@@ -63,9 +63,11 @@ func GetSystemProfileSectionLocks(cedarSystemID uuid.UUID) ([]*models.SystemProf
 
 	var lockStatuses []*models.SystemProfileSectionLockStatus
 	for section := range sectionLocks {
-		lockStatus := sectionLocks[section]
-		ls := lockStatus
-		lockStatuses = append(lockStatuses, &ls)
+		lockStatus, ok := sectionLocks[section]
+		if !ok {
+			continue
+		}
+		lockStatuses = append(lockStatuses, &lockStatus)
 	}
 	systemProfileSessionLocks.Unlock()
 
@@ -199,13 +201,11 @@ func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID uuid.UUID) (
 	sessionID := cedarSystemIDToSessionID(cedarSystemID)
 	var unlockedSections []*models.SystemProfileSectionLockStatus
 	for _, item := range sectionsToUnlock {
-		lockStatus := item.lockStatus
-		ls := lockStatus
-		unlockedSections = append(unlockedSections, &ls)
+		unlockedSections = append(unlockedSections, new(item.lockStatus))
 
 		ps.Publish(sessionID, pubsubevents.SystemProfileSectionLocksChanged, models.SystemProfileSectionLockStatusChanged{
 			ChangeType: models.LockChangeTypeRemoved,
-			LockStatus: &ls,
+			LockStatus: new(item.lockStatus),
 		})
 	}
 

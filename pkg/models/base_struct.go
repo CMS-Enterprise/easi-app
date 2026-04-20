@@ -37,9 +37,7 @@ func NewBaseStruct(createdBy string) BaseStruct {
 
 // SetModifiedBy sets the modifiedBy information based off a Principal object
 func (b *BaseStruct) SetModifiedBy(principal authentication.Principal) error {
-	euaid := principal.ID()
-
-	b.ModifiedBy = &euaid
+	b.ModifiedBy = new(principal.ID())
 	return nil
 }
 
