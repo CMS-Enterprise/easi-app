@@ -63,9 +63,7 @@ func (s *Store) CreateTRBAdminNoteTRBInsightLinks(
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = createdLinkRows.Close()
-	}()
+	defer closeRows(ctx, createdLinkRows)
 
 	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
 	createdLinks := []*models.TRBAdminNoteTRBGuidanceLetterInsightLink{}

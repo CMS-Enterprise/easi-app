@@ -39,7 +39,7 @@ type grbEmailJobs struct {
 var GRBEmailJobs = getGRBEmailJobs(SharedScheduler)
 
 // getGRBEmailJobs initializes all GRB email jobs
-func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
+func getGRBEmailJobs(scheduler *scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
 		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJob(
 			"SendAsyncVotingHalfwayThroughEmailJob",

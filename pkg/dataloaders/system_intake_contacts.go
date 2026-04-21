@@ -49,7 +49,7 @@ func SystemIntakeContactGetRequester(ctx context.Context, id uuid.UUID) (*models
 	if err != nil {
 		return nil, err
 	}
-	return contacts.Requester()
+	return contacts.Requester(), nil
 }
 
 func (d *dataReader) batchSystemIntakeContactsBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContact, []error) {

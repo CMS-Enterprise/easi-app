@@ -36,17 +36,17 @@ func TestSystemProfileSectionLock(t *testing.T) {
 	principal := createTestPrincipal("ABCD", false)
 
 	// Initial state - no locks
-	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
+	locks, err := getSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	assert.Empty(t, locks)
 
 	// Lock a section
-	locked, err := LockSystemProfileSection(ps, cedarSystemID, section, principal)
+	locked, err := lockSystemProfileSection(ps, cedarSystemID, section, principal)
 	require.NoError(t, err)
 	assert.True(t, locked)
 
 	// Verify section is locked
-	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
+	locks, err = getSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	require.Len(t, locks, 1)
 	assert.Equal(t, cedarSystemID, locks[0].CedarSystemID)
@@ -55,12 +55,12 @@ func TestSystemProfileSectionLock(t *testing.T) {
 
 	// Unlock the section
 	userID := principal.Account().ID
-	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userID)
+	unlocked, err := unlockSystemProfileSection(ps, cedarSystemID, section, userID)
 	require.NoError(t, err)
 	assert.True(t, unlocked)
 
 	// Verify section is unlocked
-	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
+	locks, err = getSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	assert.Empty(t, locks)
 }
@@ -77,34 +77,34 @@ func TestSystemProfileSectionLockConflict(t *testing.T) {
 	userB := createTestPrincipal("USR1", false)
 
 	// User A locks the section
-	locked, err := LockSystemProfileSection(ps, cedarSystemID, section, userA)
+	locked, err := lockSystemProfileSection(ps, cedarSystemID, section, userA)
 	require.NoError(t, err)
 	assert.True(t, locked)
 
 	// User B tries to lock the same section - should fail
-	locked, err = LockSystemProfileSection(ps, cedarSystemID, section, userB)
+	locked, err = lockSystemProfileSection(ps, cedarSystemID, section, userB)
 	require.Error(t, err)
 	assert.False(t, locked)
 	assert.Contains(t, err.Error(), "already locked by")
 
 	// Verify only User A's lock exists
-	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
+	locks, err := getSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	require.Len(t, locks, 1)
 	assert.Equal(t, userA.Account().ID, locks[0].LockedByUserAccount.ID)
 
 	// User A unlocks
-	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userA.Account().ID)
+	unlocked, err := unlockSystemProfileSection(ps, cedarSystemID, section, userA.Account().ID)
 	require.NoError(t, err)
 	assert.True(t, unlocked)
 
 	// Now User B can lock the section
-	locked, err = LockSystemProfileSection(ps, cedarSystemID, section, userB)
+	locked, err = lockSystemProfileSection(ps, cedarSystemID, section, userB)
 	require.NoError(t, err)
 	assert.True(t, locked)
 
 	// Verify User B's lock exists
-	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
+	locks, err = getSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	require.Len(t, locks, 1)
 	assert.Equal(t, userB.Account().ID, locks[0].LockedByUserAccount.ID)
@@ -123,25 +123,25 @@ func TestUnlockAllSystemProfileSections(t *testing.T) {
 	section2 := models.SystemProfileLockableSectionData
 	section3 := models.SystemProfileLockableSectionTeam
 
-	locked1, err := LockSystemProfileSection(ps, cedarSystemID, section1, principal)
+	locked1, err := lockSystemProfileSection(ps, cedarSystemID, section1, principal)
 	require.NoError(t, err)
 	assert.True(t, locked1)
 
-	locked2, err := LockSystemProfileSection(ps, cedarSystemID, section2, principal)
+	locked2, err := lockSystemProfileSection(ps, cedarSystemID, section2, principal)
 	require.NoError(t, err)
 	assert.True(t, locked2)
 
-	locked3, err := LockSystemProfileSection(ps, cedarSystemID, section3, principal)
+	locked3, err := lockSystemProfileSection(ps, cedarSystemID, section3, principal)
 	require.NoError(t, err)
 	assert.True(t, locked3)
 
 	// Verify all sections are locked
-	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
+	locks, err := getSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	assert.Len(t, locks, 3)
 
 	// Unlock all sections
-	deletedSections, err := UnlockAllSystemProfileSections(ps, cedarSystemID)
+	deletedSections, err := unlockAllSystemProfileSections(ps, cedarSystemID)
 	require.NoError(t, err)
 	assert.Len(t, deletedSections, 3)
 
@@ -155,7 +155,7 @@ func TestUnlockAllSystemProfileSections(t *testing.T) {
 	assert.True(t, deletedSectionTypes[section3])
 
 	// Verify no locks remain
-	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
+	locks, err = getSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	assert.Empty(t, locks)
 }

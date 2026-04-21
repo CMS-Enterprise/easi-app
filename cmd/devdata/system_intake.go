@@ -95,10 +95,7 @@ func fillOutInitialIntake(
 	if err != nil {
 		panic(err)
 	}
-	requester, err := contacts.Requester()
-	if err != nil {
-		panic(fmt.Errorf("unable to find a requester: %w", err))
-	}
+	requester := contacts.Requester()
 	if requester == nil {
 		panic("requester is nil")
 	}

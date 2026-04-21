@@ -115,37 +115,37 @@ type SystemIntakeContacts struct {
 }
 
 // Requester returns the primary requester of a system intake. If none are found, it returns nil. This should be a very uncommon situation
-func (info *SystemIntakeContacts) Requester() (*SystemIntakeContact, error) {
+func (info *SystemIntakeContacts) Requester() *SystemIntakeContact {
 	if info == nil || info.AllContacts == nil || len(info.AllContacts) == 0 {
-		return nil, nil
+		return nil
 	}
 
 	requester, _ := lo.Find(info.AllContacts, func(c *SystemIntakeContact) bool {
 		return c.IsRequester
 	})
-	return requester, nil
+	return requester
 }
 
 // BusinessOwners returns the business owner from the List of Contacts
-func (info *SystemIntakeContacts) BusinessOwners() ([]*SystemIntakeContact, error) {
+func (info *SystemIntakeContacts) BusinessOwners() []*SystemIntakeContact {
 	contacts := lo.Filter(info.AllContacts, func(c *SystemIntakeContact, index int) bool {
 		return c.Roles != nil && lo.Contains(c.Roles, SystemIntakeContactRoleBusinessOwner)
 	})
-	return contacts, nil
+	return contacts
 }
 
 // ProductManagers returns the product managers from the List of Contacts
-func (info *SystemIntakeContacts) ProductManagers() ([]*SystemIntakeContact, error) {
+func (info *SystemIntakeContacts) ProductManagers() []*SystemIntakeContact {
 	contacts := lo.Filter(info.AllContacts, func(c *SystemIntakeContact, index int) bool {
 		return c.Roles != nil && lo.Contains(c.Roles, SystemIntakeContactRoleProductManager)
 	})
-	return contacts, nil
+	return contacts
 }
 
 // AdditionalContacts Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productOwners
-func (info *SystemIntakeContacts) AdditionalContacts() ([]*SystemIntakeContact, error) {
+func (info *SystemIntakeContacts) AdditionalContacts() []*SystemIntakeContact {
 	contacts := lo.Filter(info.AllContacts, func(c *SystemIntakeContact, index int) bool {
 		return !c.IsRequester && !lo.Some(c.Roles, []SystemIntakeContactRole{SystemIntakeContactRoleBusinessOwner, SystemIntakeContactRoleProductManager})
 	})
-	return contacts, nil
+	return contacts
 }

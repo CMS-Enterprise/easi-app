@@ -199,3 +199,16 @@ func closeNamedStmt(ctx context.Context, stmt *sqlx.NamedStmt) {
 		appcontext.ZLogger(ctx).Error("Failed to close prepared statement", zap.Error(err))
 	}
 }
+
+func closeRows(ctx context.Context, rows *sqlx.Rows) {
+	if rows == nil {
+		return
+	}
+	if ctx == nil {
+		ctx = context.TODO()
+	}
+
+	if err := rows.Close(); err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to close rows", zap.Error(err))
+	}
+}

@@ -29,7 +29,7 @@ func GetCoreTranslatableContactInfo(ctx context.Context, systemIntakeID uuid.UUI
 	}
 	retContacts = &CoreTranslatableContacts{}
 
-	requester, _ := contacts.Requester()
+	requester := contacts.Requester()
 	if requester != nil {
 		reqAccount, _ := requester.UserAccount(ctx)
 		if reqAccount != nil {
@@ -37,7 +37,7 @@ func GetCoreTranslatableContactInfo(ctx context.Context, systemIntakeID uuid.UUI
 		}
 		retContacts.Component = null.StringFrom(string(requester.Component))
 	}
-	businessOwners, _ := contacts.BusinessOwners()
+	businessOwners := contacts.BusinessOwners()
 	if len(businessOwners) > 0 {
 		boAccount, _ := businessOwners[0].UserAccount(ctx)
 		if boAccount != nil {
@@ -46,7 +46,7 @@ func GetCoreTranslatableContactInfo(ctx context.Context, systemIntakeID uuid.UUI
 		retContacts.BusinessOwnerComponent = null.StringFrom(string(businessOwners[0].Component))
 	}
 
-	productManagers, _ := contacts.ProductManagers()
+	productManagers := contacts.ProductManagers()
 	if len(productManagers) > 0 {
 		pmAccount, _ := productManagers[0].UserAccount(ctx)
 		if pmAccount != nil {
