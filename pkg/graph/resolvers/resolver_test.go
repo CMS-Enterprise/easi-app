@@ -139,7 +139,11 @@ func GetDefaultTestConfigs() *TestConfigs {
 // GetDefaults sets the dependencies for the TestConfigs struct
 func (tc *TestConfigs) GetDefaults() {
 	tc.DBConfig = NewDBConfig()
-	tc.LDClient, _ = ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	if err != nil {
+		panic(err)
+	}
+	tc.LDClient = ldClient
 
 	s3Client := upload.NewS3Client(tc.Context, newS3Config())
 	tc.S3Client = &s3Client
@@ -150,7 +154,11 @@ func (tc *TestConfigs) GetDefaults() {
 		Email:       "testuser@test.com",
 		Username:    "TEST",
 	}
-	tc.Store, _ = storage.NewStore(tc.DBConfig, tc.LDClient)
+	store, err := storage.NewStore(tc.DBConfig, tc.LDClient)
+	if err != nil {
+		panic(err)
+	}
+	tc.Store = store
 
 	localOktaClient := local.NewOktaAPIClient()
 	tc.UserSearchClient = localOktaClient
@@ -179,14 +187,18 @@ func getTestEmailConfig() email.Config {
 func NewEmailClient() (*email.Client, *mockSender) {
 	sender := &mockSender{}
 	emailConfig := getTestEmailConfig()
-	emailClient, _ := email.NewClient(emailConfig, sender)
+	emailClient, err := email.NewClient(emailConfig, sender)
+	if err != nil {
+		panic(err)
+	}
 	return &emailClient, sender
 }
 
 // getTestPrincipal gets a user principal from database
 func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string, isAdmin bool) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
+	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
+	s.NoError(err)
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:           userName,

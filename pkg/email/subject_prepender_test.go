@@ -7,16 +7,30 @@ import (
 )
 
 func TestAddNonProdEnvToSubject(t *testing.T) {
-	localEnv, _ := appconfig.NewEnvironment("local")
-	devEnv, _ := appconfig.NewEnvironment("dev")
-	testEnv, _ := appconfig.NewEnvironment("test")
-	implEnv, _ := appconfig.NewEnvironment("impl")
-	prodEnv, _ := appconfig.NewEnvironment("prod")
+	mustEnvironment := func(envName string) appconfig.Environment {
+		env, err := appconfig.NewEnvironment(envName)
+		if err != nil {
+			t.Fatalf("failed to create %q environment: %v", envName, err)
+		}
+		return env
+	}
+
+	localEnv := mustEnvironment("local")
+	devEnv := mustEnvironment("dev")
+	testEnv := mustEnvironment("test")
+	implEnv := mustEnvironment("impl")
+	prodEnv := mustEnvironment("prod")
 
 	// these final two cases really only exist to test what would happen if
 	// we ignored the error returned by NewEnvironment, which both of these cases will hit
-	invalidEnv, _ := appconfig.NewEnvironment("something weird!")
-	emptyEnv, _ := appconfig.NewEnvironment("")
+	invalidEnv, err := appconfig.NewEnvironment("something weird!")
+	if err == nil {
+		t.Fatal("expected error when creating invalid environment")
+	}
+	emptyEnv, err := appconfig.NewEnvironment("")
+	if err == nil {
+		t.Fatal("expected error when creating empty environment")
+	}
 
 	tests := []struct {
 		name     string

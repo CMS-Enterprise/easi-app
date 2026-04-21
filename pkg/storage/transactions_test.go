@@ -104,7 +104,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 		var createID uuid.UUID
 
 		panicFunc := func() {
-			_ = sqlutils.WithTransaction(ctx, s.store, func(tx *sqlx.Tx) error {
+			err := sqlutils.WithTransaction(ctx, s.store, func(tx *sqlx.Tx) error {
 				trb := models.NewTRBRequest(anonEua)
 				trb.Type = models.TRBTNeedHelp
 				trb.State = models.TRBRequestStateOpen
@@ -122,6 +122,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 
 				panic("panic!")
 			})
+			s.NoError(err)
 		}
 
 		// we expect a panic, so we don't want the test to fail due to our panic

@@ -53,7 +53,10 @@ func GetDefaultTestConfigs(getTestPrincipalFunction GetTestPrincipalFunction) *B
 // The principal needs to be set before every test as the user account is removed between tests
 func (config *Base) GetDefaults(ctxCallbacks ...func(context.Context) context.Context) {
 	dbConfig, ldClient, logger, userInfo := getTestDependencies()
-	store, _ := storage.NewStore(dbConfig, ldClient)
+	store, err := storage.NewStore(dbConfig, ldClient)
+	if err != nil {
+		panic(err)
+	}
 	emailClient, sender := emailtestconfigs.NewEmailClient()
 	userSearchClient := local.NewOktaAPIClient()
 
@@ -79,7 +82,10 @@ func (config *Base) GetDefaults(ctxCallbacks ...func(context.Context) context.Co
 
 func getTestDependencies() (storage.DBConfig, *ld.LDClient, *zap.Logger, *models.UserInfo) {
 	config := dbtestconfigs.NewDBCTestConfig()
-	ldClient, _ := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	if err != nil {
+		panic(err)
+	}
 	logger := zap.NewNop()
 	userInfo := &models.UserInfo{
 		DisplayName: "Test User",

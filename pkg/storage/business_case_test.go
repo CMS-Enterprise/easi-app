@@ -46,7 +46,8 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 	})
 
 	s.Run("cannot without an ID that exists in the db", func() {
-		badUUID, _ := uuid.Parse("")
+		badUUID, err := uuid.Parse("")
+		s.Error(err)
 		fetched, err := s.store.FetchBusinessCaseByID(ctx, badUUID)
 
 		s.Error(err)

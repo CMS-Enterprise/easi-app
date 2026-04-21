@@ -54,7 +54,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusUnauthorized, resp.StatusCode)
 	})
@@ -68,7 +68,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
@@ -97,7 +97,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusUnauthorized, resp.StatusCode)
 	})
@@ -120,7 +120,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)

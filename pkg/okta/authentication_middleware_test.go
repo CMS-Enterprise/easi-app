@@ -38,9 +38,11 @@ func TestAuthenticationMiddlewareTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 	logger := zap.NewNop()
 
-	ldClient, _ := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	assert.NoError(t, err)
 
-	store, _ := storage.NewStore(NewDBConfig(), ldClient)
+	store, err := storage.NewStore(NewDBConfig(), ldClient)
+	assert.NoError(t, err)
 	localOktaClient := local.NewOktaAPIClient()
 
 	testSuite := &AuthenticationMiddlewareTestSuite{

@@ -24,13 +24,18 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	ctx = appcontext.WithPrincipal(ctx, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 
 	// Build out test intakes with varying LCID expiration dates
-	testDate, _ := time.Parse(DateLayout, "2023-02-20")
+	testDate, err := time.Parse(DateLayout, "2023-02-20")
+	assert.NoError(t, err)
 
 	// mock expiration dates
-	twoYearsFromDate, _ := time.Parse(DateLayout, "2021-03-20")
-	sixtyDaysFromDate, _ := time.Parse(DateLayout, "2023-04-21")
-	fiftyNineDaysFromDate, _ := time.Parse(DateLayout, "2023-04-20")
-	fortySixDaysFromDate, _ := time.Parse(DateLayout, "2023-04-06")
+	twoYearsFromDate, err := time.Parse(DateLayout, "2021-03-20")
+	assert.NoError(t, err)
+	sixtyDaysFromDate, err := time.Parse(DateLayout, "2023-04-21")
+	assert.NoError(t, err)
+	fiftyNineDaysFromDate, err := time.Parse(DateLayout, "2023-04-20")
+	assert.NoError(t, err)
+	fortySixDaysFromDate, err := time.Parse(DateLayout, "2023-04-06")
+	assert.NoError(t, err)
 
 	var intakePtr *models.SystemIntake
 	intake := testhelpers.NewSystemIntake()

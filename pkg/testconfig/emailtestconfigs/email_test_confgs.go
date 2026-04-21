@@ -27,7 +27,10 @@ func getTestEmailConfig() email.Config {
 func NewEmailClient() (*email.Client, *MockSender) {
 	sender := &MockSender{}
 	emailConfig := getTestEmailConfig()
-	emailClient, _ := email.NewClient(emailConfig, sender)
+	emailClient, err := email.NewClient(emailConfig, sender)
+	if err != nil {
+		panic(err)
+	}
 	return &emailClient, sender
 }
 

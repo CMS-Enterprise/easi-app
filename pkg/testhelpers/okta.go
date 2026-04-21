@@ -60,7 +60,10 @@ func fetchOktaAccessToken(
 	secret string,
 ) (string, error) {
 	// Get Session Token
-	issuerParts, _ := url.Parse(domain)
+	issuerParts, err := url.Parse(domain)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse Okta domain: %w", err)
+	}
 	baseURL := issuerParts.Scheme + "://" + issuerParts.Hostname()
 	requestURI := baseURL + "/api/v1/authn"
 	postValues := map[string]string{
@@ -200,8 +203,14 @@ func fetchOktaAccessToken(
 	if err := resp.Body.Close(); err != nil {
 		return "", fmt.Errorf("failed to close authorization response body: %w", err)
 	}
-	locParts, _ := url.Parse(location)
-	fragmentParts, _ := url.ParseQuery(locParts.Fragment)
+	locParts, err := url.Parse(location)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse authorization location: %w", err)
+	}
+	fragmentParts, err := url.ParseQuery(locParts.Fragment)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse authorization fragment: %w", err)
+	}
 
 	if fragmentParts["access_token"] == nil {
 		fmt.Println("could not extract access token")

@@ -23,7 +23,7 @@ func (s *IntegrationTestSuite) TestCatchAllRoute() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusNotFound, resp.StatusCode)
 	})
@@ -40,7 +40,7 @@ func (s *IntegrationTestSuite) TestCatchAllRoute() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusNotFound, resp.StatusCode)
 	})

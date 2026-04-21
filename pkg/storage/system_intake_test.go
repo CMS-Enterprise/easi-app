@@ -403,7 +403,8 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 	})
 
 	s.Run("cannot without an ID that exists in the db", func() {
-		badUUID, _ := uuid.Parse("")
+		badUUID, err := uuid.Parse("")
+		s.Error(err)
 		fetched, err := s.store.FetchSystemIntakeByID(ctx, badUUID)
 
 		s.Error(err)
@@ -474,7 +475,8 @@ func (s *StoreTestSuite) TestUpdateAdminLead() {
 		adminLead := "Test Lead"
 
 		_, err = s.store.UpdateAdminLead(ctx, intake.ID, adminLead)
-		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+		s.NoError(err, "failed to update admin lead")
+		fetchedIntake, err := s.store.FetchSystemIntakeByID(ctx, intake.ID)
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Equal(fetchedIntake.AdminLead.String, adminLead)
@@ -490,11 +492,14 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
-		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
-		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
+		grbDate, err := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
+		s.NoError(err)
+		grtDate, err := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
+		s.NoError(err)
 
 		_, err = s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, &grtDate)
-		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+		s.NoError(err, "failed to update review dates")
+		fetchedIntake, err := s.store.FetchSystemIntakeByID(ctx, intake.ID)
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Equal(fetchedIntake.GRBDate.Format("2006-01-02"), "2021-12-22")
@@ -507,7 +512,8 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
-		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
+		grbDate, err := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
+		s.NoError(err)
 		updatedIntake, err := s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, nil)
 
 		s.NoError(err, "failed to fetch system intakes")
@@ -521,7 +527,8 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
-		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
+		grtDate, err := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
+		s.NoError(err)
 		updatedIntake, err := s.store.UpdateReviewDates(ctx, intake.ID, nil, &grtDate)
 
 		s.NoError(err, "failed to fetch system intakes")

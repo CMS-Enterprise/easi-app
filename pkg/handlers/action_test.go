@@ -36,7 +36,8 @@ func newMockCreateActionCapture(captured **models.Action, err error) createActio
 func (s *HandlerTestSuite) TestSystemIntakeActionHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithPrincipal(requestContext, &authentication.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
-	id, _ := uuid.NewUUID()
+	id, err := uuid.NewUUID()
+	s.NoError(err)
 
 	s.Run("golden path POST passes", func() {
 		body, err := json.Marshal(map[string]string{

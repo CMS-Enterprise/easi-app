@@ -35,7 +35,8 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		EUAUserID:   null.StringFrom(s.user.euaID),
 	}
-	createdIntake, _ := storage.CreateSystemIntake(context.Background(), s.store, &systemIntake)
+	createdIntake, err := storage.CreateSystemIntake(context.Background(), s.store, &systemIntake)
+	s.NoError(err)
 	id := createdIntake.ID
 
 	s.Run("PUT will succeed first time with token", func() {
@@ -51,7 +52,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
@@ -67,7 +68,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
@@ -93,7 +94,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
@@ -138,7 +139,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
@@ -167,7 +168,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 		s.Equal(http.StatusBadRequest, resp.StatusCode)
 	})
@@ -181,7 +182,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 		s.NoError(err)
 		defer func() {
-			_ = resp.Body.Close()
+			s.NoError(resp.Body.Close())
 		}()
 
 		s.Equal(http.StatusOK, resp.StatusCode)

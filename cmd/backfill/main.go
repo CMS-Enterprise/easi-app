@@ -109,7 +109,7 @@ func execute(cfg *config) error {
 	return nil
 }
 
-func upload(host string, auth string, item *entry) (didCreate bool, err error) {
+func upload(host string, auth string, item *entry) (bool, error) {
 	body, err := json.MarshalIndent(item, "", "\t")
 	if err != nil {
 		return false, err
@@ -133,13 +133,13 @@ func upload(host string, auth string, item *entry) (didCreate bool, err error) {
 	if err != nil {
 		return false, fmt.Errorf("request failed: %w", err)
 	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
 	content, err := io.ReadAll(resp.Body)
-	closeErr := resp.Body.Close()
 	if err != nil {
 		return false, fmt.Errorf("could not read response: %w", err)
-	}
-	if closeErr != nil {
-		return false, fmt.Errorf("could not close response: %w", closeErr)
 	}
 
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusCreated {

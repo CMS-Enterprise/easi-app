@@ -95,7 +95,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
-	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	env, err := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	assert.NoError(t, err)
 
 	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)

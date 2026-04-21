@@ -28,7 +28,8 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
-	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	env, err := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	s.NoError(err)
 
 	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
@@ -52,8 +53,10 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			models.TRBCollabGroupOptionCloud,
 			models.TRBCollabGroupOptionPrivacyAdvisor,
 		}
-		expectedStartDate, _ := time.Parse(time.RFC3339, "2022-10-10T12:00:00+00:00")
-		expectedEndDate, _ := time.Parse(time.RFC3339, "2050-10-10T12:00:00+00:00")
+		expectedStartDate, err := time.Parse(time.RFC3339, "2022-10-10T12:00:00+00:00")
+		s.NoError(err)
+		expectedEndDate, err := time.Parse(time.RFC3339, "2050-10-10T12:00:00+00:00")
+		s.NoError(err)
 
 		subjectAreaOptions := []models.TRBSubjectAreaOption{
 			models.TRBSubjectAreaOptionAccessControlAndIdentityMgmt,

@@ -27,8 +27,10 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 	scope := models.HTML("scope")
 	costBaseline := "costBaseline"
 	nextSteps := models.HTML("nextSteps")
-	expireDate, _ := time.Parse("01/02/2006", "12/25/2021")
-	issueDate, _ := time.Parse("01/02/2006", "12/25/2023")
+	expireDate, err := time.Parse("01/02/2006", "12/25/2021")
+	s.NoError(err)
+	issueDate, err := time.Parse("01/02/2006", "12/25/2023")
+	s.NoError(err)
 	requesterTaskLink := fmt.Sprintf(
 		"%s://%s/governance-task-list/%s",
 		s.config.URLScheme,
