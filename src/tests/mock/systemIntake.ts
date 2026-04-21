@@ -572,6 +572,7 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     grbDate: systemIntake.grbDate,
     lcid: null,
     lcidScope: null,
+    lcidIssuedAt: null,
     lcidExpiresAt: null,
     adminLead: null,
     notes: [],
