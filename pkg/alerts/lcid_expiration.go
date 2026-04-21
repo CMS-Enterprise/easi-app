@@ -32,8 +32,8 @@ func getAlertRecipients(
 		}, nil
 	}
 
-	requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 	var emailsToNotify []models.EmailAddress
+	requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 
 	// Only return an error if we hit an "unexpected" error
 	if err != nil {

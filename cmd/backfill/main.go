@@ -50,18 +50,31 @@ func execute(cfg *config) error {
 	url := fmt.Sprintf(healthcheck, cfg.host)
 
 	// #nosec G107 - we need to have the URL for the API be provided at runtime
-	resp, err := http.Get(url)
-	if err != nil {
-		return fmt.Errorf("failed healthcheck for [%s]: %w", url, err)
-	}
-	if err := resp.Body.Close(); err != nil {
-		return fmt.Errorf("failed to close healthcheck response for [%s]: %w", url, err)
+	if err := func() error {
+		resp, err := http.Get(url)
+		if err != nil {
+			return fmt.Errorf("failed healthcheck for [%s]: %w", url, err)
+		}
+		defer func() {
+			if closeErr := resp.Body.Close(); closeErr != nil {
+				log.Printf("failed to close healthcheck response for [%s]: %v", url, closeErr)
+			}
+		}()
+		return nil
+	}(); err != nil {
+		return err
 	}
 
 	f, err := os.Open(cfg.file)
 	if err != nil {
 		return err
 	}
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("failed to close input file [%s]: %v", cfg.file, closeErr)
+		}
+	}()
+
 	src := csv.NewReader(f)
 	row, err := src.Read()
 	if err != nil {

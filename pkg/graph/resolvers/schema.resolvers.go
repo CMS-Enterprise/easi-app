@@ -492,13 +492,17 @@ func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, inpu
 	}
 
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
+	if err != nil {
+		return nil, err
+	}
+
 	systemIntake := models.SystemIntake{
 		AdminLead: null.StringFrom(savedAdminLead),
 		ID:        input.ID,
 	}
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: &systemIntake,
-	}, err
+	}, nil
 }
 
 // UpdateSystemIntakeReviewDates is the resolver for the updateSystemIntakeReviewDates field.

@@ -2,7 +2,6 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -52,8 +51,8 @@ func (c *Client) PurgeCacheByPath(ctx context.Context, path string) error {
 	if c.skipPurge {
 		return nil
 	}
-	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
 	logger := appcontext.ZLogger(ctx)
+	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
 	if err != nil {
 		return err
 	}
@@ -61,7 +60,12 @@ func (c *Client) PurgeCacheByPath(ctx context.Context, path string) error {
 	if err != nil {
 		return err
 	}
-	closeErr := res.Body.Close()
+	defer func() {
+		if closeErr := res.Body.Close(); closeErr != nil {
+			logger.Error("Failed to close cache purge response body", zap.Error(closeErr))
+		}
+	}()
+
 	var cacheIsPurged bool
 	if res.StatusCode == http.StatusOK {
 		cacheIsPurged = true
@@ -74,9 +78,6 @@ func (c *Client) PurgeCacheByPath(ctx context.Context, path string) error {
 		zap.Int("status", res.StatusCode),
 		zap.Bool("success", cacheIsPurged),
 	)
-	if closeErr != nil {
-		return fmt.Errorf("failed to close cache purge response body: %w", closeErr)
-	}
 	return nil
 }
 

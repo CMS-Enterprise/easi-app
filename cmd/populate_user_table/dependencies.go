@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -119,6 +120,12 @@ func writeObjectToJSONFile(object any, path string) {
 
 		panic("Can't create the file")
 	}
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("can't close the file %q: %v", path, err)
+		}
+	}()
+
 	_, err = file.Write(entryBytes)
 	if err != nil {
 		panic("Can't write the file")
@@ -126,23 +133,27 @@ func writeObjectToJSONFile(object any, path string) {
 }
 
 func readJSONFromFile[anyType any](file string, obj *anyType) error {
+	if obj == nil {
+		return errors.New("cannot read JSON into nil destination")
+	}
 
 	f, err := os.Open(file) //nolint
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("could not close JSON file %q: %v", file, closeErr)
+		}
+	}()
 
 	byteValue, err := io.ReadAll(f)
-	closeErr := f.Close()
 	if err != nil {
 		return fmt.Errorf("could not read JSON file %q: %w", file, err)
 	}
-	if closeErr != nil {
-		return fmt.Errorf("could not close JSON file %q: %w", file, closeErr)
-	}
 
-	err = json.Unmarshal(byteValue, &obj)
+	err = json.Unmarshal(byteValue, obj)
 
 	return err
 

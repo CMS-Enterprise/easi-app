@@ -58,8 +58,8 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			}
 
 			createdNote, err := s.store.CreateSystemIntakeNote(ctx, in)
-			id := createdNote.ID
 			s.NoError(err)
+			id := createdNote.ID
 
 			out, err := s.store.FetchSystemIntakeNoteByID(ctx, id)
 			s.NoError(err)

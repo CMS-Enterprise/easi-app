@@ -31,17 +31,23 @@ func (f OktaMiddlewareFactory) jwt(_ *zap.Logger, authHeader string) (*authentic
 	if len(tokenParts) < 2 {
 		return nil, errors.New("invalid Bearer in auth header")
 	}
+
 	bearerToken := tokenParts[1]
 	if bearerToken == "" {
 		return nil, errors.New("empty bearer value")
 	}
+
 	jwt, err := f.verifier.VerifyAccessToken(bearerToken)
+	if err != nil {
+		return nil, err
+	}
+
 	enhanced := authentication.EnhancedJwt{
 		JWT:       jwt,
 		AuthToken: bearerToken,
 	}
 
-	return &enhanced, err
+	return &enhanced, nil
 }
 
 func jwtGroupsContainsJobCode(jwt *jwtverifier.Jwt, jobCode string) bool {

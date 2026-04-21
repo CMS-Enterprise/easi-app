@@ -80,24 +80,25 @@ func fetchOktaAccessToken(
 		fmt.Println(err, "Could not submit authentication endpoint")
 		return "", err
 	}
-	if resp.StatusCode != http.StatusOK {
-		err = fmt.Errorf("bad response from authentication request: %v", resp.Status)
-		if authCloseErr := resp.Body.Close(); authCloseErr != nil {
-			return "", fmt.Errorf("%w; failed to close authentication response body: %w", err, authCloseErr)
-		}
-		return "", err
-	}
+	body, err := func() ([]byte, error) {
+		defer func() {
+			if authCloseErr := resp.Body.Close(); authCloseErr != nil {
+				fmt.Printf("failed to close authentication response body: %v\n", authCloseErr)
+			}
+		}()
 
-	body, err := io.ReadAll(resp.Body)
-	authCloseErr := resp.Body.Close()
-	if err != nil {
-		if authCloseErr != nil {
-			return "", fmt.Errorf("failed to read authentication response body: %w; failed to close authentication response body: %w", err, authCloseErr)
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("bad response from authentication request: %v", resp.Status)
 		}
+
+		responseBody, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read authentication response body: %w", err)
+		}
+		return responseBody, nil
+	}()
+	if err != nil {
 		return "", err
-	}
-	if authCloseErr != nil {
-		return "", fmt.Errorf("failed to close authentication response body: %w", authCloseErr)
 	}
 
 	var authn AuthnResponse
@@ -133,24 +134,25 @@ func fetchOktaAccessToken(
 		fmt.Println("Failed to send MFA challenge")
 		return "", err
 	}
-	if factorResp.StatusCode != http.StatusOK {
-		err = fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
-		if mfaCloseErr := factorResp.Body.Close(); mfaCloseErr != nil {
-			return "", fmt.Errorf("%w; failed to close MFA response body: %w", err, mfaCloseErr)
-		}
-		return "", err
-	}
+	body, err = func() ([]byte, error) {
+		defer func() {
+			if mfaCloseErr := factorResp.Body.Close(); mfaCloseErr != nil {
+				fmt.Printf("failed to close MFA response body: %v\n", mfaCloseErr)
+			}
+		}()
 
-	body, err = io.ReadAll(factorResp.Body)
-	mfaCloseErr := factorResp.Body.Close()
-	if err != nil {
-		if mfaCloseErr != nil {
-			return "", fmt.Errorf("failed to read MFA response body: %w; failed to close MFA response body: %w", err, mfaCloseErr)
+		if factorResp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
 		}
+
+		responseBody, err := io.ReadAll(factorResp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read MFA response body: %w", err)
+		}
+		return responseBody, nil
+	}()
+	if err != nil {
 		return "", err
-	}
-	if mfaCloseErr != nil {
-		return "", fmt.Errorf("failed to close MFA response body: %w", mfaCloseErr)
 	}
 	err = json.Unmarshal(body, &authn)
 	if err != nil {
@@ -191,17 +193,21 @@ func fetchOktaAccessToken(
 		fmt.Println("could not submit authorization endpoint")
 		return "", err
 	}
-	if resp.StatusCode != http.StatusFound {
-		err = fmt.Errorf("bad response from access request: %v", resp.Status)
-		if authzCloseErr := resp.Body.Close(); authzCloseErr != nil {
-			return "", fmt.Errorf("%w; failed to close authorization response body: %w", err, authzCloseErr)
-		}
-		return "", err
-	}
+	location, err := func() (string, error) {
+		defer func() {
+			if authzCloseErr := resp.Body.Close(); authzCloseErr != nil {
+				fmt.Printf("failed to close authorization response body: %v\n", authzCloseErr)
+			}
+		}()
 
-	location := resp.Header.Get("Location")
-	if err := resp.Body.Close(); err != nil {
-		return "", fmt.Errorf("failed to close authorization response body: %w", err)
+		if resp.StatusCode != http.StatusFound {
+			return "", fmt.Errorf("bad response from access request: %v", resp.Status)
+		}
+
+		return resp.Header.Get("Location"), nil
+	}()
+	if err != nil {
+		return "", err
 	}
 	locParts, err := url.Parse(location)
 	if err != nil {

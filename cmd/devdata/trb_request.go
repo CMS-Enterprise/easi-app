@@ -1148,6 +1148,11 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil {
+			fmt.Printf("failed to close sample PDF: %v\n", closeErr)
+		}
+	}()
 
 	fileStats, err := file.Stat()
 	if err != nil {

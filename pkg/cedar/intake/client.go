@@ -208,6 +208,7 @@ func (c *Client) PublishEveryWeekdayOnSchedule(ctx context.Context, store *stora
 
 		// We need to build the data loaders each time that we publish the details to CEDAR
 		contextWithLoader := dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
+		contextWithLoader = appcontext.WithUserAccountService(contextWithLoader, dataloaders.GetUserAccountByID)
 
 		logger.Info("running scheduled intake publish to CEDAR")
 		c.publishIntakeAndBusinessCase(contextWithLoader, decoratedLogger, store)

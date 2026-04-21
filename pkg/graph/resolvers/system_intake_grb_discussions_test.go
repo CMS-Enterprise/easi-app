@@ -821,15 +821,15 @@ func (s *ResolverSuite) createIntakeAndAddReviewersByEUAs(reviewerEuaIDs ...stri
 }
 
 func addTags(htmlString string, tags ...models.Tag) string {
-	var htmlStringSb823 strings.Builder
+	var sb strings.Builder
 	for _, tag := range tags {
 		span := fmt.Sprintf(`<span class="mention" tag-type="%s" data-type="mention"`, tag.TagType)
 		if tag.TagType == models.TagTypeUserAccount {
 			span += fmt.Sprintf(` data-id-db="%s"`, tag.TaggedContentID)
 		}
 		span += `>@tag</span>`
-		htmlStringSb823.WriteString(span)
+		sb.WriteString(span)
 	}
-	htmlString += htmlStringSb823.String()
-	return htmlString
+
+	return htmlString + sb.String()
 }

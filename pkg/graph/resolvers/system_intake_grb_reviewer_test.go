@@ -53,8 +53,8 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 				},
 			},
 		)
-		reviewers := payload.Reviewers
 		s.NoError(err)
+		reviewers := payload.Reviewers
 		s.Equal(userAccts[0].ID, reviewers[0].UserID)
 		s.Equal(string(votingRole1), string(reviewers[0].GRBVotingRole))
 		s.Equal(string(grbRole1), string(reviewers[0].GRBReviewerRole))

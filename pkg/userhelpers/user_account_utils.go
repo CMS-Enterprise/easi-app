@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
@@ -354,13 +354,17 @@ func GetOktaAccountInfo(ctx context.Context, _ string) (*OktaAccountInfo, error)
 		return nil, err
 	}
 
-	jsonDataFromHTTP, err := io.ReadAll(resp.Body)
-	closeErr := resp.Body.Close()
+	jsonDataFromHTTP, err := func() ([]byte, error) {
+		defer func() {
+			if closeErr := resp.Body.Close(); closeErr != nil {
+				appcontext.ZLogger(ctx).Error("Failed to close Okta account response body", zap.Error(closeErr))
+			}
+		}()
+
+		return io.ReadAll(resp.Body)
+	}()
 	if err != nil {
 		return nil, err
-	}
-	if closeErr != nil {
-		return nil, fmt.Errorf("failed to close Okta account response body: %w", closeErr)
 	}
 
 	ret := OktaAccountInfo{}

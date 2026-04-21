@@ -48,8 +48,8 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	s.Run("GET will fail with no Authorization", func() {
 		getURL.Path = path.Join(getURL.Path, createdBizCase.ID.String())
 		req, err := http.NewRequest(http.MethodPost, getURL.String(), nil)
-		req.Header.Del("Authorization")
 		s.NoError(err)
+		req.Header.Del("Authorization")
 		resp, err := client.Do(req)
 
 		s.NoError(err)
