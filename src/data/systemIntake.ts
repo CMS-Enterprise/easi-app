@@ -66,6 +66,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   createdAt: null,
   archivedAt: null,
   lcid: '',
+  lcidIssuedAt: null,
   lcidExpiresAt: null,
   lcidScope: '',
   decisionNextSteps: '',
@@ -103,6 +104,8 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     intake?.updatedAt && formatDateLocal(intake.updatedAt, 'MM/dd/yyyy');
   const archivedAt =
     intake?.archivedAt && formatDateLocal(intake.archivedAt, 'MM/dd/yyyy');
+  const lcidIssuedAt =
+    intake?.lcidIssuedAt && formatDateLocal(intake.lcidIssuedAt, 'MM/dd/yyyy');
   const lcidExpiresAt =
     intake?.lcidExpiresAt &&
     formatDateLocal(intake.lcidExpiresAt, 'MM/dd/yyyy');
@@ -137,6 +140,7 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     submittedAt,
     updatedAt,
     archivedAt,
+    lcidIssuedAt,
     lcidExpiresAt
   });
 };
