@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -131,9 +132,10 @@ type args map[string]any
 // namedSelect is a shortcut for using `sqlx` Select (SelectContext) with named arguments to prevent writing out the prepare step each time
 // normally useful for returning multiple rows
 func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlStatement string, arguments any) error {
+	logger := appcontext.ZLogger(ctx)
 	if ctx == nil {
 		ctx = context.TODO()
-		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedSelect")
+		logger.Debug("nil ctx passed to namedSelect")
 	}
 
 	if arguments == nil {
@@ -144,9 +146,7 @@ func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlSt
 	if err != nil {
 		return err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	return stmt.SelectContext(ctx, dest, arguments)
 }
@@ -154,9 +154,10 @@ func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlSt
 // namedGet is a shortcut for using `sqlx` Get (GetContext) with named arguments to prevent writing out the prepare step each time
 // normally useful for returning a single row
 func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlStatement string, arguments any) error {
+	logger := appcontext.ZLogger(ctx)
 	if ctx == nil {
 		ctx = context.TODO()
-		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedGet")
+		logger.Debug("nil ctx passed to namedGet")
 	}
 
 	if arguments == nil {
@@ -167,9 +168,7 @@ func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlState
 	if err != nil {
 		return err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	return stmt.GetContext(ctx, dest, arguments)
 }
@@ -186,4 +185,17 @@ func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement stri
 	}
 
 	return np.NamedExecContext(ctx, sqlStatement, arguments)
+}
+
+func closeNamedStmt(ctx context.Context, stmt *sqlx.NamedStmt) {
+	if stmt == nil {
+		return
+	}
+	if ctx == nil {
+		ctx = context.TODO()
+	}
+
+	if err := stmt.Close(); err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to close prepared statement", zap.Error(err))
+	}
 }

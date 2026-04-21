@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"log"
 	"os"
+	"syscall"
 	"time"
 
 	"github.com/google/uuid"
@@ -50,7 +53,9 @@ func main() {
 		atom,
 	))
 	defer func() {
-		_ = logger.Sync()
+		if err := logger.Sync(); err != nil && !errors.Is(err, syscall.EINVAL) {
+			log.Printf("failed to sync logger: %v", err)
+		}
 	}()
 
 	// This prevents the seed script from dumping unnecessary logs

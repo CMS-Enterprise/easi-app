@@ -132,11 +132,16 @@ func readJSONFromFile[anyType any](file string, obj *anyType) error {
 		log.Fatal(err)
 		return err
 	}
-	defer func() {
-		_ = f.Close()
-	}()
 
-	byteValue, _ := io.ReadAll(f)
+	byteValue, err := io.ReadAll(f)
+	closeErr := f.Close()
+	if err != nil {
+		return fmt.Errorf("could not read JSON file %q: %w", file, err)
+	}
+	if closeErr != nil {
+		return fmt.Errorf("could not close JSON file %q: %w", file, closeErr)
+	}
+
 	err = json.Unmarshal(byteValue, &obj)
 
 	return err

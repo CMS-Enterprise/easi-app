@@ -55,7 +55,7 @@ func GetOrCreateUserAccountFullName(
 	fullName string,
 	hasLoggedIn bool,
 	getAccountInformationFullName GetAccountInfoFunc) (*authentication.UserAccount, error) {
-	userAccount, accErr := store.UserAccountGetByCommonName(fullName) //TODO: this could be expanded to check by either username or commonName
+	userAccount, accErr := store.UserAccountGetByCommonName(ctx, fullName) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}

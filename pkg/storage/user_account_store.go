@@ -17,16 +17,14 @@ import (
 )
 
 // UserAccountGetByCommonName gets a user account by a give username
-func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.UserAccount, error) {
+func (s *Store) UserAccountGetByCommonName(ctx context.Context, commonName string) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
 	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByCommonName)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	arg := map[string]any{
 		"common_name": commonName,
@@ -34,7 +32,7 @@ func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.U
 
 	err = stmt.Get(user, arg)
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" { //EXPECT THERE TO BE NULL results, don't treat this as an error
+		if errors.Is(err, sql.ErrNoRows) { //EXPECT THERE TO BE NULL results, don't treat this as an error
 			return nil, nil
 		}
 		return nil, err
@@ -51,7 +49,7 @@ func UserAccountGetByUsername(ctx context.Context, np sqlutils.NamedPreparer, us
 		"username": username,
 	})
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" { //EXPECT THERE TO BE NULL results, don't treat this as an error
+		if errors.Is(err, sql.ErrNoRows) { //EXPECT THERE TO BE NULL results, don't treat this as an error
 			return nil, nil
 		}
 		return nil, err

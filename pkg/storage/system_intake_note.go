@@ -79,9 +79,7 @@ func (s *Store) UpdateSystemIntakeNote(ctx context.Context, note *models.SystemI
 		return nil, err
 	}
 
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	updated := models.SystemIntakeNote{}
 

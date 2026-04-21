@@ -67,9 +67,7 @@ func (s *Store) CreateTRBGuidanceLetterInsight(
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	created := models.TRBGuidanceLetterInsight{}
 
@@ -95,9 +93,7 @@ func (s *Store) GetTRBGuidanceLetterInsightByID(ctx context.Context, id uuid.UUI
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	arg := map[string]any{"id": id}
 	err = stmt.Get(&insight, arg)
@@ -185,9 +181,7 @@ func (s *Store) GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx context.Cont
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	results := []*models.TRBGuidanceLetterInsight{}
 	arg := map[string]any{
@@ -241,9 +235,7 @@ func (s *Store) UpdateTRBGuidanceLetterInsight(ctx context.Context, insight *mod
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	updated := models.TRBGuidanceLetterInsight{}
 
@@ -279,9 +271,7 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 			)
 			return nil, err
 		}
-		defer func() {
-			_ = stmt.Close()
-		}()
+		defer closeNamedStmt(ctx, stmt)
 
 		toDelete := models.TRBGuidanceLetterInsight{}
 		toDelete.ID = id
@@ -378,9 +368,7 @@ func updateTRBGuidanceLetterInsightOrder(
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	updatedInsights := []*models.TRBGuidanceLetterInsight{}
 	arg := map[string]any{

@@ -100,9 +100,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")})
 				return
 			}
-			defer func() {
-				_ = r.Body.Close()
-			}()
+			defer closeRequestBody(r.Context(), r.Body)
 			decoder := json.NewDecoder(r.Body)
 			businessCaseToCreate := models.BusinessCaseWithCosts{}
 			err := decoder.Decode(&businessCaseToCreate)
@@ -152,9 +150,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				)
 				return
 			}
-			defer func() {
-				_ = r.Body.Close()
-			}()
+			defer closeRequestBody(r.Context(), r.Body)
 			decoder := json.NewDecoder(r.Body)
 			businessCaseToUpdate := models.BusinessCaseWithCosts{}
 			err := decoder.Decode(&businessCaseToUpdate)

@@ -43,7 +43,8 @@ func createEmailClient() email.Client {
 		TemplateDirectory:           os.Getenv("EMAIL_TEMPLATE_DIR"),
 	}
 
-	env, _ := appconfig.NewEnvironment("local") // hardcoded as "local" as it's easier than fetching from envs since we only ever use this locally
+	env, err := appconfig.NewEnvironment("local") // hardcoded as "local" as it's easier than fetching from envs since we only ever use this locally
+	noErr(err)
 	sender := local.NewSMTPSender("localhost:1025", env)
 	emailClient, err := email.NewClient(emailConfig, sender)
 	noErr(err)

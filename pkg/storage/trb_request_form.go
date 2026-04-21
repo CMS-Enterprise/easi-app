@@ -33,9 +33,7 @@ func (s *Store) CreateTRBRequestForm(ctx context.Context, np sqlutils.NamedPrepa
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	created := models.TRBRequestForm{}
 	err = stmt.Get(&created, form)
@@ -86,9 +84,7 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	updated := models.TRBRequestForm{}
 
@@ -199,9 +195,7 @@ func (s *Store) DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	toDelete := models.TRBRequestForm{}
 	toDelete.ID = trbRequestID

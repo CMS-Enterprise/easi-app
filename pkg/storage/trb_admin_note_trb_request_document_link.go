@@ -109,9 +109,7 @@ func (s *Store) GetTRBRequestDocumentsByAdminNoteID(ctx context.Context, adminNo
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	arg := map[string]any{
 		"admin_note_id": adminNoteID,

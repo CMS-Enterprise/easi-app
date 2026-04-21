@@ -50,9 +50,7 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, np sqlutils.NamedP
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	created := models.TRBRequestAttendee{}
 	err = stmt.Get(&created, attendee)
@@ -81,9 +79,7 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	updated := models.TRBRequestAttendee{}
 
@@ -156,9 +152,7 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	toDelete := models.TRBRequestAttendee{}
 	toDelete.ID = id

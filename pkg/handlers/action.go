@@ -54,9 +54,7 @@ func (h ActionHandler) Handle() http.HandlerFunc {
 		}
 		switch r.Method {
 		case http.MethodPost:
-			defer func() {
-				_ = r.Body.Close()
-			}()
+			defer closeRequestBody(r.Context(), r.Body)
 			decoder := json.NewDecoder(r.Body)
 			action := models.Action{}
 			err = decoder.Decode(&action)

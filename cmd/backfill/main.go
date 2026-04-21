@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -134,7 +135,9 @@ func upload(host string, auth string, item *entry) (bool, error) {
 		return false, fmt.Errorf("request failed: %w", err)
 	}
 	defer func() {
-		_ = resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			log.Printf("could not close response body: %v", closeErr)
+		}
 	}()
 
 	content, err := io.ReadAll(resp.Body)

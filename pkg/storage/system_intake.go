@@ -304,9 +304,7 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		_ = updateStmt.Close()
-	}()
+	defer closeNamedStmt(ctx, updateStmt)
 
 	_, err = updateStmt.Exec(intake)
 	if err != nil {
@@ -363,9 +361,7 @@ func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id 
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		_ = intakeStmt.Close()
-	}()
+	defer closeNamedStmt(ctx, intakeStmt)
 
 	intake := models.SystemIntake{}
 	err = intakeStmt.Get(&intake, map[string]any{
@@ -410,9 +406,7 @@ func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id 
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		_ = fundingSourcesStmt.Close()
-	}()
+	defer closeNamedStmt(ctx, fundingSourcesStmt)
 
 	sources := []*models.SystemIntakeFundingSource{}
 	err = fundingSourcesStmt.Select(&sources, map[string]any{

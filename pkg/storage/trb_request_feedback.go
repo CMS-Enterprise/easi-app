@@ -61,9 +61,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			)
 			return nil, err
 		}
-		defer func() {
-			_ = stmt.Close()
-		}()
+		defer closeNamedStmt(ctx, stmt)
 
 		createdFeedback := models.TRBRequestFeedback{}
 		err = stmt.Get(&createdFeedback, feedback)
@@ -93,9 +91,7 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 				)
 				return nil, formErr
 			}
-			defer func() {
-				_ = formStmt.Close()
-			}()
+			defer closeNamedStmt(ctx, formStmt)
 
 			updatedForm := models.TRBRequestForm{}
 			formErr = formStmt.Get(&updatedForm, formToUpdate)

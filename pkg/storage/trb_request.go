@@ -32,9 +32,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, np sqlutils.NamedPreparer,
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 	retTRB := models.TRBRequest{}
 
 	err = stmt.Get(&retTRB, trb)
@@ -69,9 +67,7 @@ func (s *Store) GetTRBRequestByIDNP(ctx context.Context, np sqlutils.NamedPrepar
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	arg := map[string]any{"id": id}
 	err = stmt.Get(&trb, arg)
@@ -108,9 +104,7 @@ func (s *Store) UpdateTRBRequestNP(ctx context.Context, np sqlutils.NamedPrepare
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	retTRB := models.TRBRequest{}
 
@@ -142,9 +136,7 @@ func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TR
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	arg := map[string]any{
 		"archived": archived,
@@ -176,9 +168,7 @@ func (s *Store) GetMyTRBRequests(ctx context.Context, archived bool) ([]*models.
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	arg := map[string]any{
 		"archived":   archived,

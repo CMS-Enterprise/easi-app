@@ -116,9 +116,7 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	retDoc := models.TRBRequestDocument{}
 	err = stmt.Get(&retDoc, document)
@@ -167,9 +165,7 @@ func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*mo
 		)
 		return nil, err
 	}
-	defer func() {
-		_ = stmt.Close()
-	}()
+	defer closeNamedStmt(ctx, stmt)
 
 	arg := map[string]any{
 		"id": id,
