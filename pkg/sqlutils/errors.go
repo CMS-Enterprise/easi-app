@@ -60,9 +60,7 @@ func (e *baseDBError) Unwrap() error {
 }
 
 func ProcessDataBaseErrors(message string, err error) error {
-	var pqErr *pq.Error
-	if errors.As(err, &pqErr) {
-
+	if pqErr, ok := errors.AsType[*pq.Error](err); ok {
 		switch pqErr.Code.Name() {
 		case "unique_violation":
 			return newErrDupConstraintErr(message, pqErr)
