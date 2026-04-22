@@ -29,7 +29,7 @@ func GetSystemIntakeDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*
 // GetURLForSystemIntakeDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
 func GetURLForSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, s3Key string) (*string, error) {
 	if err := allowView(ctx, store, s3Key); err != nil {
-		return nil, err
+		return nil, nil
 	}
 
 	presignedURL, err := s3Client.NewGetPresignedURL(ctx, s3Key)
