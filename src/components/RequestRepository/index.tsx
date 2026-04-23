@@ -136,7 +136,7 @@ const RequestRepository = () => {
   }, [systemIntakes.closed, dateRangeStart, dateRangeEnd]);
 
   /** Convert selected intakes to CSV format */
-  const convertIntakesToCSV = (intakes: SystemIntakeForTable[]) =>
+  const prepareIntakesToCSV = (intakes: SystemIntakeForTable[]) =>
     intakes.map(prepareIntakeToCSV);
 
   const csvHeaders = csvHeaderMap(t);
@@ -335,7 +335,7 @@ const RequestRepository = () => {
 
             <ButtonGroup>
               <SafeCSVLink
-                data={convertIntakesToCSV(portfolioUpdateReport)}
+                data={prepareIntakesToCSV(portfolioUpdateReport)}
                 filename="EASi-Portfolio-Update-Report.csv"
                 headers={csvPortfolioReportHeaders}
                 onClick={() => setConfigReportModalOpen(false)}
@@ -449,7 +449,7 @@ const RequestRepository = () => {
           />
 
           <SafeCSVLink
-            data={convertIntakesToCSV(data)}
+            data={prepareIntakesToCSV(data)}
             filename={`EASi-${startCase(activeTable)}-ITGO-Requests.csv`}
             headers={csvHeaders}
           >
