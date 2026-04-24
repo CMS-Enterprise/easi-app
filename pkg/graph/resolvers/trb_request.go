@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -457,4 +458,29 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 	}
 
 	return requesterInfo, nil
+}
+
+func AuthorizeUserCanAccessTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
+	p := appcontext.Principal(ctx)
+
+	// admin
+	if p.AllowTRBAdmin() {
+		return nil
+	}
+
+	eua := p.Account().Username
+
+	// creator
+	if trbRequest.CreatedBy == eua {
+		return nil
+	}
+
+	// lead
+	if trbRequest.TRBLead != nil && *trbRequest.TRBLead == eua {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{
+		Err: errors.New("unauthorized to access TRB request"),
+	}
 }

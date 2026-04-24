@@ -2,10 +2,12 @@ package resolvers
 
 import (
 	"bytes"
+	"errors"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -29,6 +31,68 @@ func (s *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	createdDocument := createTRBRequestDocumentSubtest(s, trbRequestID, documentToCreate)
 	getTRBRequestDocumentsByRequestIDSubtest(s, trbRequestID, createdDocument)
 	deleteTRBRequestDocumentSubtest(s, createdDocument)
+}
+
+func (s *ResolverSuite) TestCreateTRBRequestDocumentUnauthorized() {
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	testContents := "Test file content"
+	encodedFileContent := easiencoding.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
+
+	_, err = CreateTRBRequestDocument(
+		otherCtx,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		models.CreateTRBRequestDocumentInput{
+			RequestID:    trbRequest.ID,
+			DocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+			FileData: graphql.Upload{
+				File:        fileToUpload,
+				Filename:    "unauthorized.pdf",
+				Size:        fileToUpload.Size(),
+				ContentType: "application/pdf",
+			},
+		},
+	)
+	s.Error(err)
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
+
+	documents, fetchErr := GetTRBRequestDocumentsByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
+	s.NoError(fetchErr)
+	s.Len(documents, 0)
+}
+
+func (s *ResolverSuite) TestDeleteTRBRequestDocumentUnauthorized() {
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	documentToCreate := &models.TRBRequestDocument{
+		TRBRequestID:       trbRequest.ID,
+		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+		FileName:           "create_and_get.pdf",
+		Bucket:             "bukkit",
+		S3Key:              uuid.NewString(),
+	}
+
+	createdDocument := createTRBRequestDocumentSubtest(s, trbRequest.ID, documentToCreate)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	_, err = DeleteTRBRequestDocument(otherCtx, s.testConfigs.Store, createdDocument.ID)
+	s.Error(err)
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
+
+	documents, fetchErr := GetTRBRequestDocumentsByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
+	s.NoError(fetchErr)
+	s.Len(documents, 1)
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
