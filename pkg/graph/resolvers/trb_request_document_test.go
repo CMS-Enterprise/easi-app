@@ -95,6 +95,35 @@ func (s *ResolverSuite) TestDeleteTRBRequestDocumentUnauthorized() {
 	s.Len(documents, 1)
 }
 
+func (s *ResolverSuite) TestGetTRBRequestDocumentURLUnauthorized() {
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	documentToCreate := &models.TRBRequestDocument{
+		TRBRequestID:       trbRequest.ID,
+		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+		FileName:           "create_and_get.pdf",
+		Bucket:             "bukkit",
+		S3Key:              uuid.NewString(),
+	}
+
+	createdDocument := createTRBRequestDocumentSubtest(s, trbRequest.ID, documentToCreate)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	_, err = GetURLForTRBRequestDocument(
+		otherCtx,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		createdDocument.TRBRequestID,
+		createdDocument.S3Key,
+	)
+	s.Error(err)
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
+}
+
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
 
 func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUID, documentToCreate *models.TRBRequestDocument) *models.TRBRequestDocument {

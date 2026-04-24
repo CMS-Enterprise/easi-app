@@ -36,6 +36,15 @@ func UpdateTRBRequestForm(
 		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB request form: %v", idIface)
 	}
 
+	trbRequest, err := store.GetTRBRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
 	isSubmitted := false
 	if isSubmittedVal, isSubmittedFound := input["isSubmitted"]; isSubmittedFound {
 
@@ -66,15 +75,7 @@ func UpdateTRBRequestForm(
 	emailInfoErrGroup := new(errgroup.Group)
 
 	if willSendNotifications {
-		emailInfoErrGroup.Go(func() error {
-			// declare new error variable so we don't interfere with calls outside of this goroutine
-			requestPtr, getRequestErr := store.GetTRBRequestByID(ctx, id)
-			if getRequestErr != nil {
-				return getRequestErr
-			}
-			request = *requestPtr
-			return nil
-		})
+		request = *trbRequest
 
 		emailInfoErrGroup.Go(func() error {
 			// declare new error variable so we don't interfere with calls outside of this goroutine

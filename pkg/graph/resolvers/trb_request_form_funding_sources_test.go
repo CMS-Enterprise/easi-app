@@ -1,8 +1,11 @@
 package resolvers
 
 import (
+	"errors"
+
 	"github.com/samber/lo"
 
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -109,4 +112,30 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 			s.Nil(deletedSource)
 		}
 	})
+}
+
+func (s *ResolverSuite) TestModifyTRBFundingSourcesUnauthorized() {
+	trbRequest := s.createNewTRBRequest()
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	_, err := UpdateTRBRequestFundingSources(
+		otherCtx,
+		s.testConfigs.Store,
+		trbRequest.ID,
+		"12345",
+		[]string{"banana", "apple"},
+	)
+	s.Error(err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
+
+	_, err = DeleteTRBRequestFundingSources(
+		otherCtx,
+		s.testConfigs.Store,
+		trbRequest.ID,
+		"12345",
+	)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
 }

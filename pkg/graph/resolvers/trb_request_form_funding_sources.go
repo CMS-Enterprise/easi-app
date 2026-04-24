@@ -25,6 +25,15 @@ func UpdateTRBRequestFundingSources(
 	fundingNumber string,
 	sources []string,
 ) ([]*models.TRBFundingSource, error) {
+	trbRequest, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
 	fundingSources := make([]*models.TRBFundingSource, len(sources))
 	createdBy := appcontext.Principal(ctx).ID()
 	now := time.Now()
@@ -48,5 +57,14 @@ func DeleteTRBRequestFundingSources(
 	trbRequestID uuid.UUID,
 	fundingNumber string,
 ) ([]*models.TRBFundingSource, error) {
+	trbRequest, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
 	return store.DeleteTRBRequestFundingSources(ctx, trbRequestID, fundingNumber)
 }

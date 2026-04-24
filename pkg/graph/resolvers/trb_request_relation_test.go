@@ -2,11 +2,13 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
@@ -463,4 +465,52 @@ func (s *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})
+}
+
+func (s *ResolverSuite) TestTRBRequestRelationUnauthorized() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+	s.NoError(err)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	var unauthorizedErr *apperrors.UnauthorizedError
+
+	_, err = SetTRBRequestRelationNewSystem(otherCtx, store, models.SetTRBRequestRelationNewSystemInput{
+		TrbRequestID:    trbRequest.ID,
+		ContractNumbers: []string{"12345"},
+	})
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+
+	unauthorizedErr = nil
+	_, err = SetTRBRequestRelationExistingSystem(
+		otherCtx,
+		store,
+		func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
+			return &models.CedarSystem{}, nil
+		},
+		models.SetTRBRequestRelationExistingSystemInput{
+			TrbRequestID:    trbRequest.ID,
+			CedarSystemIDs:  []uuid.UUID{uuid.New()},
+			ContractNumbers: []string{"12345"},
+		},
+	)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+
+	unauthorizedErr = nil
+	_, err = SetTRBRequestRelationExistingService(otherCtx, store, models.SetTRBRequestRelationExistingServiceInput{
+		TrbRequestID:    trbRequest.ID,
+		ContractName:    "Contract Name",
+		ContractNumbers: []string{"12345"},
+	})
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+
+	unauthorizedErr = nil
+	_, err = UnlinkTRBRequestRelation(otherCtx, store, trbRequest.ID)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
 }

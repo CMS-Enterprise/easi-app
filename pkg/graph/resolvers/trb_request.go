@@ -99,6 +99,10 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 		return nil, err
 	}
 
+	if err := authorizeUserCanAccessTRBRequest(ctx, existing); err != nil {
+		return nil, err
+	}
+
 	princ := appcontext.Principal(ctx)
 
 	//apply changes here
@@ -460,7 +464,7 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 	return requesterInfo, nil
 }
 
-func AuthorizeUserCanAccessTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
+func authorizeUserCanAccessTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
 	p := appcontext.Principal(ctx)
 
 	// admin

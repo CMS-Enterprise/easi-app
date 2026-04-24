@@ -2,12 +2,14 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -50,6 +52,24 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	s.EqualValues(updated.Archived, false)
 	s.EqualValues(updated.ModifiedBy, &princ)
 	s.NotNil(updated.ModifiedAt)
+}
+
+func (s *ResolverSuite) TestUpdateTRBRequestUnauthorized() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	changes := map[string]interface{}{
+		"Name": "Testing",
+	}
+
+	_, err = UpdateTRBRequest(otherCtx, trb.ID, changes, s.testConfigs.Store)
+	s.Error(err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
 }
 
 // TestGetTRBRequestByID returns a TRB request by it's ID

@@ -1633,7 +1633,7 @@ func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.T
 		return nil, err
 	}
 
-	if err := AuthorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 
@@ -2325,7 +2325,7 @@ func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models
 
 // URL is the resolver for the url field.
 func (r *tRBRequestDocumentResolver) URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error) {
-	return GetURLForTRBRequestDocument(ctx, r.s3Client, obj.S3Key)
+	return GetURLForTRBRequestDocument(ctx, r.store, r.s3Client, obj.TRBRequestID, obj.S3Key)
 }
 
 // NotifyEuaIds is the resolver for the notifyEuaIds field.

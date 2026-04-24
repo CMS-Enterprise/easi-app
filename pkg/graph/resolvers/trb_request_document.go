@@ -21,7 +21,16 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*mo
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
-func GetURLForTRBRequestDocument(ctx context.Context, s3Client *upload.S3Client, s3Key string) (string, error) {
+func GetURLForTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, trbRequestID uuid.UUID, s3Key string) (string, error) {
+	trbRequest, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return "", err
+	}
+
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		return "", err
+	}
+
 	presignedURL, err := s3Client.NewGetPresignedURL(ctx, s3Key)
 	if err != nil {
 		return "", err
@@ -55,7 +64,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 		return nil, err
 	}
 
-	if err := AuthorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 
@@ -109,7 +118,7 @@ func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid
 		return nil, err
 	}
 
-	if err := AuthorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 

@@ -99,6 +99,29 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 	return &updated, err
 }
 
+// GetTRBRequestAttendeeByID queries the DB for a TRB request attendee by ID
+func (s *Store) GetTRBRequestAttendeeByID(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error) {
+	attendee := models.TRBRequestAttendee{}
+	err := namedGet(ctx, s.db, &attendee, `
+		SELECT *
+		FROM trb_request_attendees
+		WHERE id = :id
+	`, args{
+		"id": id,
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request attendee by ID", zap.Error(err), zap.String("id", id.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestAttendee{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return &attendee, nil
+}
+
 // GetTRBRequestAttendeesByTRBRequestID queries the DB for all the TRB request attendee records
 // matching the given TRB request ID
 func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestAttendee, error) {

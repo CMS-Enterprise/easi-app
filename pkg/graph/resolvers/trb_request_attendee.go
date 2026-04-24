@@ -25,8 +25,17 @@ func CreateTRBRequestAttendee(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	attendee *models.TRBRequestAttendee,
 ) (*models.TRBRequestAttendee, error) {
+	requestPtr, err := store.GetTRBRequestByID(ctx, attendee.TRBRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanAccessTRBRequest(ctx, requestPtr); err != nil {
+		return nil, err
+	}
+
 	// start fetching info we'll need to send notifications now, but don't wait on results until we're ready to send emails
-	var request models.TRBRequest
+	request := *requestPtr
 	var requester models.UserInfo
 	var attendeeInfo models.UserInfo
 
@@ -34,12 +43,6 @@ func CreateTRBRequestAttendee(
 
 	emailInfoErrGroup.Go(func() error {
 		// declare new error variable so we don't interfere with calls outside of this goroutine
-		requestPtr, getRequestErr := store.GetTRBRequestByID(ctx, attendee.TRBRequestID)
-		if getRequestErr != nil {
-			return getRequestErr
-		}
-		request = *requestPtr
-
 		requesterPtr, getRequesterErr := fetchUserInfo(ctx, request.CreatedBy)
 		if getRequesterErr != nil {
 			return getRequesterErr
@@ -87,6 +90,20 @@ func CreateTRBRequestAttendee(
 
 // UpdateTRBRequestAttendee updates a TRBRequestAttendee record in the database
 func UpdateTRBRequestAttendee(ctx context.Context, store *storage.Store, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
+	existingAttendee, err := store.GetTRBRequestAttendeeByID(ctx, attendee.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	trbRequest, err := store.GetTRBRequestByID(ctx, existingAttendee.TRBRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
 	modifiedBy := appcontext.Principal(ctx).ID()
 	attendee.ModifiedBy = &modifiedBy
 
@@ -100,6 +117,20 @@ func UpdateTRBRequestAttendee(ctx context.Context, store *storage.Store, attende
 
 // DeleteTRBRequestAttendee deletes a TRBRequestAttendee record from the database
 func DeleteTRBRequestAttendee(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestAttendee, error) {
+	existingAttendee, err := store.GetTRBRequestAttendeeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	trbRequest, err := store.GetTRBRequestByID(ctx, existingAttendee.TRBRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
 	deleted, err := store.DeleteTRBRequestAttendee(ctx, id)
 	if err != nil {
 		return nil, err

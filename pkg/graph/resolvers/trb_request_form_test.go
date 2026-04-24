@@ -1,9 +1,11 @@
 package resolvers
 
 import (
+	"errors"
 	"time"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -129,4 +131,41 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.EqualValues(submittedForm.Status, models.TRBFormStatusCompleted)
 		s.NotNil(submittedForm.SubmittedAt) // we submitted, so this should be populated
 	})
+}
+
+func (s *ResolverSuite) TestUpdateTRBRequestFormUnauthorized() {
+	okta := local.NewOktaAPIClient()
+
+	config := testhelpers.NewConfig()
+	emailConfig := email.Config{
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+
+	env, _ := appconfig.NewEnvironment("test")
+	localSender := local.NewSender(env)
+	emailClient, err := email.NewClient(emailConfig, localSender)
+	if err != nil {
+		s.FailNow("Unable to construct email client with local sender")
+	}
+
+	trbRequest := s.createNewTRBRequest()
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	formChanges := map[string]interface{}{
+		"isSubmitted":  false,
+		"trbRequestId": trbRequest.ID,
+		"component":    "Taco Cart",
+	}
+
+	_, err = UpdateTRBRequestForm(otherCtx, s.testConfigs.Store, &emailClient, okta.FetchUserInfo, formChanges)
+	s.Error(err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
 }
