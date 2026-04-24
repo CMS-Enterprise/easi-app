@@ -22,7 +22,6 @@ import { AppState } from 'stores/reducers/rootReducer';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { BusinessCaseModel } from 'types/businessCase';
-import normalizePresentationLinkUrl from 'utils/normalizePresentationLinkUrl';
 
 import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 
@@ -89,8 +88,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
   const { recordingLink, transcriptLink, presentationDeckFileURL } =
     grbPresentationLinks || {};
-  const safeRecordingLink = normalizePresentationLinkUrl(recordingLink);
-  const safeTranscriptLink = normalizePresentationLinkUrl(transcriptLink);
+  const recordingLinkValue = recordingLink?.trim() || null;
+  const transcriptLinkValue = transcriptLink?.trim() || null;
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
@@ -134,7 +133,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   /** Returns true if presentation links card should render */
   const renderPresentationLinksCard = useMemo(() => {
     const hasPresentationLinks: boolean =
-      !!safeRecordingLink || !!safeTranscriptLink || !!presentationDeckFileURL;
+      !!recordingLinkValue ||
+      !!transcriptLinkValue ||
+      !!presentationDeckFileURL;
 
     // Return true if presentation links are uploaded
     if (hasPresentationLinks) return true;
@@ -154,8 +155,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   }, [
     grbReviewStandardStatus,
     isITGovAdmin,
-    safeRecordingLink,
-    safeTranscriptLink,
+    recordingLinkValue,
+    transcriptLinkValue,
     presentationDeckFileURL
   ]);
 

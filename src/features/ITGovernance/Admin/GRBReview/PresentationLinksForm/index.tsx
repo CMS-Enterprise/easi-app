@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -105,6 +105,26 @@ const PresentationLinksForm = ({
   const transcriptLinkField = register('transcriptLink', {
     shouldUnregister: true
   });
+
+  useEffect(() => {
+    const preloadedLinkFields: Array<'recordingLink' | 'transcriptLink'> = [];
+
+    if (grbPresentationLinks?.recordingLink?.trim()) {
+      preloadedLinkFields.push('recordingLink');
+    }
+
+    if (grbPresentationLinks?.transcriptLink?.trim()) {
+      preloadedLinkFields.push('transcriptLink');
+    }
+
+    if (preloadedLinkFields.length > 0) {
+      trigger(preloadedLinkFields);
+    }
+  }, [
+    grbPresentationLinks?.recordingLink,
+    grbPresentationLinks?.transcriptLink,
+    trigger
+  ]);
 
   /**
    * Returns true if both recordingLink and presentationDeckFileData fields have errors

@@ -47,6 +47,12 @@ describe('GRB presentation links form', () => {
     expect(
       screen.getByRole('button', { name: 'Save presentation details' })
     ).toBeDisabled();
+
+    expect(
+      screen.queryByText(
+        'Please enter a full URL beginning with http:// or https://.'
+      )
+    ).not.toBeInTheDocument();
   });
 
   it('renders the edit links form', () => {
@@ -156,6 +162,36 @@ describe('GRB presentation links form', () => {
     ).not.toBeInTheDocument();
 
     await user.tab();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          'Please enter a full URL beginning with http:// or https://.'
+        )
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('shows the recording link validation error on load for pre-existing invalid data', async () => {
+    const invalidRecordingLink = ['java', 'script:confirm', '``'].join('');
+
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <PresentationLinksForm
+              id={systemIntake.id}
+              grbReviewType={SystemIntakeGRBReviewType.ASYNC}
+              grbPresentationLinks={{
+                ...grbPresentationLinks,
+                recordingLink: invalidRecordingLink
+              }}
+              grbReviewAsyncRecordingTime={null}
+            />
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(

@@ -113,6 +113,10 @@ describe('Async Presentation Links Card', () => {
     expect(
       screen.queryByRole('button', { name: 'View recording' })
     ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByText(`Recording link: ${javascriptPayload}`)
+    ).toBeInTheDocument();
   });
 
   it('does not render a clickable transcript link for unsupported url schemes', () => {
@@ -134,6 +138,10 @@ describe('Async Presentation Links Card', () => {
     expect(
       screen.queryByRole('button', { name: 'View transcript' })
     ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByText('Transcript link: mailto:test@example.com')
+    ).toBeInTheDocument();
   });
 
   it('renders virus scanning text', () => {

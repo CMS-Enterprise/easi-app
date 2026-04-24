@@ -167,6 +167,8 @@ function PresentationLinksCard({
     presentationDeckFileURL
   } = grbPresentationLinks || {};
 
+  const recordingLinkValue = recordingLink?.trim() || null;
+  const transcriptLinkValue = transcriptLink?.trim() || null;
   const safeRecordingLink = normalizePresentationLinkUrl(recordingLink);
   const safeTranscriptLink = normalizePresentationLinkUrl(transcriptLink);
 
@@ -176,7 +178,7 @@ function PresentationLinksCard({
     presentationDeckFileStatus === SystemIntakeDocumentStatus.PENDING;
 
   const hasAnyLinks: boolean =
-    !!safeRecordingLink || !!safeTranscriptLink || !!presentationDeckFileURL;
+    !!recordingLinkValue || !!transcriptLinkValue || !!presentationDeckFileURL;
 
   // Remove links handling
 
@@ -271,9 +273,9 @@ function PresentationLinksCard({
               </em>
             ) : (
               <>
-                {(safeRecordingLink ||
+                {(recordingLinkValue ||
                   recordingPasscode ||
-                  safeTranscriptLink) && (
+                  transcriptLinkValue) && (
                   <div className="display-flex flex-wrap flex-gap-1">
                     {safeRecordingLink && (
                       <ExternalLinkAndModal href={safeRecordingLink}>
@@ -281,8 +283,16 @@ function PresentationLinksCard({
                       </ExternalLinkAndModal>
                     )}
 
-                    {!safeRecordingLink &&
-                      (recordingPasscode || safeTranscriptLink) && (
+                    {!safeRecordingLink && recordingLinkValue && (
+                      <span className="text-base">
+                        {t('asyncPresentation.recordingLinkValue', {
+                          link: recordingLinkValue
+                        })}
+                      </span>
+                    )}
+
+                    {!recordingLinkValue &&
+                      (recordingPasscode || transcriptLinkValue) && (
                         <span>
                           {t('asyncPresentation.noRecordingLinkAvailable')}
                         </span>
@@ -302,6 +312,14 @@ function PresentationLinksCard({
                   <ExternalLinkAndModal href={safeTranscriptLink}>
                     {t('asyncPresentation.viewTranscript')}
                   </ExternalLinkAndModal>
+                )}
+
+                {!safeTranscriptLink && transcriptLinkValue && (
+                  <span className="text-base">
+                    {t('asyncPresentation.transcriptLinkValue', {
+                      link: transcriptLinkValue
+                    })}
+                  </span>
                 )}
 
                 {transcriptFileStatus ===
