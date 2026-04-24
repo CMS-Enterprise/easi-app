@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
 import { grbPresentationLinks, systemIntake } from 'tests/mock/systemIntake';
 
@@ -119,5 +120,49 @@ describe('GRB presentation links form', () => {
         name: 'Asynchronous presentation recording date'
       })
     ).not.toBeInTheDocument();
+  });
+
+  it('shows the transcript link validation error on blur', async () => {
+    const user = userEvent.setup();
+
+    const { container } = render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <PresentationLinksForm
+              id={systemIntake.id}
+              grbReviewType={SystemIntakeGRBReviewType.ASYNC}
+              grbPresentationLinks={grbPresentationLinks}
+              grbReviewAsyncRecordingTime={null}
+            />
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    await user.click(screen.getByRole('tab', { name: 'Add link' }));
+
+    const transcriptInput = container.querySelector(
+      '#transcriptLink'
+    ) as HTMLInputElement;
+
+    await user.clear(transcriptInput);
+    await user.type(transcriptInput, 'mailto:test@example.com');
+
+    expect(
+      screen.queryByText(
+        'Please enter a full URL beginning with http:// or https://.'
+      )
+    ).not.toBeInTheDocument();
+
+    await user.tab();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          'Please enter a full URL beginning with http:// or https://.'
+        )
+      ).toBeInTheDocument();
+    });
   });
 });

@@ -22,6 +22,7 @@ import {
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import { useEasiForm } from 'components/EasiForm';
+import FieldErrorMsg from 'components/FieldErrorMsg';
 import FileInput from 'components/FileInput';
 import HelpText from 'components/HelpText';
 import IconLink from 'components/IconLink';
@@ -73,6 +74,7 @@ const PresentationLinksForm = ({
     register,
     handleSubmit,
     control,
+    trigger,
     watch,
     formState: { errors, isValid, isDirty, defaultValues }
   } = useEasiForm<PresentationLinkFields>({
@@ -99,13 +101,17 @@ const PresentationLinksForm = ({
 
   const grbReviewPath = `/it-governance/${id}/grb-review`;
 
+  const recordingLinkField = register('recordingLink');
+  const transcriptLinkField = register('transcriptLink', {
+    shouldUnregister: true
+  });
+
   /**
    * Returns true if both recordingLink and presentationDeckFileData fields have errors
    */
   const hasRequiredFieldErrors =
-    !!errors?.recordingLink &&
-    (!!errors?.presentationDeckFileData ||
-      !defaultValues?.presentationDeckFileData?.name);
+    errors?.recordingLink?.type === 'required' ||
+    errors?.presentationDeckFileData?.type === 'required';
 
   /** Submit form to set GRB review presentation links */
   const submit = handleSubmit(
@@ -229,20 +235,25 @@ const PresentationLinksForm = ({
               {t('presentationGRBReviewForm.reviewersDescription')}
             </p>
 
-            <FormGroup error={hasRequiredFieldErrors}>
+            <FormGroup error={!!errors?.recordingLink}>
               <Label htmlFor="recordingLink" className="text-normal">
                 {t('presentationLinks.recordingLinkLabel')}
               </Label>
               <HelpText id="recordingLinkHelpText" className="margin-top-05">
                 {t('presentationLinks.recordingLinkHelpText')}
               </HelpText>
+              <FieldErrorMsg>{errors?.recordingLink?.message}</FieldErrorMsg>
 
               <TextInput
-                {...register('recordingLink')}
+                {...recordingLinkField}
                 ref={null}
                 id="recordingLink"
                 aria-describedby="recordingLinkHelpText"
                 type="url"
+                onBlur={e => {
+                  recordingLinkField.onBlur(e);
+                  trigger('recordingLink');
+                }}
               />
             </FormGroup>
 
@@ -266,12 +277,13 @@ const PresentationLinksForm = ({
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup error={!!errors?.transcriptLink}>
               <Fieldset id="transcriptFields">
                 <legend>{t('presentationLinks.transcript')}</legend>
                 <HelpText id="transcriptHelpText" className="margin-top-05">
                   {t('presentationLinks.transcriptHelpText')}
                 </HelpText>
+                <FieldErrorMsg>{errors?.transcriptLink?.message}</FieldErrorMsg>
 
                 <Tabs
                   className="margin-top-105"
@@ -288,14 +300,16 @@ const PresentationLinksForm = ({
                     className="outline-0"
                   >
                     <TextInput
-                      {...register('transcriptLink', {
-                        shouldUnregister: true
-                      })}
+                      {...transcriptLinkField}
                       ref={null}
                       id="transcriptLink"
                       aria-describedby="transcriptHelpText"
                       type="url"
                       className="margin-top-2"
+                      onBlur={e => {
+                        transcriptLinkField.onBlur(e);
+                        trigger('transcriptLink');
+                      }}
                     />
                   </TabPanel>
                   <TabPanel
