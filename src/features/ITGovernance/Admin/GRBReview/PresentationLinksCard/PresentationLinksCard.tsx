@@ -28,6 +28,7 @@ import Modal from 'components/Modal';
 import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
+import normalizePresentationLinkUrl from 'utils/normalizePresentationLinkUrl';
 
 import ITGovAdminContext from '../../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
@@ -166,13 +167,16 @@ function PresentationLinksCard({
     presentationDeckFileURL
   } = grbPresentationLinks || {};
 
+  const safeRecordingLink = normalizePresentationLinkUrl(recordingLink);
+  const safeTranscriptLink = normalizePresentationLinkUrl(transcriptLink);
+
   /** Returns true if either document is still being scanned */
   const isVirusScanning =
     transcriptFileStatus === SystemIntakeDocumentStatus.PENDING ||
     presentationDeckFileStatus === SystemIntakeDocumentStatus.PENDING;
 
   const hasAnyLinks: boolean =
-    !!recordingLink || !!transcriptLink || !!presentationDeckFileURL;
+    !!safeRecordingLink || !!safeTranscriptLink || !!presentationDeckFileURL;
 
   // Remove links handling
 
@@ -267,16 +271,18 @@ function PresentationLinksCard({
               </em>
             ) : (
               <>
-                {(recordingLink || recordingPasscode || transcriptLink) && (
+                {(safeRecordingLink ||
+                  recordingPasscode ||
+                  safeTranscriptLink) && (
                   <div className="display-flex flex-wrap flex-gap-1">
-                    {recordingLink && (
-                      <ExternalLinkAndModal href={recordingLink}>
+                    {safeRecordingLink && (
+                      <ExternalLinkAndModal href={safeRecordingLink}>
                         {t('asyncPresentation.viewRecording')}
                       </ExternalLinkAndModal>
                     )}
 
-                    {!recordingLink &&
-                      (recordingPasscode || transcriptLink) && (
+                    {!safeRecordingLink &&
+                      (recordingPasscode || safeTranscriptLink) && (
                         <span>
                           {t('asyncPresentation.noRecordingLinkAvailable')}
                         </span>
@@ -292,8 +298,8 @@ function PresentationLinksCard({
                   </div>
                 )}
 
-                {transcriptLink && (
-                  <ExternalLinkAndModal href={transcriptLink}>
+                {safeTranscriptLink && (
+                  <ExternalLinkAndModal href={safeTranscriptLink}>
                     {t('asyncPresentation.viewTranscript')}
                   </ExternalLinkAndModal>
                 )}

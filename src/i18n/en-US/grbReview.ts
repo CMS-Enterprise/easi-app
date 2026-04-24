@@ -463,6 +463,8 @@ export default {
     emptyFormError:
       'Please complete either the recording link or presentation deck field before submitting.',
     requiredField: 'This is a required field.',
+    urlValidation:
+      'Please enter a full URL beginning with http:// or https://.',
     presentationUpload: {
       header: 'Upload GRB presentation',
       description:

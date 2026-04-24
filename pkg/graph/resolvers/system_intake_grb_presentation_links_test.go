@@ -30,6 +30,56 @@ func (s *ResolverSuite) TestSetSystemIntakeGRBPresentationLinks() {
 	s.NotNil(createdLinks)
 }
 
+func (s *ResolverSuite) TestSetSystemIntakeGRBPresentationLinksRejectsUnsafeLinkSchemes() {
+	systemIntake, err := CreateSystemIntake(s.testConfigs.Context, s.testConfigs.Store, models.CreateSystemIntakeInput{
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		Requester: &models.SystemIntakeRequesterInput{
+			Name: "Requester Name",
+		},
+	},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.fetchUserInfoStub),
+	)
+	s.NoError(err)
+	s.NotNil(systemIntake)
+
+	testCases := []struct {
+		name  string
+		input models.SystemIntakeGRBPresentationLinksInput
+	}{
+		{
+			name: "rejects javascript recording link",
+			input: models.SystemIntakeGRBPresentationLinksInput{
+				SystemIntakeID: systemIntake.ID,
+				RecordingLink: graphql.OmittableOf(
+					new("javascript:confirm``"),
+				),
+			},
+		},
+		{
+			name: "rejects mailto transcript link",
+			input: models.SystemIntakeGRBPresentationLinksInput{
+				SystemIntakeID: systemIntake.ID,
+				TranscriptLink: graphql.OmittableOf(
+					new("mailto:test@example.com"),
+				),
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		s.Run(tc.name, func() {
+			links, setErr := SetSystemIntakeGRBPresentationLinks(
+				s.testConfigs.Context,
+				s.testConfigs.Store,
+				s.testConfigs.S3Client,
+				tc.input,
+			)
+			s.Error(setErr)
+			s.Nil(links)
+		})
+	}
+}
+
 func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 	input := s.createUploadSystemIntakeGRBPresentationDeckInput(s.createUploadSystemIntakeGRBPresentationDeckFileData())
 

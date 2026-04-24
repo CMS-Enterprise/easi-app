@@ -20,6 +20,7 @@ import PresentationLinksCard from './PresentationLinksCard';
 
 describe('Async Presentation Links Card', () => {
   const formattedRecordingPasscode = `(Passcode: ${grbPresentationLinks?.recordingPasscode})`;
+  const javascriptPayload = ['java', 'script:confirm', '``'].join('');
 
   function renderCard(
     props: Partial<ComponentProps<typeof PresentationLinksCard>>,
@@ -91,6 +92,48 @@ describe('Async Presentation Links Card', () => {
     });
 
     screen.getByRole('button', { name: 'View transcript' });
+  });
+
+  it('does not render a clickable recording link for unsupported url schemes', () => {
+    renderCard({
+      grbPresentationLinks: {
+        ...grbPresentationLinks,
+        recordingLink: javascriptPayload,
+        recordingPasscode: '',
+        transcriptLink: '',
+        transcriptFileStatus: null,
+        transcriptFileURL: null,
+        transcriptFileName: null,
+        presentationDeckFileStatus: null,
+        presentationDeckFileURL: null,
+        presentationDeckFileName: null
+      }
+    });
+
+    expect(
+      screen.queryByRole('button', { name: 'View recording' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not render a clickable transcript link for unsupported url schemes', () => {
+    renderCard({
+      grbPresentationLinks: {
+        ...grbPresentationLinks,
+        recordingLink: null,
+        recordingPasscode: '',
+        transcriptLink: 'mailto:test@example.com',
+        transcriptFileStatus: null,
+        transcriptFileURL: null,
+        transcriptFileName: null,
+        presentationDeckFileStatus: null,
+        presentationDeckFileURL: null,
+        presentationDeckFileName: null
+      }
+    });
+
+    expect(
+      screen.queryByRole('button', { name: 'View transcript' })
+    ).not.toBeInTheDocument();
   });
 
   it('renders virus scanning text', () => {
