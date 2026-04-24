@@ -126,9 +126,7 @@ const PresentationLinksForm = ({
     trigger
   ]);
 
-  /**
-   * Returns true if both recordingLink and presentationDeckFileData fields have errors
-   */
+  // Returns true if either required field for the empty-form alert has an error
   const hasRequiredFieldErrors =
     errors?.recordingLink?.type === 'required' ||
     errors?.presentationDeckFileData?.type === 'required';
