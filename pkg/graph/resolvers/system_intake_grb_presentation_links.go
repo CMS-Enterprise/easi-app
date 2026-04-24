@@ -39,7 +39,7 @@ func normalizePresentationLink(value *string, fieldName string) (*string, error)
 
 	switch strings.ToLower(parsedURL.Scheme) {
 	case "http", "https":
-		return new(trimmedValue), nil
+		return &trimmedValue, nil
 	default:
 		return nil, fmt.Errorf("%s must be a valid http:// or https:// URL", fieldName)
 	}
