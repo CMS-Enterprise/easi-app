@@ -1,10 +1,19 @@
-// Sanitize data for CSV export by escaping characters that could cause Excel DDE issues.
+// Sanitize data for CSV export by neutralizing spreadsheet formulas.
 // https://github.com/react-csv/react-csv/issues/156#issuecomment-517017565
 // https://jiraent.cms.gov/browse/EASI-2717
-//
-// Disable prefer-default-export because we may add more utilities here
-// eslint-disable-next-line import/prefer-default-export
-export const cleanCSVData = (data: any): any => {
+const spreadsheetFormulaPrefix = /^[\t\r\n ]*[=+\-@]/;
+
+const cleanCSVString = (value: string): string => {
+  const escapedValue = value.replace(/"/g, '""');
+
+  if (spreadsheetFormulaPrefix.test(value)) {
+    return `'${escapedValue}`;
+  }
+
+  return escapedValue;
+};
+
+const cleanCSVData = (data: any): any => {
   /** safety check because typeof null === 'object' */
   if (data === null) {
     return null;
@@ -32,9 +41,9 @@ export const cleanCSVData = (data: any): any => {
 
   /**
    * fairly confident this should be typecast as a string by now
-   * basically, just chuck a backslash in front of any + or = characters
+   * neutralize cells that spreadsheet apps may interpret as formulas
    */
-  return (data as string)
-    .replace(/[+|=]/g, match => `\\${match}`)
-    .replace(/"/g, '""');
+  return cleanCSVString(data as string);
 };
+
+export default cleanCSVData;

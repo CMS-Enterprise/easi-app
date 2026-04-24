@@ -6,7 +6,6 @@ import {
 import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
 import extractTextContent from 'utils/extractTextContent';
 import formatContractNumbers from 'utils/formatContractNumbers';
@@ -82,7 +81,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   hasUiChanges: null
 };
 
-export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
+export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
   const lastAdminNote = intake.lastAdminNote
     ? { ...intake.lastAdminNote }
     : null;
@@ -121,8 +120,7 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   const contractNumber = formatContractNumbers(intake.contractNumbers);
   const cmsSystem = intake.systems.map(v => v.name).join(', ');
 
-  // Override all applicable fields with CSV formatting
-  return cleanCSVData({
+  return {
     ...intake,
     contractName: intake.contractName || '',
     contractNumber,
@@ -142,5 +140,5 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     archivedAt,
     lcidIssuedAt,
     lcidExpiresAt
-  });
+  };
 };

@@ -26,15 +26,14 @@ import {
 import i18next from 'i18next';
 import { ActiveStateType, TableStateContext } from 'wrappers/TableStateWrapper';
 
-import CsvDownloadLink from 'components/CsvDownloadLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
+import SafeCSVLink from 'components/SafeCSVLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import useTableState from 'hooks/useTableState';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
-import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
@@ -98,9 +97,7 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
     ];
   });
 
-  const cleanedRows = cleanCSVData(rows);
-
-  return [trbRequestsCsvHeader, ...cleanedRows];
+  return [trbRequestsCsvHeader, ...rows];
 }
 
 function SubmissionDateCell({
@@ -242,13 +239,13 @@ function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
       </p>
 
       {/* Download new requests csv */}
-      <CsvDownloadLink
+      <SafeCSVLink
         data={getTrbRequestDataAsCsv(requests)}
         filename="new-trb-requests.csv"
         className="display-inline-block margin-bottom-1 line-height-body-5"
       >
         {t('adminTeamHome.newRequests.downloadCsv')}
-      </CsvDownloadLink>
+      </SafeCSVLink>
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
@@ -499,13 +496,13 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       </p>
 
       {/* Download existing requests csv */}
-      <CsvDownloadLink
+      <SafeCSVLink
         data={getTrbRequestDataAsCsv(requests)}
         filename="existing-trb-requests.csv"
         className="display-inline-block margin-bottom-2 line-height-body-5"
       >
         {t('adminTeamHome.existingRequests.downloadCsv')}
-      </CsvDownloadLink>
+      </SafeCSVLink>
 
       {/* Open | Closed requests tabs */}
       <nav aria-label={t('adminTeamHome.existingRequests.tabs.label')}>
@@ -680,12 +677,12 @@ function TrbAdminTeamHome() {
             >
               {t('adminTeamHome.jumpToExistingRequests')}
             </Button>
-            <CsvDownloadLink
+            <SafeCSVLink
               data={getTrbRequestDataAsCsv(trbRequests)}
               filename="all-trb-requests.csv"
             >
               {t('adminTeamHome.downloadAllTrbRequests')}
-            </CsvDownloadLink>
+            </SafeCSVLink>
             {/* {t('adminTeamHome.switchToDifferentAdminView')} post-mvp */}
             <UswdsReactLink to="/trb/start">
               {t('adminTeamHome.submitYourOwnRequest')}
