@@ -27,7 +27,7 @@ func GetURLForTRBRequestDocument(ctx context.Context, store *storage.Store, s3Cl
 		return "", err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanViewTRBRequest(ctx, trbRequest); err != nil {
 		return "", err
 	}
 
@@ -64,7 +64,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 
@@ -118,7 +118,7 @@ func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 

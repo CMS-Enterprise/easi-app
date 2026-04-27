@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -156,6 +157,13 @@ func (s *ResolverSuite) TestUpdateTRBRequestFormUnauthorized() {
 
 	trbRequest := s.createNewTRBRequest()
 	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
 
 	formChanges := map[string]interface{}{
 		"isSubmitted":  false,
@@ -163,9 +171,11 @@ func (s *ResolverSuite) TestUpdateTRBRequestFormUnauthorized() {
 		"component":    "Taco Cart",
 	}
 
-	_, err = UpdateTRBRequestForm(otherCtx, s.testConfigs.Store, &emailClient, okta.FetchUserInfo, formChanges)
-	s.Error(err)
-
 	var unauthorizedErr *apperrors.UnauthorizedError
-	s.True(errors.As(err, &unauthorizedErr))
+	for _, ctx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, okta.FetchUserInfo, formChanges)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
 }

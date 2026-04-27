@@ -1633,7 +1633,7 @@ func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.T
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanViewTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 

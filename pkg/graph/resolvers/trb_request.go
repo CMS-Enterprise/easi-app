@@ -99,7 +99,7 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, existing); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, existing); err != nil {
 		return nil, err
 	}
 
@@ -464,7 +464,7 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 	return requesterInfo, nil
 }
 
-func authorizeUserCanAccessTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
+func authorizeUserCanViewTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
 	p := appcontext.Principal(ctx)
 
 	// admin
@@ -486,5 +486,34 @@ func authorizeUserCanAccessTRBRequest(ctx context.Context, trbRequest *models.TR
 
 	return &apperrors.UnauthorizedError{
 		Err: errors.New("unauthorized to access TRB request"),
+	}
+}
+
+func authorizeUserCanEditOwnTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
+	eua := appcontext.Principal(ctx).Account().Username
+
+	if trbRequest.CreatedBy == eua {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{
+		Err: errors.New("unauthorized to modify TRB request"),
+	}
+}
+
+func authorizeUserCanManageTRBRequestRelations(ctx context.Context, trbRequest *models.TRBRequest) error {
+	p := appcontext.Principal(ctx)
+
+	if p.AllowTRBAdmin() {
+		return nil
+	}
+
+	eua := p.Account().Username
+	if trbRequest.CreatedBy == eua {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{
+		Err: errors.New("unauthorized to manage TRB request relations"),
 	}
 }

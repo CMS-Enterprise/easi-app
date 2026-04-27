@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"errors"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
@@ -127,6 +128,13 @@ func (s *ResolverSuite) TestTRBRequestAttendeeUnauthorized() {
 
 	trbRequest := s.createNewTRBRequest()
 	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(ctx, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
 
 	paRole := models.PersonRolePrivacyAdvisor
 	attendee := models.TRBRequestAttendee{
@@ -135,16 +143,19 @@ func (s *ResolverSuite) TestTRBRequestAttendeeUnauthorized() {
 		Role:         &paRole,
 	}
 
-	_, err = CreateTRBRequestAttendee(
-		otherCtx,
-		store,
-		emailClient.SendTRBAttendeeAddedNotification,
-		okta.FetchUserInfo,
-		&attendee,
-	)
-	s.Error(err)
 	var unauthorizedErr *apperrors.UnauthorizedError
-	s.True(errors.As(err, &unauthorizedErr))
+	for _, unauthorizedCtx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = CreateTRBRequestAttendee(
+			unauthorizedCtx,
+			store,
+			emailClient.SendTRBAttendeeAddedNotification,
+			okta.FetchUserInfo,
+			&attendee,
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
 
 	createdAttendee, err := CreateTRBRequestAttendee(
 		ctx,
@@ -157,11 +168,15 @@ func (s *ResolverSuite) TestTRBRequestAttendeeUnauthorized() {
 
 	component := "The Citadel of Ricks"
 	createdAttendee.Component = &component
-	_, err = UpdateTRBRequestAttendee(otherCtx, store, createdAttendee)
-	s.Error(err)
-	s.True(errors.As(err, &unauthorizedErr))
+	for _, unauthorizedCtx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = UpdateTRBRequestAttendee(unauthorizedCtx, store, createdAttendee)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
 
-	_, err = DeleteTRBRequestAttendee(otherCtx, store, createdAttendee.ID)
-	s.Error(err)
-	s.True(errors.As(err, &unauthorizedErr))
+		_, err = DeleteTRBRequestAttendee(unauthorizedCtx, store, createdAttendee.ID)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
 }

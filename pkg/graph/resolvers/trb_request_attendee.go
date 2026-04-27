@@ -30,7 +30,7 @@ func CreateTRBRequestAttendee(
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, requestPtr); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, requestPtr); err != nil {
 		return nil, err
 	}
 
@@ -100,7 +100,7 @@ func UpdateTRBRequestAttendee(ctx context.Context, store *storage.Store, attende
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 
@@ -127,7 +127,7 @@ func DeleteTRBRequestAttendee(ctx context.Context, store *storage.Store, id uuid
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 

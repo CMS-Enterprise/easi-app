@@ -60,16 +60,26 @@ func (s *ResolverSuite) TestUpdateTRBRequestUnauthorized() {
 	s.NotNil(trb)
 
 	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trb.TRBLead = &leadEUA
+	trb, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trb)
+	s.NoError(err)
+
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
 
 	changes := map[string]interface{}{
 		"Name": "Testing",
 	}
 
-	_, err = UpdateTRBRequest(otherCtx, trb.ID, changes, s.testConfigs.Store)
-	s.Error(err)
-
 	var unauthorizedErr *apperrors.UnauthorizedError
-	s.True(errors.As(err, &unauthorizedErr))
+	for _, ctx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = UpdateTRBRequest(ctx, trb.ID, changes, s.testConfigs.Store)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
 }
 
 // TestGetTRBRequestByID returns a TRB request by it's ID
@@ -115,6 +125,42 @@ func (s *ResolverSuite) TestTRBRequestGuidanceLetterVisibility() {
 	s.NoError(err)
 	s.NotNil(completedOwnerLetter)
 	s.Equal(letter.ID, completedOwnerLetter.ID)
+}
+
+func (s *ResolverSuite) TestTRBRequestAuthorizationHelpers() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	leadEUA := "LEAD"
+	trb.TRBLead = &leadEUA
+	trb, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trb)
+	s.NoError(err)
+
+	ownerCtx := s.testConfigs.Context
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	s.NoError(authorizeUserCanViewTRBRequest(ownerCtx, trb))
+	s.NoError(authorizeUserCanViewTRBRequest(adminCtx, trb))
+	s.NoError(authorizeUserCanViewTRBRequest(leadCtx, trb))
+
+	viewErr := authorizeUserCanViewTRBRequest(otherCtx, trb)
+	s.Error(viewErr)
+
+	s.NoError(authorizeUserCanEditOwnTRBRequest(ownerCtx, trb))
+	for _, ctx := range []context.Context{adminCtx, leadCtx, otherCtx} {
+		editErr := authorizeUserCanEditOwnTRBRequest(ctx, trb)
+		s.Error(editErr)
+	}
+
+	s.NoError(authorizeUserCanManageTRBRequestRelations(ownerCtx, trb))
+	s.NoError(authorizeUserCanManageTRBRequestRelations(adminCtx, trb))
+	for _, ctx := range []context.Context{leadCtx, otherCtx} {
+		relationErr := authorizeUserCanManageTRBRequestRelations(ctx, trb)
+		s.Error(relationErr)
+	}
 }
 
 // TestGetTRBRequests returns all TRB Requests

@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"errors"
 
 	"github.com/samber/lo"
@@ -117,25 +118,35 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 func (s *ResolverSuite) TestModifyTRBFundingSourcesUnauthorized() {
 	trbRequest := s.createNewTRBRequest()
 	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
 
-	_, err := UpdateTRBRequestFundingSources(
-		otherCtx,
-		s.testConfigs.Store,
-		trbRequest.ID,
-		"12345",
-		[]string{"banana", "apple"},
-	)
-	s.Error(err)
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err := s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
-	s.True(errors.As(err, &unauthorizedErr))
+	for _, ctx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = UpdateTRBRequestFundingSources(
+			ctx,
+			s.testConfigs.Store,
+			trbRequest.ID,
+			"12345",
+			[]string{"banana", "apple"},
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
 
-	_, err = DeleteTRBRequestFundingSources(
-		otherCtx,
-		s.testConfigs.Store,
-		trbRequest.ID,
-		"12345",
-	)
-	s.Error(err)
-	s.True(errors.As(err, &unauthorizedErr))
+		_, err = DeleteTRBRequestFundingSources(
+			ctx,
+			s.testConfigs.Store,
+			trbRequest.ID,
+			"12345",
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
 }

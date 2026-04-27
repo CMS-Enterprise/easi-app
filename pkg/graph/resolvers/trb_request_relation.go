@@ -29,7 +29,7 @@ func SetTRBRequestRelationNewSystem(
 		}
 
 		// check access
-		if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
 			return nil, err
 		}
 
@@ -65,7 +65,7 @@ func SetTRBRequestRelationExistingSystem(
 		if err != nil {
 			return nil, err
 		}
-		if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
 			return nil, err
 		}
 
@@ -106,7 +106,7 @@ func SetTRBRequestRelationExistingService(
 		if err != nil {
 			return nil, err
 		}
-		if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
 			return nil, err
 		}
 
@@ -140,7 +140,7 @@ func UnlinkTRBRequestRelation(
 		if err != nil {
 			return nil, err
 		}
-		if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
 			return nil, err
 		}
 

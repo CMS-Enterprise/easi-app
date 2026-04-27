@@ -30,7 +30,7 @@ func UpdateTRBRequestFundingSources(
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 
@@ -62,7 +62,7 @@ func DeleteTRBRequestFundingSources(
 		return nil, err
 	}
 
-	if err := authorizeUserCanAccessTRBRequest(ctx, trbRequest); err != nil {
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
 		return nil, err
 	}
 
