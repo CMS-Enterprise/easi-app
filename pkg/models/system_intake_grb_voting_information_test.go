@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 )
 
 func (s *ModelTestSuite) TestNumberOfNoObjection() {
@@ -17,15 +15,15 @@ func (s *ModelTestSuite) TestNumberOfNoObjection() {
 	info.GRBReviewers = []*SystemIntakeGRBReviewer{
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleNonVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 	}
 
@@ -44,15 +42,15 @@ func (s *ModelTestSuite) TestNumberOfObjection() {
 	info.GRBReviewers = []*SystemIntakeGRBReviewer{
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleNonVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 	}
 
@@ -71,15 +69,15 @@ func (s *ModelTestSuite) TestNumberOfNotVoted() {
 	info.GRBReviewers = []*SystemIntakeGRBReviewer{
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleNonVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 	}
 
@@ -107,15 +105,15 @@ func (s *ModelTestSuite) TestNumberOfVoted() {
 	info.GRBReviewers = []*SystemIntakeGRBReviewer{
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleNonVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 	}
 
@@ -134,7 +132,7 @@ func (s *ModelTestSuite) TestQuorumReached() {
 	info.GRBReviewers = []*SystemIntakeGRBReviewer{
 		{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleNonVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		},
 	}
 
@@ -143,10 +141,10 @@ func (s *ModelTestSuite) TestQuorumReached() {
 	s.False(quorumReached)
 
 	// add enough votes for quorum to be met
-	for i := 0; i < numberOfVotesForQuorum; i++ {
+	for range numberOfVotesForQuorum {
 		info.GRBReviewers = append(info.GRBReviewers, &SystemIntakeGRBReviewer{
 			GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-			Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+			Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 		})
 	}
 
@@ -189,7 +187,7 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSNotStarted,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{},
 			},
@@ -199,9 +197,9 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSInconclusive,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -2)),
-					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
-					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:          new(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate:       new(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{},
 			},
@@ -211,30 +209,30 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSInconclusive,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -1)),
-					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
-					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:          new(now.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate:       new(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 				},
 			},
@@ -244,29 +242,29 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSInconclusive,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -2)),
-					GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:    new(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 				},
 			},
@@ -276,29 +274,29 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSApproved,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -2)),
-					GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:    new(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 				},
 			},
@@ -308,30 +306,30 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSApproved,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -1)),
-					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
-					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:          new(now.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate:       new(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 				},
 			},
@@ -341,30 +339,30 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSNotApproved,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -1)),
-					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
-					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:          new(now.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate:       new(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 				},
 			},
@@ -374,29 +372,29 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			expected: GRBVSNotApproved,
 			info: &GRBVotingInformation{
 				SystemIntake: &SystemIntake{
-					GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -2)),
-					GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:    new(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate: new(now.AddDate(0, 0, -1)),
 				},
 				GRBReviewers: []*SystemIntakeGRBReviewer{
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 					{
 						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
-						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+						Vote:          new(SystemIntakeAsyncGRBVotingOptionNoObjection),
 					},
 				},
 			},

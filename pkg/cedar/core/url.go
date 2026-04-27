@@ -2,7 +2,7 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
@@ -44,7 +44,7 @@ func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID uuid.UUID) 
 	}
 
 	if resp.Payload == nil {
-		return []*models.CedarURL{}, fmt.Errorf("no body received")
+		return []*models.CedarURL{}, errors.New("no body received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct

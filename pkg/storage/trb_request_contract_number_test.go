@@ -26,7 +26,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 
 	s.Run("sets contracts on a TRB Request", func() {
 		// create three TRB Requests
-		for i := 0; i < 3; i++ {
+		for range 3 {
 			createdIDs = append(createdIDs, createTRBRequest(ctx, s, "ANON"))
 		}
 

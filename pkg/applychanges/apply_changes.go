@@ -1,6 +1,7 @@
 package applychanges
 
 import (
+	"errors"
 	"reflect"
 	"time"
 
@@ -13,7 +14,7 @@ import (
 // Currently, these include:
 // - Empty strings are converted to nil
 // - Empty slices are converted to nil
-func sanitizeChanges(changes map[string]interface{}) {
+func sanitizeChanges(changes map[string]any) {
 	for key, value := range changes {
 		// Get the reflect value for type comparisons
 		reflectValue := reflect.ValueOf(value)
@@ -41,7 +42,7 @@ func sanitizeChanges(changes map[string]interface{}) {
 // ApplyChanges applies arbitrary changes from a map to a struct. Any field not mentioned in the changes object will remain the same
 // Code largely copied from GQLGen's docs on changesets
 // https://gqlgen.com/reference/changesets/
-func ApplyChanges(changes map[string]interface{}, to interface{}) error {
+func ApplyChanges(changes map[string]any, to any) error {
 	sanitizeChanges(changes)
 
 	// Set up the decoder. This is almost exactly ripped from https://gqlgen.com/reference/changesets/
@@ -52,21 +53,29 @@ func ApplyChanges(changes map[string]interface{}, to interface{}) error {
 		ZeroFields:  true,
 		Squash:      true,
 		// This is needed to get mapstructure to call the gqlgen unmarshaler func for custom scalars (eg Date)
-		DecodeHook: func(a reflect.Type, b reflect.Type, v interface{}) (interface{}, error) {
+		DecodeHook: func(a reflect.Type, b reflect.Type, v any) (any, error) {
 			// If the destination is a time.Time and we need to parse it from a string
-			if b == reflect.TypeOf(time.Time{}) && a == reflect.TypeOf("") {
-				t, err := time.Parse(time.RFC3339Nano, v.(string))
+			if b == reflect.TypeFor[time.Time]() && a == reflect.TypeFor[string]() {
+				value, ok := v.(string)
+				if !ok {
+					return nil, errors.New("expected string value for time.Time")
+				}
+				t, err := time.Parse(time.RFC3339Nano, value)
 				return t, err
 			}
 
 			// If the destination is a uuid.UUID and we need to parse it from a string
-			if b == reflect.TypeOf(uuid.UUID{}) && a == reflect.TypeOf("") {
-				u, err := uuid.Parse(v.(string))
+			if b == reflect.TypeFor[uuid.UUID]() && a == reflect.TypeFor[string]() {
+				value, ok := v.(string)
+				if !ok {
+					return nil, errors.New("expected string value for uuid.UUID")
+				}
+				u, err := uuid.Parse(value)
 				return u, err
 			}
 
 			// If the destination implements graphql.Unmarshaler
-			if reflect.PointerTo(b).Implements(reflect.TypeOf((*graphql.Unmarshaler)(nil)).Elem()) {
+			if reflect.PointerTo(b).Implements(reflect.TypeFor[graphql.Unmarshaler]()) {
 				resultType := reflect.New(b)
 				result := resultType.MethodByName("UnmarshalGQL").Call([]reflect.Value{reflect.ValueOf(v)})
 				err, _ := result[0].Interface().(error)

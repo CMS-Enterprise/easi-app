@@ -21,7 +21,7 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 		return errors.New("unexpected nil system intake ID when linking system intake to contract numbers")
 	}
 
-	if _, err := tx.NamedExec(sqlqueries.SystemIntakeContractNumberForm.Delete, map[string]interface{}{
+	if _, err := tx.NamedExec(sqlqueries.SystemIntakeContractNumberForm.Delete, map[string]any{
 		"contract_numbers": pq.StringArray(contractNumbers),
 		"system_intake_id": systemIntakeID,
 	}); err != nil {

@@ -212,7 +212,7 @@ func (s *Server) routes() {
 		coreClient,
 		pubsubService,
 	)
-	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
+	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj any, next graphql.Resolver, role models.Role) (res any, err error) {
 		if !services.HasRole(ctx, role) {
 			// don't need to log here - services.HasRole() handles logging
 			return nil, &apperrors.UnauthorizedError{
@@ -333,9 +333,9 @@ func (s *Server) routes() {
 		base,
 	).Handle())
 
-	if ok, _ := strconv.ParseBool(os.Getenv("DEBUG_ROUTES")); ok {
+	if ok, err := strconv.ParseBool(os.Getenv("DEBUG_ROUTES")); ok && err == nil {
 		// useful for debugging route issues
-		_ = s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		if err := s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 			pathTemplate, err := route.GetPathTemplate()
 			if err == nil {
 				fmt.Println("ROUTE:", pathTemplate)
@@ -358,7 +358,9 @@ func (s *Server) routes() {
 			}
 			fmt.Println()
 			return nil
-		})
+		}); err != nil {
+			fmt.Printf("problem with debug router walk: %s", err.Error())
+		}
 	}
 
 	// This code publishes all system intakes to CEDAR's intake API

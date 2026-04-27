@@ -13,7 +13,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
 )
 
-func generateSchema(object interface{}, version translation.SchemaVersion, filename string) {
+func generateSchema(object any, version translation.SchemaVersion, filename string) {
 	schema := jsonschema.Reflect(object)
 	schema.Title = string(version)
 

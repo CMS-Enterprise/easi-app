@@ -47,8 +47,8 @@ func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 			CedarSystemID: cedarSystemID,
 		}
 		created, err := s.store.CreateCedarSystemBookmark(ctx, &bookmark)
-		createdAt := created.CreatedAt.Unix()
 		s.NoError(err)
+		createdAt := created.CreatedAt.Unix()
 
 		mockClock.Add(time.Minute)
 

@@ -2,7 +2,7 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 	"unicode"
 	"unicode/utf8"
@@ -50,7 +50,7 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID uuid.UUID) (
 
 	sys := resp.Payload
 	if sys == nil {
-		return nil, fmt.Errorf("no body received")
+		return nil, errors.New("no body received")
 	}
 
 	retVal := &models.CedarSystemDetails{

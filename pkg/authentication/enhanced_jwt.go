@@ -1,7 +1,7 @@
 package authentication
 
 import (
-	"fmt"
+	"errors"
 
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 )
@@ -17,5 +17,5 @@ func (ejwt *EnhancedJwt) GetOktaBaseURL() (*string, error) {
 	if url, ok := ejwt.JWT.Claims["iss"].(string); ok {
 		return &url, nil
 	}
-	return nil, fmt.Errorf("there is no base URL in the JWT claim")
+	return nil, errors.New("there is no base URL in the JWT claim")
 }

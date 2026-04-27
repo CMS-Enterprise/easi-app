@@ -2,7 +2,7 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -58,7 +58,7 @@ func (c *Client) GetDeployments(ctx context.Context, cedarSystemID uuid.UUID, op
 	}
 
 	if resp.Payload == nil {
-		return []*models.CedarDeployment{}, fmt.Errorf("no body received")
+		return []*models.CedarDeployment{}, errors.New("no body received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct

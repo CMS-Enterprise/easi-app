@@ -39,7 +39,7 @@ func (s *Store) CreateTRBLeadOption(ctx context.Context, leadOption *models.TRBL
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	created := models.TRBLeadOption{}
 	err = stmt.Get(&created, leadOption)
@@ -64,7 +64,7 @@ func (s *Store) DeleteTRBLeadOption(ctx context.Context, euaID string) (*models.
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	toDelete := models.TRBLeadOption{}
 	toDelete.EUAUserID = euaID

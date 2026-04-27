@@ -56,7 +56,7 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	retNote := models.TRBAdminNote{}
 
@@ -129,9 +129,9 @@ func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
-	arg := map[string]interface{}{"id": id}
+	arg := map[string]any{"id": id}
 
 	err = stmt.Get(&note, arg)
 	if err != nil {
@@ -173,10 +173,10 @@ func (s *Store) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArc
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	updated := models.TRBAdminNote{}
-	arg := map[string]interface{}{
+	arg := map[string]any{
 		"id":          id,
 		"is_archived": isArchived,
 		"modified_by": modifiedBy,

@@ -134,7 +134,10 @@ func createTestPrincipal(store *storage.Store, userName string) *authentication.
 		HasLoggedIn: true,
 	}
 
-	userAccount, _ := storage.UserAccountCreate(context.Background(), store, &tAccount) //swallow error
+	userAccount, err := storage.UserAccountCreate(context.Background(), store, &tAccount)
+	if err != nil {
+		panic(err)
+	}
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,
 		JobCodeEASi: true,

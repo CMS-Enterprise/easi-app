@@ -145,6 +145,6 @@ func getResultSimplified[K comparable, V any](key K, resultMap map[K][]V) ([]V, 
 }
 
 // OneToMany uses the standard OneToManyFunc, but assumes that the mapKey is the same as the dataloaderkey K.
-func OneToMany[K comparable, V any, mapType any, Output any](keys []K, vals []mapType, getKey func(mapType) K, transformOutput func([]mapType, bool) Output) []Output {
+func OneToMany[K comparable, mapType any, Output any](keys []K, vals []mapType, getKey func(mapType) K, transformOutput func([]mapType, bool) Output) []Output {
 	return OneToManyWithCustomKey(keys, vals, getKey, getResultSimplified[K, mapType], transformOutput)
 }

@@ -2,6 +2,7 @@ package appcontext
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 
@@ -80,7 +81,7 @@ func EnhancedJWT(c context.Context) *authentication.EnhancedJwt {
 func UserAccountService(ctx context.Context) (authentication.GetUserAccountFromDBFunc, error) {
 	userAccountServiceInterface := ctx.Value(userAccountServiceKey)
 	if userAccountServiceInterface == nil {
-		return nil, fmt.Errorf("the user account service was not found on the provided ctx")
+		return nil, errors.New("the user account service was not found on the provided ctx")
 	}
 	userAccountService, ok := userAccountServiceInterface.(authentication.GetUserAccountFromDBFunc)
 	if !ok {

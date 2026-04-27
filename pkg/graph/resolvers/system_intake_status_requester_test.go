@@ -6,7 +6,6 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -206,7 +205,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					State:                 models.SystemIntakeStateOpen,
 					DecisionState:         models.SIDSNoDecision,
 					GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
-					GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+					GRBReviewStartedAt:    new(yesterday.AddDate(0, 0, -1)),
 					GrbReviewAsyncEndDate: &yesterday,
 				},
 				expectedStatus: models.SISRGrbReviewInProgress,

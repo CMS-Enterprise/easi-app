@@ -63,7 +63,7 @@ func (s *Store) CreateTRBAdminNoteTRBInsightLinks(
 		)
 		return nil, err
 	}
-	defer createdLinkRows.Close()
+	defer closeRows(ctx, createdLinkRows)
 
 	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
 	createdLinks := []*models.TRBAdminNoteTRBGuidanceLetterInsightLink{}
@@ -107,9 +107,9 @@ func (s *Store) GetTRBInsightsByAdminNoteID(ctx context.Context, adminNoteID uui
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
-	arg := map[string]interface{}{
+	arg := map[string]any{
 		"admin_note_id": adminNoteID,
 	}
 

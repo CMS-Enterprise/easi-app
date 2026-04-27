@@ -18,7 +18,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 	ctx := context.Background()
 	anonEua := "ANON"
 	s.Run("No errors will commit a transaction", func() {
-		newTRB, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		newTRB, err := sqlutils.WithTransactionRet(ctx, s.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
@@ -34,14 +34,14 @@ func (s *StoreTestSuite) TestWithTransaction() {
 		s.NoError(err)
 		s.NotNil(newTRB)
 
-		trbRet, err := s.store.GetTRBRequestByID(ctx, newTRB.ID) // If the transaction was commited, we should get the plan
+		trbRet, err := s.store.GetTRBRequestByID(ctx, newTRB.ID) // If the transaction was committed, we should get the plan
 		s.NoError(err)
 		s.NotNil(trbRet)
 	})
 
 	s.Run("Errors will rollback a transaction", func() {
 		var createID uuid.UUID
-		retVal, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		retVal, err := sqlutils.WithTransactionRet(ctx, s.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
@@ -77,7 +77,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 	s.Run("With Transaction can also perform discrete db actions not directly part of the transaction", func() {
 		//NOTE: this is not behavior we should expect in production code.
 		var trbGlobal *models.TRBRequest
-		retVal, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		retVal, err := sqlutils.WithTransactionRet(ctx, s.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
@@ -104,7 +104,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 		var createID uuid.UUID
 
 		panicFunc := func() {
-			_ = sqlutils.WithTransaction(ctx, s.store, func(tx *sqlx.Tx) error {
+			err := sqlutils.WithTransaction(ctx, s.store, func(tx *sqlx.Tx) error {
 				trb := models.NewTRBRequest(anonEua)
 				trb.Type = models.TRBTNeedHelp
 				trb.State = models.TRBRequestStateOpen
@@ -122,6 +122,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 
 				panic("panic!")
 			})
+			s.NoError(err)
 		}
 
 		// we expect a panic, so we don't want the test to fail due to our panic

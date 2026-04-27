@@ -29,7 +29,7 @@ func (s *EmailTestSuite) TestSendNotITGovRequestNotification() {
 	)
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
-	reason := models.HTML("inumerable reasons, literally so many reasons")
+	reason := models.HTML("enumerable reasons, literally so many reasons")
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")

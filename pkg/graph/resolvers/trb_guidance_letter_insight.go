@@ -40,7 +40,7 @@ func GetTRBGuidanceLetterInsightsByTRBRequestID(ctx context.Context, store *stor
 }
 
 // UpdateTRBGuidanceLetterInsight updates a TRBGuidanceLetterInsight record in the database
-func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, changes map[string]interface{}) (*models.TRBGuidanceLetterInsight, error) {
+func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, changes map[string]any) (*models.TRBGuidanceLetterInsight, error) {
 	idIface, idFound := changes["id"]
 	if !idFound {
 		return nil, errors.New("missing required property id")

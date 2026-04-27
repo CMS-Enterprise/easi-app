@@ -61,10 +61,10 @@ func makeSystemIntake(
 	createSystemIntakeDocument(ctx, store, intake, "sixth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
 	createSystemIntakeDocument(ctx, store, intake, "seventh_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftOther)
 	createSystemIntakeDocument(ctx, store, intake, "eighth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeSOOSOW)
-	createSystemIntakeDocument(ctx, store, intake, "nineth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "ninth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
 	createSystemIntakeDocument(ctx, store, intake, "tenth_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeMEETINGMINS)
 	createSystemIntakeDocument(ctx, store, intake, "eleventh_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
-	createSystemIntakeDocument(ctx, store, intake, "twelth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
+	createSystemIntakeDocument(ctx, store, intake, "twelfth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
 	createSystemIntakeDocument(ctx, store, intake, "thirteenth_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftOther)
 	return fillOutInitialIntake(ctx, requestName, store, intake)
 }
@@ -95,10 +95,7 @@ func fillOutInitialIntake(
 	if err != nil {
 		panic(err)
 	}
-	requester, err := contacts.Requester()
-	if err != nil {
-		panic(fmt.Errorf("unable to find a requester: %w", err))
-	}
+	requester := contacts.Requester()
 	if requester == nil {
 		panic("requester is nil")
 	}
@@ -313,7 +310,7 @@ func updateSystemIntakeContact(
 	userPrincipal := appcontext.Principal(ctx)
 	input := models.UpdateSystemIntakeContactInput{
 		ID:          requesterID,
-		Component:   models.SystemIntakeContactComponent(component),
+		Component:   component,
 		Roles:       roles,
 		IsRequester: IsRequester,
 	}

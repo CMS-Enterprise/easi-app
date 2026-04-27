@@ -36,12 +36,12 @@ func (note *TranslatableNote) CreateIntakeModel(ctx context.Context) (*wire.Inta
 	}
 
 	result := wire.IntakeInput{
-		ClientID: pStr(note.ID.String()),
-		Body:     pStr(string(blob)),
+		ClientID: new(note.ID.String()),
+		Body:     new(string(blob)),
 
 		// invariants for this type
 		ClientStatus: statusStr(inputStatusFinal),
-		BodyFormat:   pStr(wire.IntakeInputBodyFormatJSON),
+		BodyFormat:   new(wire.IntakeInputBodyFormatJSON),
 		Type:         typeStr(intakeInputNote),
 		Schema:       versionStr(IntakeInputSchemaEASINoteVersion),
 	}

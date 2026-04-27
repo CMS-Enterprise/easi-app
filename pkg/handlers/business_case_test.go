@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -51,7 +52,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 	s.NoError(err)
 	s.Run("golden path GET passes", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "GET", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodGet, fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBufferString(""))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		BusinessCaseHandler{
@@ -64,12 +65,12 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 
 	s.Run("GET returns an error if the uuid is not valid", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "GET", "/business_case/NON_EXISTENT", bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodGet, "/business_case/NON_EXISTENT", bytes.NewBufferString(""))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": "NON_EXISTENT"})
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
-			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to parse Business Case id to uuid")),
+			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(errors.New("failed to parse Business Case id to uuid")),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
@@ -79,7 +80,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
 		nonexistentID := uuid.New()
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "GET", "/business_case/"+nonexistentID.String(), bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodGet, "/business_case/"+nonexistentID.String(), bytes.NewBufferString(""))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": nonexistentID.String()})
 		BusinessCaseHandler{
@@ -101,7 +102,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"system_intake_id": id.String(),
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPost, "/business_case/", bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
@@ -118,7 +119,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"system_intake_id": id.String(),
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(badContext, "POST", "/business_case/", bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(badContext, http.MethodPost, "/business_case/", bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
@@ -134,13 +135,13 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"system_intake_id": id.String(),
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPost, "/business_case/", bytes.NewBuffer(body))
 
 		s.NoError(err)
 		expectedErr := apperrors.ValidationError{
 			Model:   models.BusinessCase{},
 			ModelID: "",
-			Err:     fmt.Errorf("failed validations"),
+			Err:     errors.New("failed validations"),
 		}
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
@@ -156,13 +157,13 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"system_intake_id": id.String(),
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPost, "/business_case/", bytes.NewBuffer(body))
 
 		s.NoError(err)
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
-			CreateBusinessCase:    newMockCreateBusinessCase(fmt.Errorf("failed to create Business Case")),
+			CreateBusinessCase:    newMockCreateBusinessCase(errors.New("failed to create Business Case")),
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
@@ -173,7 +174,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"requesterPhoneNumber": "1234567890",
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPut, fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
@@ -187,7 +188,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 
 	s.Run("returns an error if the body is empty", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPut, fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBufferString(""))
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
@@ -205,7 +206,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"requesterPhoneNumber": "1234567890",
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", "3"), bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPut, fmt.Sprintf("/business_case/%s", "3"), bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
@@ -223,7 +224,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"requesterPhoneNumber": "1234567890",
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(badContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(badContext, http.MethodPut, fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
@@ -242,7 +243,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"requesterPhoneNumber": "1234567890",
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPut, fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
@@ -261,7 +262,7 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"requesterPhoneNumber": "1234567890",
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPut, fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
@@ -280,14 +281,14 @@ func (s *HandlerTestSuite) TestBusinessCaseHandler() {
 			"requesterPhoneNumber": "1234567890",
 		})
 		s.NoError(err)
-		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		req, err := http.NewRequestWithContext(requestContext, http.MethodPut, fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
-			UpdateBusinessCase:    newMockUpdateBusinessCase(fmt.Errorf("failed to update Business Case")),
+			UpdateBusinessCase:    newMockUpdateBusinessCase(errors.New("failed to update Business Case")),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)

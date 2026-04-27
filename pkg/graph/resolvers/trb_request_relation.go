@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -21,7 +20,7 @@ func SetTRBRequestRelationNewSystem(
 	store *storage.Store,
 	input models.SetTRBRequestRelationNewSystemInput,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, input.TrbRequestID)
 		if err != nil {
@@ -40,7 +39,7 @@ func SetTRBRequestRelationNewSystem(
 
 		// Clear contract name
 		trbRequest.ContractName = zero.StringFromPtr(nil)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeNewSystem)
+		trbRequest.SystemRelationType = new(models.RelationTypeNewSystem)
 		return store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }
@@ -54,7 +53,7 @@ func SetTRBRequestRelationExistingSystem(
 	getCedarSystem func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error),
 	input models.SetTRBRequestRelationExistingSystemInput,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, input.TrbRequestID)
 		if err != nil {
@@ -79,7 +78,7 @@ func SetTRBRequestRelationExistingSystem(
 		}
 
 		trbRequest.ContractName = zero.StringFromPtr(nil)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingSystem)
+		trbRequest.SystemRelationType = new(models.RelationTypeExistingSystem)
 		return store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }
@@ -92,7 +91,7 @@ func SetTRBRequestRelationExistingService(
 	store *storage.Store,
 	input models.SetTRBRequestRelationExistingServiceInput,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, input.TrbRequestID)
 		if err != nil {
@@ -111,7 +110,7 @@ func SetTRBRequestRelationExistingService(
 
 		// set contract name
 		trbRequest.ContractName = zero.StringFrom(input.ContractName)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingService)
+		trbRequest.SystemRelationType = new(models.RelationTypeExistingService)
 		return store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }
@@ -123,7 +122,7 @@ func UnlinkTRBRequestRelation(
 	store *storage.Store,
 	trbRequestID uuid.UUID,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, trbRequestID)
 		if err != nil {

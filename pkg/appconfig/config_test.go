@@ -46,31 +46,36 @@ func (s *ConfigTestSuite) TestNewEnvironment() {
 }
 
 func (s *ConfigTestSuite) TestLocal() {
-	env, _ := NewEnvironment("local")
+	env, err := NewEnvironment("local")
+	s.NoError(err)
 
 	s.True(env.Local())
 }
 
 func (s *ConfigTestSuite) TestTest() {
-	env, _ := NewEnvironment("test")
+	env, err := NewEnvironment("test")
+	s.NoError(err)
 
 	s.True(env.Test())
 }
 
 func (s *ConfigTestSuite) TestDev() {
-	env, _ := NewEnvironment("dev")
+	env, err := NewEnvironment("dev")
+	s.NoError(err)
 
 	s.True(env.Dev())
 }
 
 func (s *ConfigTestSuite) TestImpl() {
-	env, _ := NewEnvironment("impl")
+	env, err := NewEnvironment("impl")
+	s.NoError(err)
 
 	s.True(env.Impl())
 }
 
 func (s *ConfigTestSuite) TestProd() {
-	env, _ := NewEnvironment("prod")
+	env, err := NewEnvironment("prod")
+	s.NoError(err)
 
 	s.True(env.Prod())
 }

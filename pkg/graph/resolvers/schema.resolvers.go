@@ -20,7 +20,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -493,13 +492,17 @@ func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, inpu
 	}
 
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
+	if err != nil {
+		return nil, err
+	}
+
 	systemIntake := models.SystemIntake{
 		AdminLead: null.StringFrom(savedAdminLead),
 		ID:        input.ID,
 	}
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: &systemIntake,
-	}, err
+	}, nil
 }
 
 // UpdateSystemIntakeReviewDates is the resolver for the updateSystemIntakeReviewDates field.
@@ -944,7 +947,7 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 		return nil, errors.New("user is unauthorized to archive system intake")
 	}
 
-	now := helpers.PointerTo(time.Now())
+	now := new(time.Now())
 
 	// close out any associated Business Case
 	if intake.BusinessCaseID != nil {
@@ -1016,8 +1019,7 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input models.S
 		return nil, err
 	}
 
-	msg := "Feedback sent successfully"
-	return &msg, nil
+	return new("Feedback sent successfully"), nil
 }
 
 // SendCantFindSomethingEmail is the resolver for the sendCantFindSomethingEmail field.
@@ -1038,8 +1040,7 @@ func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input
 		return nil, err
 	}
 
-	msg := "Feedback sent successfully"
-	return &msg, nil
+	return new("Feedback sent successfully"), nil
 }
 
 // SendReportAProblemEmail is the resolver for the sendReportAProblemEmail field.
@@ -1071,8 +1072,7 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 		return nil, err
 	}
 
-	msg := "Feedback sent successfully"
-	return &msg, nil
+	return new("Feedback sent successfully"), nil
 }
 
 // CreateTRBRequest is the resolver for the createTRBRequest field.
@@ -1087,7 +1087,6 @@ func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, c
 
 // CreateTRBRequestAttendee is the resolver for the createTRBRequestAttendee field.
 func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input models.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
-	role := models.PersonRole(input.Role)
 	return CreateTRBRequestAttendee(
 		ctx,
 		r.store,
@@ -1097,17 +1096,16 @@ func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input m
 			TRBRequestID: input.TrbRequestID,
 			EUAUserID:    input.EuaUserID,
 			Component:    &input.Component,
-			Role:         &role,
+			Role:         &input.Role,
 		},
 	)
 }
 
 // UpdateTRBRequestAttendee is the resolver for the updateTRBRequestAttendee field.
 func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input models.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
-	role := models.PersonRole(input.Role)
 	attendee := &models.TRBRequestAttendee{
 		Component: &input.Component,
-		Role:      &role,
+		Role:      &input.Role,
 	}
 	attendee.ID = input.ID
 	return UpdateTRBRequestAttendee(ctx, r.store, attendee)
@@ -1211,7 +1209,7 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 		r.service.FetchUserInfos,
 		&models.TRBRequestFeedback{
 			TRBRequestID:    input.TrbRequestID,
-			FeedbackMessage: models.HTML(input.FeedbackMessage),
+			FeedbackMessage: input.FeedbackMessage,
 			CopyTRBMailbox:  input.CopyTrbMailbox,
 			NotifyEUAIDs:    notifyEuas,
 			Action:          input.Action,
@@ -1740,13 +1738,9 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		endDate := *obj.ContractEndDate
 		year, month, day := endDate.Date()
 
-		dayStr := strconv.Itoa(day)
-		monthStr := strconv.Itoa(int(month))
-		yearStr := strconv.Itoa(year)
-
-		contractEnd.Day = &dayStr
-		contractEnd.Month = &monthStr
-		contractEnd.Year = &yearStr
+		contractEnd.Day = new(strconv.Itoa(day))
+		contractEnd.Month = new(strconv.Itoa(int(month)))
+		contractEnd.Year = new(strconv.Itoa(year))
 	}
 
 	contractStart := models.ContractDate{}
@@ -1762,13 +1756,9 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		startDate := *obj.ContractStartDate
 		year, month, day := startDate.Date()
 
-		dayStr := strconv.Itoa(day)
-		monthStr := strconv.Itoa(int(month))
-		yearStr := strconv.Itoa(year)
-
-		contractStart.Day = &dayStr
-		contractStart.Month = &monthStr
-		contractStart.Year = &yearStr
+		contractStart.Day = new(strconv.Itoa(day))
+		contractStart.Month = new(strconv.Itoa(int(month)))
+		contractStart.Year = new(strconv.Itoa(year))
 	}
 
 	return &models.SystemIntakeContract{
@@ -2117,12 +2107,12 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ct
 
 // VotingRole is the resolver for the votingRole field.
 func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error) {
-	return models.SystemIntakeGRBReviewerVotingRole(obj.GRBVotingRole), nil
+	return obj.GRBVotingRole, nil
 }
 
 // GrbRole is the resolver for the grbRole field.
 func (r *systemIntakeGRBReviewerResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerRole, error) {
-	return models.SystemIntakeGRBReviewerRole(obj.GRBReviewerRole), nil
+	return obj.GRBReviewerRole, nil
 }
 
 // Author is the resolver for the author field.
@@ -2248,8 +2238,7 @@ func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBR
 
 // RequesterComponent is the resolver for the requesterComponent field.
 func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
-	requester := obj.CreatedBy
-	return GetTRBAttendeeComponent(ctx, &requester, obj.ID)
+	return GetTRBAttendeeComponent(ctx, &obj.CreatedBy, obj.ID)
 }
 
 // AdminNotes is the resolver for the adminNotes field.

@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/facebookgo/clock"
@@ -67,110 +68,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.With(logfields.TraceField(traceID.String()))
 	}
 
-	// get code and response
-	var code int
-	var response errorResponse
-	switch appErr := appErr.(type) {
-	case *apperrors.UnauthorizedError:
-		// 4XX errors are not logged as errors, but are for client
-		logger.Info("Returning unauthorized response from handler", zap.Error(appErr))
-		code = http.StatusUnauthorized
-		response = newErrorResponse(
-			code,
-			"Unauthorized",
-			traceID,
-		)
-	case *apperrors.QueryError:
-		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		switch appErr.Unwrap().(type) {
-		case *apperrors.ResourceNotFoundError:
-			code = http.StatusNotFound
-			response = newErrorResponse(
-				code,
-				"Resource not found",
-				traceID,
-			)
-		default:
-			code = http.StatusInternalServerError
-			response = newErrorResponse(
-				code,
-				"Something went wrong",
-				traceID,
-			)
-		}
-	case *apperrors.ExternalAPIError:
-		logger.Error("Returning service unavailable error response from handler", zap.Error(appErr))
-		code = http.StatusServiceUnavailable
-		response = newErrorResponse(
-			code,
-			"Service unavailable",
-			traceID,
-		)
-	case *apperrors.ContextError:
-		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		code = http.StatusInternalServerError
-		response = newErrorResponse(
-			code,
-			"Something went wrong",
-			traceID,
-		)
-	case *apperrors.ValidationError:
-		logger.Info("Returning unprocessable entity error from handler", zap.Error(appErr))
-		code = http.StatusUnprocessableEntity
-		response = newErrorResponse(
-			code,
-			"Entity unprocessable",
-			traceID,
-		)
-		response.withMap(appErr.Validations.Map())
-	case *apperrors.MethodNotAllowedError:
-		logger.Info("Returning method not allowed error from handler", zap.Error(appErr))
-		code = http.StatusMethodNotAllowed
-		response = newErrorResponse(
-			code,
-			"Method not allowed",
-			traceID,
-		)
-	case *apperrors.ResourceConflictError:
-		logger.Info("Returning resource conflict error from handler", zap.Error(appErr))
-		code = http.StatusConflict
-		response = newErrorResponse(
-			code,
-			"Resource conflict",
-			traceID,
-		)
-	case *apperrors.BadRequestError:
-		logger.Info("Returning bad request error from handler", zap.Error(appErr))
-		code = http.StatusBadRequest
-		response = newErrorResponse(
-			code,
-			"Bad request",
-			traceID,
-		)
-	case *apperrors.UnknownRouteError:
-		logger.Info("Returning status not found error from handler", zap.Error(appErr))
-		code = http.StatusNotFound
-		response = newErrorResponse(
-			code,
-			"Not found",
-			traceID,
-		)
-	case *apperrors.ResourceNotFoundError:
-		code = http.StatusNotFound
-		response = newErrorResponse(
-			code,
-			"Resource not found",
-			traceID,
-		)
-	default:
-		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		code = http.StatusInternalServerError
-		response = newErrorResponse(
-			code,
-			"Something went wrong",
-			traceID,
-		)
-	}
+	response := errorResponseFor(appErr, traceID, logger)
 
 	// get error as response body
 	responseBody, err := json.Marshal(response)
@@ -182,11 +80,120 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 
 	// write a JSON response and fallback to generic message
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
+	w.WriteHeader(response.Code)
 	_, err = w.Write(responseBody)
 	if err != nil {
 		logger.Error("Failed to write error response. Defaulting to generic.")
 		http.Error(w, "Something went wrong", http.StatusInternalServerError)
 		return
 	}
+}
+
+func errorResponseFor(appErr error, traceID uuid.UUID, logger *zap.Logger) errorResponse {
+	if _, ok := errors.AsType[*apperrors.UnauthorizedError](appErr); ok {
+		// 4XX errors are not logged as errors, but are for client
+		logger.Info("Returning unauthorized response from handler", zap.Error(appErr))
+		return newErrorResponse(
+			http.StatusUnauthorized,
+			"Unauthorized",
+			traceID,
+		)
+	}
+
+	if queryErr, ok := errors.AsType[*apperrors.QueryError](appErr); ok {
+		logger.Error("Returning server error response from handler", zap.Error(appErr))
+		if _, ok := errors.AsType[*apperrors.ResourceNotFoundError](queryErr.Unwrap()); ok {
+			return newErrorResponse(
+				http.StatusNotFound,
+				"Resource not found",
+				traceID,
+			)
+		}
+
+		return newErrorResponse(
+			http.StatusInternalServerError,
+			"Something went wrong",
+			traceID,
+		)
+	}
+
+	if _, ok := errors.AsType[*apperrors.ExternalAPIError](appErr); ok {
+		logger.Error("Returning service unavailable error response from handler", zap.Error(appErr))
+		return newErrorResponse(
+			http.StatusServiceUnavailable,
+			"Service unavailable",
+			traceID,
+		)
+	}
+
+	if _, ok := errors.AsType[*apperrors.ContextError](appErr); ok {
+		logger.Error("Returning server error response from handler", zap.Error(appErr))
+		return newErrorResponse(
+			http.StatusInternalServerError,
+			"Something went wrong",
+			traceID,
+		)
+	}
+
+	if validationErr, ok := errors.AsType[*apperrors.ValidationError](appErr); ok {
+		logger.Info("Returning unprocessable entity error from handler", zap.Error(appErr))
+		response := newErrorResponse(
+			http.StatusUnprocessableEntity,
+			"Entity unprocessable",
+			traceID,
+		)
+		response.withMap(validationErr.Validations.Map())
+		return response
+	}
+
+	if _, ok := errors.AsType[*apperrors.MethodNotAllowedError](appErr); ok {
+		logger.Info("Returning method not allowed error from handler", zap.Error(appErr))
+		return newErrorResponse(
+			http.StatusMethodNotAllowed,
+			"Method not allowed",
+			traceID,
+		)
+	}
+
+	if _, ok := errors.AsType[*apperrors.ResourceConflictError](appErr); ok {
+		logger.Info("Returning resource conflict error from handler", zap.Error(appErr))
+		return newErrorResponse(
+			http.StatusConflict,
+			"Resource conflict",
+			traceID,
+		)
+	}
+
+	if _, ok := errors.AsType[*apperrors.BadRequestError](appErr); ok {
+		logger.Info("Returning bad request error from handler", zap.Error(appErr))
+		return newErrorResponse(
+			http.StatusBadRequest,
+			"Bad request",
+			traceID,
+		)
+	}
+
+	if _, ok := errors.AsType[*apperrors.UnknownRouteError](appErr); ok {
+		logger.Info("Returning status not found error from handler", zap.Error(appErr))
+		return newErrorResponse(
+			http.StatusNotFound,
+			"Not found",
+			traceID,
+		)
+	}
+
+	if _, ok := errors.AsType[*apperrors.ResourceNotFoundError](appErr); ok {
+		return newErrorResponse(
+			http.StatusNotFound,
+			"Resource not found",
+			traceID,
+		)
+	}
+
+	logger.Error("Returning server error response from handler", zap.Error(appErr))
+	return newErrorResponse(
+		http.StatusInternalServerError,
+		"Something went wrong",
+		traceID,
+	)
 }

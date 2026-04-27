@@ -3,9 +3,8 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
-
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
@@ -221,7 +220,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 
 		// explicitly set to something other than GRB Meeting
 		intake.Step = models.SystemIntakeStepFINALBIZCASE
-		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+		intake.GrbReviewAsyncManualEndDate = new(time.Now().Add(time.Hour * -24))
 
 		var err error
 		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
@@ -673,7 +672,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 
 		// set step back to something else
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
-		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+		intake.GrbReviewAsyncManualEndDate = new(time.Now().Add(time.Hour * -24))
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 		s.NoError(err)
 
@@ -822,13 +821,15 @@ func (s *ResolverSuite) createIntakeAndAddReviewersByEUAs(reviewerEuaIDs ...stri
 }
 
 func addTags(htmlString string, tags ...models.Tag) string {
+	var sb strings.Builder
 	for _, tag := range tags {
 		span := fmt.Sprintf(`<span class="mention" tag-type="%s" data-type="mention"`, tag.TagType)
 		if tag.TagType == models.TagTypeUserAccount {
 			span += fmt.Sprintf(` data-id-db="%s"`, tag.TaggedContentID)
 		}
 		span += `>@tag</span>`
-		htmlString += span
+		sb.WriteString(span)
 	}
-	return htmlString
+
+	return htmlString + sb.String()
 }

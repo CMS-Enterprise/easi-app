@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -84,8 +85,12 @@ func (e EstimatedLifecycleCost) GetMappingVal() *EstimatedLifecycleCost {
 type EstimatedLifecycleCosts []EstimatedLifecycleCost
 
 // Scan implements the sql.Scanner interface
-func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
-	return json.Unmarshal(src.([]byte), e)
+func (e *EstimatedLifecycleCosts) Scan(src any) error {
+	value, ok := src.([]byte)
+	if !ok {
+		return errors.New("expected []byte for EstimatedLifecycleCosts")
+	}
+	return json.Unmarshal(value, e)
 }
 
 // BusinessCase is the model for the Business Case form.

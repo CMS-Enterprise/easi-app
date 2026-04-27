@@ -20,9 +20,15 @@ func S3TestClient(ctx context.Context, viperConfig *viper.Viper) upload.S3Client
 		IsLocal: true,
 	}
 	//OS GetEnv(called in NewS3Client ) won't get environment variables set by VSCODE for debugging. Set here for testing
-	_ = os.Setenv(appconfig.LocalMinioAddressKey, viperConfig.GetString(appconfig.LocalMinioAddressKey))
-	_ = os.Setenv(appconfig.LocalMinioS3AccessKey, viperConfig.GetString(appconfig.LocalMinioS3AccessKey))
-	_ = os.Setenv(appconfig.LocalMinioS3SecretKey, viperConfig.GetString(appconfig.LocalMinioS3SecretKey))
+	if err := os.Setenv(appconfig.LocalMinioAddressKey, viperConfig.GetString(appconfig.LocalMinioAddressKey)); err != nil {
+		panic(err)
+	}
+	if err := os.Setenv(appconfig.LocalMinioS3AccessKey, viperConfig.GetString(appconfig.LocalMinioS3AccessKey)); err != nil {
+		panic(err)
+	}
+	if err := os.Setenv(appconfig.LocalMinioS3SecretKey, viperConfig.GetString(appconfig.LocalMinioS3SecretKey)); err != nil {
+		panic(err)
+	}
 
 	return upload.NewS3Client(ctx, s3Cfg)
 }

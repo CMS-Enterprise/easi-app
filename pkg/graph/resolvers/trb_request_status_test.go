@@ -33,7 +33,8 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
-	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	env, err := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	s.NoError(err)
 
 	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
@@ -95,7 +96,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trb.ID)
 		s.NoError(err)
 		s.NotNil(form)
-		formChanges := map[string]interface{}{
+		formChanges := map[string]any{
 			"isSubmitted":  false,
 			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
@@ -123,7 +124,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		form, err = GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trb.ID)
 		s.NoError(err)
 		s.NotNil(form)
-		formChanges = map[string]interface{}{
+		formChanges = map[string]any{
 			"isSubmitted":  true,
 			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
@@ -154,7 +155,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 			FeedbackMessage: "I like the TRB request",
 			CopyTRBMailbox:  true,
 			NotifyEUAIDs:    notifyEUAIDs,
-			Action:          models.TRBFeedbackAction(models.TRBFeedbackActionReadyForConsult),
+			Action:          models.TRBFeedbackActionReadyForConsult,
 		}
 		_, err = CreateTRBRequestFeedback(
 			ctx,
@@ -252,7 +253,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		guidanceLetter, err := CreateTRBGuidanceLetter(ctx, store, trb.ID)
 		s.NoError(err)
 		s.NotNil(guidanceLetter)
-		guidanceLetterChanges := map[string]interface{}{
+		guidanceLetterChanges := map[string]any{
 			"trbRequestId":   trb.ID,
 			"meetingSummary": "Talked about stuff",
 		}
@@ -316,7 +317,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		}, *taskStatuses)
 
 		// Test the "FOLLOW_UP_REQUESTED" status by updating the guidance letter to recommend follow up
-		guidanceLetterChanges = map[string]interface{}{
+		guidanceLetterChanges = map[string]any{
 			"trbRequestId":          trb.ID,
 			"isFollowupRecommended": true,
 		}

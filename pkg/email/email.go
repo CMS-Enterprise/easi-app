@@ -27,7 +27,7 @@ type Config struct {
 
 // templateCaller is an interface to helping with testing template dependencies
 type templateCaller interface {
-	Execute(wr io.Writer, data interface{}) error
+	Execute(wr io.Writer, data any) error
 }
 
 // templates stores typed templates

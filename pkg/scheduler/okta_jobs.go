@@ -17,7 +17,7 @@ type oktaJobs struct {
 var OktaJobs = getOktaJobs(SharedScheduler)
 
 // getOktaJobs initializes all Okta jobs
-func getOktaJobs(scheduler *Scheduler) *oktaJobs {
+func getOktaJobs(scheduler *scheduler) *oktaJobs {
 	return &oktaJobs{
 		ReauthenticateWithOktaJob: NewScheduledJob(
 			"ReauthenticateWithOktaJob",

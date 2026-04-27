@@ -17,9 +17,10 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewLastDay() {
 
 	recipient := models.NewEmailAddress("reviewer@example.com")
 	sender := mockSender{}
-	client, _ := NewClient(s.config, &sender)
+	client, err := NewClient(s.config, &sender)
+	s.NoError(err)
 
-	err := client.SystemIntake.SendSystemIntakeGRBReviewLastDay(ctx,
+	err = client.SystemIntake.SendSystemIntakeGRBReviewLastDay(ctx,
 		SendSystemIntakeGRBReviewLastDayInput{
 			Recipient:          recipient,
 			SystemIntakeID:     intakeID,

@@ -15,7 +15,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -104,13 +103,13 @@ func TestShouldSend(t *testing.T) {
 		{
 			name:         "admin selected yes",
 			role:         models.AdminUploaderRole,
-			send:         helpers.PointerTo(true),
+			send:         new(true),
 			expectResult: true,
 		},
 		{
 			name:         "admin selected no",
 			role:         models.AdminUploaderRole,
-			send:         helpers.PointerTo(false),
+			send:         new(false),
 			expectResult: false,
 		},
 		{
@@ -122,13 +121,13 @@ func TestShouldSend(t *testing.T) {
 		{
 			name:         "requester selected yes",
 			role:         models.RequesterUploaderRole,
-			send:         helpers.PointerTo(true),
+			send:         new(true),
 			expectResult: false,
 		},
 		{
 			name:         "requester selected no",
 			role:         models.RequesterUploaderRole,
-			send:         helpers.PointerTo(false),
+			send:         new(false),
 			expectResult: false,
 		},
 		{

@@ -132,7 +132,7 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 	// since this isn't a "search", but a lookup by EUA ID
 	if len(searchedUsers) == 0 {
 		appcontext.ZLogger(ctx).Error("no users found when calling FetchUserInfos", zap.String("usernames", strings.Join(usernames, ",")))
-		return users, fmt.Errorf("no users found")
+		return users, errors.New("no users found")
 	}
 
 	for _, user := range searchedUsers {
@@ -179,8 +179,8 @@ func (cw *ClientWrapper) FetchUserInfo(ctx context.Context, username string) (*m
 // It will error if no users are found, and will also error if there are more than one result for that user
 // It is possible that users would share a name, but other functions must be used for to return the array.
 func (cw *ClientWrapper) FetchUserInfoByCommonName(ctx context.Context, commonName string) (*models.UserInfo, error) {
-	users, err := cw.SearchCommonNameContainsExhaustive(ctx, commonName)
 	logger := appcontext.ZLogger(ctx)
+	users, err := cw.SearchCommonNameContainsExhaustive(ctx, commonName)
 	if err != nil {
 		// Only log the error if it's not a context cancellation, we don't really care about these (but still pass it up the call stack)
 		if !errors.Is(err, context.Canceled) {

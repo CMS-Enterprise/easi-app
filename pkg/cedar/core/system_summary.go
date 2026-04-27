@@ -2,7 +2,7 @@ package cedarcore
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,7 +12,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	apisystems "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/system"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -25,8 +24,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	params := apisystems.NewSystemSummaryFindListParams()
 
 	// default filters
-	params.SetState(helpers.PointerTo("active"))
-	params.SetIncludeInSurvey(helpers.PointerTo(true))
+	params.SetState(new("active"))
+	params.SetIncludeInSurvey(new(true))
 
 	// set additional param filters
 	for _, opt := range opts {
@@ -60,14 +59,14 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	}
 
 	if resp.Payload == nil {
-		return []*models.CedarSystem{}, fmt.Errorf("no body received")
+		return []*models.CedarSystem{}, errors.New("no body received")
 	}
 
 	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
 	// hard-coded parameters we have set when we are not filtering.
 	// This is defensive programming against this case.
 	if len(resp.Payload.SystemSummary) == 0 && len(opts) < 1 {
-		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
+		return []*models.CedarSystem{}, errors.New("empty response array received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
@@ -140,7 +139,7 @@ func (c *Client) GetSystem(ctx context.Context, systemID uuid.UUID) (*models.Ced
 		return sys, nil
 	}
 
-	return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
+	return nil, &apperrors.ResourceNotFoundError{Err: errors.New("no system found"), Resource: models.CedarSystem{}}
 }
 
 type systemSummaryParamFilterOpt func(*apisystems.SystemSummaryFindListParams)
@@ -168,7 +167,7 @@ func (systemSummaryOpts) WithEuaIDFilter(euaUserID string) systemSummaryParamFil
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
 func (systemSummaryOpts) WithSubSystems(cedarSystemID uuid.UUID) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
-		params.SetBelongsTo(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
+		params.SetBelongsTo(new(formatIDForCEDAR(cedarSystemID)))
 
 		// we want all sub systems, not just ones included in the survey
 		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?

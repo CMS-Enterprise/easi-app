@@ -38,9 +38,11 @@ func TestAuthenticationMiddlewareTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 	logger := zap.NewNop()
 
-	ldClient, _ := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	assert.NoError(t, err)
 
-	store, _ := storage.NewStore(NewDBConfig(), ldClient)
+	store, err := storage.NewStore(NewDBConfig(), ldClient)
+	assert.NoError(t, err)
 	localOktaClient := local.NewOktaAPIClient()
 
 	testSuite := &AuthenticationMiddlewareTestSuite{
@@ -56,7 +58,7 @@ func TestAuthenticationMiddlewareTestSuite(t *testing.T) {
 
 func validJwt() *jwtverifier.Jwt {
 	return &jwtverifier.Jwt{
-		Claims: map[string]interface{}{
+		Claims: map[string]any{
 			"groups": []string{},
 			"sub":    "EASI",
 		},
@@ -96,7 +98,7 @@ func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 			return validJwt(), nil
 		})
 
-		req := httptest.NewRequest("GET", "/systems/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/systems/", nil)
 		req.Header.Set("AUTHORIZATION", "Bearer abcdefg")
 		rr := httptest.NewRecorder()
 
@@ -119,7 +121,7 @@ func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 			return nil, errors.New("invalid token")
 		})
 
-		req := httptest.NewRequest("GET", "/systems/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/systems/", nil)
 		req.Header.Set("AUTHORIZATION", "Bearer isNotABear")
 		rr := httptest.NewRecorder()
 
@@ -136,7 +138,7 @@ func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 			return nil, nil
 		})
 
-		req := httptest.NewRequest("GET", "/systems/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/systems/", nil)
 		rr := httptest.NewRecorder()
 
 		handlerRun := false
@@ -162,7 +164,7 @@ func TestJobCodes(t *testing.T) {
 		]
 	}
 	`
-	claims := map[string]interface{}{}
+	claims := map[string]any{}
 	if err := json.Unmarshal([]byte(payload), &claims); err != nil {
 		t.Fatalf("incorrect data: %v\n", err)
 	}

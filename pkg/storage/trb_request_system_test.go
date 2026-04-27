@@ -29,7 +29,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 	s.Run("sets systems on a trb request", func() {
 		// create three trb requests
 		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			for i := 0; i < 3; i++ {
+			for range 3 {
 				trbRequest := models.NewTRBRequest(testhelpers.RandomEUAIDNull().String)
 				trbRequest.Type = models.TRBTBrainstorm
 				trbRequest.State = models.TRBRequestStateOpen

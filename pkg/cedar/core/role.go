@@ -55,11 +55,6 @@ func getCedarBusinessOwnerRoleTypeID(ctx context.Context, c *Client) (string, er
 	return "", errors.New("no Business Owner role type found")
 }
 
-func cedarRoleApplicationPtr() *string {
-	str := cedarRoleApplication
-	return &str
-}
-
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
 	lowered := strings.ToLower(rawAssigneeType)
 
@@ -117,7 +112,7 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID uuid.UUID, 
 	}
 
 	if resp.Payload == nil {
-		return []*models.CedarRole{}, fmt.Errorf("no body received")
+		return []*models.CedarRole{}, errors.New("no body received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
@@ -204,7 +199,7 @@ func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, err
 	}
 
 	if resp.Payload == nil {
-		return []*models.CedarRoleType{}, fmt.Errorf("no body received")
+		return []*models.CedarRoleType{}, errors.New("no body received")
 	}
 
 	// Convert the auto-generated struct to our own pkg/models struct
@@ -407,20 +402,17 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID uuid.UUID, newRoles
 	rolesToCreate := []*apimodels.Role{}
 
 	for _, newRole := range newRoles {
-		// create by-value copy of roleTypeID so it doesn't change as newRole iterates through newRoles
-		roleTypeID := newRole.roleTypeID
-
 		roleToCreate := &apimodels.Role{
-			Application:      cedarRoleApplicationPtr(),
+			Application:      new(cedarRoleApplication),
 			ObjectID:         cedarSystem.VersionID.Ptr(),
 			AssigneeUserName: newRole.euaUserID,
-			RoleTypeID:       &roleTypeID,
+			RoleTypeID:       &newRole.roleTypeID,
 		}
 		rolesToCreate = append(rolesToCreate, roleToCreate)
 	}
 
 	body := &apimodels.RoleAddRequest{
-		Application: cedarRoleApplicationPtr(),
+		Application: new(cedarRoleApplication),
 		Roles:       rolesToCreate,
 	}
 
@@ -436,14 +428,14 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID uuid.UUID, newRoles
 	}
 
 	if resp.Payload == nil {
-		return fmt.Errorf("no body received")
+		return errors.New("no body received")
 	}
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
 			return errors.New(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
 		}
-		return fmt.Errorf("unknown error")
+		return errors.New("unknown error")
 	}
 	err = c.PurgeRoleCache(ctx, cedarSystemID)
 	if err != nil {
@@ -473,14 +465,14 @@ func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) erro
 	}
 
 	if resp.Payload == nil {
-		return fmt.Errorf("no body received")
+		return errors.New("no body received")
 	}
 
 	if resp.Payload.Result == "error" {
 		if len(resp.Payload.Message) > 0 {
 			return errors.New(resp.Payload.Message[0]) // should be "Role assignment(s) could not be found"
 		}
-		return fmt.Errorf("unknown error")
+		return errors.New("unknown error")
 	}
 
 	return nil

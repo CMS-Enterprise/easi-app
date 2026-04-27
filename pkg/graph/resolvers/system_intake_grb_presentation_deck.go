@@ -52,8 +52,7 @@ func SendGRBReviewPresentationDeckReminderEmail(
 		return false, err
 	}
 
-	curTime := time.Now().UTC()
-	intake.GrbPresentationDeckRequesterReminderEmailSentTime = &curTime
+	intake.GrbPresentationDeckRequesterReminderEmailSentTime = new(time.Now().UTC())
 	_, err = store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return true, err // return true to indicate email was sent, but include the error as the cache was not updated

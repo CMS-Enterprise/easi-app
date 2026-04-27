@@ -51,64 +51,70 @@ func cedarSystemIDToSessionID(cedarSystemID uuid.UUID) uuid.UUID {
 	return uuid.NewSHA1(uuid.NameSpaceOID, []byte(cedarSystemID.String()))
 }
 
-// GetSystemProfileSectionLocks returns the list of locked system profile sections. Any sections not included should be considered as unlocked.
-func GetSystemProfileSectionLocks(cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
+// getSystemProfileSectionLocks returns the list of locked system profile sections. Any sections not included should be considered as unlocked.
+func getSystemProfileSectionLocks(cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
 	systemProfileSessionLocks.Lock()
+	defer systemProfileSessionLocks.Unlock()
 
 	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
 	if !found {
-		systemProfileSessionLocks.Unlock()
+
 		return nil, nil
 	}
 
 	var lockStatuses []*models.SystemProfileSectionLockStatus
 	for section := range sectionLocks {
-		lockStatus := sectionLocks[section]
-		ls := lockStatus
-		lockStatuses = append(lockStatuses, &ls)
+		lockStatus, ok := sectionLocks[section]
+		if !ok {
+			continue
+		}
+		lockStatuses = append(lockStatuses, &lockStatus)
 	}
-	systemProfileSessionLocks.Unlock()
 
 	return lockStatuses, nil
 }
 
-// SubscribeSystemProfileSectionLockChanges creates a Subscriber and registers it for the pubsubevents.SystemProfileSectionLocksChanged event
-func SubscribeSystemProfileSectionLockChanges(ps pubsub.PubSub, cedarSystemID uuid.UUID, subscriber *subscribers.SystemProfileLockChangedSubscriber, onDisconnect <-chan struct{}) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+// subscribeSystemProfileSectionLockChanges creates a Subscriber and registers it for the pubsubevents.SystemProfileSectionLocksChanged event
+func subscribeSystemProfileSectionLockChanges(ps pubsub.PubSub, cedarSystemID uuid.UUID, subscriber *subscribers.SystemProfileLockChangedSubscriber, onDisconnect <-chan struct{}) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
 	sessionID := cedarSystemIDToSessionID(cedarSystemID)
 	ps.Subscribe(sessionID, pubsubevents.SystemProfileSectionLocksChanged, subscriber, onDisconnect)
 	return subscriber.GetChannel(), nil
 }
 
-// LockSystemProfileSection will lock the provided system profile section on the provided system
-func LockSystemProfileSection(ps pubsub.PubSub, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection, principal authentication.Principal) (bool, error) {
-	systemProfileSessionLocks.Lock()
+// lockSystemProfileSection will lock the provided system profile section on the provided system
+func lockSystemProfileSection(ps pubsub.PubSub, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection, principal authentication.Principal) (bool, error) {
+	newLockStatus, sectionWasLocked, err := func() (models.SystemProfileSectionLockStatus, bool, error) {
+		systemProfileSessionLocks.Lock()
+		defer systemProfileSessionLocks.Unlock()
 
-	account := principal.Account()
-	if account == nil {
-		systemProfileSessionLocks.Unlock()
-		return false, fmt.Errorf("failed to lock section [%v], unable to retrieve user account", section)
+		account := principal.Account()
+		if account == nil {
+			return models.SystemProfileSectionLockStatus{}, false, fmt.Errorf("failed to lock section [%v], unable to retrieve user account", section)
+		}
+
+		sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
+		if !found {
+			systemProfileSessionLocks.systemLockStatuses[cedarSystemID] = make(sectionLockStatusMap)
+			sectionLocks = systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
+		}
+
+		lockStatus, sectionWasLocked := sectionLocks[section]
+		if sectionWasLocked && lockStatus.LockedByUserAccount.ID != account.ID {
+			return models.SystemProfileSectionLockStatus{}, false, fmt.Errorf("failed to lock section [%v], already locked by [%v]", section, lockStatus.LockedByUserAccount.ID)
+		}
+
+		newLockStatus := models.SystemProfileSectionLockStatus{
+			CedarSystemID:       cedarSystemID,
+			Section:             section,
+			LockedByUserAccount: account,
+		}
+
+		systemProfileSessionLocks.systemLockStatuses[cedarSystemID][section] = newLockStatus
+		return newLockStatus, sectionWasLocked, nil
+	}()
+	if err != nil {
+		return false, err
 	}
-
-	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
-	if !found {
-		systemProfileSessionLocks.systemLockStatuses[cedarSystemID] = make(sectionLockStatusMap)
-		sectionLocks = systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
-	}
-
-	lockStatus, sectionWasLocked := sectionLocks[section]
-	if sectionWasLocked && lockStatus.LockedByUserAccount.ID != account.ID {
-		systemProfileSessionLocks.Unlock()
-		return false, fmt.Errorf("failed to lock section [%v], already locked by [%v]", section, lockStatus.LockedByUserAccount.ID)
-	}
-
-	newLockStatus := models.SystemProfileSectionLockStatus{
-		CedarSystemID:       cedarSystemID,
-		Section:             section,
-		LockedByUserAccount: account,
-	}
-
-	systemProfileSessionLocks.systemLockStatuses[cedarSystemID][section] = newLockStatus
-	systemProfileSessionLocks.Unlock()
 
 	if !sectionWasLocked {
 		sessionID := cedarSystemIDToSessionID(cedarSystemID)
@@ -121,37 +127,43 @@ func LockSystemProfileSection(ps pubsub.PubSub, cedarSystemID uuid.UUID, section
 	return true, nil
 }
 
-// UnlockSystemProfileSection will unlock the provided system profile section on the provided system
+// unlockSystemProfileSection will unlock the provided system profile section on the provided system
 //
 // This method will fail if the provided principal is not the person who locked the system profile section or if the section is not locked.
-func UnlockSystemProfileSection(ps pubsub.PubSub, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection, userID uuid.UUID) (bool, error) {
-	systemProfileSessionLocks.Lock()
+func unlockSystemProfileSection(ps pubsub.PubSub, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection, userID uuid.UUID) (bool, error) {
+	lockStatus, unlocked, err := func() (models.SystemProfileSectionLockStatus, bool, error) {
+		systemProfileSessionLocks.Lock()
+		defer systemProfileSessionLocks.Unlock()
 
-	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
-	if !found {
-		systemProfileSessionLocks.Unlock()
+		sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
+		if !found {
+			return models.SystemProfileSectionLockStatus{}, false, nil
+		}
+
+		lockStatus, sectionFound := sectionLocks[section]
+		if !sectionFound {
+			return models.SystemProfileSectionLockStatus{}, false, nil
+		}
+
+		if !isUserAuthorizedToEditLock(lockStatus, userID) {
+			return models.SystemProfileSectionLockStatus{}, false, fmt.Errorf("failed to unlock section [%v], user [%v] not authorized to unlock section locked by user [%v]", section, userID, lockStatus.LockedByUserAccount.ID)
+		}
+
+		delete(systemProfileSessionLocks.systemLockStatuses[cedarSystemID], section)
+
+		// Clean up empty system map
+		if len(systemProfileSessionLocks.systemLockStatuses[cedarSystemID]) == 0 {
+			delete(systemProfileSessionLocks.systemLockStatuses, cedarSystemID)
+		}
+
+		return lockStatus, true, nil
+	}()
+	if err != nil {
+		return false, err
+	}
+	if !unlocked {
 		return false, nil
 	}
-
-	lockStatus, sectionFound := sectionLocks[section]
-	if !sectionFound {
-		systemProfileSessionLocks.Unlock()
-		return false, nil
-	}
-
-	if !isUserAuthorizedToEditLock(lockStatus, userID) {
-		systemProfileSessionLocks.Unlock()
-		return false, fmt.Errorf("failed to unlock section [%v], user [%v] not authorized to unlock section locked by user [%v]", section, userID, lockStatus.LockedByUserAccount.ID)
-	}
-
-	delete(systemProfileSessionLocks.systemLockStatuses[cedarSystemID], section)
-
-	// Clean up empty system map
-	if len(systemProfileSessionLocks.systemLockStatuses[cedarSystemID]) == 0 {
-		delete(systemProfileSessionLocks.systemLockStatuses, cedarSystemID)
-	}
-
-	systemProfileSessionLocks.Unlock()
 
 	// Publish outside the lock to avoid blocking other operations
 	sessionID := cedarSystemIDToSessionID(cedarSystemID)
@@ -169,43 +181,46 @@ func isUserAuthorizedToEditLock(lockStatus models.SystemProfileSectionLockStatus
 	return userID == lockStatus.LockedByUserAccount.ID
 }
 
-// UnlockAllSystemProfileSections unlocks all sections for a system.
+// unlockAllSystemProfileSections unlocks all sections for a system.
 // Bypasses ownership checks - can unlock sections owned by any user.
 // Publishes REMOVED events for each unlocked section.
-func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
-	systemProfileSessionLocks.Lock()
+func unlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
+	sectionsToUnlock, found := func() ([]sectionLockEntry, bool) {
+		systemProfileSessionLocks.Lock()
+		defer systemProfileSessionLocks.Unlock()
 
-	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
+		sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
+		if !found {
+			return nil, false
+		}
+
+		// Copy sections to unlock while holding the lock
+		var sectionsToUnlock []sectionLockEntry
+
+		for section, lockStatus := range sectionLocks {
+			sectionsToUnlock = append(sectionsToUnlock, sectionLockEntry{
+				section:    section,
+				lockStatus: lockStatus,
+			})
+		}
+
+		// Delete from map while holding lock
+		delete(systemProfileSessionLocks.systemLockStatuses, cedarSystemID)
+		return sectionsToUnlock, true
+	}()
 	if !found {
-		systemProfileSessionLocks.Unlock()
 		return nil, nil
 	}
-
-	// Copy sections to unlock while holding the lock
-	var sectionsToUnlock []sectionLockEntry
-
-	for section, lockStatus := range sectionLocks {
-		sectionsToUnlock = append(sectionsToUnlock, sectionLockEntry{
-			section:    section,
-			lockStatus: lockStatus,
-		})
-	}
-
-	// Delete from map while holding lock
-	delete(systemProfileSessionLocks.systemLockStatuses, cedarSystemID)
-	systemProfileSessionLocks.Unlock()
 
 	// Publish events outside the lock
 	sessionID := cedarSystemIDToSessionID(cedarSystemID)
 	var unlockedSections []*models.SystemProfileSectionLockStatus
 	for _, item := range sectionsToUnlock {
-		lockStatus := item.lockStatus
-		ls := lockStatus
-		unlockedSections = append(unlockedSections, &ls)
+		unlockedSections = append(unlockedSections, new(item.lockStatus))
 
 		ps.Publish(sessionID, pubsubevents.SystemProfileSectionLocksChanged, models.SystemProfileSectionLockStatusChanged{
 			ChangeType: models.LockChangeTypeRemoved,
-			LockStatus: &ls,
+			LockStatus: new(item.lockStatus),
 		})
 	}
 
@@ -230,9 +245,9 @@ func getOwnedSections(sectionLocks sectionLockStatusMap, subscriber pubsub.Subsc
 	return ownedSections
 }
 
-// OnSystemProfileSectionLockStatusChanged subscribes to lock status change events for a system profile.
+// onSystemProfileSectionLockStatusChanged subscribes to lock status change events for a system profile.
 // Automatically unlocks all sections owned by the user when the websocket connection closes.
-func OnSystemProfileSectionLockStatusChanged(
+func onSystemProfileSectionLockStatusChanged(
 	ctx context.Context,
 	ps pubsub.PubSub,
 	cedarSystemID uuid.UUID,
@@ -252,7 +267,7 @@ func OnSystemProfileSectionLockStatusChanged(
 	subscriber := subscribers.NewSystemProfileLockChangedSubscriber(principal, cedarSystemID, logger)
 	subscriber.SetOnUnsubscribedCallback(onLockSystemProfileSectionUnsubscribeComplete)
 
-	return SubscribeSystemProfileSectionLockChanges(
+	return subscribeSystemProfileSectionLockChanges(
 		ps,
 		cedarSystemID,
 		subscriber,
@@ -268,15 +283,20 @@ func onLockSystemProfileSectionUnsubscribeComplete(
 	subscriber *subscribers.SystemProfileLockChangedSubscriber,
 ) {
 	cedarSystemID := subscriber.CedarSystemID
-	systemProfileSessionLocks.Lock()
-	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
+	ownedSections, found := func() ([]models.SystemProfileLockableSection, bool) {
+		systemProfileSessionLocks.Lock()
+		defer systemProfileSessionLocks.Unlock()
+
+		sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
+		if !found {
+			return nil, false
+		}
+
+		return getOwnedSections(sectionLocks, subscriber), true
+	}()
 	if !found {
-		systemProfileSessionLocks.Unlock()
 		return
 	}
-
-	ownedSections := getOwnedSections(sectionLocks, subscriber)
-	systemProfileSessionLocks.Unlock()
 
 	account := subscriber.GetPrincipal().Account()
 	if account == nil {
@@ -287,7 +307,7 @@ func onLockSystemProfileSectionUnsubscribeComplete(
 	}
 
 	for _, section := range ownedSections {
-		_, err := UnlockSystemProfileSection(ps, cedarSystemID, section, account.ID)
+		_, err := unlockSystemProfileSection(ps, cedarSystemID, section, account.ID)
 
 		if err != nil {
 			subscriber.Logger.Error("Failed to auto-unlock section on websocket disconnect",

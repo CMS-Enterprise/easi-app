@@ -397,7 +397,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		// we can test that the resolver returns multiple docs
 		// and test that not all docs on the request are returned
 		documentIDs := []uuid.UUID{}
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			// just create the database record for the documents; don't go through the resolver so we don't need to set up file uploads
 			documentToCreate := &models.TRBRequestDocument{
 				TRBRequestID:       trbRequest.ID,
@@ -472,7 +472,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		// we can test that the resolver returns multiple recommendations
 		// and test that not all recommendations on the request are returned
 		recommendationIDs := []uuid.UUID{}
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			recToCreate := &models.TRBGuidanceLetterInsight{
 				TRBRequestID: trbRequest.ID,
 				Title:        fmt.Sprintf("Admin Note Test Insight %v", i),

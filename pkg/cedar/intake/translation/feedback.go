@@ -36,12 +36,12 @@ package translation
 // 	}
 
 // 	result := wire.IntakeInput{
-// 		ClientID: pStr(fb.ID.String()),
-// 		Body:     pStr(string(blob)),
+// 		ClientID: new(fb.ID.String()),
+// 		Body:     new(string(blob)),
 
 // 		// invariants for this type
 // 		ClientStatus: statusStr(inputStatusFinal),
-// 		BodyFormat:   pStr(wire.IntakeInputBodyFormatJSON),
+// 		BodyFormat:   new(wire.IntakeInputBodyFormatJSON),
 // 		Type:         typeStr(intakeInputGrtFeedback),
 // 		Schema:       versionStr(IntakeInputSchemaEASIGrtFeedbackVersion),
 // 	}

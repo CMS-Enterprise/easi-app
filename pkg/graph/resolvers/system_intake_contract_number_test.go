@@ -25,7 +25,7 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 
 	// create system intake
 	s.Run("create system intake for test", func() {
-		for i := 0; i < 2; i++ {
+		for i := range 2 {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
 				RequestType: models.SystemIntakeRequestTypeNEW,

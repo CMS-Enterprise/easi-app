@@ -61,7 +61,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 		s.Run(caseName, func() {
 			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 			s.NoError(err)
-			changes := map[string]interface{}{"contractName": zero.StringFrom("Test Name")}
+			changes := map[string]any{"contractName": zero.StringFrom("Test Name")}
 			trbRequest, err = UpdateTRBRequest(ctx, trbRequest.ID, changes, store)
 			s.NoError(err)
 			s.NotEqual(trbRequest.ID, uuid.Nil)
@@ -169,7 +169,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 		s.Run(caseName, func() {
 			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 			s.NoError(err)
-			changes := map[string]interface{}{"contractName": zero.StringFrom("Test Name")}
+			changes := map[string]any{"contractName": zero.StringFrom("Test Name")}
 			trbRequest, err = UpdateTRBRequest(ctx, trbRequest.ID, changes, store)
 			s.NoError(err)
 			s.NotEqual(trbRequest.ID, uuid.Nil)

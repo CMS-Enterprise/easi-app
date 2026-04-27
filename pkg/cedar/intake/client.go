@@ -7,6 +7,7 @@ package intake
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -78,21 +79,19 @@ func (c *Client) CheckConnection(ctx context.Context) error {
 		return err
 	}
 	if resp.Payload == nil {
-		return fmt.Errorf("no response body received")
+		return errors.New("no response body received")
 	}
 	return nil
 }
 
 // PublishSystemIntake sends a system intake to CEDAR through the Intake API for eventual storage in Alfabet
 func (c *Client) PublishSystemIntake(ctx context.Context, si models.SystemIntake) error {
-	intakeObject := translation.TranslatableSystemIntake(si)
-	return c.publishIntakeObject(ctx, &intakeObject)
+	return c.publishIntakeObject(ctx, new(translation.TranslatableSystemIntake(si)))
 }
 
 // PublishBusinessCase sends a Business Case to CEDAR through the Intake API for eventual storage in Alfabet
 func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCaseWithCosts) error {
-	intakeObject := translation.TranslatableBusinessCase(bc)
-	return c.publishIntakeObject(ctx, &intakeObject)
+	return c.publishIntakeObject(ctx, new(translation.TranslatableBusinessCase(bc)))
 }
 
 // PublishGRTFeedback sends an item of GRT feedback to CEDAR through the Intake API for eventual storage in Alfabet
@@ -103,14 +102,12 @@ func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCase
 
 // PublishAction sends an action to CEDAR through the Intake API for eventual storage in Alfabet
 func (c *Client) PublishAction(ctx context.Context, action models.Action) error {
-	intakeObject := translation.TranslatableAction(action)
-	return c.publishIntakeObject(ctx, &intakeObject)
+	return c.publishIntakeObject(ctx, new(translation.TranslatableAction(action)))
 }
 
 // PublishNote sends a note to CEDAR through the Intake API for eventual storage in Alfabet
 func (c *Client) PublishNote(ctx context.Context, note models.SystemIntakeNote) error {
-	intakeObject := translation.TranslatableNote(note)
-	return c.publishIntakeObject(ctx, &intakeObject)
+	return c.publishIntakeObject(ctx, new(translation.TranslatableNote(note)))
 }
 
 // private method for publishing anything that satisfies the translation.IntakeObject interface to CEDAR through the Intake API
@@ -151,8 +148,7 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 
 	params.ValidatePayload = strconv.FormatBool(isValidatedSynchronously)
 
-	objectVersionStr := strconv.FormatInt(objectVersion, 10)
-	params.Body.Version = &objectVersionStr
+	params.Body.Version = new(strconv.FormatInt(objectVersion, 10))
 
 	resp, err := c.sdk.Intake.IntakeAdd(params, c.auth)
 	if err != nil {
@@ -212,6 +208,7 @@ func (c *Client) PublishEveryWeekdayOnSchedule(ctx context.Context, store *stora
 
 		// We need to build the data loaders each time that we publish the details to CEDAR
 		contextWithLoader := dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
+		contextWithLoader = appcontext.WithUserAccountService(contextWithLoader, dataloaders.GetUserAccountByID)
 
 		logger.Info("running scheduled intake publish to CEDAR")
 		c.publishIntakeAndBusinessCase(contextWithLoader, decoratedLogger, store)

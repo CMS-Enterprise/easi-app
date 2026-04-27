@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -14,7 +15,7 @@ import (
 // CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake Request, based on the current step, and the state of that step and the overall state
 func CalculateSystemIntakeAdminStatus(ctx context.Context, intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
 	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
-		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
+		return "", errors.New("invalid state") // This status should not be returned in normal use of the application
 	}
 
 	if intake.LifecycleRetiresAt != nil &&

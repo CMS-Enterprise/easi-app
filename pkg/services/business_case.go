@@ -146,8 +146,8 @@ func NewUpdateBusinessCase(
 		//if err != nil {
 		//	return &models.BusinessCaseWithCosts{}, err
 		//}
-		updatedAt := config.clock.Now()
-		businessCase.UpdatedAt = &updatedAt
+
+		businessCase.UpdatedAt = new(config.clock.Now())
 
 		businessCase, err = update(ctx, businessCase)
 		if err != nil {

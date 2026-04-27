@@ -29,7 +29,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 	s.Run("sets systems on a system intake", func() {
 		// create three intakes
 		createdIntakes := make([]*models.SystemIntake, 0)
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
 				RequestType: models.SystemIntakeRequestTypeNEW,

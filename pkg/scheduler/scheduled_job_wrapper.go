@@ -34,7 +34,7 @@ type ScheduledJobWrapper[input comparable] struct {
 	job           gocron.Job
 	// This is a reference to the scheduler that will be used to run the job, and provide dependencies
 	// such as the logger, store, and email client
-	scheduler *Scheduler
+	scheduler *scheduler
 }
 
 // store returns the store from the scheduler
@@ -102,7 +102,7 @@ func (sjw *ScheduledJobWrapper[input]) RunJob(ctx context.Context, params input)
 	return nil
 }
 
-func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
+func (sjw *ScheduledJobWrapper[input]) Register(scheduler *scheduler) {
 	scheduler.registerJob(sjw.name, func(ctx context.Context) (gocron.Job, error) {
 		retJob, err := scheduler.NewJob(
 			sjw.jobDefinition,
@@ -112,7 +112,7 @@ func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
 			gocron.WithContext(ctx),
 		)
 		if err != nil {
-			return nil, fmt.Errorf("error scheduling job: %v", err)
+			return nil, fmt.Errorf("error scheduling job: %w", err)
 		}
 		sjw.job = retJob
 		return retJob, nil
@@ -160,7 +160,7 @@ func (sjw *ScheduledJobWrapper[input]) decoratedLogger(ctx context.Context, logg
 }
 
 // NewScheduledJobWrapper holds the logic to initialize a new scheduled job
-func NewScheduledJobWrapper[input comparable](jobName string, scheduler *Scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[input], params input) ScheduledJobWrapper[input] {
+func NewScheduledJobWrapper[input comparable](jobName string, scheduler *scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[input], params input) ScheduledJobWrapper[input] {
 
 	sjw := ScheduledJobWrapper[input]{
 		name:          jobName,
@@ -173,7 +173,7 @@ func NewScheduledJobWrapper[input comparable](jobName string, scheduler *Schedul
 
 	return sjw
 }
-func NewScheduledJob(jobName string, scheduler *Scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[*ScheduledJob]) ScheduledJob {
+func NewScheduledJob(jobName string, scheduler *scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[*ScheduledJob]) ScheduledJob {
 	// Create an empty ScheduledJob instance
 	sj := ScheduledJob{
 		ScheduledJobWrapper: ScheduledJobWrapper[*ScheduledJob]{

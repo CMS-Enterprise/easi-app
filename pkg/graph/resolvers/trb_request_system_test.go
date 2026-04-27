@@ -22,7 +22,7 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 
 	// create trb request
 	s.Run("create trb requests for test", func() {
-		for i := 0; i < 2; i++ {
+		for range 2 {
 			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, s.testConfigs.Store)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)

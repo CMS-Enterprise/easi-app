@@ -6,10 +6,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"slices"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/exp/slices"
 
 	"go.uber.org/zap"
 
@@ -67,7 +67,7 @@ func (s *Store) CreateTRBGuidanceLetterInsight(
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	created := models.TRBGuidanceLetterInsight{}
 
@@ -93,9 +93,9 @@ func (s *Store) GetTRBGuidanceLetterInsightByID(ctx context.Context, id uuid.UUI
 	if err != nil {
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
-	arg := map[string]interface{}{"id": id}
+	arg := map[string]any{"id": id}
 	err = stmt.Get(&insight, arg)
 
 	if err != nil {
@@ -181,10 +181,10 @@ func (s *Store) GetTRBGuidanceLetterInsightsSharingTRBRequestID(ctx context.Cont
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	results := []*models.TRBGuidanceLetterInsight{}
-	arg := map[string]interface{}{
+	arg := map[string]any{
 		"insightID": insightID.String(),
 	}
 	err = stmt.Select(&results, arg)
@@ -235,7 +235,7 @@ func (s *Store) UpdateTRBGuidanceLetterInsight(ctx context.Context, insight *mod
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	updated := models.TRBGuidanceLetterInsight{}
 
@@ -271,7 +271,7 @@ func (s *Store) DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID
 			)
 			return nil, err
 		}
-		defer stmt.Close()
+		defer closeNamedStmt(ctx, stmt)
 
 		toDelete := models.TRBGuidanceLetterInsight{}
 		toDelete.ID = id
@@ -368,10 +368,10 @@ func updateTRBGuidanceLetterInsightOrder(
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	updatedInsights := []*models.TRBGuidanceLetterInsight{}
-	arg := map[string]interface{}{
+	arg := map[string]any{
 		"newPositions": string(newPositionsSerialized),
 		"trbRequestID": update.TrbRequestID.String(),
 		"category":     update.Category,

@@ -33,7 +33,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		"meatloaf",
 	}
 	for _, invalidStep := range invalidFormSteps {
-		s.Run(fmt.Sprintf("Should error targetting %s step", invalidStep), func() {
+		s.Run(fmt.Sprintf("Should error targeting %s step", invalidStep), func() {
 			intake, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        models.SystemIntakeStepINITIALFORM,
@@ -1203,7 +1203,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.NoError(err)
 		s.Empty(allNotesForIntake)
 
-		s.Run("Can confirm an already confirmd LCID", func() {
+		s.Run("Can confirm an already confirmed LCID", func() {
 			adminNote := models.HTML("test admin note for updating LCID")
 
 			// Set an alert timestamp that we expect to NOT be cleared later (since we're confirming with the same date as the original confirmation)
@@ -1233,7 +1233,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 				})
 			s.NoError(err)
 			s.EqualValues(&confirmedScope, secondconfirmIntake.LifecycleScope)
-			s.EqualValues(null.StringFrom(costBaseline), secondconfirmIntake.LifecycleCostBaseline) // This should not be confirmd since it wasn't included
+			s.EqualValues(null.StringFrom(costBaseline), secondconfirmIntake.LifecycleCostBaseline) // This should not be confirmed since it wasn't included
 			s.NotNil(secondconfirmIntake)                                                           // Shouldn't be reset since we passed the same date as before
 
 			allActionsForIntake2, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, secondconfirmIntake.ID)

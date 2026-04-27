@@ -12,7 +12,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/email/translation"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -123,7 +122,7 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 			return nil, errors.New("review already started")
 		}
 
-		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+		intake.GRBReviewStartedAt = new(time.Now())
 
 		if emailClient != nil {
 			// get GRB reviewers
@@ -190,7 +189,7 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 	}
 
 	if intake.GrbReviewAsyncManualEndDate != nil && currentTime.After(*intake.GrbReviewAsyncManualEndDate) {
-		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+		return new(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
 	}
 
 	if intake.GrbReviewAsyncEndDate == nil {
@@ -199,7 +198,7 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 
 	// Evaluate if the current time is before the Grb Review Async end date
 	if intake.GrbReviewAsyncEndDate.After(currentTime) {
-		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress)
+		return new(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress)
 	}
 
 	grbVotingInformation, err := GRBVotingInformationGetBySystemIntake(ctx, intake)
@@ -209,11 +208,11 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 
 	// If past end date and quorum is reached, review is completed
 	if grbVotingInformation.QuorumReached() {
-		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+		return new(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
 	}
 
 	// If past end date and quorum is not reached, review is past due
-	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypePastDue)
+	return new(models.SystemIntakeGRBReviewAsyncStatusTypePastDue)
 }
 
 // CalcSystemIntakeGRBReviewStandardStatus calculates the status of a standard (not async) GRB Review
@@ -231,10 +230,10 @@ func CalcSystemIntakeGRBReviewStandardStatus(
 	}
 
 	if intake.GRBDate.After(time.Now()) {
-		return helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeScheduled)
+		return new(models.SystemIntakeGRBReviewStandardStatusTypeScheduled)
 	}
 
-	return helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeCompleted)
+	return new(models.SystemIntakeGRBReviewStandardStatusTypeCompleted)
 }
 
 // ManuallyEndSystemIntakeGRBReviewAsyncVoting ends voting for the GRB Review (Async)
@@ -244,15 +243,13 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 	emailClient *email.Client,
 	systemIntakeID uuid.UUID,
 ) (*models.UpdateSystemIntakePayload, error) {
-	currentTime := time.Now()
-
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}
 
-	intake.GrbReviewAsyncManualEndDate = &currentTime
+	intake.GrbReviewAsyncManualEndDate = new(time.Now())
 
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
@@ -398,7 +395,7 @@ func RestartGRBReviewAsync(
 	}
 
 	// Set new review start time
-	intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+	intake.GRBReviewStartedAt = new(time.Now())
 
 	// Set the new end date
 	intake.GrbReviewAsyncEndDate = &input.NewGRBEndDate

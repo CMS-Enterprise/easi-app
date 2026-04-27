@@ -29,8 +29,7 @@ func EmailAddressesToStringPtrs(addresses []EmailAddress) []*string {
 
 	strPtrs := []*string{}
 	for _, address := range addresses {
-		str := address.String()
-		strPtrs = append(strPtrs, &str)
+		strPtrs = append(strPtrs, new(address.String()))
 	}
 	return strPtrs
 }

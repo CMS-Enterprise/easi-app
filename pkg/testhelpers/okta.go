@@ -60,26 +60,46 @@ func fetchOktaAccessToken(
 	secret string,
 ) (string, error) {
 	// Get Session Token
-	issuerParts, _ := url.Parse(domain)
+	issuerParts, err := url.Parse(domain)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse Okta domain: %w", err)
+	}
 	baseURL := issuerParts.Scheme + "://" + issuerParts.Hostname()
 	requestURI := baseURL + "/api/v1/authn"
 	postValues := map[string]string{
 		"username": username,
 		"password": password,
 	}
-	postJSONValues, _ := json.Marshal(postValues)
+	postJSONValues, err := json.Marshal(postValues)
+	if err != nil {
+		return "", err
+	}
 	/* #nosec */
 	resp, err := http.Post(requestURI, "application/json", bytes.NewReader(postJSONValues))
 	if err != nil {
 		fmt.Println(err, "Could not submit authentication endpoint")
 		return "", err
 	}
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("bad response from authentication request: %v", resp.Status)
-	}
+	body, err := func() ([]byte, error) {
+		defer func() {
+			if authCloseErr := resp.Body.Close(); authCloseErr != nil {
+				fmt.Printf("failed to close authentication response body: %v\n", authCloseErr)
+			}
+		}()
 
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("bad response from authentication request: %v", resp.Status)
+		}
+
+		responseBody, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read authentication response body: %w", err)
+		}
+		return responseBody, nil
+	}()
+	if err != nil {
+		return "", err
+	}
 
 	var authn AuthnResponse
 	err = json.Unmarshal(body, &authn)
@@ -104,19 +124,36 @@ func fetchOktaAccessToken(
 		"passCode":   passCode,
 		"stateToken": authn.StateToken,
 	}
-	postJSONValues, _ = json.Marshal(postValues)
+	postJSONValues, err = json.Marshal(postValues)
+	if err != nil {
+		return "", err
+	}
 	/* #nosec */
 	factorResp, err := http.Post(factorURI, "application/json", bytes.NewReader(postJSONValues))
 	if err != nil {
 		fmt.Println("Failed to send MFA challenge")
 		return "", err
 	}
-	if factorResp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
-	}
+	body, err = func() ([]byte, error) {
+		defer func() {
+			if mfaCloseErr := factorResp.Body.Close(); mfaCloseErr != nil {
+				fmt.Printf("failed to close MFA response body: %v\n", mfaCloseErr)
+			}
+		}()
 
-	defer factorResp.Body.Close()
-	body, _ = io.ReadAll(factorResp.Body)
+		if factorResp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
+		}
+
+		responseBody, err := io.ReadAll(factorResp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read MFA response body: %w", err)
+		}
+		return responseBody, nil
+	}()
+	if err != nil {
+		return "", err
+	}
 	err = json.Unmarshal(body, &authn)
 	if err != nil {
 		fmt.Println("could not marshall mfa response")
@@ -156,14 +193,30 @@ func fetchOktaAccessToken(
 		fmt.Println("could not submit authorization endpoint")
 		return "", err
 	}
-	if resp.StatusCode != http.StatusFound {
-		return "", fmt.Errorf("bad response from access request: %v", resp.Status)
-	}
+	location, err := func() (string, error) {
+		defer func() {
+			if authzCloseErr := resp.Body.Close(); authzCloseErr != nil {
+				fmt.Printf("failed to close authorization response body: %v\n", authzCloseErr)
+			}
+		}()
 
-	defer resp.Body.Close()
-	location := resp.Header.Get("Location")
-	locParts, _ := url.Parse(location)
-	fragmentParts, _ := url.ParseQuery(locParts.Fragment)
+		if resp.StatusCode != http.StatusFound {
+			return "", fmt.Errorf("bad response from access request: %v", resp.Status)
+		}
+
+		return resp.Header.Get("Location"), nil
+	}()
+	if err != nil {
+		return "", err
+	}
+	locParts, err := url.Parse(location)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse authorization location: %w", err)
+	}
+	fragmentParts, err := url.ParseQuery(locParts.Fragment)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse authorization fragment: %w", err)
+	}
 
 	if fragmentParts["access_token"] == nil {
 		fmt.Println("could not extract access token")

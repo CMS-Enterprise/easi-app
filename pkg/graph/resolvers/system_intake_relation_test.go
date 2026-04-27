@@ -9,7 +9,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -541,7 +540,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 			SystemID:                           uuid.MustParse("{7ab1e041-adde-433b-80e1-88183fd4a355}"),
 			SystemIntakeID:                     openIntake.ID,
 			SystemRelationshipType:             []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport, models.SystemRelationshipTypeOther},
-			OtherSystemRelationshipDescription: helpers.PointerTo("Test description"),
+			OtherSystemRelationshipDescription: new("Test description"),
 		})
 		s.NoError(err)
 

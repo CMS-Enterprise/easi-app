@@ -66,7 +66,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := appcontext.ZLogger(r.Context())
 		switch r.Method {
-		case "GET":
+		case http.MethodGet:
 			businessCaseID, err := requireBusinessCaseID(mux.Vars(r))
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
@@ -92,7 +92,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 
 			return
-		case "POST":
+		case http.MethodPost:
 			if r.Body == nil {
 				h.WriteErrorResponse(
 					r.Context(),
@@ -100,7 +100,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")})
 				return
 			}
-			defer r.Body.Close()
+			defer closeRequestBody(r.Context(), r.Body)
 			decoder := json.NewDecoder(r.Body)
 			businessCaseToCreate := models.BusinessCaseWithCosts{}
 			err := decoder.Decode(&businessCaseToCreate)
@@ -141,7 +141,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 			return
-		case "PUT":
+		case http.MethodPut:
 			if r.Body == nil {
 				h.WriteErrorResponse(
 					r.Context(),
@@ -150,7 +150,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				)
 				return
 			}
-			defer r.Body.Close()
+			defer closeRequestBody(r.Context(), r.Body)
 			decoder := json.NewDecoder(r.Body)
 			businessCaseToUpdate := models.BusinessCaseWithCosts{}
 			err := decoder.Decode(&businessCaseToUpdate)

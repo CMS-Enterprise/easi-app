@@ -16,7 +16,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -370,8 +369,8 @@ func SystemIntakeCompareGRBReviewers(
 				HasLoggedIn: comparison.HasLoggedIn,
 			},
 			EuaUserID:         comparison.EuaID,
-			VotingRole:        models.SystemIntakeGRBReviewerVotingRole(comparison.GRBVotingRole),
-			GrbRole:           models.SystemIntakeGRBReviewerRole(comparison.GRBReviewerRole),
+			VotingRole:        comparison.GRBVotingRole,
+			GrbRole:           comparison.GRBReviewerRole,
 			IsCurrentReviewer: comparison.IsCurrentReviewer,
 		}
 		// Add the reviewer to the slice if an entry exists
@@ -417,7 +416,7 @@ func StartGRBReview(
 			return nil, errors.New("review already started")
 		}
 
-		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+		intake.GRBReviewStartedAt = new(time.Now())
 		intake.GrbReviewAsyncManualEndDate = nil
 		if _, err := store.UpdateSystemIntakeNP(ctx, tx, intake); err != nil {
 			return nil, err
@@ -453,7 +452,7 @@ func StartGRBReview(
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
 			}
 		}
-		return helpers.PointerTo("started GRB review"), nil
+		return new("started GRB review"), nil
 	})
 }
 
@@ -476,7 +475,7 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 	// first, confirm a reminder wasn't sent in last 24 hours
 	systemIntake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
-		return nil, fmt.Errorf("problem getting system intake when attempting to send reminder")
+		return nil, errors.New("problem getting system intake when attempting to send reminder")
 	}
 
 	if err := validateCanSendReminder(systemIntake); err != nil {

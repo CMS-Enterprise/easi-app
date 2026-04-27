@@ -20,7 +20,7 @@ func (s *ServerTestSuite) TestTraceMiddleware() {
 		s.NotEqual(uuid.UUID{}, traceID)
 	})
 
-	req := httptest.NewRequest("GET", "/systems/", nil)
+	req := httptest.NewRequest(http.MethodGet, "/systems/", nil)
 	rr := httptest.NewRecorder()
 	middleware := newTraceMiddleware()
 

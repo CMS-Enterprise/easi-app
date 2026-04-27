@@ -19,8 +19,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 	id := uuid.New()
 	action.ID = id
 	if action.CreatedAt == nil {
-		createAt := s.clock.Now()
-		action.CreatedAt = &createAt
+		action.CreatedAt = new(s.clock.Now())
 	}
 	const createActionSQL = `
 		INSERT INTO actions (

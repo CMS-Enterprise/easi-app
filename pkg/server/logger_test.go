@@ -13,7 +13,7 @@ import (
 func (s *ServerTestSuite) TestLoggerMiddleware() {
 	s.Run("get a new logger with trace ID", func() {
 
-		req := httptest.NewRequest("GET", "/systems/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/systems/", nil)
 		rr := httptest.NewRecorder()
 		traceMiddleware := newTraceMiddleware()
 		prodLogger, err := zap.NewProduction()
@@ -34,7 +34,7 @@ func (s *ServerTestSuite) TestLoggerMiddleware() {
 
 	s.Run("get a new logger with no trace ID", func() {
 
-		req := httptest.NewRequest("GET", "/systems/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/systems/", nil)
 		rr := httptest.NewRecorder()
 		// need a new logger, because no-op won't use options
 		prodLogger, err := zap.NewProduction()

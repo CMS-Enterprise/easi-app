@@ -263,8 +263,10 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 	ctx := s.context
 
 	projectName := "My cool project"
-	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
-	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
+	contractStartDate, err := time.Parse("2006-1-2", "2002-8-24")
+	s.NoError(err)
+	contractEndDate, err := time.Parse("2006-1-2", "2020-10-31")
+	s.NoError(err)
 
 	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:         null.StringFrom("TEST"),
@@ -1378,8 +1380,10 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	ctx := s.context
 
-	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
-	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
+	contractStartDate, err := time.Parse("2006-1-2", "2002-8-24")
+	s.NoError(err)
+	contractEndDate, err := time.Parse("2006-1-2", "2020-10-31")
+	s.NoError(err)
 
 	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:         null.StringFrom("TEST"),

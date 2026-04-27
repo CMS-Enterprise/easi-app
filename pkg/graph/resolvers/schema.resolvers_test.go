@@ -95,7 +95,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
-	env, _ := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	env, err := appconfig.NewEnvironment("test") // hardcoding here rather than using real env vars so we can have predictable the output in our tests
+	assert.NoError(t, err)
 
 	localSender := local.NewSender(env)
 	emailClient, err := email.NewClient(emailConfig, localSender)
@@ -106,7 +107,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	oktaAPIClient := local.NewOktaAPIClient()
 	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", "1.0.0", false, true)
 
-	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
+	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj any, next graphql.Resolver, role models.Role) (res any, err error) {
 		return next(ctx)
 	}}
 

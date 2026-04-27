@@ -87,8 +87,7 @@ func CreateTRBRequestAttendee(
 
 // UpdateTRBRequestAttendee updates a TRBRequestAttendee record in the database
 func UpdateTRBRequestAttendee(ctx context.Context, store *storage.Store, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
-	modifiedBy := appcontext.Principal(ctx).ID()
-	attendee.ModifiedBy = &modifiedBy
+	attendee.ModifiedBy = new(appcontext.Principal(ctx).ID())
 
 	updatedAttendee, err := store.UpdateTRBRequestAttendee(ctx, attendee)
 	if err != nil {

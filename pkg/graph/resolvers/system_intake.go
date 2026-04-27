@@ -2,7 +2,7 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"slices"
 	"time"
 
@@ -30,7 +30,7 @@ func CreateSystemIntake(
 ) (*models.SystemIntake, error) {
 	systemIntake := models.SystemIntake{
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
-		RequestType: models.SystemIntakeRequestType(input.RequestType),
+		RequestType: input.RequestType,
 		Requester:   input.Requester.Name,
 		State:       models.SystemIntakeStateOpen,
 		Step:        models.SystemIntakeStepINITIALFORM,
@@ -74,7 +74,7 @@ func UpdateSystemIntakeRequestType(ctx context.Context, store *storage.Store, sy
 
 	// Update request type and set UpdatedAt
 	intake.RequestType = newType
-	intake.UpdatedAt = helpers.PointerTo(time.Now())
+	intake.UpdatedAt = new(time.Now())
 
 	// Save intake to DB
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
@@ -173,7 +173,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 // SystemIntakeUpdateContractDetails updates specific contract information about a system intake
 // It also updates the request form state to show in progress, unless the state was EDITS_REQUESTED
 func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
-	return sqlutils.WithTransactionRet[*models.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*models.UpdateSystemIntakePayload, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.UpdateSystemIntakePayload, error) {
 
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
 		if err != nil {
@@ -343,7 +343,7 @@ func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.Sy
 	p := appcontext.Principal(ctx)
 	userAccount := p.Account()
 	if userAccount == nil {
-		return nil, fmt.Errorf("there is no user account present")
+		return nil, errors.New("there is no user account present")
 	}
 
 	return store.GetMySystemIntakes(ctx, userAccount.ID)

@@ -24,7 +24,7 @@ func UpdateTRBRequestForm(
 	store *storage.Store,
 	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input map[string]interface{},
+	input map[string]any,
 ) (*models.TRBRequestForm, error) {
 	idIface, idFound := input["trbRequestId"]
 	if !idFound {
@@ -107,8 +107,7 @@ func UpdateTRBRequestForm(
 
 	if isSubmitted && previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusCompleted
-		now := time.Now()
-		form.SubmittedAt = &now
+		form.SubmittedAt = new(time.Now())
 	} else if previousStatus != models.TRBFormStatusCompleted {
 		form.Status = models.TRBFormStatusInProgress
 	}

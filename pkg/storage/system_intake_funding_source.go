@@ -16,7 +16,7 @@ import (
 
 // UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake using an automatically created transaction
 func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
-	return sqlutils.WithTransactionRet[[]*models.SystemIntakeFundingSource](ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeFundingSource, error) {
+	return sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeFundingSource, error) {
 		return s.UpdateSystemIntakeFundingSourcesNP(ctx, tx, systemIntakeID, fundingSources)
 
 	})
@@ -24,8 +24,6 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 
 // UpdateSystemIntakeFundingSourcesNP clears and updates the funding sources of a system intake
 func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
-	now := s.clock.Now()
-
 	deleteFundingSourcesSQL := `
 		DELETE FROM system_intake_funding_sources
 		WHERE system_intake_id = $1;
@@ -43,7 +41,7 @@ func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx
 				fundingSource.ID = uuid.New()
 			}
 			if fundingSource.CreatedAt == nil {
-				fundingSource.CreatedAt = &now
+				fundingSource.CreatedAt = new(s.clock.Now())
 			}
 			fundingSource.SystemIntakeID = systemIntakeID
 

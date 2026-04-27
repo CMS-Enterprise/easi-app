@@ -17,22 +17,22 @@ import (
 )
 
 // UserAccountGetByCommonName gets a user account by a give username
-func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.UserAccount, error) {
+func (s *Store) UserAccountGetByCommonName(ctx context.Context, commonName string) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
 	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByCommonName)
 	if err != nil {
 		return nil, err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
-	arg := map[string]interface{}{
+	arg := map[string]any{
 		"common_name": commonName,
 	}
 
 	err = stmt.Get(user, arg)
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" { //EXPECT THERE TO BE NULL results, don't treat this as an error
+		if errors.Is(err, sql.ErrNoRows) { //EXPECT THERE TO BE NULL results, don't treat this as an error
 			return nil, nil
 		}
 		return nil, err
@@ -49,7 +49,7 @@ func UserAccountGetByUsername(ctx context.Context, np sqlutils.NamedPreparer, us
 		"username": username,
 	})
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" { //EXPECT THERE TO BE NULL results, don't treat this as an error
+		if errors.Is(err, sql.ErrNoRows) { //EXPECT THERE TO BE NULL results, don't treat this as an error
 			return nil, nil
 		}
 		return nil, err
@@ -93,7 +93,7 @@ func (s *Store) UserAccountGetByID(ctx context.Context, np sqlutils.NamedPrepare
 
 // UserAccountsByIDs gets user accounts by user ID
 func (s *Store) UserAccountsByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
-	return sqlutils.WithTransactionRet[[]*authentication.UserAccount](ctx, s, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
+	return sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
 		return s.UserAccountsByIDsNP(ctx, tx, userIDs)
 	})
 }

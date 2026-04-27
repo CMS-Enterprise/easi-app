@@ -48,7 +48,6 @@ example
 func VerifyLoaders[K comparable, V any, Expected any](ctx context.Context, suite *suite.Suite, loaderWrapper LoaderWrapper[K, V], expectedResults []KeyAndExpected[K, Expected], validateResult func(V, Expected) bool) {
 	g, ctx := errgroup.WithContext(ctx)
 	for _, expected := range expectedResults {
-		expected := expected      // capture range variable by rebinding to prevent nil reference issue
 		g.Go(func() (err error) { // named error allows us to pass an error from defer
 			defer func() {
 				if r := recover(); r != nil {
@@ -57,7 +56,7 @@ func VerifyLoaders[K comparable, V any, Expected any](ctx context.Context, suite
 				}
 
 			}()
-			passed := verifyLoader[K, V, Expected](ctx, suite, loaderWrapper, expected.Key, expected.Expected, validateResult)
+			passed := verifyLoader(ctx, suite, loaderWrapper, expected.Key, expected.Expected, validateResult)
 			if !passed {
 				err = fmt.Errorf("dataloader verification function failed. expected %v for key %v", expected.Expected, expected.Key)
 			}

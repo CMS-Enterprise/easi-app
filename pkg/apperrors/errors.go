@@ -39,7 +39,7 @@ const (
 // QueryError is a typed error for query issues
 type QueryError struct {
 	Err       error
-	Model     interface{}
+	Model     any
 	Operation QueryOperation
 }
 
@@ -56,7 +56,7 @@ func (e *QueryError) Unwrap() error {
 // ResourceConflictError is for when a task can't be completed because of the resource state
 type ResourceConflictError struct {
 	Err        error
-	Resource   interface{}
+	Resource   any
 	ResourceID string
 }
 
@@ -79,7 +79,7 @@ func (v Validations) Map() map[string]string {
 }
 
 // NewValidationError returns a validation error with fields instantiated
-func NewValidationError(err error, model interface{}, modelID string) ValidationError {
+func NewValidationError(err error, model any, modelID string) ValidationError {
 	return ValidationError{
 		Err:         err,
 		Validations: Validations{},
@@ -92,7 +92,7 @@ func NewValidationError(err error, model interface{}, modelID string) Validation
 type ValidationError struct {
 	Err         error
 	Validations Validations
-	Model       interface{}
+	Model       any
 	ModelID     string
 }
 
@@ -128,7 +128,7 @@ const (
 // ExternalAPIError is a typed error for query issues
 type ExternalAPIError struct {
 	Err       error
-	Model     interface{}
+	Model     any
 	ModelID   string
 	Operation ExternalAPIOperation
 	Source    string
@@ -219,7 +219,7 @@ func (e *UnknownRouteError) Error() string {
 // ResourceNotFoundError is a typed error non-existent resources
 type ResourceNotFoundError struct {
 	Err      error
-	Resource interface{}
+	Resource any
 }
 
 // Error provides the error as a string

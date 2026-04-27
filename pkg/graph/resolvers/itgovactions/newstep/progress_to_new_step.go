@@ -1,6 +1,7 @@
 package newstep
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -88,7 +89,7 @@ func UpdateIntake(
 
 	default:
 		return &apperrors.BadRequestError{
-			Err: apperrors.NewInvalidEnumError(fmt.Errorf("newStep is an invalid value of SystemIntakeStepToProgressTo"), newStep, "SystemIntakeStepToProgressTo"),
+			Err: apperrors.NewInvalidEnumError(errors.New("newStep is an invalid value of SystemIntakeStepToProgressTo"), newStep, "SystemIntakeStepToProgressTo"),
 		}
 	}
 }

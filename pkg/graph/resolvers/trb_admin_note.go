@@ -3,7 +3,6 @@ package resolvers
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -226,7 +225,7 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 	}
 
 	// this should never happen, all five categories should be handled, but in case it does, error and alert on it
-	return nil, apperrors.NewInvalidEnumError(fmt.Errorf("admin note has an unrecognized category"), note.Category, "TRBAdminNoteCategory")
+	return nil, apperrors.NewInvalidEnumError(errors.New("admin note has an unrecognized category"), note.Category, "TRBAdminNoteCategory")
 }
 
 // SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)

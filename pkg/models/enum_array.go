@@ -13,7 +13,7 @@ import (
 type EnumArray[enumType ~string] []enumType
 
 // Scan implements the Scanner interface to decode data from the database
-func (e *EnumArray[EnumType]) Scan(value interface{}) error {
+func (e *EnumArray[EnumType]) Scan(value any) error {
 	var stringArray pq.StringArray
 	if err := stringArray.Scan(value); err != nil {
 		return err

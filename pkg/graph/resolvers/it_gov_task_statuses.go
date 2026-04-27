@@ -2,7 +2,7 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 
 	"go.uber.org/zap"
@@ -32,7 +32,7 @@ func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus
 	case models.SIRFSSubmitted:
 		return models.ITGISCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
 	}
 }
 
@@ -52,7 +52,7 @@ func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovF
 		return models.ITGFBSCompleted, nil
 
 	default: // The enum is invalid. This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
 	}
 
 }
@@ -73,7 +73,7 @@ func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessC
 		case models.SIRFSEditsRequested:
 			return models.ITGDBCSEditsRequested, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft Business Case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its draft Business Case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
 		}
 
 	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING:
@@ -84,10 +84,10 @@ func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessC
 		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the draft Business Case is not needed.
 			return models.ITGDBCSNotNeeded, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft Business Case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its draft Business Case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
 		}
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}
 
 }
@@ -116,7 +116,7 @@ func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error
 	case models.SystemIntakeStepDECISION, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING: // If after GRT step, show that it was not needed (skipped)
 		return models.ITGGRTSNotNeeded, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}
 
 }
@@ -137,7 +137,7 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 		case models.SIRFSEditsRequested:
 			return models.ITGFBCSEditsRequested, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final Business Case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its final Business Case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
 		}
 
 	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRBMEETING:
@@ -148,10 +148,10 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the final Business Case is not needed.
 			return models.ITGFBCSNotNeeded, nil
 		default:
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final Business Case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
+			return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its final Business Case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
 		}
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}
 
 }
@@ -166,7 +166,7 @@ func GrbMeetingStatus(ctx context.Context, intake *models.SystemIntake) (models.
 		return getStandardGRBReviewStatus(intake)
 
 	default:
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its grb review type"), intake.GrbReviewType, "SystemIntakeGRBReviewType")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its grb review type"), intake.GrbReviewType, "SystemIntakeGRBReviewType")
 	}
 }
 
@@ -247,7 +247,7 @@ func getGRBReviewStatusWithNilGRBDate(intake *models.SystemIntake) (models.ITGov
 	case models.SystemIntakeStepDECISION: // If after GRB step, show that it was not needed (skipped)
 		return models.ITGGRBSNotNeeded, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}
 }
 
@@ -303,11 +303,11 @@ func DecisionAndNextStepsStatus(ctx context.Context, intake *models.SystemIntake
 	case models.SystemIntakeStepDECISION:
 
 		if intake.DecisionState == models.SIDSNoDecision { // if the step is decision state, the step has to be completed, and a decision has to have been made
-			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its decision state. a decision must be made in order to be in the decision state"), intake.RequestFormState, "SystemIntakeDecisionState")
+			return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its decision state. a decision must be made in order to be in the decision state"), intake.RequestFormState, "SystemIntakeDecisionState")
 		}
 
 		return models.ITGDSCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
-		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.RequestFormState, "SystemIntakeStep")
+		return "", apperrors.NewInvalidEnumError(errors.New("intake has an invalid value for its intake form step"), intake.RequestFormState, "SystemIntakeStep")
 	}
 }

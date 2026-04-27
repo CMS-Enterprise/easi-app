@@ -19,7 +19,7 @@ import (
 
 // CreateTRBRequestSystemIntakes deletes all TRB Intake relations for the given trbRequestID and recreates them
 func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID uuid.UUID, systemIntakeIDs []uuid.UUID) ([]*models.TRBRequestSystemIntake, error) {
-	return sqlutils.WithTransactionRet[[]*models.TRBRequestSystemIntake](ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBRequestSystemIntake, error) {
+	return sqlutils.WithTransactionRet(ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBRequestSystemIntake, error) {
 
 		deleteTRBRequestSystemIntakesSQL := `
 		DELETE FROM trb_request_system_intakes

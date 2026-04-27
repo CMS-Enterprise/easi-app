@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -107,7 +108,7 @@ func newDB(dbConfig storage.DBConfig) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func writeObjectToJSONFile(object interface{}, path string) {
+func writeObjectToJSONFile(object any, path string) {
 	entryBytes, err := json.Marshal(object)
 	if err != nil {
 		panic("Can't serialize the object")
@@ -119,23 +120,40 @@ func writeObjectToJSONFile(object interface{}, path string) {
 
 		panic("Can't create the file")
 	}
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("can't close the file %q: %v", path, err)
+		}
+	}()
+
 	_, err = file.Write(entryBytes)
 	if err != nil {
 		panic("Can't write the file")
 	}
 }
 
-func readJSONFromFile[anyType interface{}](file string, obj *anyType) error {
+func readJSONFromFile[anyType any](file string, obj *anyType) error {
+	if obj == nil {
+		return errors.New("cannot read JSON into nil destination")
+	}
 
 	f, err := os.Open(file) //nolint
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
-	defer f.Close() //nolint
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			log.Printf("could not close JSON file %q: %v", file, closeErr)
+		}
+	}()
 
-	byteValue, _ := io.ReadAll(f)
-	err = json.Unmarshal(byteValue, &obj)
+	byteValue, err := io.ReadAll(f)
+	if err != nil {
+		return fmt.Errorf("could not read JSON file %q: %w", file, err)
+	}
+
+	err = json.Unmarshal(byteValue, obj)
 
 	return err
 

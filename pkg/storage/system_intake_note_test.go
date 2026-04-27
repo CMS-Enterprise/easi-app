@@ -47,7 +47,7 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 		notes := map[uuid.UUID]*models.SystemIntakeNote{}
 
 		// populate a set of notes for the given SystemIntake
-		for ix := 0; ix < 3; ix++ {
+		for range 3 {
 			ts := time.Now().UTC()
 			in := &models.SystemIntakeNote{
 				SystemIntakeID: intake.ID,
@@ -58,8 +58,8 @@ func (s *StoreTestSuite) TestNoteRoundtrip() {
 			}
 
 			createdNote, err := s.store.CreateSystemIntakeNote(ctx, in)
-			id := createdNote.ID
 			s.NoError(err)
+			id := createdNote.ID
 
 			out, err := s.store.FetchSystemIntakeNoteByID(ctx, id)
 			s.NoError(err)

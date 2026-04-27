@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
@@ -54,7 +55,7 @@ func GetOrCreateUserAccountFullName(
 	fullName string,
 	hasLoggedIn bool,
 	getAccountInformationFullName GetAccountInfoFunc) (*authentication.UserAccount, error) {
-	userAccount, accErr := store.UserAccountGetByCommonName(fullName) //TODO: this could be expanded to check by either username or commonName
+	userAccount, accErr := store.UserAccountGetByCommonName(ctx, fullName) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
@@ -341,7 +342,7 @@ func GetOktaAccountInfo(ctx context.Context, _ string) (*OktaAccountInfo, error)
 	}
 	url := *oktaBaseURL + userEndpoint
 	authorization := authPrefix + enhancedJWT.AuthToken
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -353,12 +354,20 @@ func GetOktaAccountInfo(ctx context.Context, _ string) (*OktaAccountInfo, error)
 		return nil, err
 	}
 
-	jsonDataFromHTTP, err := io.ReadAll(resp.Body)
+	jsonDataFromHTTP, err := func() ([]byte, error) {
+		defer func() {
+			if closeErr := resp.Body.Close(); closeErr != nil {
+				appcontext.ZLogger(ctx).Error("Failed to close Okta account response body", zap.Error(closeErr))
+			}
+		}()
+
+		return io.ReadAll(resp.Body)
+	}()
 	if err != nil {
 		return nil, err
 	}
 
 	ret := OktaAccountInfo{}
-	err = json.Unmarshal([]byte(jsonDataFromHTTP), &ret)
+	err = json.Unmarshal(jsonDataFromHTTP, &ret)
 	return &ret, err
 }

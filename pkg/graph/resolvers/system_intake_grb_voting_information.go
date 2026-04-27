@@ -2,7 +2,7 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -11,7 +11,7 @@ import (
 // it is used in this manner to easily provide calculations about voting information of the reviewers
 func GRBVotingInformationGetBySystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.GRBVotingInformation, error) {
 	if intake == nil {
-		return nil, fmt.Errorf("intake is nil, unable to fetch GRB voting information")
+		return nil, errors.New("intake is nil, unable to fetch GRB voting information")
 	}
 
 	reviewers, err := SystemIntakeGRBReviewers(ctx, intake.ID)

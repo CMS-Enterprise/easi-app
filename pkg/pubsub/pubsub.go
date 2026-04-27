@@ -10,5 +10,5 @@ import (
 type PubSub interface {
 	Subscribe(sessionID uuid.UUID, eventType EventType, subscriber Subscriber, onDisconnect <-chan struct{})
 	Unsubscribe(sessionID uuid.UUID, eventType EventType, subscriberID string)
-	Publish(sessionID uuid.UUID, eventType EventType, payload interface{})
+	Publish(sessionID uuid.UUID, eventType EventType, payload any)
 }

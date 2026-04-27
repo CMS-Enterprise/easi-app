@@ -5,7 +5,6 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -20,8 +19,8 @@ func (suite *SchedulerTestSuite) TestSendAsyncVotingHalfwayThroughEmailJobFuncti
 	// create test intake that is halfway through (started 3 days ago, ends in 4 days)
 	now := time.Now()
 	testIntake := &models.SystemIntake{
-		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -3)),
-		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, 4)),
+		GRBReviewStartedAt:    new(now.AddDate(0, 0, -3)),
+		GrbReviewAsyncEndDate: new(now.AddDate(0, 0, 4)),
 		Step:                  models.SystemIntakeStepINITIALFORM,
 		RequestType:           models.SystemIntakeRequestTypeNEW,
 		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
@@ -43,8 +42,8 @@ func (suite *SchedulerTestSuite) TestSendAsyncPastDueNoQuorumEmailJobFunction() 
 
 	now := time.Now()
 	testIntake := &models.SystemIntake{
-		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -7)),
-		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+		GRBReviewStartedAt:    new(now.AddDate(0, 0, -7)),
+		GrbReviewAsyncEndDate: new(now.AddDate(0, 0, -1)),
 		Step:                  models.SystemIntakeStepINITIALFORM,
 		RequestType:           models.SystemIntakeRequestTypeNEW,
 		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
@@ -69,8 +68,8 @@ func (suite *SchedulerTestSuite) TestSendGRBReviewEndedEmailJobFunction() {
 		Requester:             "Ended Voting User",
 		Component:             null.StringFrom("Test Component"),
 		ProjectName:           null.StringFrom("Voting Ended Project"),
-		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -5)),
-		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)), // Ended yesterday
+		GRBReviewStartedAt:    new(now.AddDate(0, 0, -5)),
+		GrbReviewAsyncEndDate: new(now.AddDate(0, 0, -1)), // Ended yesterday
 		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 		Step:                  models.SystemIntakeStepINITIALFORM,
 		RequestType:           models.SystemIntakeRequestTypeNEW,

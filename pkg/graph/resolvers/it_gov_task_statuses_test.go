@@ -3,8 +3,6 @@ package resolvers
 import (
 	"time"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
-
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -427,7 +425,7 @@ func (s *ResolverSuite) TestDecisionAndNextStepsStatus() {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepGRBMEETING,
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
-				GRBDate:       helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+				GRBDate:       new(time.Now().Add(time.Hour * 24)),
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,
@@ -447,7 +445,7 @@ func (s *ResolverSuite) TestDecisionAndNextStepsStatus() {
 			intake: models.SystemIntake{
 				Step:                  models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
-				GrbReviewAsyncEndDate: helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+				GrbReviewAsyncEndDate: new(time.Now().Add(time.Hour * 24)),
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,
@@ -759,7 +757,7 @@ func (s *ResolverSuite) TestGrtMeetingStatus() {
 			expectError:    false,
 		},
 		{
-			testCase: "Request form: GRT Date Tommorrow",
+			testCase: "Request form: GRT Date Tomorrow",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepINITIALFORM,
 				GRTDate: &tomorrow,
@@ -786,7 +784,7 @@ func (s *ResolverSuite) TestGrtMeetingStatus() {
 			expectError:    false,
 		},
 		{
-			testCase: "Draft Business Case: GRT Date Tommorrow",
+			testCase: "Draft Business Case: GRT Date Tomorrow",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepDRAFTBIZCASE,
 				GRTDate: &tomorrow,
@@ -813,7 +811,7 @@ func (s *ResolverSuite) TestGrtMeetingStatus() {
 			expectError:    false,
 		},
 		{
-			testCase: "GRT Step: GRT Date Tommorrow",
+			testCase: "GRT Step: GRT Date Tomorrow",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRTMEETING,
 				GRTDate: &tomorrow,
@@ -840,7 +838,7 @@ func (s *ResolverSuite) TestGrtMeetingStatus() {
 			expectError:    false,
 		},
 		{
-			testCase: "Final Business Case Step: GRT Date Tommorrow",
+			testCase: "Final Business Case Step: GRT Date Tomorrow",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepFINALBIZCASE,
 				GRTDate: &tomorrow,
@@ -867,7 +865,7 @@ func (s *ResolverSuite) TestGrtMeetingStatus() {
 			expectError:    false,
 		},
 		{
-			testCase: "GRB Step: GRT Date Tommorrow",
+			testCase: "GRB Step: GRT Date Tomorrow",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRTDate: &tomorrow,
@@ -894,7 +892,7 @@ func (s *ResolverSuite) TestGrtMeetingStatus() {
 			expectError:    false,
 		},
 		{
-			testCase: "Decision Step: GRT Date Tommorrow",
+			testCase: "Decision Step: GRT Date Tomorrow",
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepDECISION,
 				GRTDate: &tomorrow,
@@ -921,7 +919,7 @@ func (s *ResolverSuite) TestGrtMeetingStatus() {
 			expectError:    false,
 		},
 		{
-			testCase: "Invalid Step: GRT Date Tommorrow, no error",
+			testCase: "Invalid Step: GRT Date Tomorrow, no error",
 			intake: models.SystemIntake{
 				Step:    invalidTestStep,
 				GRTDate: &tomorrow,

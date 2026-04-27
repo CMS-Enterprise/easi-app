@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -144,7 +145,7 @@ func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlSt
 	if err != nil {
 		return err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	return stmt.SelectContext(ctx, dest, arguments)
 }
@@ -165,7 +166,7 @@ func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlState
 	if err != nil {
 		return err
 	}
-	defer stmt.Close()
+	defer closeNamedStmt(ctx, stmt)
 
 	return stmt.GetContext(ctx, dest, arguments)
 }
@@ -182,4 +183,30 @@ func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement stri
 	}
 
 	return np.NamedExecContext(ctx, sqlStatement, arguments)
+}
+
+func closeNamedStmt(ctx context.Context, stmt *sqlx.NamedStmt) {
+	if stmt == nil {
+		return
+	}
+	if ctx == nil {
+		ctx = context.TODO()
+	}
+
+	if err := stmt.Close(); err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to close prepared statement", zap.Error(err))
+	}
+}
+
+func closeRows(ctx context.Context, rows *sqlx.Rows) {
+	if rows == nil {
+		return
+	}
+	if ctx == nil {
+		ctx = context.TODO()
+	}
+
+	if err := rows.Close(); err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to close rows", zap.Error(err))
+	}
 }

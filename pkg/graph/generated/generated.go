@@ -40442,7 +40442,7 @@ func (ec *executionContext) _SystemIntakeContacts_requester(ctx context.Context,
 		field,
 		ec.fieldContext_SystemIntakeContacts_requester,
 		func(ctx context.Context) (any, error) {
-			return obj.Requester()
+			return obj.Requester(), nil
 		},
 		nil,
 		ec.marshalOSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContact,
@@ -40499,7 +40499,7 @@ func (ec *executionContext) _SystemIntakeContacts_businessOwners(ctx context.Con
 		field,
 		ec.fieldContext_SystemIntakeContacts_businessOwners,
 		func(ctx context.Context) (any, error) {
-			return obj.BusinessOwners()
+			return obj.BusinessOwners(), nil
 		},
 		nil,
 		ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ,
@@ -40556,7 +40556,7 @@ func (ec *executionContext) _SystemIntakeContacts_productManagers(ctx context.Co
 		field,
 		ec.fieldContext_SystemIntakeContacts_productManagers,
 		func(ctx context.Context) (any, error) {
-			return obj.ProductManagers()
+			return obj.ProductManagers(), nil
 		},
 		nil,
 		ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ,
@@ -40613,7 +40613,7 @@ func (ec *executionContext) _SystemIntakeContacts_additionalContacts(ctx context
 		field,
 		ec.fieldContext_SystemIntakeContacts_additionalContacts,
 		func(ctx context.Context) (any, error) {
-			return obj.AdditionalContacts()
+			return obj.AdditionalContacts(), nil
 		},
 		nil,
 		ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ,

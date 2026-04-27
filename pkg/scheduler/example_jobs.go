@@ -19,7 +19,7 @@ type exampleJobs struct {
 // var ExampleJobs = GetExampleJobs(SharedScheduler)
 
 // GetExampleJobs returns a new exampleJobs struct with all the example jobs
-func GetExampleJobs(scheduler *Scheduler) *exampleJobs {
+func GetExampleJobs(scheduler *scheduler) *exampleJobs {
 	return &exampleJobs{
 		SimplifiedJob:      NewScheduledJob("SimplifiedJob", scheduler, timing.Every5Seconds, simplifiedJobFunction),
 		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, timing.Every5Seconds, runEvery5SecondJobFunction, true),

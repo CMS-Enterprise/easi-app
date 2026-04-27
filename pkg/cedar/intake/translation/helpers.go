@@ -34,23 +34,16 @@ func strDateTime(t *time.Time) string {
 	return str
 }
 
-// pStr is a quick helper for turning a string into a string-pointer
-// inline, without having to clutter your mainline code with the
-// indirection, e.g. when building a type and assigning properties
-func pStr(s string) *string {
-	return &s
-}
-
 func versionStr(version SchemaVersion) *string {
-	return pStr(string(version))
+	return new(string(version))
 }
 
 func statusStr(status intakeInputStatus) *string {
-	return pStr(string(status))
+	return new(string(status))
 }
 
 func typeStr(inputType intakeInputType) *string {
-	return pStr(string(inputType))
+	return new(string(inputType))
 }
 
 // pStrfmtDateTime turns a time pointer into a strfmt.DateTime pointer;
@@ -60,6 +53,5 @@ func pStrfmtDateTime(t *time.Time) *strfmt.DateTime {
 		return nil
 	}
 
-	strfmtDatetime := strfmt.DateTime(*t)
-	return &strfmtDatetime
+	return new(strfmt.DateTime(*t))
 }

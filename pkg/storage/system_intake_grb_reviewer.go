@@ -100,7 +100,7 @@ func (s *Store) DeleteSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 }
 
 func (s *Store) SystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeGRBReviewer, error) {
-	return sqlutils.WithTransactionRet[[]*models.SystemIntakeGRBReviewer](ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeGRBReviewer, error) {
+	return sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeGRBReviewer, error) {
 		return s.SystemIntakeGRBReviewersBySystemIntakeIDsNP(ctx, tx, systemIntakeIDs)
 	})
 }

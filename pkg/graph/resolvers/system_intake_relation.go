@@ -21,7 +21,7 @@ func SetSystemIntakeRelationExistingService(
 	store *storage.Store,
 	input *models.SetSystemIntakeRelationExistingServiceInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -42,8 +42,7 @@ func SetSystemIntakeRelationExistingService(
 
 		// Set contract name
 		intake.ContractName = zero.StringFrom(input.ContractName)
-		relationType := models.RelationTypeExistingService
-		intake.SystemRelationType = &relationType
+		intake.SystemRelationType = new(models.RelationTypeExistingService)
 		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
@@ -56,7 +55,7 @@ func SetSystemIntakeRelationNewSystem(
 	store *storage.Store,
 	input *models.SetSystemIntakeRelationNewSystemInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -76,8 +75,7 @@ func SetSystemIntakeRelationNewSystem(
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
-		relationType := models.RelationTypeNewSystem
-		intake.SystemRelationType = &relationType
+		intake.SystemRelationType = new(models.RelationTypeNewSystem)
 		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
@@ -91,7 +89,7 @@ func SetSystemIntakeRelationExistingSystem(
 	getCedarSystem func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error),
 	input *models.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -118,8 +116,7 @@ func SetSystemIntakeRelationExistingSystem(
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
-		relationType := models.RelationTypeExistingSystem
-		intake.SystemRelationType = &relationType
+		intake.SystemRelationType = new(models.RelationTypeExistingSystem)
 		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
@@ -132,7 +129,7 @@ func SetSystemSupportAndUnlinkSystemIntakeRelation(
 	intakeID uuid.UUID,
 	doesNotSupportSystems bool,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
