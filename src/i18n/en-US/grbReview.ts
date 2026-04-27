@@ -142,9 +142,11 @@ export default {
     editPresentationLinks: 'Edit presentation links',
     removeAllPresentationLinks: 'Remove all presentation links',
     viewRecording: 'View recording',
+    recordingLinkValue: 'Recording link: {{link}}',
     noRecordingLinkAvailable: 'No recording link available',
     passcode: '(Passcode: {{passcode}})',
     viewTranscript: 'View transcript',
+    transcriptLinkValue: 'Transcript link: {{link}}',
     viewSlideDeck: 'View slide deck',
     addAsynchronousPresentationLinks: 'Add asynchronous presentation links',
     virusScanning: 'Virus scanning in progress...',
@@ -463,6 +465,8 @@ export default {
     emptyFormError:
       'Please complete either the recording link or presentation deck field before submitting.',
     requiredField: 'This is a required field.',
+    urlValidation:
+      'Please enter a full URL beginning with http:// or https://.',
     presentationUpload: {
       header: 'Upload GRB presentation',
       description:

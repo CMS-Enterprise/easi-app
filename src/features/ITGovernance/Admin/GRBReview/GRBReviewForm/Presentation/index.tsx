@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
@@ -25,6 +25,7 @@ import HelpText from 'components/HelpText';
 import { TabPanel, Tabs } from 'components/Tabs';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 import { fileToBase64File } from 'utils/downloadFile';
+import normalizePresentationLinkUrl from 'utils/normalizePresentationLinkUrl';
 
 import SendPresentationReminder from '../../SendPresentationReminder';
 import GRBReviewFormStepWrapper, {
@@ -93,15 +94,56 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const {
     control,
     watch,
-    formState: { errors, isSubmitted }
+    formState: { errors }
   } = standardForm;
 
   const {
     control: controlAsync,
     register,
+    trigger: triggerAsync,
     watch: watchAsync,
-    formState: { defaultValues }
+    formState: {
+      defaultValues,
+      errors: asyncErrors,
+      isSubmitted: isSubmittedAsync
+    }
   } = asyncForm;
+
+  const validatePresentationLink = (value?: string | null) =>
+    !value ||
+    normalizePresentationLinkUrl(value) !== null ||
+    t<string>('presentationLinks.urlValidation');
+
+  const recordingLinkField = register('links.recordingLink', {
+    validate: validatePresentationLink
+  });
+
+  const transcriptLinkField = register('links.transcriptLink', {
+    shouldUnregister: true,
+    validate: validatePresentationLink
+  });
+
+  useEffect(() => {
+    const preloadedLinkFields: Array<
+      'links.recordingLink' | 'links.transcriptLink'
+    > = [];
+
+    if (grbReview.grbPresentationLinks?.recordingLink?.trim()) {
+      preloadedLinkFields.push('links.recordingLink');
+    }
+
+    if (grbReview.grbPresentationLinks?.transcriptLink?.trim()) {
+      preloadedLinkFields.push('links.transcriptLink');
+    }
+
+    if (preloadedLinkFields.length > 0) {
+      triggerAsync(preloadedLinkFields);
+    }
+  }, [
+    grbReview.grbPresentationLinks?.recordingLink,
+    grbReview.grbPresentationLinks?.transcriptLink,
+    triggerAsync
+  ]);
 
   const onSubmitStandard: GRBReviewFormStepSubmit<
     StandardPresentationFields
@@ -302,10 +344,10 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                       </HelpText>
 
                       <ErrorMessage
-                        errors={errors}
+                        errors={asyncErrors}
                         name="asyncRecordingDate.grbReviewAsyncRecordingTime"
                         render={({ message }) =>
-                          isSubmitted && (
+                          isSubmittedAsync && (
                             <FieldErrorMsg>{message}</FieldErrorMsg>
                           )
                         }
@@ -334,7 +376,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                   {t('presentationGRBReviewForm.reviewersDescription')}
                 </p>
 
-                <FormGroup>
+                <FormGroup error={!!asyncErrors?.links?.recordingLink}>
                   <Label htmlFor="links.recordingLink" className="text-normal">
                     {t('presentationLinks.recordingLinkLabel')}
                   </Label>
@@ -346,12 +388,20 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                     {t('presentationLinks.recordingLinkHelpText')}
                   </HelpText>
 
+                  <FieldErrorMsg>
+                    {asyncErrors?.links?.recordingLink?.message}
+                  </FieldErrorMsg>
+
                   <TextInput
-                    {...register('links.recordingLink')}
+                    {...recordingLinkField}
                     ref={null}
                     id="recordingLink"
                     aria-describedby="recordingLinkHelpText"
                     type="text"
+                    onBlur={e => {
+                      recordingLinkField.onBlur(e);
+                      triggerAsync('links.recordingLink');
+                    }}
                   />
                 </FormGroup>
 
@@ -379,7 +429,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                   />
                 </FormGroup>
 
-                <FormGroup>
+                <FormGroup error={!!asyncErrors?.links?.transcriptLink}>
                   <Fieldset id="transcriptFields">
                     <Label htmlFor="transcriptLink" className="text-normal">
                       {t('presentationLinks.transcript')}
@@ -388,6 +438,10 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                     <HelpText id="transcriptHelpText" className="margin-top-05">
                       {t('presentationLinks.transcriptHelpText')}
                     </HelpText>
+
+                    <FieldErrorMsg>
+                      {asyncErrors?.links?.transcriptLink?.message}
+                    </FieldErrorMsg>
 
                     <Tabs
                       className="margin-top-105"
@@ -404,14 +458,16 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                         className="outline-0"
                       >
                         <TextInput
-                          {...register('links.transcriptLink', {
-                            shouldUnregister: true
-                          })}
+                          {...transcriptLinkField}
                           ref={null}
                           id="transcriptLink"
                           aria-describedby="transcriptHelpText"
                           type="url"
                           className="margin-top-2"
+                          onBlur={e => {
+                            transcriptLinkField.onBlur(e);
+                            triggerAsync('links.transcriptLink');
+                          }}
                         />
                       </TabPanel>
 
