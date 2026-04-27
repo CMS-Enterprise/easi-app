@@ -8,6 +8,7 @@ import { MixedSchema } from 'yup/lib/mixed';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import extractObjectKeys from 'utils/extractObjectKeys';
+import normalizePresentationLinkUrl from 'utils/normalizePresentationLinkUrl';
 
 /** GRB Reviewer for IT Governance request */
 export const GRBReviewerSchema = Yup.object().shape({
@@ -83,15 +84,23 @@ export const SetGRBParticipantsAsyncSchema = Yup.object({
 });
 
 /** Presentation links schema */
+const presentationLinkSchema = Yup.string()
+  .nullable()
+  .test(
+    'presentation-link-scheme',
+    i18next.t('grbReview:presentationLinks.urlValidation'),
+    value => !value || normalizePresentationLinkUrl(value) !== null
+  );
+
 export const SetGRBPresentationLinksSchema = Yup.object().shape(
   {
     // Form requires either recordingLink or presentationDeckFileData fields
-    recordingLink: Yup.string().when('presentationDeckFileData', {
+    recordingLink: presentationLinkSchema.when('presentationDeckFileData', {
       is: (value?: MixedSchema) => !value,
-      then: Yup.string().required(
+      then: presentationLinkSchema.required(
         i18next.t('grbReview:presentationLinks.requiredField')
       ),
-      otherwise: Yup.string()
+      otherwise: presentationLinkSchema
     }),
     presentationDeckFileData: Yup.mixed().when('recordingLink', {
       is: (value?: string) => !value,
@@ -104,7 +113,7 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
     // Optional fields
     recordingPasscode: Yup.string().nullable(),
     transcriptFileData: Yup.mixed(),
-    transcriptLink: Yup.string().nullable()
+    transcriptLink: presentationLinkSchema
   },
   // Prevents cyclic dependency error
   [['recordingLink', 'presentationDeckFileData']]

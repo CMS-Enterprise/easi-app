@@ -4,7 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
+	"net/url"
 	"path/filepath"
+	"strings"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
@@ -18,6 +21,29 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
+
+func normalizePresentationLink(value *string, fieldName string) (*string, error) {
+	if value == nil {
+		return nil, nil
+	}
+
+	trimmedValue := strings.TrimSpace(*value)
+	if trimmedValue == "" {
+		return nil, nil
+	}
+
+	parsedURL, err := url.Parse(trimmedValue)
+	if err != nil || parsedURL == nil || parsedURL.Host == "" {
+		return nil, fmt.Errorf("%s must be a valid http:// or https:// URL", fieldName)
+	}
+
+	switch strings.ToLower(parsedURL.Scheme) {
+	case "http", "https":
+		return &trimmedValue, nil
+	default:
+		return nil, fmt.Errorf("%s must be a valid http:// or https:// URL", fieldName)
+	}
+}
 
 func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
 	userID := appcontext.Principal(ctx).Account().ID
@@ -50,7 +76,12 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	}
 
 	if value, ok := input.RecordingLink.ValueOK(); ok {
-		links.RecordingLink = value
+		normalizedValue, normalizeErr := normalizePresentationLink(value, "recording link")
+		if normalizeErr != nil {
+			return nil, normalizeErr
+		}
+
+		links.RecordingLink = normalizedValue
 	}
 
 	if value, ok := input.RecordingPasscode.ValueOK(); ok {
@@ -58,11 +89,16 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	}
 
 	if value, ok := input.TranscriptLink.ValueOK(); ok {
-		links.TranscriptLink = value
+		normalizedValue, normalizeErr := normalizePresentationLink(value, "transcript link")
+		if normalizeErr != nil {
+			return nil, normalizeErr
+		}
+
+		links.TranscriptLink = normalizedValue
 
 		// if setting a transcript link, we need to also un-set all the other transcript-related fields
 		// for the transcript_link_or_doc_null_check SQL check
-		if value != nil {
+		if normalizedValue != nil {
 			links.TranscriptFileName = nil
 			links.TranscriptS3Key = nil
 		}

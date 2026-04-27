@@ -23,7 +23,11 @@ import {
   mockDiscussionsWithoutReplies
 } from 'tests/mock/discussions';
 import { getSystemIntakeGRBReviewQuery, grbReview } from 'tests/mock/grbReview';
-import { documents, systemIntake } from 'tests/mock/systemIntake';
+import {
+  documents,
+  grbPresentationLinks,
+  systemIntake
+} from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -192,6 +196,58 @@ describe('GRB review tab', () => {
   });
 
   describe('Presentation links card', () => {
+    it('renders the card for admins when only legacy invalid links exist', async () => {
+      const legacyRecordingLink = ['java', 'script:confirm', '``'].join('');
+
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery({
+                ...grbReview,
+                grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+                grbReviewStartedAt: '2024-10-21T14:55:47.88283Z',
+                grbPresentationLinks: {
+                  ...grbPresentationLinks!,
+                  recordingLink: legacyRecordingLink,
+                  recordingPasscode: null,
+                  transcriptLink: null,
+                  transcriptFileName: null,
+                  transcriptFileStatus: null,
+                  transcriptFileURL: null,
+                  presentationDeckFileName: null,
+                  presentationDeckFileStatus: null,
+                  presentationDeckFileURL: null
+                }
+              })
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={systemIntake}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByTestId('presentation-links-card')
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByText(`Recording link: ${legacyRecordingLink}`)
+      ).toBeInTheDocument();
+    });
+
     it('hides empty card for GRB reviewers', () => {
       render(
         <MemoryRouter>
