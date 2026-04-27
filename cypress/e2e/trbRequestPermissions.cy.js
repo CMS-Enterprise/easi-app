@@ -7,7 +7,8 @@ const requestNames = {
   completed: 'Case 2 - Request form complete',
   draftGuidanceLetter: 'Case 6 - Draft guidance letter',
   completedGuidanceLetter: 'Case 9 - Guidance letter sent',
-  relation: 'Case 12 - Completed request form with New System Relation'
+  relation: 'Case 12 - Completed request form with New System Relation',
+  relatedTable: 'Case 17 - Completed request with related system (0A)'
 };
 
 const notFoundHeading = 'This page cannot be found.';
@@ -23,7 +24,8 @@ const requestUrls = {
   completed: null,
   draftGuidanceLetter: null,
   completedGuidanceLetter: null,
-  relation: null
+  relation: null,
+  relatedTable: null
 };
 
 const loginAs = ({ name, role } = {}) => {
@@ -80,6 +82,10 @@ describe('TRB request permissions', () => {
 
     getRequestUrls(requestNames.relation).then(urls => {
       requestUrls.relation = urls;
+    });
+
+    getRequestUrls(requestNames.relatedTable).then(urls => {
+      requestUrls.relatedTable = urls;
     });
 
     cy.clearCookies();
@@ -173,5 +179,25 @@ describe('TRB request permissions', () => {
     cy.contains(
       'This request is for a completely new system, service, or contract and may not have other requests related to it.'
     ).should('be.visible');
+  });
+
+  it('shows related TRB rows and hides inaccessible IT Gov rows on the admin related-requests table', () => {
+    loginAs(admin);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetTRBRequestRelatedRequests') {
+        req.alias = 'getTrbRequestRelatedRequests';
+      }
+    });
+
+    cy.visit(requestUrls.relatedTable.adminAdditionalInfoHref);
+    cy.wait('@getTrbRequestRelatedRequests');
+
+    cy.contains('h2', 'Related requests').should('be.visible');
+    cy.contains(
+      'a',
+      'Case 14 - Completed request form with Existing System Relation'
+    ).should('be.visible');
+    cy.contains('Related Intake 1 (system 0A)').should('not.exist');
   });
 });

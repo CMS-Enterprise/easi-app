@@ -7,7 +7,6 @@ package resolvers
 import (
 	"context"
 	"errors"
-	"slices"
 	"strconv"
 	"time"
 
@@ -1412,30 +1411,11 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	// if this user is an admin
-	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
-		return intake, nil
-	}
-
-	// if this user created the intake
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
-		return intake, nil
-	}
-
-	grbUsers, err := r.store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{id})
-	if err != nil {
+	if err := authorizeUserCanViewSystemIntake(ctx, r.store, intake); err != nil {
 		return nil, err
 	}
 
-	principal := appcontext.Principal(ctx)
-
-	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
-		return reviewer.UserID == principal.Account().ID
-	}); isGRBViewer {
-		return intake, nil
-	}
-
-	return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+	return intake, nil
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
@@ -1652,6 +1632,10 @@ func (r *queryResolver) MyTrbRequests(ctx context.Context, archived bool) ([]*mo
 
 // TrbLeadOptions is the resolver for the trbLeadOptions field.
 func (r *queryResolver) TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
+	if !appcontext.Principal(ctx).AllowTRBAdmin() {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch TRB lead options")}
+	}
+
 	return GetTRBLeadOptions(ctx, r.store, r.service.FetchUserInfos)
 }
 
@@ -2297,12 +2281,22 @@ func (r *tRBRequestResolver) Systems(ctx context.Context, obj *models.TRBRequest
 
 // RelatedIntakes is the resolver for the relatedIntakes field.
 func (r *tRBRequestResolver) RelatedIntakes(ctx context.Context, obj *models.TRBRequest) ([]*models.SystemIntake, error) {
-	return TRBRequestRelatedSystemIntakes(ctx, obj.ID)
+	intakes, err := TRBRequestRelatedSystemIntakes(ctx, obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return filterVisibleSystemIntakes(ctx, r.store, intakes)
 }
 
 // RelatedTRBRequests is the resolver for the relatedTRBRequests field.
 func (r *tRBRequestResolver) RelatedTRBRequests(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequest, error) {
-	return TRBRequestRelatedTRBRequests(ctx, obj.ID)
+	trbRequests, err := TRBRequestRelatedTRBRequests(ctx, obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return filterVisibleTRBRequests(ctx, trbRequests)
 }
 
 // UserInfo is the resolver for the userInfo field.
@@ -2365,7 +2359,12 @@ func (r *tRBRequestFormResolver) FundingSources(ctx context.Context, obj *models
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *tRBRequestFormResolver) SystemIntakes(ctx context.Context, obj *models.TRBRequestForm) ([]*models.SystemIntake, error) {
-	return GetTRBRequestFormSystemIntakesByTRBRequestID(ctx, obj.TRBRequestID)
+	intakes, err := GetTRBRequestFormSystemIntakesByTRBRequestID(ctx, obj.TRBRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	return filterVisibleSystemIntakes(ctx, r.store, intakes)
 }
 
 // SubjectAreaOptions is the resolver for the subjectAreaOptions field.

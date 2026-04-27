@@ -15,14 +15,22 @@ const getSystemOrContractName = (
   }
 
   if (relationType === RequestRelationType.EXISTING_SYSTEM) {
-    if (systems.length === 1) {
-      return systems[0].name;
+    const systemNames = systems
+      .map(system => system?.name)
+      .filter((name): name is string => Boolean(name));
+
+    if (systemNames.length === 0) {
+      return i18next.t('governanceReviewTeam:noneSpecified');
+    }
+
+    if (systemNames.length === 1) {
+      return systemNames[0];
     }
 
     // If more than one system, returns `[name], +[count]`
     return i18next.t('governanceReviewTeam:systemNamePlural', {
-      name: systems[0].name,
-      count: systems.length - 1
+      name: systemNames[0],
+      count: systemNames.length - 1
     });
   }
 

@@ -2,8 +2,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { ModalRef } from '@trussworks/react-uswds';
+import { RequestRelationType } from 'gql/generated/graphql';
 import {
   getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
@@ -86,5 +87,44 @@ describe('TRB Admin Home summary', () => {
 
     // Snapshot
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('falls back safely when an existing-system relation has no resolved systems', async () => {
+    render(
+      <MemoryRouter>
+        <MockedProvider
+          mocks={[getTrbRequestQuery, getTRBRequestAttendeesQuery]}
+        >
+          <Provider store={defaultStore}>
+            <Summary
+              trbRequestId={mockTrbRequestId}
+              name={trbRequestSummary.name || 'Draft'}
+              requestType={trbRequestSummary.type}
+              state={trbRequestSummary.state}
+              taskStatus={trbRequestSummary.status}
+              trbLead={trbRequestSummary.trbLeadInfo.commonName}
+              requester={requester}
+              requesterString="Adeline Aarons, CMS"
+              submittedAt={trbRequestSummary.createdAt}
+              assignLeadModalRef={modalRef}
+              assignLeadModalTrbRequestIdRef={trbRequestIdRef}
+              contractName={trbRequestSummary.contractName}
+              relationType={RequestRelationType.EXISTING_SYSTEM}
+              systems={[]}
+              contractNumbers={trbRequestSummary.contractNumbers.map(
+                c => c.contractNumber
+              )}
+            />
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'None specified',
+        level: 4
+      })
+    ).toBeInTheDocument();
   });
 });

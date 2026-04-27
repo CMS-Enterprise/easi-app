@@ -517,3 +517,27 @@ func authorizeUserCanManageTRBRequestRelations(ctx context.Context, trbRequest *
 		Err: errors.New("unauthorized to manage TRB request relations"),
 	}
 }
+
+func filterVisibleTRBRequests(
+	ctx context.Context,
+	trbRequests []*models.TRBRequest,
+) ([]*models.TRBRequest, error) {
+	visible := make([]*models.TRBRequest, 0, len(trbRequests))
+
+	for _, trbRequest := range trbRequests {
+		err := authorizeUserCanViewTRBRequest(ctx, trbRequest)
+		if err == nil {
+			visible = append(visible, trbRequest)
+			continue
+		}
+
+		var unauthorizedErr *apperrors.UnauthorizedError
+		if errors.As(err, &unauthorizedErr) {
+			continue
+		}
+
+		return nil, err
+	}
+
+	return visible, nil
+}

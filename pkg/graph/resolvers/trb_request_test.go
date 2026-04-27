@@ -6,12 +6,16 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // TestCreateTRBRequest makes a new TRB request
@@ -161,6 +165,99 @@ func (s *ResolverSuite) TestTRBRequestAuthorizationHelpers() {
 		relationErr := authorizeUserCanManageTRBRequestRelations(ctx, trb)
 		s.Error(relationErr)
 	}
+}
+
+func (s *ResolverSuite) TestTRBRequestNestedRelationVisibility() {
+	const sharedContractNumber = "CN-12345"
+
+	ownerTRB := s.createNewTRBRequest()
+
+	otherCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+
+	hiddenTRB, err := CreateTRBRequest(otherCtx, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(hiddenTRB)
+
+	hiddenIntake, err := CreateSystemIntake(
+		otherCtx,
+		s.testConfigs.Store,
+		models.CreateSystemIntakeInput{
+			Requester: &models.SystemIntakeRequesterInput{
+				Name: "Other User",
+			},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo),
+	)
+	s.NoError(err)
+	s.NotNil(hiddenIntake)
+
+	err = sqlutils.WithTransaction(s.testConfigs.Context, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+		if err := s.testConfigs.Store.SetTRBRequestContractNumbers(s.testConfigs.Context, tx, ownerTRB.ID, []string{sharedContractNumber}); err != nil {
+			return err
+		}
+		if err := s.testConfigs.Store.SetTRBRequestContractNumbers(s.testConfigs.Context, tx, hiddenTRB.ID, []string{sharedContractNumber}); err != nil {
+			return err
+		}
+		if err := s.testConfigs.Store.SetSystemIntakeContractNumbers(s.testConfigs.Context, tx, hiddenIntake.ID, []string{sharedContractNumber}); err != nil {
+			return err
+		}
+		return nil
+	})
+	s.NoError(err)
+
+	_, err = s.testConfigs.Store.CreateTRBRequestSystemIntakes(s.testConfigs.Context, ownerTRB.ID, []uuid.UUID{hiddenIntake.ID})
+	s.NoError(err)
+
+	rawRelatedTRBRequests, err := TRBRequestRelatedTRBRequests(s.ctxWithNewDataloaders(), ownerTRB.ID)
+	s.NoError(err)
+	s.Len(rawRelatedTRBRequests, 1)
+	s.Equal(hiddenTRB.ID, rawRelatedTRBRequests[0].ID)
+
+	rawRelatedIntakes, err := TRBRequestRelatedSystemIntakes(s.ctxWithNewDataloaders(), ownerTRB.ID)
+	s.NoError(err)
+	s.Len(rawRelatedIntakes, 1)
+	s.Equal(hiddenIntake.ID, rawRelatedIntakes[0].ID)
+
+	rawFormIntakes, err := GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), ownerTRB.ID)
+	s.NoError(err)
+	s.Len(rawFormIntakes, 1)
+	s.Equal(hiddenIntake.ID, rawFormIntakes[0].ID)
+
+	resolver := &Resolver{store: s.testConfigs.Store}
+	trbResolver := &tRBRequestResolver{resolver}
+	formResolver := &tRBRequestFormResolver{resolver}
+
+	ownerCtx := s.ctxWithNewDataloaders()
+
+	visibleRelatedTRBRequests, err := trbResolver.RelatedTRBRequests(ownerCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(visibleRelatedTRBRequests, 0)
+
+	visibleRelatedIntakes, err := trbResolver.RelatedIntakes(ownerCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(visibleRelatedIntakes, 0)
+
+	visibleFormIntakes, err := formResolver.SystemIntakes(ownerCtx, &models.TRBRequestForm{TRBRequestID: ownerTRB.ID})
+	s.NoError(err)
+	s.Len(visibleFormIntakes, 0)
+
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	adminRelatedTRBRequests, err := trbResolver.RelatedTRBRequests(adminCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(adminRelatedTRBRequests, 1)
+	s.Equal(hiddenTRB.ID, adminRelatedTRBRequests[0].ID)
+
+	adminRelatedIntakes, err := trbResolver.RelatedIntakes(adminCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(adminRelatedIntakes, 1)
+	s.Equal(hiddenIntake.ID, adminRelatedIntakes[0].ID)
+
+	adminFormIntakes, err := formResolver.SystemIntakes(adminCtx, &models.TRBRequestForm{TRBRequestID: ownerTRB.ID})
+	s.NoError(err)
+	s.Len(adminFormIntakes, 1)
+	s.Equal(hiddenIntake.ID, adminFormIntakes[0].ID)
 }
 
 // TestGetTRBRequests returns all TRB Requests

@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"slices"
 	"time"
@@ -13,9 +14,11 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -61,6 +64,62 @@ func CreateSystemIntake(
 		return createdIntake, nil
 	})
 	return intakeRetFromTransaction, err
+}
+
+func authorizeUserCanViewSystemIntake(
+	ctx context.Context,
+	store *storage.Store,
+	intake *models.SystemIntake,
+) error {
+	// admins can always view
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return nil
+	}
+
+	// the requester can view
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return nil
+	}
+
+	grbUsers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+	if err != nil {
+		return err
+	}
+
+	principal := appcontext.Principal(ctx)
+
+	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+		return reviewer.UserID == principal.Account().ID
+	}); isGRBViewer {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+}
+
+func filterVisibleSystemIntakes(
+	ctx context.Context,
+	store *storage.Store,
+	intakes []*models.SystemIntake,
+) ([]*models.SystemIntake, error) {
+	visible := make([]*models.SystemIntake, 0, len(intakes))
+
+	for _, intake := range intakes {
+		err := authorizeUserCanViewSystemIntake(ctx, store, intake)
+		if err == nil {
+			visible = append(visible, intake)
+			continue
+		}
+
+		var unauthorizedErr *apperrors.UnauthorizedError
+		if errors.As(err, &unauthorizedErr) {
+			continue
+		}
+
+		return nil, err
+	}
+
+	return visible, nil
 }
 
 // UpdateSystemIntakeRequestType updates a system intake's request type and returns the updated intake.
