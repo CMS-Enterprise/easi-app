@@ -83,6 +83,40 @@ func (s *ResolverSuite) TestGetTRBRequestByID() {
 	s.NotNil(ret)
 }
 
+func (s *ResolverSuite) TestTRBRequestGuidanceLetterVisibility() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	letter, err := CreateTRBGuidanceLetter(s.testConfigs.Context, s.testConfigs.Store, trb.ID)
+	s.NoError(err)
+	s.NotNil(letter)
+
+	resolver := &tRBRequestResolver{&Resolver{store: s.testConfigs.Store}}
+
+	ownerLetter, err := resolver.GuidanceLetter(s.ctxWithNewDataloaders(), trb)
+	s.NoError(err)
+	s.Nil(ownerLetter)
+
+	adminCtx, _ := s.getTestContextWithPrincipal("ABCD", true)
+	adminLetter, err := resolver.GuidanceLetter(adminCtx, trb)
+	s.NoError(err)
+	s.NotNil(adminLetter)
+	s.Equal(letter.ID, adminLetter.ID)
+
+	_, err = s.testConfigs.Store.UpdateTRBGuidanceLetterStatus(
+		s.testConfigs.Context,
+		letter.ID,
+		models.TRBGuidanceLetterStatusCompleted,
+	)
+	s.NoError(err)
+
+	completedOwnerLetter, err := resolver.GuidanceLetter(s.ctxWithNewDataloaders(), trb)
+	s.NoError(err)
+	s.NotNil(completedOwnerLetter)
+	s.Equal(letter.ID, completedOwnerLetter.ID)
+}
+
 // TestGetTRBRequests returns all TRB Requests
 func (s *ResolverSuite) TestGetTRBRequests() {
 	// Create a context to use for requests from another user

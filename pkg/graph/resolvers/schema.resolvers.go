@@ -2227,7 +2227,16 @@ func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (
 
 // GuidanceLetter is the resolver for the guidancLetter field.
 func (r *tRBRequestResolver) GuidanceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBGuidanceLetter, error) {
-	return GetTRBGuidanceLetterByTRBRequestID(ctx, obj.ID)
+	letter, err := GetTRBGuidanceLetterByTRBRequestID(ctx, obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !canViewTRBGuidanceLetter(ctx, letter) {
+		return nil, nil
+	}
+
+	return letter, nil
 }
 
 // TaskStatuses is the resolver for the taskStatuses field.
