@@ -17,7 +17,8 @@ describe('IT Gov Request relation link form', () => {
   const mockStore = configureMockStore();
   const store = mockStore({
     auth: {
-      euaId: 'AAAA'
+      euaId: 'AAAA',
+      isUserSet: true
     }
   });
 
@@ -41,6 +42,13 @@ describe('IT Gov Request relation link form', () => {
                       id,
                       relationType: null,
                       contractName: null,
+                      requester: {
+                        __typename: 'SystemIntakeContact',
+                        userAccount: {
+                          __typename: 'UserAccount',
+                          username: 'AAAA'
+                        }
+                      },
                       contractNumbers: [],
                       systems: [],
                       __typename: 'SystemIntake'

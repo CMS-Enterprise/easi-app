@@ -74,56 +74,33 @@ const productManagerContact: GetCedarContactsQuery['cedarPersonsByCommonName'][n
   };
 
 describe('The System Intake page', () => {
-  it('renders without crashing', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/system/${systemIntake.id}/contact-details`]}
-      >
-        <MockedProvider
-          mocks={[
-            getSystemIntakeQuery(),
-            getSystemIntakeContactsQuery(),
-            getCedarContactsQuery(
-              formatContactLabel(requesterContact),
-              requesterContact
-            ),
-            getCedarContactsQuery(
-              formatContactLabel(businessOwnerContact),
-              businessOwnerContact
-            ),
-            getCedarContactsQuery(
-              formatContactLabel(productManagerContact),
-              productManagerContact
-            )
-          ]}
-        >
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+  const mockStore = configureMockStore();
 
-    expect(screen.getByTestId('system-intake')).toBeInTheDocument();
-  });
-
-  it('renders document upload', async () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
+  const createStore = (euaId = requester.userAccount.username) =>
+    mockStore({
       auth: {
-        euaId: 'ABCD'
+        euaId,
+        isUserSet: true
       },
       systemIntake: { systemIntake: {} },
       action: {}
     });
-    const user = userEvent.setup();
+
+  const renderSystemIntake = ({
+    route,
+    mocks,
+    store = createStore()
+  }: {
+    route: string;
+    mocks: React.ComponentProps<typeof MockedProvider>['mocks'];
+    store?: ReturnType<typeof createStore>;
+  }) =>
     render(
-      <MemoryRouter initialEntries={[`/system/${systemIntake.id}/documents`]}>
-        <MockedProvider mocks={[getSystemIntakeQuery({ documents })]}>
+      <MemoryRouter initialEntries={[route]}>
+        <MockedProvider mocks={mocks}>
           <Provider store={store}>
             <MessageProvider>
-              <Route path="/system/:systemId/:formPage">
+              <Route path="/system/:systemId/:formPage/:subPage?">
                 <SystemIntake />
               </Route>
             </MessageProvider>
@@ -131,6 +108,41 @@ describe('The System Intake page', () => {
         </MockedProvider>
       </MemoryRouter>
     );
+
+  it('renders without crashing', async () => {
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/contact-details`,
+      mocks: [
+        getSystemIntakeQuery(),
+        getSystemIntakeContactsQuery(),
+        getCedarContactsQuery(
+          formatContactLabel(requesterContact),
+          requesterContact
+        ),
+        getCedarContactsQuery(
+          formatContactLabel(businessOwnerContact),
+          businessOwnerContact
+        ),
+        getCedarContactsQuery(
+          formatContactLabel(productManagerContact),
+          productManagerContact
+        )
+      ]
+    });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(screen.getByTestId('system-intake')).toBeInTheDocument();
+  });
+
+  it('renders document upload', async () => {
+    const user = userEvent.setup();
+
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/documents`,
+      mocks: [getSystemIntakeQuery({ documents })]
+    });
+
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
@@ -153,29 +165,10 @@ describe('The System Intake page', () => {
   });
 
   it('renders intake review page', async () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      auth: {
-        euaId: 'ABCD'
-      },
-      systemIntake: { systemIntake: {} },
-      action: {}
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/review`,
+      mocks: [getSystemIntakeQuery(), getSystemIntakeContactsQuery()]
     });
-    render(
-      <MemoryRouter initialEntries={[`/system/${systemIntake.id}/review`]}>
-        <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
-        >
-          <Provider store={store}>
-            <MessageProvider>
-              <Route path="/system/:systemId/:formPage">
-                <SystemIntake />
-              </Route>
-            </MessageProvider>
-          </Provider>
-        </MockedProvider>
-      </MemoryRouter>
-    );
 
     expect(
       await screen.findByRole('heading', {
@@ -186,17 +179,11 @@ describe('The System Intake page', () => {
   });
 
   it('renders confirmation page', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/system/${systemIntake.id}/confirmation`]}
-      >
-        <MockedProvider mocks={[getSystemIntakeQuery()]}>
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/confirmation`,
+      mocks: [getSystemIntakeQuery()]
+    });
+
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
@@ -208,19 +195,11 @@ describe('The System Intake page', () => {
   });
 
   it('renders intake view page', async () => {
-    render(
-      <MemoryRouter initialEntries={[`/system/${systemIntake.id}/view`]}>
-        <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
-        >
-          <MessageProvider>
-            <Route path="/system/:systemId/:formPage">
-              <SystemIntake />
-            </Route>
-          </MessageProvider>
-        </MockedProvider>
-      </MemoryRouter>
-    );
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/view`,
+      mocks: [getSystemIntakeQuery(), getSystemIntakeContactsQuery()]
+    });
+
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
@@ -232,15 +211,11 @@ describe('The System Intake page', () => {
   });
 
   it('renders not found page for unrecognized route', async () => {
-    render(
-      <MemoryRouter initialEntries={[`/system/${systemIntake.id}/mumbo-jumbo`]}>
-        <MockedProvider mocks={[getSystemIntakeQuery()]}>
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/mumbo-jumbo`,
+      mocks: [getSystemIntakeQuery()]
+    });
+
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
@@ -265,15 +240,12 @@ describe('The System Intake page', () => {
         }
       }
     };
-    render(
-      <MemoryRouter initialEntries={[`/system/${systemIntake.id}/mumbo-jumbo`]}>
-        <MockedProvider mocks={[invalidIntakeQuery]}>
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
+
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/mumbo-jumbo`,
+      mocks: [invalidIntakeQuery]
+    });
+
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
@@ -285,23 +257,14 @@ describe('The System Intake page', () => {
   });
 
   it('renders feedback banner if edits are requested', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/system/${systemIntake.id}/request-details`]}
-      >
-        <MockedProvider
-          mocks={[
-            getSystemIntakeQuery({
-              requestFormState: SystemIntakeFormState.EDITS_REQUESTED
-            })
-          ]}
-        >
-          <Route path="/system/:systemId/:formPage">
-            <SystemIntake />
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/request-details`,
+      mocks: [
+        getSystemIntakeQuery({
+          requestFormState: SystemIntakeFormState.EDITS_REQUESTED
+        })
+      ]
+    });
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 

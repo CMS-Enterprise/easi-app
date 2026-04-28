@@ -3,9 +3,9 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import {
-  GetCedarSystemDocument,
-  GetCedarSystemQuery,
-  GetCedarSystemQueryVariables
+  GetSystemWorkspaceDocument,
+  GetSystemWorkspaceQuery,
+  GetSystemWorkspaceQueryVariables
 } from 'gql/generated/graphql';
 
 import { MockedQuery } from 'types/util';
@@ -20,35 +20,45 @@ vi.mock('launchdarkly-react-client-sdk', () => ({
   })
 }));
 
-const cedarSystem: GetCedarSystemQuery['cedarSystem'] = {
-  __typename: 'CedarSystem',
-  id: '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}',
-  name: 'Office of Funny Walks',
-  description:
-    'Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet.',
-  acronym: 'OFW',
-  status: null,
-  businessOwnerOrg: 'Information Systems Team',
-  businessOwnerOrgComp: 'IST',
-  systemMaintainerOrg: 'Division of Quality Assurance',
-  systemMaintainerOrgComp: 'DQA',
-  isBookmarked: false
-};
+vi.mock('contexts/SystemSectionLockContext', () => ({
+  __esModule: true,
+  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useSystemSectionLockContext: () => ({
+    systemProfileSectionLocks: [],
+    loading: false
+  })
+}));
 
-const getCedarSystemQuery: MockedQuery<
-  GetCedarSystemQuery,
-  GetCedarSystemQueryVariables
+const cedarSystemId = '11AB1A00-1234-5678-ABC1-1A001B00CC1B';
+const cedarSystemName = 'Office of Funny Walks';
+
+const getSystemWorkspaceQuery: MockedQuery<
+  GetSystemWorkspaceQuery,
+  GetSystemWorkspaceQueryVariables
 > = {
   request: {
-    query: GetCedarSystemDocument,
+    query: GetSystemWorkspaceDocument,
     variables: {
-      id: '000-100-0'
+      cedarSystemId
     }
   },
   result: {
     data: {
       __typename: 'Query',
-      cedarSystem
+      cedarAuthorityToOperate: [],
+      cedarSystemDetails: {
+        __typename: 'CedarSystemDetails',
+        isMySystem: true,
+        cedarSystem: {
+          __typename: 'CedarSystem',
+          id: cedarSystemId,
+          name: cedarSystemName,
+          isBookmarked: false,
+          linkedTrbRequests: [],
+          linkedSystemIntakes: []
+        },
+        roles: []
+      }
     }
   }
 };
@@ -59,8 +69,8 @@ describe('EditSystemProfile', () => {
   it('renders the system name', async () => {
     render(
       <Provider store={store}>
-        <VerboseMockedProvider mocks={[getCedarSystemQuery]}>
-          <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+        <VerboseMockedProvider mocks={[getSystemWorkspaceQuery]}>
+          <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/edit`]}>
             <Route path="/systems/:systemId/edit">
               <EditSystemProfile />
             </Route>
@@ -69,24 +79,25 @@ describe('EditSystemProfile', () => {
       </Provider>
     );
 
-    await screen.findByText(`for ${cedarSystem.name}`);
+    await screen.findByText(`for ${cedarSystemName}`);
   });
 
   it('renders page not found for invalid system id', async () => {
     const invalidCedarSystemQuery: MockedQuery<
-      GetCedarSystemQuery,
-      GetCedarSystemQueryVariables
+      GetSystemWorkspaceQuery,
+      GetSystemWorkspaceQueryVariables
     > = {
       request: {
-        query: GetCedarSystemDocument,
+        query: GetSystemWorkspaceDocument,
         variables: {
-          id: 'invalid'
+          cedarSystemId: 'invalid'
         }
       },
       result: {
         data: {
           __typename: 'Query',
-          cedarSystem: null
+          cedarAuthorityToOperate: [],
+          cedarSystemDetails: null
         }
       }
     };
