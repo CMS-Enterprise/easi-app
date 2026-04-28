@@ -20,6 +20,15 @@ const loginAs = ({ name, role } = {}) => {
   cy.localLogin({ name, role });
 };
 
+const localAuthHeader = ({ name, role, allowEasi = true }) => ({
+  authorization: `Local ${JSON.stringify({
+    euaId: name,
+    jobCodes: role ? [role] : [],
+    favorLocalAuth: true,
+    allowEasi
+  })}`
+});
+
 const requesterFormRoutes = {
   contactDetails: `/system/${requesterFormIntakeId}/contact-details`,
   requestDetails: `/system/${requesterFormIntakeId}/request-details`,
@@ -47,17 +56,24 @@ describe('System intake permissions', () => {
   it('lets an IT Gov admin query requester update email data', () => {
     loginAs(admin);
 
-    cy.request('POST', '/api/graph/query', {
-      operationName: 'GetRequesterUpdateEmailData',
-      query: `
-        query GetRequesterUpdateEmailData {
-          requesterUpdateEmailData {
-            requesterEmail
+    cy.request({
+      method: 'POST',
+      url: '/api/graph/query',
+      headers: localAuthHeader(admin),
+      body: {
+        operationName: 'GetRequesterUpdateEmailData',
+        query: `
+          query GetRequesterUpdateEmailData {
+            requesterUpdateEmailData {
+              requesterEmail
+            }
           }
-        }
-      `
+        `
+      }
     }).then(({ body }) => {
       expect(body.errors).to.equal(undefined);
+      expect(body).to.have.property('data');
+      expect(body.data).to.have.property('requesterUpdateEmailData');
       expect(body.data.requesterUpdateEmailData).to.be.an('array');
     });
   });
@@ -69,6 +85,7 @@ describe('System intake permissions', () => {
       method: 'POST',
       url: '/api/graph/query',
       failOnStatusCode: false,
+      headers: localAuthHeader(owner),
       body: {
         operationName: 'GetRequesterUpdateEmailData',
         query: `
@@ -81,7 +98,7 @@ describe('System intake permissions', () => {
       }
     }).then(({ body, status }) => {
       expect(status).to.equal(200);
-      expect(body.data).to.equal(null);
+      expect(body.data ?? null).to.equal(null);
       expect(body.errors[0].message).to.contain('User is unauthorized');
     });
   });

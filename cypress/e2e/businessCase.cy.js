@@ -4,10 +4,16 @@ describe('The Business Case Form', () => {
   });
 
   it('fills out all Business Case fields', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetRequests') {
+        req.alias = 'getRequests';
+      }
+    });
+
     cy.visit('/');
-    cy.get('.requests-table')
-      .contains('a', 'Easy Access to System Information')
-      .click();
+    cy.contains('h3', 'My open requests');
+    cy.wait('@getRequests');
+    cy.contains('a', 'Easy Access to System Information').click();
     cy.contains('h1', 'Governance task list');
 
     cy.get('li[data-testid="prepare-a-draft-business-case"]')

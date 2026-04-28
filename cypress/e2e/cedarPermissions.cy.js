@@ -1,5 +1,5 @@
 const localAuthHeader = ({ name, role, allowEasi = true }) => ({
-  Authorization: `Local ${JSON.stringify({
+  authorization: `Local ${JSON.stringify({
     euaId: name,
     jobCodes: role ? [role] : [],
     favorLocalAuth: true,
@@ -26,6 +26,8 @@ describe('CEDAR permissions', () => {
     }).then(({ body, status }) => {
       expect(status).to.equal(200);
       expect(body.errors).to.equal(undefined);
+      expect(body).to.have.property('data');
+      expect(body.data).to.have.property('cedarSystems');
       expect(body.data.cedarSystems).to.be.an('array');
     });
   });
@@ -48,7 +50,7 @@ describe('CEDAR permissions', () => {
       }
     }).then(({ body, status }) => {
       expect(status).to.equal(200);
-      expect(body.data).to.equal(null);
+      expect(body.data ?? null).to.equal(null);
       expect(body.errors[0].message).to.contain('User is unauthorized');
     });
   });
@@ -71,7 +73,7 @@ describe('CEDAR permissions', () => {
       }
     }).then(({ body, status }) => {
       expect(status).to.equal(200);
-      expect(body.data).to.equal(null);
+      expect(body.data ?? null).to.equal(null);
       expect(body.errors[0].message).to.contain('User is unauthorized');
     });
   });
