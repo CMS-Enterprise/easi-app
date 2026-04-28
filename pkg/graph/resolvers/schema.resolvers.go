@@ -1793,6 +1793,10 @@ func (r *queryResolver) CompareGRBReviewersByIntakeID(ctx context.Context, id uu
 
 // CedarAuthorityToOperate is the resolver for the cedarAuthorityToOperate field.
 func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarAuthorityToOperate, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1803,6 +1807,10 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 
 // CedarBudget is the resolver for the cedarBudget field.
 func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarBudget, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarBudget, err := r.cedarCoreClient.GetBudgetBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1813,6 +1821,10 @@ func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID uuid.UUID
 
 // CedarBudgetSystemCost is the resolver for the cedarBudgetSystemCost field.
 func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarBudgetSystemCost, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarBudgetSystemCost, err := r.cedarCoreClient.GetBudgetSystemCostBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1823,6 +1835,10 @@ func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID
 
 // CedarPersonsByCommonName is the resolver for the cedarPersonsByCommonName field.
 func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	response, err := r.service.SearchCommonNameContains(ctx, commonName)
 	if err != nil {
 		return nil, err
@@ -1833,6 +1849,10 @@ func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName
 
 // CedarSoftwareProducts is the resolver for the cedarSoftwareProducts field.
 func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSoftwareProducts, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarSoftwareProducts, err := r.cedarCoreClient.GetSoftwareProductsBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1842,6 +1862,10 @@ func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID
 
 // CedarSubSystems is the resolver for the cedarSubSystems field.
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarSubSystem, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithSubSystems(cedarSystemID))
 	if err != nil {
 		return nil, err
@@ -1862,11 +1886,19 @@ func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID uuid.
 
 // CedarContractsBySystem is the resolver for the cedarContractsBySystem field.
 func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarContract, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	return r.cedarCoreClient.GetContractBySystem(ctx, cedarSystemID)
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
 func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarSystemBookmarks, err := r.store.FetchCedarSystemBookmarks(ctx)
 	if err != nil {
 		return nil, err
@@ -1876,6 +1908,10 @@ func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.Ced
 
 // CedarThreat is the resolver for the cedarThreat field.
 func (r *queryResolver) CedarThreat(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarThreat, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarThreat, err := r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1885,6 +1921,10 @@ func (r *queryResolver) CedarThreat(ctx context.Context, cedarSystemID uuid.UUID
 
 // Deployments is the resolver for the deployments field.
 func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID uuid.UUID, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	var optionalParams *cedarcore.GetDeploymentsOptionalParams
 	if deploymentType != nil || state != nil || status != nil {
 		optionalParams = &cedarcore.GetDeploymentsOptionalParams{}
@@ -1940,6 +1980,10 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID uuid.UUID, role
 
 // Exchanges is the resolver for the exchanges field.
 func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarExchange, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	exchanges, err := r.cedarCoreClient.GetExchangesBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1950,6 +1994,10 @@ func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID uuid.UUID) 
 
 // Urls is the resolver for the urls field.
 func (r *queryResolver) Urls(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarURL, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarURLs, err := r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -2011,6 +2059,10 @@ func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models
 
 // RequesterUpdateEmailData is the resolver for the requesterUpdateEmailData field.
 func (r *queryResolver) RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
+	if !appcontext.Principal(ctx).AllowGRT() {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch requester update email data")}
+	}
+
 	return GetRequesterUpdateEmailData(ctx, r.store, r.service.FetchUserInfos)
 }
 

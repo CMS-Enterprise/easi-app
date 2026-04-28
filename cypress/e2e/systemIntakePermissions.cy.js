@@ -44,6 +44,48 @@ const reviewedIntakeRoutes = {
 };
 
 describe('System intake permissions', () => {
+  it('lets an IT Gov admin query requester update email data', () => {
+    loginAs(admin);
+
+    cy.request('POST', '/api/graph/query', {
+      operationName: 'GetRequesterUpdateEmailData',
+      query: `
+        query GetRequesterUpdateEmailData {
+          requesterUpdateEmailData {
+            requesterEmail
+          }
+        }
+      `
+    }).then(({ body }) => {
+      expect(body.errors).to.equal(undefined);
+      expect(body.data.requesterUpdateEmailData).to.be.an('array');
+    });
+  });
+
+  it('blocks a non-GRT user from querying requester update email data', () => {
+    loginAs(owner);
+
+    cy.request({
+      method: 'POST',
+      url: '/api/graph/query',
+      failOnStatusCode: false,
+      body: {
+        operationName: 'GetRequesterUpdateEmailData',
+        query: `
+          query GetRequesterUpdateEmailData {
+            requesterUpdateEmailData {
+              requesterEmail
+            }
+          }
+        `
+      }
+    }).then(({ body, status }) => {
+      expect(status).to.equal(200);
+      expect(body.data).to.equal(null);
+      expect(body.errors[0].message).to.contain('User is unauthorized');
+    });
+  });
+
   it('lets the owner access requester intake form pages and the relation-management entry point', () => {
     loginAs(owner);
 

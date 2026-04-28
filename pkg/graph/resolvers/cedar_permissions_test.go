@@ -9,6 +9,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -41,6 +42,7 @@ func (s *ResolverSuite) cedarMutationResolver() *mutationResolver {
 }
 
 func (s *ResolverSuite) cedarQueryResolver() *queryResolver {
+	okta := local.NewOktaAPIClient()
 	cedarCoreClient := cedarcore.NewClient(
 		appcontext.WithLogger(context.Background(), s.testConfigs.Logger),
 		"fake",
@@ -52,6 +54,10 @@ func (s *ResolverSuite) cedarQueryResolver() *queryResolver {
 
 	return &queryResolver{
 		&Resolver{
+			store: s.testConfigs.Store,
+			service: ResolverService{
+				SearchCommonNameContains: okta.SearchCommonNameContains,
+			},
 			cedarCoreClient: cedarCoreClient,
 		},
 	}
@@ -245,4 +251,58 @@ func (s *ResolverSuite) TestCEDARLinkedRequestVisibility() {
 	outsiderIntakeResults, err := resolver.LinkedSystemIntakes(outsiderCtx, cedarSystem, models.SystemIntakeStateOpen)
 	s.NoError(err)
 	s.Empty(outsiderIntakeResults)
+}
+
+func (s *ResolverSuite) TestCEDARReadQueryPermissions() {
+	resolver := s.cedarQueryResolver()
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+
+	easiCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	nonEasiCtx := appcontext.WithPrincipal(s.ctxWithNewDataloaders(), &authentication.EUAPrincipal{
+		EUAID:       "ZZZZ",
+		UserAccount: &authentication.UserAccount{Username: "ZZZZ"},
+	})
+
+	s.NoError(authorizeUserCanAccessCEDARReadQueries(easiCtx))
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	err := authorizeUserCanAccessCEDARReadQueries(nonEasiCtx)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+	unauthorizedErr = nil
+
+	systems, err := resolver.CedarSystems(easiCtx)
+	s.NoError(err)
+	s.NotNil(systems)
+
+	_, err = resolver.CedarSystems(nonEasiCtx)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+	unauthorizedErr = nil
+
+	systemDetails, err := resolver.CedarSystemDetails(easiCtx, cedarSystemID)
+	s.NoError(err)
+	s.NotNil(systemDetails)
+
+	_, err = resolver.CedarSystemDetails(nonEasiCtx, cedarSystemID)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+	unauthorizedErr = nil
+
+	bookmarks, err := resolver.CedarSystemBookmarks(easiCtx)
+	s.NoError(err)
+	s.NotNil(bookmarks)
+
+	_, err = resolver.CedarSystemBookmarks(nonEasiCtx)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+	unauthorizedErr = nil
+
+	contacts, err := resolver.CedarPersonsByCommonName(easiCtx, "AB")
+	s.NoError(err)
+	s.NotNil(contacts)
+
+	_, err = resolver.CedarPersonsByCommonName(nonEasiCtx, "AB")
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
 }

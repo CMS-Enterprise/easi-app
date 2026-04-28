@@ -78,6 +78,14 @@ func authorizeUserCanAccessCEDARTeamMetadata(
 	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar team metadata")}
 }
 
+func authorizeUserCanAccessCEDARReadQueries(ctx context.Context) error {
+	if appcontext.Principal(ctx).AllowEASi() {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar read queries")}
+}
+
 func authorizeUserCanManageCEDARSystemTeam(
 	ctx context.Context,
 	cedarCoreClient *cedarcore.Client,

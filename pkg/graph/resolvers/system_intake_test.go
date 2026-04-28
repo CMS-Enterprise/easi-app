@@ -2,10 +2,12 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"slices"
 	"time"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -227,5 +229,29 @@ func (s *ResolverSuite) TestGetRequesterUpdateEmailData() {
 	_, err := GetRequesterUpdateEmailData(ctx, store, func(ctx context.Context, strings []string) ([]*models.UserInfo, error) {
 		return nil, nil
 	})
+	s.NoError(err)
+}
+
+func (s *ResolverSuite) TestRequesterUpdateEmailDataAuthorization() {
+	store := s.testConfigs.Store
+
+	resolver := &queryResolver{&Resolver{
+		store: store,
+		service: ResolverService{
+			FetchUserInfos: func(ctx context.Context, euaIDs []string) ([]*models.UserInfo, error) {
+				return nil, nil
+			},
+		},
+	}}
+
+	nonAdminCtx, _ := s.getTestContextWithPrincipal("USR1", false)
+	_, err := resolver.RequesterUpdateEmailData(nonAdminCtx)
+	s.Error(err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
+
+	adminCtx, _ := s.getTestContextWithPrincipal("ABCD", true)
+	_, err = resolver.RequesterUpdateEmailData(adminCtx)
 	s.NoError(err)
 }

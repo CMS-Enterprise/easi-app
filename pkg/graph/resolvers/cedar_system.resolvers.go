@@ -150,6 +150,10 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 
 // CedarSystem is the resolver for the cedarSystem field.
 func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -160,6 +164,10 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx)
 	if err != nil {
 		return nil, err
@@ -170,6 +178,10 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	requesterEUAID := appcontext.Principal(ctx).ID()
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(requesterEUAID))
 	if err != nil {
@@ -181,6 +193,10 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 
 // CedarSystemDetails is the resolver for the cedarSystemDetails field.
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error) {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	// TODO: consider refactoring this to work with the main CEDAR system implementation instead of using go funcs
 	logger := appcontext.ZLogger(ctx)
 

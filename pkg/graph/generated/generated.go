@@ -11221,24 +11221,30 @@ type Query {
   trbRequestLcidOptions(trbRequestID: UUID!): [SystemIntakeLCIDOption!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
   cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]
-  cedarBudget(cedarSystemID: UUID!): [CedarBudget!]
+    @hasRole(role: EASI_USER)
+  cedarBudget(cedarSystemID: UUID!): [CedarBudget!] @hasRole(role: EASI_USER)
   cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
+    @hasRole(role: EASI_USER)
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
+    @hasRole(role: EASI_USER)
   cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
+    @hasRole(role: EASI_USER)
   cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]
+    @hasRole(role: EASI_USER)
   cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]
-  cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]
+    @hasRole(role: EASI_USER)
+  cedarSystemBookmarks: [CedarSystemBookmark!]! @hasRole(role: EASI_USER)
+  cedarThreat(cedarSystemId: UUID!): [CedarThreat!] @hasRole(role: EASI_USER)
   deployments(
     cedarSystemId: UUID!
     deploymentType: String
     state: String
     status: String
-  ): [CedarDeployment!]
+  ): [CedarDeployment!] @hasRole(role: EASI_USER)
   roleTypes: [CedarRoleType!]!
   roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]
-  exchanges(cedarSystemId: UUID!): [CedarExchange!]
-  urls(cedarSystemId: UUID!): [CedarURL!]
+  exchanges(cedarSystemId: UUID!): [CedarExchange!] @hasRole(role: EASI_USER)
+  urls(cedarSystemId: UUID!): [CedarURL!] @hasRole(role: EASI_USER)
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """
@@ -11250,6 +11256,7 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
+    @hasRole(role: EASI_GOVTEAM)
   systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
   systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
 }
@@ -11675,15 +11682,16 @@ type CedarSystemDetails {
 }
 
 extend type Query {
-  cedarSystem(cedarSystemId: UUID!): CedarSystem
-  cedarSystems: [CedarSystem!]
-  myCedarSystems: [CedarSystem!]
+  cedarSystem(cedarSystemId: UUID!): CedarSystem @hasRole(role: EASI_USER)
+  cedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
+  myCedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
 
   """
   Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
   TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
   """
   cedarSystemDetails(cedarSystemId: UUID!): CedarSystemDetails
+    @hasRole(role: EASI_USER)
 }
 `, BuiltIn: false},
 	{Name: "../schema/types/current_user.graphql", Input: `"""
@@ -33539,7 +33547,25 @@ func (ec *executionContext) _Query_cedarAuthorityToOperate(ctx context.Context, 
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarAuthorityToOperate(ctx, fc.Args["cedarSystemID"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarAuthorityToOperate
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarAuthorityToOperate
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ,
 		true,
 		false,
@@ -33640,7 +33666,25 @@ func (ec *executionContext) _Query_cedarBudget(ctx context.Context, field graphq
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarBudget(ctx, fc.Args["cedarSystemID"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarBudget
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarBudget
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ,
 		true,
 		false,
@@ -33701,7 +33745,25 @@ func (ec *executionContext) _Query_cedarBudgetSystemCost(ctx context.Context, fi
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarBudgetSystemCost(ctx, fc.Args["cedarSystemID"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal *models.CedarBudgetSystemCost
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal *models.CedarBudgetSystemCost
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarBudgetSystemCost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetSystemCost,
 		true,
 		false,
@@ -33746,7 +33808,25 @@ func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context,
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarPersonsByCommonName(ctx, fc.Args["commonName"].(string))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.UserInfo
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.UserInfo
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalNUserInfo2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfoᚄ,
 		true,
 		true,
@@ -33799,7 +33879,25 @@ func (ec *executionContext) _Query_cedarSoftwareProducts(ctx context.Context, fi
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarSoftwareProducts(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal *models.CedarSoftwareProducts
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal *models.CedarSoftwareProducts
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarSoftwareProducts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSoftwareProducts,
 		true,
 		false,
@@ -33870,7 +33968,25 @@ func (ec *executionContext) _Query_cedarSubSystems(ctx context.Context, field gr
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarSubSystems(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarSubSystem
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarSubSystem
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ,
 		true,
 		false,
@@ -33921,7 +34037,25 @@ func (ec *executionContext) _Query_cedarContractsBySystem(ctx context.Context, f
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarContractsBySystem(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarContract
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarContract
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarContract2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContractᚄ,
 		true,
 		false,
@@ -33981,7 +34115,25 @@ func (ec *executionContext) _Query_cedarSystemBookmarks(ctx context.Context, fie
 		func(ctx context.Context) (any, error) {
 			return ec.resolvers.Query().CedarSystemBookmarks(ctx)
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarSystemBookmark
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarSystemBookmark
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalNCedarSystemBookmark2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmarkᚄ,
 		true,
 		true,
@@ -34017,7 +34169,25 @@ func (ec *executionContext) _Query_cedarThreat(ctx context.Context, field graphq
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarThreat(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarThreat
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarThreat
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ,
 		true,
 		false,
@@ -34074,7 +34244,25 @@ func (ec *executionContext) _Query_deployments(ctx context.Context, field graphq
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().Deployments(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["deploymentType"].(*string), fc.Args["state"].(*string), fc.Args["status"].(*string))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarDeployment
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarDeployment
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ,
 		true,
 		false,
@@ -34267,7 +34455,25 @@ func (ec *executionContext) _Query_exchanges(ctx context.Context, field graphql.
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().Exchanges(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarExchange
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarExchange
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarExchange2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ,
 		true,
 		false,
@@ -34366,7 +34572,25 @@ func (ec *executionContext) _Query_urls(ctx context.Context, field graphql.Colle
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().Urls(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarURL
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarURL
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ,
 		true,
 		false,
@@ -34930,7 +35154,25 @@ func (ec *executionContext) _Query_requesterUpdateEmailData(ctx context.Context,
 		func(ctx context.Context) (any, error) {
 			return ec.resolvers.Query().RequesterUpdateEmailData(ctx)
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+				if err != nil {
+					var zeroVal []*models.RequesterUpdateEmailData
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.RequesterUpdateEmailData
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalNRequesterUpdateEmailData2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailDataᚄ,
 		true,
 		true,
@@ -35086,7 +35328,25 @@ func (ec *executionContext) _Query_cedarSystem(ctx context.Context, field graphq
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarSystem(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal *models.CedarSystem
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal *models.CedarSystem
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem,
 		true,
 		false,
@@ -35164,7 +35424,25 @@ func (ec *executionContext) _Query_cedarSystems(ctx context.Context, field graph
 		func(ctx context.Context) (any, error) {
 			return ec.resolvers.Query().CedarSystems(ctx)
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarSystem
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarSystem
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ,
 		true,
 		false,
@@ -35231,7 +35509,25 @@ func (ec *executionContext) _Query_myCedarSystems(ctx context.Context, field gra
 		func(ctx context.Context) (any, error) {
 			return ec.resolvers.Query().MyCedarSystems(ctx)
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal []*models.CedarSystem
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal []*models.CedarSystem
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ,
 		true,
 		false,
@@ -35299,7 +35595,25 @@ func (ec *executionContext) _Query_cedarSystemDetails(ctx context.Context, field
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarSystemDetails(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
-		nil,
+		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
+			directive0 := next
+
+			directive1 := func(ctx context.Context) (any, error) {
+				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+				if err != nil {
+					var zeroVal *models.CedarSystemDetails
+					return zeroVal, err
+				}
+				if ec.directives.HasRole == nil {
+					var zeroVal *models.CedarSystemDetails
+					return zeroVal, errors.New("directive hasRole is not implemented")
+				}
+				return ec.directives.HasRole(ctx, nil, directive0, role)
+			}
+
+			next = directive1
+			return next
+		},
 		ec.marshalOCedarSystemDetails2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemDetails,
 		true,
 		false,
