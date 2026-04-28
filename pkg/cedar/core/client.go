@@ -48,7 +48,7 @@ var (
 
 // PurgeCacheByPath purges the Proxy Cache by URL using a given path
 func (c *Client) PurgeCacheByPath(ctx context.Context, path string) error {
-	if c.skipPurge {
+	if c.mockEnabled || c.skipPurge {
 		return nil
 	}
 	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
