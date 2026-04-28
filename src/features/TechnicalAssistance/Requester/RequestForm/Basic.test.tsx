@@ -43,6 +43,10 @@ const mockEmptyFormFields = {
 const mockTrbRequestData: GetTRBRequestQuery['trbRequest'] = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Draft',
+  requesterInfo: {
+    __typename: 'UserInfo',
+    euaUserId: 'ABCD'
+  },
   form: {
     ...mockEmptyFormFields,
     id: '452cf444-69b2-41a9-b8ab-ed354d209307',
@@ -103,6 +107,10 @@ describe('Trb Request form: Basic', () => {
               request={{
                 id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
                 name: 'Draft',
+                requesterInfo: {
+                  __typename: 'UserInfo',
+                  euaUserId: 'ABCD'
+                },
                 form: {
                   ...mockEmptyFormFields,
                   id: '452cf444-69b2-41a9-b8ab-ed354d209307',

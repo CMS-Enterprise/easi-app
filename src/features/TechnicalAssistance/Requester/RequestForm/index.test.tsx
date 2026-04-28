@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestQuery,
@@ -123,5 +123,32 @@ describe('TRB Request Form Feedback', () => {
     expect(sortedDates[1]).toHaveTextContent('January 30, 2023');
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('prevents a non-requester from viewing the requester form', async () => {
+    const store = easiMockStore({
+      euaUserId: 'TEST',
+      groups: ['EASI_TRB_ADMIN_D']
+    });
+
+    render(
+      <MemoryRouter
+        initialEntries={[`/trb/requests/${mockTrbRequestId}/basic`]}
+      >
+        <MockedProvider mocks={[getTrbRequestQuery]}>
+          <Route exact path="/trb/requests/:id/:step?/:view?">
+            <Provider store={store}>
+              <RequestForm />
+            </Provider>
+          </Route>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByRole('heading', {
+        name: i18next.t<string>('error:notFound.heading')
+      })
+    ).toBeInTheDocument();
   });
 });

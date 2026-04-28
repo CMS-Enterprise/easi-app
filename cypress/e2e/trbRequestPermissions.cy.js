@@ -4,6 +4,7 @@ const unrelatedUser = { name: 'USR2' };
 const trbLead = { name: 'TEST' };
 
 const requestNames = {
+  draft: 'Case 1 - Draft request form',
   completed: 'Case 2 - Request form complete',
   draftGuidanceLetter: 'Case 6 - Draft guidance letter',
   completedGuidanceLetter: 'Case 9 - Guidance letter sent',
@@ -23,6 +24,7 @@ const relatedLcidsLabel =
   'Select any Life Cycle IDs (LCIDs) pertaining to this request.';
 
 const requestUrls = {
+  draft: null,
   completed: null,
   draftGuidanceLetter: null,
   completedGuidanceLetter: null,
@@ -70,6 +72,10 @@ const getRequestUrls = requestName => {
 describe('TRB request permissions', () => {
   before(() => {
     loginAs(owner);
+
+    getRequestUrls(requestNames.draft).then(urls => {
+      requestUrls.draft = urls;
+    });
 
     getRequestUrls(requestNames.completed).then(urls => {
       requestUrls.completed = urls;
@@ -120,7 +126,7 @@ describe('TRB request permissions', () => {
       }
     });
 
-    cy.visit(requestUrls.completed.requesterBasicHref);
+    cy.visit(requestUrls.draft.requesterBasicHref);
     cy.wait('@getTrbRequestLcidOptions');
 
     cy.contains('label', relatedLcidsLabel).should('be.visible');
@@ -149,7 +155,7 @@ describe('TRB request permissions', () => {
       operationNames.push(req.body.operationName);
     });
 
-    cy.visit(requestUrls.completed.requesterBasicHref);
+    cy.visit(requestUrls.draft.requesterBasicHref);
     cy.contains('h1', notFoundHeading).should('be.visible');
 
     cy.then(() => {

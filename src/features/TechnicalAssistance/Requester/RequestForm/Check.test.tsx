@@ -28,6 +28,10 @@ import Check from './Check';
 const mockTrbRequestData: GetTRBRequestQuery['trbRequest'] = {
   id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
   name: 'Lorem ipsum dolor sit amet, consectetur',
+  requesterInfo: {
+    __typename: 'UserInfo',
+    euaUserId: requester.userInfo.euaUserId
+  },
   state: TRBRequestState.OPEN,
   taskStatuses: {
     __typename: 'TRBTaskStatuses',

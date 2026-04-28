@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ApolloQueryResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
@@ -12,6 +13,7 @@ import {
   useGetTRBRequestQuery
 } from 'gql/generated/graphql';
 import { isEqual } from 'lodash';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -294,6 +296,12 @@ function RequestForm() {
   const request: GetTRBRequestQuery['trbRequest'] | undefined =
     data?.trbRequest;
 
+  const { euaId, isUserSet } = useSelector(
+    (appState: AppState) => appState.auth
+  );
+
+  const isRequester = isUserSet && euaId === request?.requesterInfo.euaUserId;
+
   const {
     data: { requester }
   } = useTRBAttendees(id);
@@ -450,16 +458,20 @@ function RequestForm() {
     }
   }, [formAlert]);
 
-  if (!step || taskListUrl === null) {
+  if (!step) {
     return null;
   }
 
-  if (error) {
+  if (error || (!loading && !request) || (request && !isRequester)) {
     return (
       <GridContainer className="width-full">
         <NotFoundPartial />
       </GridContainer>
     );
+  }
+
+  if (taskListUrl === null) {
+    return <PageLoading />;
   }
 
   // Return early on certain slugs that are not form steps
@@ -530,7 +542,7 @@ function RequestForm() {
           />
         </GridContainer>
       ) : (
-        loading && <PageLoading />
+        <PageLoading />
       )}
     </>
   );
