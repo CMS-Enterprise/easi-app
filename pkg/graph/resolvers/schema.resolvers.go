@@ -1756,10 +1756,6 @@ func (r *queryResolver) MySystemIntakes(ctx context.Context) ([]*models.SystemIn
 
 // SystemIntakesWithReviewRequested is the resolver for the systemIntakesWithReviewRequested field.
 func (r *queryResolver) SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error) {
-	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
-		return nil, err
-	}
-
 	return SystemIntakesWithReviewRequested(ctx, r.store)
 }
 
@@ -2441,7 +2437,7 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 
 // SystemIntakeSystems is the resolver for the systemIntakeSystems field.
 func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
-	if err := authorizeUserCanManageSystemIntakeRelations(ctx, obj); err != nil {
+	if err := authorizeUserCanViewSystemIntake(ctx, r.store, obj); err != nil {
 		return nil, err
 	}
 

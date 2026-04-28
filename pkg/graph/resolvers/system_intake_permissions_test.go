@@ -282,11 +282,10 @@ func (s *ResolverSuite) TestSystemIntakeNestedFieldPermissions() {
 	_, err = typeResolver.Contacts(reviewerCtx, intake)
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
-	unauthorizedErr = nil
 
-	_, err = typeResolver.SystemIntakeSystems(reviewerCtx, intake)
-	s.Error(err)
-	s.True(errors.As(err, &unauthorizedErr))
+	linkedSystems, err = typeResolver.SystemIntakeSystems(reviewerCtx, intake)
+	s.NoError(err)
+	s.NotEmpty(linkedSystems)
 }
 
 func (s *ResolverSuite) TestSystemIntakeRequesterWorkflowPermissions() {
@@ -516,6 +515,14 @@ func (s *ResolverSuite) TestSystemIntakeAdminListQueryPermissions() {
 	s.NoError(err)
 	s.NotNil(reviewRequested)
 
+	ownerReviewRequested, err := queryResolver.SystemIntakesWithReviewRequested(ownerCtx)
+	s.NoError(err)
+	s.Empty(ownerReviewRequested)
+
+	reviewerReviewRequested, err := queryResolver.SystemIntakesWithReviewRequested(reviewerCtx)
+	s.NoError(err)
+	s.NotEmpty(reviewerReviewRequested)
+
 	lcidIntakes, err := queryResolver.SystemIntakesWithLcids(adminCtx)
 	s.NoError(err)
 	s.NotNil(lcidIntakes)
@@ -524,11 +531,6 @@ func (s *ResolverSuite) TestSystemIntakeAdminListQueryPermissions() {
 		var unauthorizedErr *apperrors.UnauthorizedError
 
 		_, err = queryResolver.SystemIntakes(unauthorizedCtx, true)
-		s.Error(err)
-		s.True(errors.As(err, &unauthorizedErr))
-		unauthorizedErr = nil
-
-		_, err = queryResolver.SystemIntakesWithReviewRequested(unauthorizedCtx)
 		s.Error(err)
 		s.True(errors.As(err, &unauthorizedErr))
 		unauthorizedErr = nil
