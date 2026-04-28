@@ -64,7 +64,8 @@ func (s *ResolverSuite) SetupTest() {
 
 func (s *ResolverSuite) getTestContextWithPrincipal(euaID string, isAdmin bool) (context.Context, *authentication.EUAPrincipal) {
 	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, euaID, isAdmin)
-	return appcontext.WithPrincipal(s.testConfigs.Context, princ), princ
+	ctx := s.ctxWithNewDataloaders()
+	return appcontext.WithPrincipal(ctx, princ), princ
 }
 
 // TestResolverSuite runs the resolver test suite

@@ -7,9 +7,11 @@ import (
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testconfig/useraccountstoretestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
@@ -583,7 +585,10 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
-	ctx := s.context
+	principal, principalErr := useraccountstoretestconfigs.GetTestPrincipal(s.store, "TEST", false)
+	s.NoError(principalErr)
+
+	ctx := appcontext.WithPrincipal(s.context, principal)
 
 	intake, intakeErr := CreateSystemIntake(
 		ctx,

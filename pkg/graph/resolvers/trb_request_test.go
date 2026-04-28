@@ -107,7 +107,8 @@ func (s *ResolverSuite) TestTRBRequestGuidanceLetterVisibility() {
 
 	resolver := &tRBRequestResolver{&Resolver{store: s.testConfigs.Store}}
 
-	ownerLetter, err := resolver.GuidanceLetter(s.ctxWithNewDataloaders(), trb)
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+	ownerLetter, err := resolver.GuidanceLetter(ownerCtx, trb)
 	s.NoError(err)
 	s.Nil(ownerLetter)
 
@@ -124,7 +125,8 @@ func (s *ResolverSuite) TestTRBRequestGuidanceLetterVisibility() {
 	)
 	s.NoError(err)
 
-	completedOwnerLetter, err := resolver.GuidanceLetter(s.ctxWithNewDataloaders(), trb)
+	ownerCtx, _ = s.getTestContextWithPrincipal("TEST", false)
+	completedOwnerLetter, err := resolver.GuidanceLetter(ownerCtx, trb)
 	s.NoError(err)
 	s.NotNil(completedOwnerLetter)
 	s.Equal(letter.ID, completedOwnerLetter.ID)
@@ -269,7 +271,7 @@ func (s *ResolverSuite) TestTRBRequestNestedRelationVisibility() {
 	trbResolver := &tRBRequestResolver{resolver}
 	formResolver := &tRBRequestFormResolver{resolver}
 
-	ownerCtx := s.ctxWithNewDataloaders()
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
 
 	visibleRelatedTRBRequests, err := trbResolver.RelatedTRBRequests(ownerCtx, ownerTRB)
 	s.NoError(err)

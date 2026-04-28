@@ -509,11 +509,11 @@ func (s *ResolverSuite) TestSystemIntakeAdminListQueryPermissions() {
 
 	adminOpenIntakes, err := queryResolver.SystemIntakes(adminCtx, true)
 	s.NoError(err)
-	s.NotNil(adminOpenIntakes)
+	s.Empty(adminOpenIntakes)
 
 	reviewRequested, err := queryResolver.SystemIntakesWithReviewRequested(adminCtx)
 	s.NoError(err)
-	s.NotNil(reviewRequested)
+	s.Empty(reviewRequested)
 
 	ownerReviewRequested, err := queryResolver.SystemIntakesWithReviewRequested(ownerCtx)
 	s.NoError(err)
@@ -525,7 +525,7 @@ func (s *ResolverSuite) TestSystemIntakeAdminListQueryPermissions() {
 
 	lcidIntakes, err := queryResolver.SystemIntakesWithLcids(adminCtx)
 	s.NoError(err)
-	s.NotNil(lcidIntakes)
+	s.Empty(lcidIntakes)
 
 	for _, unauthorizedCtx := range []context.Context{ownerCtx, reviewerCtx} {
 		var unauthorizedErr *apperrors.UnauthorizedError
@@ -700,7 +700,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewManagementPermissions() {
 
 	comparisons, err := queryResolver.CompareGRBReviewersByIntakeID(adminCtx, intake.ID)
 	s.NoError(err)
-	s.NotNil(comparisons)
+	s.Empty(comparisons)
 
 	started, err := resolver.StartGRBReview(
 		adminCtx,
@@ -740,8 +740,6 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewerIdentityVisibility() {
 	s.NoError(err)
 
 	reviewerCtx, _ := s.getTestContextWithPrincipal("USR2", false)
-	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
-	adminCtx, _ := s.getTestContextWithPrincipal("ABCD", true)
 
 	_, err = CastSystemIntakeGRBReviewerVote(
 		reviewerCtx,
@@ -753,6 +751,10 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewerIdentityVisibility() {
 		},
 	)
 	s.NoError(err)
+
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+	reviewerCtx, _ = s.getTestContextWithPrincipal("USR2", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("ABCD", true)
 
 	ownerReviewers, err := typeResolver.GrbReviewers(ownerCtx, intake)
 	s.NoError(err)
