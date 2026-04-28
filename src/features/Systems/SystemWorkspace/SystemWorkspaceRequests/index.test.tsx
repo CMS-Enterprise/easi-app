@@ -8,6 +8,9 @@ import {
   GetLinkedRequestsDocument,
   GetLinkedRequestsQuery,
   GetLinkedRequestsQueryVariables,
+  GetSystemWorkspaceDocument,
+  GetSystemWorkspaceQuery,
+  GetSystemWorkspaceQueryVariables,
   SystemIntakeState,
   TRBRequestState
 } from 'gql/generated/graphql';
@@ -23,6 +26,37 @@ import SystemWorkspaceRequests from '.';
 describe('System Workspace Requests Table', () => {
   it('renders open and closed requests', async () => {
     const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
+
+    const getSystemWorkspaceMockedQuery: MockedQuery<
+      GetSystemWorkspaceQuery,
+      GetSystemWorkspaceQueryVariables
+    > = {
+      request: {
+        query: GetSystemWorkspaceDocument,
+        variables: {
+          cedarSystemId
+        }
+      },
+      result: {
+        data: {
+          __typename: 'Query',
+          cedarAuthorityToOperate: [],
+          cedarSystemDetails: {
+            __typename: 'CedarSystemDetails',
+            isMySystem: true,
+            cedarSystem: {
+              __typename: 'CedarSystem',
+              id: cedarSystemId,
+              name: 'Office of Funny Walks',
+              isBookmarked: false,
+              linkedSystemIntakes,
+              linkedTrbRequests
+            },
+            roles: []
+          }
+        }
+      }
+    };
 
     const result: FetchResult<GetLinkedRequestsQuery> = {
       data: {
@@ -70,9 +104,13 @@ describe('System Workspace Requests Table', () => {
     };
 
     const user = userEvent.setup();
-    const { asFragment } = render(
+    render(
       <MockedProvider
         mocks={[
+          getSystemWorkspaceMockedQuery,
+          getSystemWorkspaceMockedQuery,
+          getSystemWorkspaceMockedQuery,
+          getSystemWorkspaceMockedQuery,
           getLinkedRequestsMockedQuery,
           getLinkedRequestsMockedQueryClosed
         ]}
@@ -90,8 +128,11 @@ describe('System Workspace Requests Table', () => {
 
     // Open requests loads first by default
     expect(screen.getByText('Upcoming meeting date')).toBeInTheDocument();
-
-    expect(asFragment()).toMatchSnapshot();
+    expect(
+      await screen.findByText(
+        'Case 14 - Completed request form with Existing System Relation'
+      )
+    ).toBeInTheDocument();
 
     // Click to load closed requests
     const closed = await screen.findByRole('button', {
@@ -103,7 +144,56 @@ describe('System Workspace Requests Table', () => {
     expect(
       await screen.findByText('Most recent meeting date')
     ).toBeInTheDocument();
+  });
 
-    expect(asFragment()).toMatchSnapshot();
+  it('renders not found for a non-team member', async () => {
+    const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
+
+    const getSystemWorkspaceMockedQuery: MockedQuery<
+      GetSystemWorkspaceQuery,
+      GetSystemWorkspaceQueryVariables
+    > = {
+      request: {
+        query: GetSystemWorkspaceDocument,
+        variables: {
+          cedarSystemId
+        }
+      },
+      result: {
+        data: {
+          __typename: 'Query',
+          cedarAuthorityToOperate: [],
+          cedarSystemDetails: {
+            __typename: 'CedarSystemDetails',
+            isMySystem: false,
+            cedarSystem: {
+              __typename: 'CedarSystem',
+              id: cedarSystemId,
+              name: 'Office of Funny Walks',
+              isBookmarked: false,
+              linkedSystemIntakes: [],
+              linkedTrbRequests: []
+            },
+            roles: []
+          }
+        }
+      }
+    };
+
+    render(
+      <MockedProvider mocks={[getSystemWorkspaceMockedQuery]}>
+        <MemoryRouter
+          initialEntries={[`/systems/${cedarSystemId}/workspace/requests`]}
+        >
+          <Route exact path="/systems/:systemId/workspace/requests">
+            <SystemWorkspaceRequests />
+          </Route>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: 'This page cannot be found.' })
+    ).toBeInTheDocument();
   });
 });

@@ -833,6 +833,12 @@ type SystemIntake {
   contacts: SystemIntakeContacts!
 }
 
+type SystemIntakeLCIDOption {
+  id: UUID!
+  lcid: String
+  requestName: String
+}
+
 """
 GRBVotingInformation holds all the information about the voting session for a GRB Review.
 """
@@ -3073,6 +3079,7 @@ type Query {
   mySystemIntakes: [SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
+  trbRequestLcidOptions(trbRequestID: UUID!): [SystemIntakeLCIDOption!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
   cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]
   cedarBudget(cedarSystemID: UUID!): [CedarBudget!]

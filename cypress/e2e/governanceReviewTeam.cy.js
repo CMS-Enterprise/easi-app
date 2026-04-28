@@ -214,6 +214,12 @@ describe('Governance Review Team', () => {
   });
 
   it('can issue an existing Life Cycle ID', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntakesWithLCIDS') {
+        req.alias = 'getSystemIntakesWithLcids';
+      }
+    });
+
     cy.contains('a', 'final biz case submitted').should('be.visible').click();
 
     cy.get('li.usa-sidenav__item a[href*="actions"]').click();
@@ -234,6 +240,9 @@ describe('Governance Review Team', () => {
     const costBaseline = 'Test next steps for issuing existing LCID';
 
     cy.get('#useExistingLcid_true').check({ force: true });
+    cy.wait('@getSystemIntakesWithLcids')
+      .its('response.statusCode')
+      .should('eq', 200);
     cy.get('#useExistingLcid').select(lcid).should('have.value', lcid);
 
     cy.get('#expiresAt').clear();

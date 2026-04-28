@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
@@ -18,6 +19,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import NotFound from 'features/Miscellaneous/NotFound';
 import {
   RequestRelationType,
   useGetSystemIntakeRelationQuery,
@@ -31,6 +33,7 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUnlinkTrbRequestRelationMutation
 } from 'gql/generated/graphql';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -70,6 +73,7 @@ const RequestLinkForm = ({
   const { id } = useParams<{
     id: string;
   }>();
+  const { euaId, isUserSet } = useSelector((state: AppState) => state.auth);
   const history = useHistory();
 
   const { t } = useTranslation([
@@ -192,6 +196,12 @@ const RequestLinkForm = ({
   // Ref fields for some form behavior
   const fields = watch();
   const relation = fields.relationType;
+  const requesterIntake =
+    requestType === 'itgov' && data && 'systemIntake' in data
+      ? data.systemIntake
+      : undefined;
+  const isRequester =
+    isUserSet && euaId === requesterIntake?.requester?.userAccount.username;
 
   // This form doesn't use field validation feedback
   // Instead the submission button is disabled according to field requirements
@@ -320,6 +330,16 @@ const RequestLinkForm = ({
       );
     }
   };
+
+  if (
+    !relationLoading &&
+    requestType === 'itgov' &&
+    !fromAdmin &&
+    data &&
+    !isRequester
+  ) {
+    return <NotFound />;
+  }
 
   return (
     <MainContent className="grid-container margin-bottom-15">

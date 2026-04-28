@@ -246,7 +246,7 @@ const RequestOverview = () => {
                   />
                 )}
 
-                {flags?.grbReviewTab && (
+                {flags?.grbReviewTab && isITGovAdmin && (
                   <Route
                     path="/it-governance/:systemId/grb-review/presentation-deck-upload"
                     render={() => <PresentationDeckUpload type="admin" />}

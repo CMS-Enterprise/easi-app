@@ -203,6 +203,10 @@ func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	updatedIntake, err := ProgressIntake(
 		ctx,
 		r.store,
@@ -222,6 +226,10 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	intake, err := CreateSystemIntakeActionRequestEdits(
 		ctx,
 		r.store,
@@ -237,6 +245,10 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 // CreateSystemIntakeActionExpireLcid is the resolver for the createSystemIntakeActionExpireLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Context, input models.SystemIntakeExpireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -259,6 +271,10 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	intake, err := UpdateLCID(
 		ctx,
 		r.store,
@@ -275,6 +291,10 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 // CreateSystemIntakeActionRetireLcid is the resolver for the createSystemIntakeActionRetireLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Context, input models.SystemIntakeRetireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -297,6 +317,10 @@ func (r *mutationResolver) CreateSystemIntakeActionUnretireLcid(ctx context.Cont
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	intake, err := UnretireLCID(
 		ctx,
 		r.store,
@@ -313,6 +337,10 @@ func (r *mutationResolver) CreateSystemIntakeActionUnretireLcid(ctx context.Cont
 // CreateSystemIntakeActionChangeLCIDRetirementDate is the resolver for the createSystemIntakeActionChangeLCIDRetirementDate field.
 func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input models.SystemIntakeChangeLCIDRetirementDateInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -335,6 +363,10 @@ func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Conte
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	intake, err := ConfirmLCID(
 		ctx,
 		r.store,
@@ -351,6 +383,10 @@ func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Conte
 // CreateSystemIntakeActionIssueLcid is the resolver for the createSystemIntakeActionIssueLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input models.SystemIntakeIssueLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -373,6 +409,10 @@ func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Cont
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	updatedIntake, err := RejectIntakeAsNotApproved(
 		ctx,
 		r.store,
@@ -389,6 +429,10 @@ func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Cont
 // CreateSystemIntakeActionReopenRequest is the resolver for the createSystemIntakeActionReopenRequest field.
 func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Context, input models.SystemIntakeReopenRequestInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -410,6 +454,10 @@ func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Cont
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	intake, err := CreateSystemIntakeActionCloseRequest(
 		ctx,
 		r.store,
@@ -425,6 +473,10 @@ func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Cont
 // CreateSystemIntakeActionNotITGovRequest is the resolver for the createSystemIntakeActionNotITGovRequest field.
 func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.Context, input models.SystemIntakeNotITGovReqInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -446,12 +498,20 @@ func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input mod
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	return CreateSystemIntakeNote(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeNote is the resolver for the updateSystemIntakeNote field.
 func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input models.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -473,6 +533,15 @@ func (r *mutationResolver) UpdateSystemIntakeRequestType(ctx context.Context, id
 		return nil, err
 	}
 
+	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return UpdateSystemIntakeRequestType(ctx, r.store, id, newType)
 }
 
@@ -482,12 +551,25 @@ func (r *mutationResolver) SubmitIntake(ctx context.Context, input models.Submit
 		return nil, err
 	}
 
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return SubmitIntake(ctx, r.store, r.service.FetchUserInfo, r.service.SubmitIntake, input)
 }
 
 // UpdateSystemIntakeAdminLead is the resolver for the updateSystemIntakeAdminLead field.
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input models.UpdateSystemIntakeAdminLeadInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
 		return nil, err
 	}
 
@@ -507,6 +589,10 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -519,6 +605,15 @@ func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context,
 		return nil, err
 	}
 
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeUpdateContactDetails(ctx, r.store, input)
 }
 
@@ -528,12 +623,30 @@ func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context,
 		return nil, err
 	}
 
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeUpdate(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 }
 
 // UpdateSystemIntakeContractDetails is the resolver for the updateSystemIntakeContractDetails field.
 func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
 		return nil, err
 	}
 
@@ -580,7 +693,16 @@ func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context,
 		return nil, err
 	}
 
-	intake, err := SetSystemIntakeRelationNewSystem(ctx, r.store, input)
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	intake, err = SetSystemIntakeRelationNewSystem(ctx, r.store, input)
 	if err != nil {
 		return nil, err
 	}
@@ -599,7 +721,16 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Con
 		return nil, err
 	}
 
-	intake, err := SetSystemIntakeRelationExistingSystem(ctx, r.store, r.cedarCoreClient.GetSystem, input)
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	intake, err = SetSystemIntakeRelationExistingSystem(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 	if err != nil {
 		return nil, err
 	}
@@ -623,7 +754,16 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 		return nil, err
 	}
 
-	intake, err := SetSystemIntakeRelationExistingService(ctx, r.store, input)
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	intake, err = SetSystemIntakeRelationExistingService(ctx, r.store, input)
 	if err != nil {
 		return nil, err
 	}
@@ -639,7 +779,16 @@ func (r *mutationResolver) SetSystemSupportAndUnlinkSystemIntakeRelation(ctx con
 		return nil, err
 	}
 
-	intake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, r.store, intakeID, doesNotSupportSystems)
+	intake, err := r.store.FetchSystemIntakeByID(ctx, intakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	intake, err = SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, r.store, intakeID, doesNotSupportSystems)
 
 	if err != nil {
 		return nil, err
@@ -653,6 +802,15 @@ func (r *mutationResolver) SetSystemSupportAndUnlinkSystemIntakeRelation(ctx con
 // AddSystemLink is the resolver for the addSystemLink field.
 func (r *mutationResolver) AddSystemLink(ctx context.Context, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
 		return nil, err
 	}
 
@@ -670,6 +828,23 @@ func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSys
 		return nil, err
 	}
 
+	linkedSystem, err := GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
+	if err != nil {
+		return nil, err
+	}
+	if linkedSystem == nil {
+		return nil, nil
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	deletedSystemIntake, err := DeleteSystemIntakeSystemByID(ctx, r.store, systemIntakeSystemID)
 
 	if err != nil {
@@ -681,6 +856,23 @@ func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSys
 // UpdateSystemLink is the resolver for the updateSystemLink field.
 func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	linkedSystem, err := GetLinkedSystemByID(ctx, r.store, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	if linkedSystem == nil {
+		return nil, nil
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
 		return nil, err
 	}
 
@@ -698,6 +890,15 @@ func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input 
 		return nil, err
 	}
 
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	principal := appcontext.Principal(ctx)
 	logger := appcontext.ZLogger(ctx)
 
@@ -707,6 +908,23 @@ func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
 func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	contact, err := SystemIntakeContactGetByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	if contact == nil {
+		return nil, nil
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, contact.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
 		return nil, err
 	}
 
@@ -721,7 +939,24 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 		return nil, err
 	}
 
-	contact, err := SystemIntakeContactDelete(ctx, r.store, input.ID)
+	contact, err := SystemIntakeContactGetByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	if contact == nil {
+		return nil, nil
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, contact.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	contact, err = SystemIntakeContactDelete(ctx, r.store, input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -736,12 +971,20 @@ func (r *mutationResolver) StartGRBReview(ctx context.Context, input models.Star
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return StartGRBReview(ctx, r.store, r.emailClient, input.SystemIntakeID)
 }
 
 // CreateSystemIntakeGRBReviewers is the resolver for the createSystemIntakeGRBReviewers field.
 func (r *mutationResolver) CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return nil, err
 	}
 
@@ -754,12 +997,20 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, in
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return UpdateSystemIntakeGRBReviewer(ctx, r.store, &input)
 }
 
 // DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
 func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return uuid.Nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return uuid.Nil, err
 	}
 
@@ -778,6 +1029,10 @@ func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, 
 // SendSystemIntakeGRBReviewerReminder is the resolver for the sendSystemIntakeGRBReviewerReminder field.
 func (r *mutationResolver) SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return nil, err
 	}
 
@@ -808,12 +1063,20 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewType(ctx context.Context, 
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return UpdateSystemIntakeGRBReviewType(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeGRBReviewFormPresentationStandard is the resolver for the updateSystemIntakeGRBReviewFormPresentationStandard field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormPresentationStandard(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return nil, err
 	}
 
@@ -826,12 +1089,20 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormPresentationAsync(ctx 
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return UpdateSystemIntakeGRBReviewFormInputPresentationAsync(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeGRBReviewFormTimeframeAsync is the resolver for the updateSystemIntakeGRBReviewFormTimeframeAsync field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return nil, err
 	}
 
@@ -844,12 +1115,20 @@ func (r *mutationResolver) ExtendGRBReviewDeadlineAsync(ctx context.Context, inp
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return ExtendGRBReviewDeadlineAsync(ctx, r.store, r.emailClient, input)
 }
 
 // RestartGRBReviewAsync is the resolver for the restartGRBReviewAsync field.
 func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return nil, err
 	}
 
@@ -862,6 +1141,15 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 		return nil, err
 	}
 
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
 	if input.CedarSystemID != nil && *input.CedarSystemID != uuid.Nil {
 		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
@@ -871,7 +1159,7 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 		}
 	}
 
-	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, input.CedarSystemID)
+	intake, err = r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, input.CedarSystemID)
 
 	if err != nil {
 		return nil, err
@@ -888,12 +1176,25 @@ func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Conte
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return SetSystemIntakeGRBPresentationLinks(ctx, r.store, r.s3Client, input)
 }
 
 // UploadSystemIntakeGRBPresentationDeck is the resolver for the uploadSystemIntakeGRBPresentationDeck field.
 func (r *mutationResolver) UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
 		return nil, err
 	}
 
@@ -906,12 +1207,25 @@ func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Co
 		return uuid.Nil, err
 	}
 
+	intake, err := r.store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if err := authorizeUserCanDeleteSystemIntakeGRBPresentationLinks(ctx, intake); err != nil {
+		return uuid.Nil, err
+	}
+
 	return input.SystemIntakeID, r.store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
 }
 
 // ManuallyEndSystemIntakeGRBReviewAsyncVoting is the resolver for the manuallyEndSystemIntakeGRBReviewAsyncVoting field.
 func (r *mutationResolver) ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return nil, err
 	}
 
@@ -1196,6 +1510,10 @@ func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, i
 
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
 func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input models.SetRolesForUserOnSystemInput) (*string, error) {
+	if err := authorizeUserCanManageCEDARSystemTeam(ctx, r.cedarCoreClient, input.CedarSystemID); err != nil {
+		return nil, err
+	}
+
 	return SetRolesForUserOnCEDARSystem(ctx, r.service.FetchUserInfos, r.cedarCoreClient, r.emailClient, input)
 }
 
@@ -1401,6 +1719,10 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 
 // SendGRBReviewPresentationDeckReminderEmail is the resolver for the sendGRBReviewPresentationDeckReminderEmail field.
 func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return false, err
+	}
+
 	return SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store, r.service.FetchUserInfo)
 }
 
@@ -1420,6 +1742,10 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakes(ctx, r.store, openRequests)
 }
 
@@ -1430,16 +1756,42 @@ func (r *queryResolver) MySystemIntakes(ctx context.Context) ([]*models.SystemIn
 
 // SystemIntakesWithReviewRequested is the resolver for the systemIntakesWithReviewRequested field.
 func (r *queryResolver) SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakesWithReviewRequested(ctx, r.store)
 }
 
 // SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.
 func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	return r.store.GetSystemIntakesWithLCIDs(ctx)
+}
+
+// TrbRequestLcidOptions is the resolver for the trbRequestLcidOptions field.
+func (r *queryResolver) TrbRequestLcidOptions(ctx context.Context, trbRequestID uuid.UUID) ([]*models.SystemIntakeLCIDOption, error) {
+	trbRequest, err := r.store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
+	return r.store.GetSystemIntakeLCIDOptions(ctx)
 }
 
 // CompareGRBReviewersByIntakeID is the resolver for the compareGRBReviewersByIntakeID field.
 func (r *queryResolver) CompareGRBReviewersByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GRBReviewerComparisonIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeCompareGRBReviewers(ctx, r.store, id)
 }
 
@@ -1564,6 +1916,10 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID uuid.UUID
 
 // RoleTypes is the resolver for the roleTypes field.
 func (r *queryResolver) RoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
+	if err := authorizeUserCanAccessCEDARTeamMetadata(ctx, r.cedarCoreClient); err != nil {
+		return nil, err
+	}
+
 	roleTypes, err := r.cedarCoreClient.GetRoleTypes(ctx)
 	if err != nil {
 		return nil, err
@@ -1574,6 +1930,10 @@ func (r *queryResolver) RoleTypes(ctx context.Context) ([]*models.CedarRoleType,
 
 // Roles is the resolver for the roles field.
 func (r *queryResolver) Roles(ctx context.Context, cedarSystemID uuid.UUID, roleTypeID *string) ([]*models.CedarRole, error) {
+	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
+		return nil, err
+	}
+
 	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, roleTypeID)
 	if err != nil {
 		return nil, err
@@ -1603,6 +1963,15 @@ func (r *queryResolver) Urls(ctx context.Context, cedarSystemID uuid.UUID) ([]*m
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
 func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeContactsGetBySystemIntakeID(ctx, id)
 }
 
@@ -1651,16 +2020,46 @@ func (r *queryResolver) RequesterUpdateEmailData(ctx context.Context) ([]*models
 
 // SystemIntakeSystem is the resolver for the systemIntakeSystem field.
 func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
-	return GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
+	linkedSystem, err := GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
+	if err != nil {
+		return nil, err
+	}
+	if linkedSystem == nil {
+		return nil, nil
+	}
+
+	intake, err := r.store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	return linkedSystem, nil
 }
 
 // SystemIntakeSystems is the resolver for the systemIntakeSystems field.
 func (r *queryResolver) SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeSystemsByIntakeID(ctx, systemIntakeID)
 }
 
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	actions, actionsErr := dataloaders.GetSystemIntakeActionsBySystemIntakeID(ctx, obj.ID)
 	if actionsErr != nil {
 		return nil, actionsErr
@@ -1889,7 +2288,16 @@ func (r *systemIntakeResolver) NextMeetingDate(ctx context.Context, obj *models.
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
 	//TODO: this method is being deprecated. Remove it once the new method is implemented on the FE
-	return SystemIntakeGRBReviewers(ctx, obj.ID)
+	reviewers, err := SystemIntakeGRBReviewers(ctx, obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !userCanViewSystemIntakeGRBReviewerIdentities(ctx, reviewers) {
+		return []*models.SystemIntakeGRBReviewer{}, nil
+	}
+
+	return reviewers, nil
 }
 
 // GrbVotingInformation is the resolver for the grbVotingInformation field.
@@ -1925,6 +2333,10 @@ func (r *systemIntakeResolver) AcquisitionMethods(ctx context.Context, obj *mode
 
 // Notes is the resolver for the notes field.
 func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeNote, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeNotes(ctx, obj)
 }
 
@@ -2005,6 +2417,10 @@ func (r *systemIntakeResolver) GrbDiscussionsPrimary(ctx context.Context, obj *m
 
 // GrbDiscussionsInternal is the resolver for the grbDiscussionsInternal field.
 func (r *systemIntakeResolver) GrbDiscussionsInternal(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+	if !isAuthorizedForInternalBoard(ctx, obj.ID) {
+		return []*models.SystemIntakeGRBReviewDiscussion{}, nil
+	}
+
 	return SystemIntakeGRBDiscussions(ctx, obj.ID, models.SystemIntakeGRBDiscussionBoardTypeInternal)
 }
 
@@ -2025,11 +2441,19 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 
 // SystemIntakeSystems is the resolver for the systemIntakeSystems field.
 func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, obj); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeSystemsByIntakeID(ctx, obj.ID)
 }
 
 // Contacts is the resolver for the contacts field.
 func (r *systemIntakeResolver) Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error) {
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, obj); err != nil {
+		return nil, err
+	}
+
 	return SystemIntakeContactsGetBySystemIntakeID(ctx, obj.ID)
 }
 
@@ -2088,7 +2512,7 @@ func (r *systemIntakeDocumentResolver) CanView(ctx context.Context, obj *models.
 
 // TranscriptFileURL is the resolver for the transcriptFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	return SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx, r.s3Client, obj.SystemIntakeID)
+	return SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx, r.store, r.s3Client, obj.SystemIntakeID)
 }
 
 // TranscriptFileStatus is the resolver for the transcriptFileStatus field.
@@ -2099,7 +2523,7 @@ func (r *systemIntakeGRBPresentationLinksResolver) TranscriptFileStatus(ctx cont
 
 // PresentationDeckFileURL is the resolver for the presentationDeckFileURL field.
 func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileURL(ctx context.Context, obj *models.SystemIntakeGRBPresentationLinks) (*string, error) {
-	return SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx, r.s3Client, obj.SystemIntakeID)
+	return SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx, r.store, r.s3Client, obj.SystemIntakeID)
 }
 
 // PresentationDeckFileStatus is the resolver for the presentationDeckFileStatus field.

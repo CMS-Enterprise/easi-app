@@ -6,6 +6,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"slices"
 	"sync"
 
@@ -13,6 +14,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -34,12 +36,42 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
+	trbRequests, err := CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
+	if err != nil {
+		return nil, err
+	}
+
+	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
+	if err == nil {
+		return trbRequests, nil
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	if !errors.As(err, &unauthorizedErr) {
+		return nil, err
+	}
+
+	return filterVisibleTRBRequests(ctx, trbRequests)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
+	intakes, err := CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
+	if err != nil {
+		return nil, err
+	}
+
+	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
+	if err == nil {
+		return intakes, nil
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	if !errors.As(err, &unauthorizedErr) {
+		return nil, err
+	}
+
+	return filterVisibleSystemIntakes(ctx, r.store, intakes)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.

@@ -19,6 +19,8 @@ const guidanceLetterIncompleteHeading = 'Guidance letter incomplete';
 const guidanceLetterDownloadLabel = 'Download guidance letter as PDF';
 const guidanceLetterQuestionsHeading =
   'Have questions about this guidance letter?';
+const relatedLcidsLabel =
+  'Select any Life Cycle IDs (LCIDs) pertaining to this request.';
 
 const requestUrls = {
   completed: null,
@@ -53,6 +55,7 @@ const getRequestUrls = requestName => {
       return {
         id,
         taskListHref: `/trb/task-list/${id}`,
+        requesterBasicHref: `/trb/requests/${id}/basic`,
         requesterDocumentsHref: `/trb/task-list/${id}/documents`,
         adminRequestHref: `/trb/${id}/request`,
         adminDocumentsHref: `/trb/${id}/documents`,
@@ -104,11 +107,54 @@ describe('TRB request permissions', () => {
     cy.contains('a', 'Add a document').should('be.visible');
   });
 
+  it('uses the requester-safe LCID lookup on the TRB basic form', () => {
+    loginAs(owner);
+
+    const operationNames = [];
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      operationNames.push(req.body.operationName);
+
+      if (req.body.operationName === 'GetTRBRequestLcidOptions') {
+        req.alias = 'getTrbRequestLcidOptions';
+      }
+    });
+
+    cy.visit(requestUrls.completed.requesterBasicHref);
+    cy.wait('@getTrbRequestLcidOptions');
+
+    cy.contains('label', relatedLcidsLabel).should('be.visible');
+    cy.get('#systemIntakes').click({ force: true });
+    cy.contains('000001').should('be.visible');
+
+    cy.then(() => {
+      expect(operationNames).to.include('GetTRBRequestLcidOptions');
+      expect(operationNames).not.to.include('GetSystemIntakesWithLCIDS');
+    });
+  });
+
   it('blocks an unrelated user from the requester task list view', () => {
     loginAs(unrelatedUser);
 
     cy.visit(requestUrls.completed.taskListHref);
     cy.contains('h1', notFoundHeading).should('be.visible');
+  });
+
+  it('blocks an unrelated user from the TRB basic form LCID lookup', () => {
+    loginAs(unrelatedUser);
+
+    const operationNames = [];
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      operationNames.push(req.body.operationName);
+    });
+
+    cy.visit(requestUrls.completed.requesterBasicHref);
+    cy.contains('h1', notFoundHeading).should('be.visible');
+
+    cy.then(() => {
+      expect(operationNames).not.to.include('GetTRBRequestLcidOptions');
+    });
   });
 
   it('blocks a TRB lead from the requester task list view', () => {

@@ -610,6 +610,13 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 	return intakes, nil
 }
 
+// GetSystemIntakeLCIDOptions retrieves requester-safe LCID lookup options.
+func (s *Store) GetSystemIntakeLCIDOptions(ctx context.Context) ([]*models.SystemIntakeLCIDOption, error) {
+	var intakes []*models.SystemIntakeLCIDOption
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetLCIDOptions, args{})
+	return intakes, err
+}
+
 func (s *Store) GetMySystemIntakes(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
 	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetByUser, args{

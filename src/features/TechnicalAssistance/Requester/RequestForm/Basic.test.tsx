@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  GetTRBRequestLcidOptionsDocument,
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables,
   TRBRequestState,
@@ -56,6 +57,28 @@ const mockTrbRequestData: GetTRBRequestQuery['trbRequest'] = {
   __typename: 'TRBRequest'
 };
 
+const lcidOptionsMock = {
+  request: {
+    query: GetTRBRequestLcidOptionsDocument,
+    variables: {
+      trbRequestID: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7'
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      trbRequestLcidOptions: [
+        {
+          __typename: 'SystemIntakeLCIDOption',
+          id: '43fe5a4e-525c-40da-b0f6-3b36b5f84cc1',
+          lcid: '000001',
+          requestName: 'A Completed Intake Form'
+        }
+      ]
+    }
+  }
+};
+
 const mockRefetch = async (
   variables?: Partial<GetTRBRequestQueryVariables> | undefined
 ): Promise<ApolloQueryResult<GetTRBRequestQuery>> => {
@@ -75,7 +98,7 @@ describe('Trb Request form: Basic', () => {
     const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
       render(
         <MemoryRouter>
-          <MockedProvider>
+          <MockedProvider mocks={[lcidOptionsMock]}>
             <Basic
               request={{
                 id: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',

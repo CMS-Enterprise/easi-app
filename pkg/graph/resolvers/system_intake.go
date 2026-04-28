@@ -97,6 +97,93 @@ func authorizeUserCanViewSystemIntake(
 	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
 }
 
+func authorizeUserCanEditOwnSystemIntake(
+	ctx context.Context,
+	intake *models.SystemIntake,
+) error {
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to edit system intake")}
+}
+
+func authorizeUserCanManageSystemIntakeContacts(
+	ctx context.Context,
+	intake *models.SystemIntake,
+) error {
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return nil
+	}
+
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to manage system intake contacts")}
+}
+
+func authorizeUserCanManageSystemIntakeRelations(
+	ctx context.Context,
+	intake *models.SystemIntake,
+) error {
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return nil
+	}
+
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to manage system intake relations")}
+}
+
+func authorizeUserCanManageSystemIntakeGRBReview(ctx context.Context) error {
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to manage system intake GRB review")}
+}
+
+func userCanViewSystemIntakeGRBReviewerIdentities(
+	ctx context.Context,
+	reviewers []*models.SystemIntakeGRBReviewer,
+) bool {
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return true
+	}
+
+	principal := appcontext.Principal(ctx)
+
+	return slices.ContainsFunc(reviewers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+		return reviewer.UserID == principal.Account().ID
+	})
+}
+
+func authorizeUserCanManageSystemIntakeAdminWorkflow(ctx context.Context) error {
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to manage system intake admin workflow")}
+}
+
+func authorizeUserCanDeleteSystemIntakeGRBPresentationLinks(
+	ctx context.Context,
+	intake *models.SystemIntake,
+) error {
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return nil
+	}
+
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete system intake GRB presentation links")}
+}
+
 func filterVisibleSystemIntakes(
 	ctx context.Context,
 	store *storage.Store,

@@ -72,7 +72,15 @@ const GovernanceReviewTeam = () => {
               </Route>
             )}
 
-            {flags?.grbReviewTab && (
+            {!isITGovAdmin && (
+              <Route
+                path="/it-governance/:id/system-information/link"
+                exact
+                component={NotFound}
+              />
+            )}
+
+            {flags?.grbReviewTab && isITGovAdmin && (
               <Route
                 path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
                 exact
@@ -93,7 +101,7 @@ const GovernanceReviewTeam = () => {
               </Route>
             )}
 
-            {flags?.grbReviewTab && (
+            {flags?.grbReviewTab && isITGovAdmin && (
               <Route
                 path="/it-governance/:systemId/grb-review/presentation-links"
                 render={() => (
@@ -109,18 +117,52 @@ const GovernanceReviewTeam = () => {
               />
             )}
 
-            <Route
-              path="/it-governance/:systemId/grb-review/:action(add|edit)"
-              exact
-            >
-              <GRBReviewerForm
-                isFromGRBSetup={isFromGRBSetup}
-                initialGRBReviewers={
-                  grbReview.grbVotingInformation?.grbReviewers
-                }
-                grbReviewStartedAt={grbReview.grbReviewStartedAt}
+            {isITGovAdmin && (
+              <Route
+                path="/it-governance/:systemId/grb-review/:action(add|edit)"
+                exact
+              >
+                <GRBReviewerForm
+                  isFromGRBSetup={isFromGRBSetup}
+                  initialGRBReviewers={
+                    grbReview.grbVotingInformation?.grbReviewers
+                  }
+                  grbReviewStartedAt={grbReview.grbReviewStartedAt}
+                />
+              </Route>
+            )}
+
+            {flags?.grbReviewTab && !isITGovAdmin && (
+              <Route
+                path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
+                exact
+                component={NotFound}
               />
-            </Route>
+            )}
+
+            {flags?.grbReviewTab && !isITGovAdmin && (
+              <Route
+                path="/it-governance/:systemId/grb-review/presentation-links"
+                exact
+                component={NotFound}
+              />
+            )}
+
+            {!isITGovAdmin && (
+              <Route
+                path="/it-governance/:systemId/grb-review/:action(add|edit)"
+                exact
+                component={NotFound}
+              />
+            )}
+
+            {flags?.grbReviewTab && !isITGovAdmin && (
+              <Route
+                path="/it-governance/:systemId/documents/upload"
+                exact
+                component={NotFound}
+              />
+            )}
 
             <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
               <RequestOverview />

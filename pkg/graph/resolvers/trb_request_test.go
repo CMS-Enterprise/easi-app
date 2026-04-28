@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
@@ -164,6 +165,48 @@ func (s *ResolverSuite) TestTRBRequestAuthorizationHelpers() {
 	for _, ctx := range []context.Context{leadCtx, otherCtx} {
 		relationErr := authorizeUserCanManageTRBRequestRelations(ctx, trb)
 		s.Error(relationErr)
+	}
+}
+
+func (s *ResolverSuite) TestTRBRequestLCIDOptionsPermissions() {
+	queryResolver := s.systemIntakeQueryResolver()
+
+	lcidIntake := s.createNewIntakeWithResolver(func(intake *models.SystemIntake) {
+		intake.ProjectName = null.StringFrom("LCID source intake")
+		intake.LifecycleID = null.StringFrom("000001")
+	})
+
+	trbRequest := s.createNewTRBRequest()
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err := s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+
+	ownerCtx := s.testConfigs.Context
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+	otherCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+
+	options, err := queryResolver.TrbRequestLcidOptions(ownerCtx, trbRequest.ID)
+	s.NoError(err)
+	s.NotEmpty(options)
+
+	optionByID := map[uuid.UUID]*models.SystemIntakeLCIDOption{}
+	for _, option := range options {
+		optionByID[option.ID] = option
+	}
+
+	s.Contains(optionByID, lcidIntake.ID)
+	s.Equal("000001", optionByID[lcidIntake.ID].LCID.ValueOrZero())
+	s.Equal("LCID source intake", optionByID[lcidIntake.ID].RequestName.ValueOrZero())
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	for _, ctx := range []context.Context{adminCtx, leadCtx, otherCtx} {
+		_, err = queryResolver.TrbRequestLcidOptions(ctx, trbRequest.ID)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
 	}
 }
 

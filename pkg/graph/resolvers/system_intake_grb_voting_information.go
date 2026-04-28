@@ -18,9 +18,16 @@ func GRBVotingInformationGetBySystemIntake(ctx context.Context, intake *models.S
 	if err != nil {
 		return nil, err
 	}
+
+	visibleReviewers := reviewers
+	if !userCanViewSystemIntakeGRBReviewerIdentities(ctx, reviewers) {
+		visibleReviewers = []*models.SystemIntakeGRBReviewer{}
+	}
+
 	votingInformation := &models.GRBVotingInformation{
-		SystemIntake: intake,
-		GRBReviewers: reviewers,
+		SystemIntake:    intake,
+		GRBReviewers:    visibleReviewers,
+		AllGRBReviewers: reviewers,
 	}
 	return votingInformation, nil
 

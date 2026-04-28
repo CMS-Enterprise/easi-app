@@ -24,18 +24,28 @@ const numberOfVotesForQuorum = 1
 // It is a convenience struct that holds a SystemIntake and its GRB reviewers
 // we form it this way so that we can easily calculate information about the voting process
 type GRBVotingInformation struct {
-	SystemIntake *SystemIntake
-	GRBReviewers []*SystemIntakeGRBReviewer
+	SystemIntake    *SystemIntake
+	GRBReviewers    []*SystemIntakeGRBReviewer
+	AllGRBReviewers []*SystemIntakeGRBReviewer
+}
+
+func (info *GRBVotingInformation) reviewersForCounts() []*SystemIntakeGRBReviewer {
+	if info.AllGRBReviewers != nil {
+		return info.AllGRBReviewers
+	}
+
+	return info.GRBReviewers
 }
 
 // NumberOfNoObjection returns the number of reviewers who have voted no objection
 func (info *GRBVotingInformation) NumberOfNoObjection() int {
-	if info.GRBReviewers == nil {
+	reviewers := info.reviewersForCounts()
+	if reviewers == nil {
 		return 0
 	}
 
 	var count int
-	for _, reviewer := range info.GRBReviewers {
+	for _, reviewer := range reviewers {
 		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
 			continue
 		}
@@ -54,12 +64,13 @@ func (info *GRBVotingInformation) NumberOfNoObjection() int {
 
 // NumberOfObjection returns the number of reviewers who have voted objection
 func (info *GRBVotingInformation) NumberOfObjection() int {
-	if info.GRBReviewers == nil {
+	reviewers := info.reviewersForCounts()
+	if reviewers == nil {
 		return 0
 	}
 
 	var count int
-	for _, reviewer := range info.GRBReviewers {
+	for _, reviewer := range reviewers {
 		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
 			continue
 		}
@@ -78,12 +89,13 @@ func (info *GRBVotingInformation) NumberOfObjection() int {
 
 // NumberOfNotVoted returns the number of reviewers who have not voted
 func (info *GRBVotingInformation) NumberOfNotVoted() int {
-	if info.GRBReviewers == nil {
+	reviewers := info.reviewersForCounts()
+	if reviewers == nil {
 		return 0
 	}
 
 	var count int
-	for _, reviewer := range info.GRBReviewers {
+	for _, reviewer := range reviewers {
 		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
 			continue
 		}
@@ -98,12 +110,13 @@ func (info *GRBVotingInformation) NumberOfNotVoted() int {
 
 // NumberOfVoted returns the number of reviewers who have voted
 func (info *GRBVotingInformation) NumberOfVoted() int {
-	if info.GRBReviewers == nil {
+	reviewers := info.reviewersForCounts()
+	if reviewers == nil {
 		return 0
 	}
 
 	var count int
-	for _, reviewer := range info.GRBReviewers {
+	for _, reviewer := range reviewers {
 		// only count reviewers who have voting roles
 		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
 			continue
@@ -155,7 +168,7 @@ func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 		return GRBVSNotStarted
 	}
 
-	if info.GRBReviewers == nil {
+	if info.reviewersForCounts() == nil {
 		return GRBVSNotStarted
 	}
 

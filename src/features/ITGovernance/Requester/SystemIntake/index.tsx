@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, Route, Switch, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
@@ -9,6 +10,7 @@ import {
 import DocumentUploadForm from 'features/ITGovernance/_components/DocumentUploadForm';
 import NotFound, { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import { useGetSystemIntakeQuery } from 'gql/generated/graphql';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
@@ -30,6 +32,7 @@ export const SystemIntake = () => {
     formPage: string;
     subPage: string;
   }>();
+  const { euaId, isUserSet } = useSelector((state: AppState) => state.auth);
 
   const { loading, data } = useGetSystemIntakeQuery({
     nextFetchPolicy: 'cache-first',
@@ -43,7 +46,14 @@ export const SystemIntake = () => {
   const isConfirmationPage =
     formPage === 'confirmation' || formPage === 'confirmation-error';
 
+  const isRequester =
+    isUserSet && euaId === systemIntake?.requester?.userAccount.username;
+
   if (!loading && !systemIntake) {
+    return <NotFound />;
+  }
+
+  if (!loading && systemIntake && !isRequester) {
     return <NotFound />;
   }
 

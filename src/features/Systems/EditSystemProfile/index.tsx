@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useGetCedarSystemQuery } from 'gql/generated/graphql';
+import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
 
 import PageLoading from 'components/PageLoading';
 import SystemSectionLockContextProvider from 'contexts/SystemSectionLockContext';
@@ -29,17 +29,25 @@ const EditSystemProfile = () => {
     systemId: string;
   }>();
 
-  const { data, loading } = useGetCedarSystemQuery({
+  const { data, loading, error } = useGetSystemWorkspaceQuery({
     variables: {
-      id: systemId
+      cedarSystemId: systemId
     }
   });
 
-  if (!data) return <NotFound />;
-
   if (loading) return <PageLoading />;
 
-  const { name: systemName = '' } = data.cedarSystem || {};
+  const cedarSystemDetails = data?.cedarSystemDetails;
+
+  if (
+    error ||
+    !cedarSystemDetails?.cedarSystem ||
+    !cedarSystemDetails.isMySystem
+  ) {
+    return <NotFound />;
+  }
+
+  const { name: systemName = '' } = cedarSystemDetails.cedarSystem;
 
   return (
     <SystemSectionLockContextProvider>

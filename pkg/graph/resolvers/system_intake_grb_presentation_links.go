@@ -228,7 +228,16 @@ func UploadSystemIntakeGRBPresentationDeck(
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 }
 
-func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanViewSystemIntake(ctx, store, intake); err != nil {
+		return nil, err
+	}
+
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
@@ -273,7 +282,16 @@ func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, l
 	return helpers.PointerTo(fileStatus), nil
 }
 
-func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanViewSystemIntake(ctx, store, intake); err != nil {
+		return nil, err
+	}
+
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
