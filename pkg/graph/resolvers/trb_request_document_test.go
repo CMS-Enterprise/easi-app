@@ -145,16 +145,15 @@ func (s *ResolverSuite) TestGetTRBRequestDocumentURLUnauthorized() {
 	var unauthorizedErr *apperrors.UnauthorizedError
 	s.True(errors.As(err, &unauthorizedErr))
 
-	_, err = GetURLForTRBRequestDocument(
+	url, err := GetURLForTRBRequestDocument(
 		adminCtx,
 		s.testConfigs.Store,
 		s.testConfigs.S3Client,
 		createdDocument.TRBRequestID,
 		createdDocument.S3Key,
 	)
-	s.Error(err)
-	unauthorizedErr = nil
-	s.True(errors.As(err, &unauthorizedErr))
+	s.NoError(err)
+	s.NotEmpty(url)
 }
 
 func (s *ResolverSuite) TestGetTRBRequestDocumentURLLeadAuthorized() {

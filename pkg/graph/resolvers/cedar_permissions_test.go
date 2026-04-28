@@ -82,7 +82,7 @@ func (s *ResolverSuite) TestCEDARSystemTeamManagementPermissions() {
 	addedRoleID := "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID03}"
 
 	teamMemberCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
-	otherUserCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+	otherUserCtx, _ := s.getTestContextWithPrincipal("ZZZZ", false)
 
 	s.NoError(authorizeUserCanAccessCEDARTeamMetadata(teamMemberCtx, resolver.cedarCoreClient))
 	s.NoError(authorizeUserCanAccessCEDARSystemWorkspace(teamMemberCtx, resolver.cedarCoreClient, cedarSystemID))
@@ -146,7 +146,7 @@ func (s *ResolverSuite) TestCEDARSystemProfileLockPermissions() {
 	section := models.SystemProfileLockableSectionTeam
 
 	teamMemberCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
-	otherUserCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+	otherUserCtx, _ := s.getTestContextWithPrincipal("ZZZZ", false)
 
 	locked, err := mutationResolver.LockSystemProfileSection(teamMemberCtx, cedarSystemID, section)
 	s.NoError(err)
@@ -206,12 +206,10 @@ func (s *ResolverSuite) TestCEDARLinkedRequestVisibility() {
 	s.NoError(err)
 	s.NotNil(intake)
 
-	description := "linked for cedar visibility"
 	linkedSystems := []*models.SystemRelationshipInput{
 		{
-			CedarSystemID:                      &cedarSystem.ID,
-			SystemRelationshipType:             []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport},
-			OtherSystemRelationshipDescription: &description,
+			CedarSystemID:          &cedarSystem.ID,
+			SystemRelationshipType: []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport},
 		},
 	}
 

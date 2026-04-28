@@ -472,7 +472,14 @@ func authorizeUserCanViewTRBRequest(ctx context.Context, trbRequest *models.TRBR
 		return nil
 	}
 
-	eua := p.Account().Username
+	account := p.Account()
+	if account == nil {
+		return &apperrors.UnauthorizedError{
+			Err: errors.New("unauthorized to access TRB request"),
+		}
+	}
+
+	eua := account.Username
 
 	// creator
 	if trbRequest.CreatedBy == eua {
@@ -490,7 +497,14 @@ func authorizeUserCanViewTRBRequest(ctx context.Context, trbRequest *models.TRBR
 }
 
 func authorizeUserCanEditOwnTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
-	eua := appcontext.Principal(ctx).Account().Username
+	account := appcontext.Principal(ctx).Account()
+	if account == nil {
+		return &apperrors.UnauthorizedError{
+			Err: errors.New("unauthorized to modify TRB request"),
+		}
+	}
+
+	eua := account.Username
 
 	if trbRequest.CreatedBy == eua {
 		return nil
@@ -508,7 +522,14 @@ func authorizeUserCanManageTRBRequestRelations(ctx context.Context, trbRequest *
 		return nil
 	}
 
-	eua := p.Account().Username
+	account := p.Account()
+	if account == nil {
+		return &apperrors.UnauthorizedError{
+			Err: errors.New("unauthorized to manage TRB request relations"),
+		}
+	}
+
+	eua := account.Username
 	if trbRequest.CreatedBy == eua {
 		return nil
 	}

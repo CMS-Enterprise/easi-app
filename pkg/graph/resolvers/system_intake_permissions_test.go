@@ -730,11 +730,20 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewerIdentityVisibility() {
 	)
 	s.Len(reviewers, 2)
 
+	now := time.Now().UTC()
+	tomorrow := now.AddDate(0, 0, 1)
+	intake.GRBReviewStartedAt = &now
+	intake.GrbReviewAsyncEndDate = &tomorrow
+
+	var err error
+	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+	s.NoError(err)
+
 	reviewerCtx, _ := s.getTestContextWithPrincipal("USR2", false)
 	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
 	adminCtx, _ := s.getTestContextWithPrincipal("ABCD", true)
 
-	_, err := CastSystemIntakeGRBReviewerVote(
+	_, err = CastSystemIntakeGRBReviewerVote(
 		reviewerCtx,
 		s.testConfigs.Store,
 		s.testConfigs.EmailClient,

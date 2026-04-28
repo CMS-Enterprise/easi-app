@@ -77,7 +77,7 @@ func authorizeUserCanViewSystemIntake(
 	}
 
 	// the requester can view
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+	if userOwnsSystemIntake(ctx, intake) {
 		return nil
 	}
 
@@ -86,22 +86,44 @@ func authorizeUserCanViewSystemIntake(
 		return err
 	}
 
-	principal := appcontext.Principal(ctx)
-
-	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
-		return reviewer.UserID == principal.Account().ID
-	}); isGRBViewer {
-		return nil
+	if account := appcontext.Principal(ctx).Account(); account != nil {
+		if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+			return reviewer.UserID == account.ID
+		}); isGRBViewer {
+			return nil
+		}
 	}
 
 	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+}
+
+func userOwnsSystemIntake(ctx context.Context, intake *models.SystemIntake) bool {
+	if intake == nil {
+		return false
+	}
+
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return true
+	}
+
+	principal := appcontext.Principal(ctx)
+	if !principal.AllowEASi() || intake.EUAUserID.IsZero() {
+		return false
+	}
+
+	account := principal.Account()
+	if account == nil {
+		return false
+	}
+
+	return account.Username == intake.EUAUserID.String
 }
 
 func authorizeUserCanEditOwnSystemIntake(
 	ctx context.Context,
 	intake *models.SystemIntake,
 ) error {
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+	if userOwnsSystemIntake(ctx, intake) {
 		return nil
 	}
 
@@ -116,7 +138,7 @@ func authorizeUserCanManageSystemIntakeContacts(
 		return nil
 	}
 
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+	if userOwnsSystemIntake(ctx, intake) {
 		return nil
 	}
 
@@ -131,7 +153,7 @@ func authorizeUserCanManageSystemIntakeRelations(
 		return nil
 	}
 
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+	if userOwnsSystemIntake(ctx, intake) {
 		return nil
 	}
 
@@ -154,11 +176,13 @@ func userCanViewSystemIntakeGRBReviewerIdentities(
 		return true
 	}
 
-	principal := appcontext.Principal(ctx)
+	if account := appcontext.Principal(ctx).Account(); account != nil {
+		return slices.ContainsFunc(reviewers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+			return reviewer.UserID == account.ID
+		})
+	}
 
-	return slices.ContainsFunc(reviewers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
-		return reviewer.UserID == principal.Account().ID
-	})
+	return false
 }
 
 func authorizeUserCanManageSystemIntakeAdminWorkflow(ctx context.Context) error {
@@ -177,7 +201,7 @@ func authorizeUserCanDeleteSystemIntakeGRBPresentationLinks(
 		return nil
 	}
 
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+	if userOwnsSystemIntake(ctx, intake) {
 		return nil
 	}
 

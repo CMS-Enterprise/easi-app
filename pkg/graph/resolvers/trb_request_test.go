@@ -11,9 +11,7 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -305,15 +303,7 @@ func (s *ResolverSuite) TestTRBRequestNestedRelationVisibility() {
 
 // TestGetTRBRequests returns all TRB Requests
 func (s *ResolverSuite) TestGetTRBRequests() {
-	// Create a context to use for requests from another user
-	principalABCD := &authentication.EUAPrincipal{
-		EUAID:           "ABCD",
-		JobCodeEASi:     true,
-		JobCodeGRT:      true,
-		JobCodeTRBAdmin: true,
-	}
-	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
-	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
+	ctxABCD, _ := s.getTestContextWithPrincipal("ABCD", true)
 
 	// Create a TRB request with TEST
 	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
@@ -353,15 +343,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 
 // TestGetMyTRBRequests returns a users TRB Requests
 func (s *ResolverSuite) TestGetMyTRBRequests() {
-	// Create a context to use for requests from another user
-	principalABCD := &authentication.EUAPrincipal{
-		EUAID:           "ABCD",
-		JobCodeEASi:     true,
-		JobCodeGRT:      true,
-		JobCodeTRBAdmin: true,
-	}
-	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
-	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
+	ctxABCD, _ := s.getTestContextWithPrincipal("ABCD", true)
 
 	// Create a TRB request with TEST
 	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)

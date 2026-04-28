@@ -227,6 +227,8 @@ func newS3Config() upload.Config {
 func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *models.SystemIntake {
 	// Future Enhancement:  this should refactored to use a resolver and not a store method look at createNewIntakeWithResolver
 	newIntake, err := storage.CreateSystemIntake(s.testConfigs.Context, s.testConfigs.Store, &models.SystemIntake{
+		EUAUserID:   null.StringFrom(s.testConfigs.Principal.ID()),
+		Requester:   s.testConfigs.Principal.ID(),
 		ProjectName: null.StringFrom("TEST"),
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,

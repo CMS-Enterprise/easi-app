@@ -7,9 +7,11 @@ import (
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
+	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 func date(year, month, day int) *time.Time {
@@ -583,10 +585,19 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 	ctx := s.context
 
-	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
-		// EUAUserID:   null.StringFrom("TEST"),
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
+	intake, intakeErr := CreateSystemIntake(
+		ctx,
+		s.store,
+		models.CreateSystemIntakeInput{
+			Requester:   &models.SystemIntakeRequesterInput{Name: "Test User"},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(local.NewOktaAPIClient().FetchUserInfo),
+	)
+	s.NoError(intakeErr)
+
+	intake.EUAUserID = null.String{}
+	intake, intakeErr = s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(intakeErr)
 
 	var resp struct {
