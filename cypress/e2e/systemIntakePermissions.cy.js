@@ -15,19 +15,13 @@ const addPocHeading = 'Add a project point of contact';
 const relationEntryPointCta = 'Answer';
 const systemInformationHeading = 'System information';
 const editSystemInformationLink = 'Edit system information';
+const itGovRequestsHeading = 'IT Governance requests';
+const requesterUpdateEmailHeading = 'Requester update email';
+const configureEmailListButton = 'Configure email list';
 
 const loginAs = ({ name, role } = {}) => {
   cy.localLogin({ name, role });
 };
-
-const localAuthHeader = ({ name, role, allowEasi = true }) => ({
-  authorization: `Local ${JSON.stringify({
-    euaId: name,
-    jobCodes: role ? [role] : [],
-    favorLocalAuth: true,
-    allowEasi
-  })}`
-});
 
 const requesterFormRoutes = {
   contactDetails: `/system/${requesterFormIntakeId}/contact-details`,
@@ -53,54 +47,30 @@ const reviewedIntakeRoutes = {
 };
 
 describe('System intake permissions', () => {
-  it('lets an IT Gov admin query requester update email data', () => {
+  it('lets an IT Gov admin access requester update email configuration from the admin home', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetRequesterUpdateEmailData') {
+        req.alias = 'getRequesterUpdateEmailData';
+      }
+    });
+
     loginAs(admin);
 
-    cy.request({
-      method: 'POST',
-      url: '/api/graph/query',
-      headers: localAuthHeader(admin),
-      body: {
-        operationName: 'GetRequesterUpdateEmailData',
-        query: `
-          query GetRequesterUpdateEmailData {
-            requesterUpdateEmailData {
-              requesterEmail
-            }
-          }
-        `
-      }
-    }).then(({ body }) => {
-      expect(body.errors).to.equal(undefined);
-      expect(body).to.have.property('data');
-      expect(body.data).to.have.property('requesterUpdateEmailData');
-      expect(body.data.requesterUpdateEmailData).to.be.an('array');
-    });
+    cy.contains('h1', itGovRequestsHeading).should('be.visible');
+    cy.wait('@getRequesterUpdateEmailData')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.contains('h4', requesterUpdateEmailHeading).should('be.visible');
+    cy.contains('button', configureEmailListButton).click();
+    cy.get('[role="dialog"]').should('contain.text', configureEmailListButton);
   });
 
-  it('blocks a non-GRT user from querying requester update email data', () => {
+  it('hides requester update email configuration from non-admin users', () => {
     loginAs(owner);
 
-    cy.request({
-      method: 'POST',
-      url: '/api/graph/query',
-      failOnStatusCode: false,
-      headers: localAuthHeader(owner),
-      body: {
-        operationName: 'GetRequesterUpdateEmailData',
-        query: `
-          query GetRequesterUpdateEmailData {
-            requesterUpdateEmailData {
-              requesterEmail
-            }
-          }
-        `
-      }
-    }).then(({ body, status }) => {
-      expect(status).to.equal(200);
-      expect(body.data ?? null).to.equal(null);
-      expect(body.errors[0].message).to.contain('User is unauthorized');
-    });
+    cy.contains('h3', 'My open requests').should('be.visible');
+    cy.contains(requesterUpdateEmailHeading).should('not.exist');
+    cy.contains('button', configureEmailListButton).should('not.exist');
   });
 
   it('lets the owner access requester intake form pages and the relation-management entry point', () => {

@@ -1,80 +1,51 @@
-const localAuthHeader = ({ name, role, allowEasi = true }) => ({
-  authorization: `Local ${JSON.stringify({
-    euaId: name,
-    jobCodes: role ? [role] : [],
-    favorLocalAuth: true,
-    allowEasi
-  })}`
-});
+const requester = { name: 'USR1' };
+const requesterFormIntakeId = '43fe5a4e-525c-40da-b0f6-3b36b5f84cc1';
+
+const linkedSystemsFormRoute = `/linked-systems-form/${requesterFormIntakeId}`;
+const contactDetailsRoute = `/system/${requesterFormIntakeId}/contact-details`;
 
 describe('CEDAR permissions', () => {
-  it('lets an EASI user query cedar systems', () => {
-    cy.request({
-      method: 'POST',
-      url: '/api/graph/query',
-      headers: localAuthHeader({ name: 'USR1' }),
-      body: {
-        operationName: 'GetCedarSystemsPermissionCheck',
-        query: `
-          query GetCedarSystemsPermissionCheck {
-            cedarSystems {
-              id
-            }
-          }
-        `
-      }
-    }).then(({ body, status }) => {
-      expect(status).to.equal(200);
-      expect(body.errors).to.equal(undefined);
-      expect(body).to.have.property('data');
-      expect(body.data).to.have.property('cedarSystems');
-      expect(body.data.cedarSystems).to.be.an('array');
-    });
+  beforeEach(() => {
+    cy.localLogin(requester);
   });
 
-  it('blocks a non-EASI user from querying cedar systems', () => {
-    cy.request({
-      method: 'POST',
-      url: '/api/graph/query',
-      failOnStatusCode: false,
-      headers: localAuthHeader({ name: 'USR1', allowEasi: false }),
-      body: {
-        operationName: 'GetCedarSystemsPermissionCheck',
-        query: `
-          query GetCedarSystemsPermissionCheck {
-            cedarSystems {
-              id
-            }
-          }
-        `
+  it('lets a requester access Cedar systems while adding a linked system', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetCedarSystems') {
+        req.alias = 'getCedarSystems';
       }
-    }).then(({ body, status }) => {
-      expect(status).to.equal(200);
-      expect(body.data ?? null).to.equal(null);
-      expect(body.errors[0].message).to.contain('User is unauthorized');
     });
+
+    cy.visit(linkedSystemsFormRoute);
+
+    cy.contains('h1', 'Add a system link').should('be.visible');
+    cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
+    cy.getByTestId('cedarSystemID')
+      .find('option')
+      .its('length')
+      .should('be.gt', 1);
+    cy.contains('We were unable to retrieve Cedar Systems').should('not.exist');
   });
 
-  it('blocks a non-EASI user from querying cedar contact lookup', () => {
-    cy.request({
-      method: 'POST',
-      url: '/api/graph/query',
-      failOnStatusCode: false,
-      headers: localAuthHeader({ name: 'USR1', allowEasi: false }),
-      body: {
-        operationName: 'GetCedarContactsPermissionCheck',
-        query: `
-          query GetCedarContactsPermissionCheck {
-            cedarPersonsByCommonName(commonName: "AB") {
-              euaUserId
-            }
-          }
-        `
+  it('lets a requester search for a Cedar contact when adding an additional contact', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetCedarContacts') {
+        req.alias = 'getCedarContacts';
       }
-    }).then(({ body, status }) => {
-      expect(status).to.equal(200);
-      expect(body.data ?? null).to.equal(null);
-      expect(body.errors[0].message).to.contain('User is unauthorized');
     });
+
+    cy.visit(contactDetailsRoute);
+
+    cy.contains('h1', 'Contact details').should('be.visible');
+    cy.contains('button', 'Add another contact').click();
+
+    cy.selectContact({
+      commonName: 'Audrey Abrams',
+      euaUserId: 'ADMI',
+      email: 'audrey.abrams@local.fake'
+    });
+
+    cy.wait('@getCedarContacts').its('response.statusCode').should('eq', 200);
+    cy.contains('button', 'Add contact').should('be.visible');
   });
 });
