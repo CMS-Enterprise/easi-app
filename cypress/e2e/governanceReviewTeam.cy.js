@@ -16,6 +16,9 @@ describe('Governance Review Team', () => {
       if (req.body.operationName === 'GetGovernanceTaskList') {
         req.alias = 'getGovernanceTaskList';
       }
+      if (req.body.operationName === 'UpdateSystemIntakeNote') {
+        req.alias = 'updateSystemIntakeNote';
+      }
     });
 
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
@@ -138,10 +141,14 @@ describe('Governance Review Team', () => {
       );
 
       cy.get('#GovernanceReviewTeam-EditNote')
-        .type(' edited', { force: true })
+        .click({ force: true })
+        .type(' edited', { delay: 75, force: true })
         .should('have.html', '<p>Test note edited</p>');
 
       cy.get('#GovernanceReviewTeam-SaveEditsButton').click({ force: true });
+      cy.wait('@updateSystemIntakeNote')
+        .its('response.statusCode')
+        .should('eq', 200);
 
       cy.get('[data-testid="user-note"]').first().contains('Test note edited');
     });
