@@ -46,6 +46,7 @@ import RequiredFieldsText from 'components/RequiredFieldsText';
 import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import flattenFormErrors from 'utils/flattenFormErrors';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 import user from 'utils/user';
 import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
 
@@ -218,9 +219,11 @@ const LinkedSystemsForm = () => {
 
   const doesNotSupportSystems = systemData?.systemIntake?.doesNotSupportSystems;
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
-  const isRequester =
-    isUserSet &&
-    euaId === systemData?.systemIntake?.requester?.userAccount.username;
+  const isRequester = isSystemIntakeRequester({
+    euaId,
+    intake: systemData?.systemIntake,
+    isUserSet
+  });
 
   const filteredCedarSystemIdOptions = useMemo<
     { label: string; value: string }[]

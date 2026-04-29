@@ -50,7 +50,7 @@ const getSystemWorkspaceQuery: MockedQuery<
         id: cedarSystemId,
         isMySystem: true,
         cedarSystem: {
-          __typename: 'CedarSystem',
+          __typename: 'CedarSystemWorkspaceSystem',
           id: cedarSystemId,
           name: cedarSystemName,
           isBookmarked: false,

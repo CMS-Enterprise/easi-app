@@ -35,6 +35,7 @@ import toastSuccess from 'components/ToastSuccess';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
 } from 'utils/linkCedarSystemIdQueryString';
@@ -126,8 +127,11 @@ function GovernanceTaskList() {
     systemIntake?.statusAdmin !== SystemIntakeStatusAdmin.LCID_RETIRING_SOON;
 
   // isRequester checks to see if the acting user is the requester (admins are not permitted to see this view, unless that admin is the requester)
-  const isRequester =
-    isUserSet && euaId === systemIntake?.requester?.userAccount.username;
+  const isRequester = isSystemIntakeRequester({
+    euaId,
+    intake: systemIntake,
+    isUserSet
+  });
 
   if (error || (systemIntake && !isRequester)) {
     return <NotFound />;

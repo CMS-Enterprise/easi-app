@@ -43,9 +43,24 @@ type CedarSystemDetails {
 This is the subset of CEDAR system data that a system team member can use to
 access workspace-scoped features without broader EASi-only read permissions.
 """
+type CedarSystemWorkspaceSystem {
+  id: UUID!
+  name: String!
+  isBookmarked: Boolean! @goField(forceResolver: true)
+  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
+    @goField(forceResolver: true)
+  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
+    @goField(forceResolver: true)
+}
+
+"""
+This is the subset of the core CEDAR system record that a system team member
+can use from workspace-scoped queries without broader EASi-only read
+permissions.
+"""
 type CedarSystemWorkspace {
   id: UUID!
-  cedarSystem: CedarSystem!
+  cedarSystem: CedarSystemWorkspaceSystem!
   roles: [CedarRole!]!
   isMySystem: Boolean!
 }

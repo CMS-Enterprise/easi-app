@@ -45,7 +45,7 @@ describe('System Workspace Requests Table', () => {
             id: cedarSystemId,
             isMySystem: true,
             cedarSystem: {
-              __typename: 'CedarSystem',
+              __typename: 'CedarSystemWorkspaceSystem',
               id: cedarSystemId,
               name: 'Office of Funny Walks',
               isBookmarked: false,
@@ -65,7 +65,7 @@ describe('System Workspace Requests Table', () => {
           __typename: 'CedarSystemWorkspace',
           id: cedarSystemId,
           cedarSystem: {
-            __typename: 'CedarSystem',
+            __typename: 'CedarSystemWorkspaceSystem',
             id: cedarSystemId,
             linkedSystemIntakes,
             linkedTrbRequests
@@ -170,7 +170,7 @@ describe('System Workspace Requests Table', () => {
             id: cedarSystemId,
             isMySystem: false,
             cedarSystem: {
-              __typename: 'CedarSystem',
+              __typename: 'CedarSystemWorkspaceSystem',
               id: cedarSystemId,
               name: 'Office of Funny Walks',
               isBookmarked: false,

@@ -135,6 +135,34 @@ describe('The System Intake page', () => {
     expect(screen.getByTestId('system-intake')).toBeInTheDocument();
   });
 
+  it('allows the requester through when only euaUserId matches', async () => {
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/view`,
+      mocks: [
+        getSystemIntakeQuery({
+          euaUserId: requester.userAccount.username,
+          requester: {
+            ...systemIntake.requester!,
+            userAccount: {
+              ...requester.userAccount,
+              username: 'STALE'
+            }
+          }
+        }),
+        getSystemIntakeContactsQuery()
+      ]
+    });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(
+      screen.getByRole('heading', {
+        name: /View submitted Intake Request/i,
+        level: 1
+      })
+    ).toBeInTheDocument();
+  });
+
   it('renders document upload', async () => {
     const user = userEvent.setup();
 

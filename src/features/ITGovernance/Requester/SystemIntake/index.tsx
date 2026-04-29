@@ -14,6 +14,7 @@ import { AppState } from 'stores/reducers/rootReducer';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
@@ -46,8 +47,11 @@ export const SystemIntake = () => {
   const isConfirmationPage =
     formPage === 'confirmation' || formPage === 'confirmation-error';
 
-  const isRequester =
-    isUserSet && euaId === systemIntake?.requester?.userAccount.username;
+  const isRequester = isSystemIntakeRequester({
+    euaId,
+    intake: systemIntake,
+    isUserSet
+  });
 
   if (!loading && !systemIntake) {
     return <NotFound />;

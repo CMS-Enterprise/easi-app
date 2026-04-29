@@ -34,6 +34,7 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import toastSuccess from 'components/ToastSuccess';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 import user from 'utils/user';
 
 import LinkedSystemsTable from './LinkedSystemsTable';
@@ -98,9 +99,11 @@ const LinkedSystems = () => {
   // Derived source of truth
   const noSystemsUsed = !!systemData?.systemIntake?.doesNotSupportSystems;
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
-  const isRequester =
-    isUserSet &&
-    euaId === systemData?.systemIntake?.requester?.userAccount.username;
+  const isRequester = isSystemIntakeRequester({
+    euaId,
+    intake: systemData?.systemIntake,
+    isUserSet
+  });
 
   // Local UI state
   const [systemToBeRemoved, setSystemToBeRemoved] = useState<string>();

@@ -502,15 +502,47 @@ export type CedarSystemMaintainerInformation = {
 };
 
 /**
- * This is the subset of CEDAR system data that a system team member can use to
- * access workspace-scoped features without broader EASi-only read permissions.
+ * This is the subset of the core CEDAR system record that a system team member
+ * can use from workspace-scoped queries without broader EASi-only read
+ * permissions.
  */
 export type CedarSystemWorkspace = {
   __typename: 'CedarSystemWorkspace';
-  cedarSystem: CedarSystem;
+  cedarSystem: CedarSystemWorkspaceSystem;
   id: Scalars['UUID']['output'];
   isMySystem: Scalars['Boolean']['output'];
   roles: Array<CedarRole>;
+};
+
+/**
+ * This is the subset of CEDAR system data that a system team member can use to
+ * access workspace-scoped features without broader EASi-only read permissions.
+ */
+export type CedarSystemWorkspaceSystem = {
+  __typename: 'CedarSystemWorkspaceSystem';
+  id: Scalars['UUID']['output'];
+  isBookmarked: Scalars['Boolean']['output'];
+  linkedSystemIntakes: Array<SystemIntake>;
+  linkedTrbRequests: Array<TRBRequest>;
+  name: Scalars['String']['output'];
+};
+
+
+/**
+ * This is the subset of CEDAR system data that a system team member can use to
+ * access workspace-scoped features without broader EASi-only read permissions.
+ */
+export type CedarSystemWorkspaceSystemLinkedSystemIntakesArgs = {
+  state?: SystemIntakeState;
+};
+
+
+/**
+ * This is the subset of CEDAR system data that a system team member can use to
+ * access workspace-scoped features without broader EASi-only read permissions.
+ */
+export type CedarSystemWorkspaceSystemLinkedTrbRequestsArgs = {
+  state?: TRBRequestState;
 };
 
 /** CedarThreat represents the response from the /threat endpoint from the CEDAR Core API. */
@@ -4371,7 +4403,7 @@ export type GetLinkedRequestsQueryVariables = Exact<{
 }>;
 
 
-export type GetLinkedRequestsQuery = { __typename: 'Query', cedarSystemWorkspace: { __typename: 'CedarSystemWorkspace', id: UUID, isMySystem: boolean, roles: Array<{ __typename: 'CedarRole', application: string, objectID: string, roleTypeID: string, assigneeType?: CedarAssigneeType | null, assigneeUsername?: string | null, assigneeEmail?: string | null, assigneeOrgID?: string | null, assigneeOrgName?: string | null, assigneeFirstName?: string | null, assigneeLastName?: string | null, roleTypeName?: string | null, roleID?: string | null }>, cedarSystem: { __typename: 'CedarSystem', id: UUID, linkedSystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, submittedAt?: Time | null, lcid?: string | null, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, name?: string | null, status: SystemIntakeStatusRequester, requester?: { __typename: 'SystemIntakeContact', id: UUID, userAccount: { __typename: 'UserAccount', id: UUID, commonName: string } } | null }>, linkedTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, state: TRBRequestState, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, form: { __typename: 'TRBRequestForm', submittedAt?: Time | null }, requesterInfo: { __typename: 'UserInfo', commonName: string } }> } } };
+export type GetLinkedRequestsQuery = { __typename: 'Query', cedarSystemWorkspace: { __typename: 'CedarSystemWorkspace', id: UUID, isMySystem: boolean, roles: Array<{ __typename: 'CedarRole', application: string, objectID: string, roleTypeID: string, assigneeType?: CedarAssigneeType | null, assigneeUsername?: string | null, assigneeEmail?: string | null, assigneeOrgID?: string | null, assigneeOrgName?: string | null, assigneeFirstName?: string | null, assigneeLastName?: string | null, roleTypeName?: string | null, roleID?: string | null }>, cedarSystem: { __typename: 'CedarSystemWorkspaceSystem', id: UUID, linkedSystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, submittedAt?: Time | null, lcid?: string | null, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, name?: string | null, status: SystemIntakeStatusRequester, requester?: { __typename: 'SystemIntakeContact', id: UUID, userAccount: { __typename: 'UserAccount', id: UUID, commonName: string } } | null }>, linkedTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, state: TRBRequestState, nextMeetingDate?: Time | null, lastMeetingDate?: Time | null, form: { __typename: 'TRBRequestForm', submittedAt?: Time | null }, requesterInfo: { __typename: 'UserInfo', commonName: string } }> } } };
 
 export type GetRequestsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4464,7 +4496,7 @@ export type GetSystemWorkspaceQueryVariables = Exact<{
 }>;
 
 
-export type GetSystemWorkspaceQuery = { __typename: 'Query', cedarSystemWorkspace: { __typename: 'CedarSystemWorkspace', id: UUID, isMySystem: boolean, cedarSystem: { __typename: 'CedarSystem', id: UUID, name: string, isBookmarked: boolean, linkedTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID }>, linkedSystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID }> }, roles: Array<{ __typename: 'CedarRole', application: string, objectID: string, roleTypeID: string, assigneeType?: CedarAssigneeType | null, assigneeUsername?: string | null, assigneeEmail?: string | null, assigneeOrgID?: string | null, assigneeOrgName?: string | null, assigneeFirstName?: string | null, assigneeLastName?: string | null, roleTypeName?: string | null, roleID?: string | null }> } };
+export type GetSystemWorkspaceQuery = { __typename: 'Query', cedarSystemWorkspace: { __typename: 'CedarSystemWorkspace', id: UUID, isMySystem: boolean, cedarSystem: { __typename: 'CedarSystemWorkspaceSystem', id: UUID, name: string, isBookmarked: boolean, linkedTrbRequests: Array<{ __typename: 'TRBRequest', id: UUID }>, linkedSystemIntakes: Array<{ __typename: 'SystemIntake', id: UUID }> }, roles: Array<{ __typename: 'CedarRole', application: string, objectID: string, roleTypeID: string, assigneeType?: CedarAssigneeType | null, assigneeUsername?: string | null, assigneeEmail?: string | null, assigneeOrgID?: string | null, assigneeOrgName?: string | null, assigneeFirstName?: string | null, assigneeLastName?: string | null, roleTypeName?: string | null, roleID?: string | null }> } };
 
 export type GetSystemWorkspaceAtoQueryVariables = Exact<{
   cedarSystemId: Scalars['UUID']['input'];

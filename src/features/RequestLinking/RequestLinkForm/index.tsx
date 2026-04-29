@@ -45,6 +45,7 @@ import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 import { useLinkCedarSystemIdQueryParam } from 'utils/linkCedarSystemIdQueryString';
 
 type RequestLinkFormFields = {
@@ -200,8 +201,11 @@ const RequestLinkForm = ({
     requestType === 'itgov' && data && 'systemIntake' in data
       ? data.systemIntake
       : undefined;
-  const isRequester =
-    isUserSet && euaId === requesterIntake?.requester?.userAccount.username;
+  const isRequester = isSystemIntakeRequester({
+    euaId,
+    intake: requesterIntake,
+    isUserSet
+  });
 
   // This form doesn't use field validation feedback
   // Instead the submission button is disabled according to field requirements
