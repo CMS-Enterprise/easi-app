@@ -102,17 +102,26 @@ func userOwnsSystemIntake(ctx context.Context, intake *models.SystemIntake) bool
 		return false
 	}
 
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
-		return true
-	}
-
 	principal := appcontext.Principal(ctx)
-	if !principal.AllowEASi() || intake.EUAUserID.IsZero() {
+	if !principal.AllowEASi() {
 		return false
 	}
 
 	account := principal.Account()
 	if account == nil {
+		return false
+	}
+
+	requester, err := SystemIntakeContactGetRequester(ctx, intake.ID)
+	if err != nil {
+		return false
+	}
+
+	if requester != nil && requester.UserID != uuid.Nil {
+		return requester.UserID == account.ID
+	}
+
+	if intake.EUAUserID.IsZero() {
 		return false
 	}
 

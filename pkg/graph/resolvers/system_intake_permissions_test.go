@@ -327,6 +327,71 @@ func (s *ResolverSuite) TestSystemIntakeRequesterWorkflowPermissions() {
 	}
 }
 
+func (s *ResolverSuite) TestArchiveSystemIntakeAllowsLegacyOwnerFallbackWithoutRequesterContact() {
+	resolver := s.systemIntakeMutationResolver()
+	creatorCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	legacyOwnerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+
+	intake, err := CreateSystemIntake(
+		creatorCtx,
+		s.testConfigs.Store,
+		models.CreateSystemIntakeInput{
+			Requester: &models.SystemIntakeRequesterInput{
+				Name: "Legacy Requester",
+			},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo),
+	)
+	s.NoError(err)
+	s.NotNil(intake)
+
+	requesterContact, err := SystemIntakeContactGetRequester(s.ctxWithNewDataloaders(), intake.ID)
+	s.NoError(err)
+	s.NotNil(requesterContact)
+
+	_, err = SystemIntakeContactDelete(s.ctxWithNewDataloaders(), s.testConfigs.Store, requesterContact.ID)
+	s.NoError(err)
+
+	intake.EUAUserID = null.StringFrom("TEST")
+	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+	s.NoError(err)
+
+	archivedIntake, err := resolver.ArchiveSystemIntake(legacyOwnerCtx, intake.ID)
+	s.NoError(err)
+	s.NotNil(archivedIntake)
+	s.NotNil(archivedIntake.ArchivedAt)
+}
+
+func (s *ResolverSuite) TestArchiveSystemIntakeDoesNotFallbackPastRequesterContactMismatch() {
+	resolver := s.systemIntakeMutationResolver()
+	creatorCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	legacyOwnerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+
+	intake, err := CreateSystemIntake(
+		creatorCtx,
+		s.testConfigs.Store,
+		models.CreateSystemIntakeInput{
+			Requester: &models.SystemIntakeRequesterInput{
+				Name: "Legacy Requester",
+			},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo),
+	)
+	s.NoError(err)
+	s.NotNil(intake)
+
+	intake.EUAUserID = null.StringFrom("TEST")
+	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+	s.NoError(err)
+
+	archivedIntake, err := resolver.ArchiveSystemIntake(legacyOwnerCtx, intake.ID)
+	s.Error(err)
+	s.Nil(archivedIntake)
+	s.EqualError(err, "user is unauthorized to archive system intake")
+}
+
 func (s *ResolverSuite) TestSystemIntakeAdminWorkflowPermissions() {
 	mutationResolver := s.systemIntakeMutationResolver()
 	typeResolver := s.systemIntakeTypeResolver()

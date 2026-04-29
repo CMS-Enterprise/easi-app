@@ -21,7 +21,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
@@ -1253,7 +1252,7 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 		return nil, errors.New("cannot remove system intake unless in Ready or In Progress status")
 	}
 
-	if !services.AuthorizeUserIsIntakeRequester(ctx, intake) {
+	if !userOwnsSystemIntake(ctx, intake) {
 		return nil, errors.New("user is unauthorized to archive system intake")
 	}
 
