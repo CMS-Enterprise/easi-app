@@ -327,7 +327,7 @@ func (s *ResolverSuite) TestSystemIntakeRequesterWorkflowPermissions() {
 	}
 }
 
-func (s *ResolverSuite) TestArchiveSystemIntakeAllowsLegacyOwnerFallbackWithoutRequesterContact() {
+func (s *ResolverSuite) TestArchiveSystemIntakeAllowsLegacyOwnerFallbackWithoutUsableRequesterContact() {
 	resolver := s.systemIntakeMutationResolver()
 	creatorCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
 	legacyOwnerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
@@ -350,11 +350,30 @@ func (s *ResolverSuite) TestArchiveSystemIntakeAllowsLegacyOwnerFallbackWithoutR
 	s.NoError(err)
 	s.NotNil(requesterContact)
 
-	_, err = SystemIntakeContactDelete(s.ctxWithNewDataloaders(), s.testConfigs.Store, requesterContact.ID)
+	// Simulate a legacy requester contact that no longer has a usable linked user account.
+	_, err = s.testConfigs.Store.NamedExecContext(
+		s.testConfigs.Context,
+		`UPDATE system_intake_contacts SET user_id = :user_id WHERE id = :id`,
+		map[string]any{
+			"id":      requesterContact.ID,
+			"user_id": uuid.Nil,
+		},
+	)
 	s.NoError(err)
 
-	intake.EUAUserID = null.StringFrom("TEST")
-	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+	requesterContact, err = SystemIntakeContactGetRequester(s.ctxWithNewDataloaders(), intake.ID)
+	s.NoError(err)
+	s.NotNil(requesterContact)
+	s.Equal(uuid.Nil, requesterContact.UserID)
+
+	_, err = s.testConfigs.Store.NamedExecContext(
+		s.testConfigs.Context,
+		`UPDATE system_intakes SET eua_user_id = :eua_user_id WHERE id = :id`,
+		map[string]any{
+			"id":          intake.ID,
+			"eua_user_id": "TEST",
+		},
+	)
 	s.NoError(err)
 
 	archivedIntake, err := resolver.ArchiveSystemIntake(legacyOwnerCtx, intake.ID)
