@@ -24,6 +24,19 @@ describe('isSystemIntakeRequester', () => {
         euaId: 'ABCD',
         intake: {
           euaUserId: 'ABCD',
+          requester: null
+        },
+        isUserSet: true
+      })
+    ).toBe(true);
+  });
+
+  it('returns false when the requester username is stale', () => {
+    expect(
+      isSystemIntakeRequester({
+        euaId: 'ABCD',
+        intake: {
+          euaUserId: 'ABCD',
           requester: {
             userAccount: {
               username: 'STALE'
@@ -32,7 +45,7 @@ describe('isSystemIntakeRequester', () => {
         },
         isUserSet: true
       })
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('returns false when neither identifier matches', () => {

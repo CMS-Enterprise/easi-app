@@ -135,7 +135,7 @@ describe('The System Intake page', () => {
     expect(screen.getByTestId('system-intake')).toBeInTheDocument();
   });
 
-  it('allows the requester through when only euaUserId matches', async () => {
+  it('renders not found when requester contact overrides a stale euaUserId', async () => {
     renderSystemIntake({
       route: `/system/${systemIntake.id}/view`,
       mocks: [
@@ -157,7 +157,7 @@ describe('The System Intake page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: /View submitted Intake Request/i,
+        name: /this page cannot be found/i,
         level: 1
       })
     ).toBeInTheDocument();

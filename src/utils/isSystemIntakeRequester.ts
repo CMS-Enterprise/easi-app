@@ -22,10 +22,13 @@ const isSystemIntakeRequester = ({
     return false;
   }
 
-  return (
-    euaId === intake.requester?.userAccount?.username ||
-    euaId === intake.euaUserId
-  );
+  const requesterUsername = intake.requester?.userAccount?.username;
+
+  if (requesterUsername) {
+    return euaId === requesterUsername;
+  }
+
+  return euaId === intake.euaUserId;
 };
 
 export default isSystemIntakeRequester;

@@ -13,7 +13,9 @@ import {
 import i18next from 'i18next';
 import {
   attendees,
+  getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
+  requester,
   trbRequest
 } from 'tests/mock/trbRequest';
 
@@ -130,12 +132,30 @@ describe('TRB Request Form Feedback', () => {
       euaUserId: 'TEST',
       groups: ['EASI_TRB_ADMIN_D']
     });
+    const attendeesResult = vi.fn(() => ({
+      data: {
+        __typename: 'Query',
+        trbRequest: {
+          __typename: 'TRBRequest',
+          id: mockTrbRequestId,
+          attendees: [requester, ...attendees]
+        }
+      }
+    }));
 
     render(
       <MemoryRouter
         initialEntries={[`/trb/requests/${mockTrbRequestId}/basic`]}
       >
-        <MockedProvider mocks={[getTrbRequestQuery]}>
+        <MockedProvider
+          mocks={[
+            getTrbRequestQuery,
+            {
+              ...getTRBRequestAttendeesQuery,
+              result: attendeesResult
+            }
+          ]}
+        >
           <Route exact path="/trb/requests/:id/:step?/:view?">
             <Provider store={store}>
               <RequestForm />
@@ -150,5 +170,7 @@ describe('TRB Request Form Feedback', () => {
         name: i18next.t<string>('error:notFound.heading')
       })
     ).toBeInTheDocument();
+
+    expect(attendeesResult).not.toHaveBeenCalled();
   });
 });

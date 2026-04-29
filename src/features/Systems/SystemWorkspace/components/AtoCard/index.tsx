@@ -15,7 +15,8 @@ import showVal from 'utils/showVal';
 import SpacesCard from '../SpacesCard';
 
 type Props = {
-  atoStatus: AtoStatus;
+  atoStatus?: AtoStatus;
+  atoUnavailable?: boolean;
   oaStatus?: string | null;
   dateAuthorizationMemoExpires?: GetSystemProfileATO['dateAuthorizationMemoExpires'];
   isso?: CedarRole;
@@ -23,6 +24,7 @@ type Props = {
 
 function AtoCard({
   atoStatus,
+  atoUnavailable = false,
   oaStatus,
   dateAuthorizationMemoExpires,
   isso
@@ -36,23 +38,34 @@ function AtoCard({
         description={t('spaces.ato.description')}
         body={
           <>
-            <div className="display-flex">
-              <AtoStatusTag
-                status={atoStatus}
-                className="display-flex flex-align-center margin-right-1"
-              />
-              {oaStatus === 'OA Member' && (
-                <span className="display-flex flex-align-center text-base">
-                  {t('spaces.ato.atoOngoing')}
-                </span>
-              )}
-              {oaStatus !== 'OA Member' && dateAuthorizationMemoExpires && (
-                <span className="display-flex flex-align-center text-base">
-                  {atoStatus === 'Expired' ? 'Expired' : 'Expires'}{' '}
-                  {formatDateUtc(dateAuthorizationMemoExpires, 'MM/dd/yyyy')}
-                </span>
-              )}
-            </div>
+            {atoUnavailable ? (
+              <p className="margin-top-0 margin-bottom-2">
+                {t('spaces.ato.unavailable')}
+              </p>
+            ) : (
+              atoStatus && (
+                <div className="display-flex">
+                  <AtoStatusTag
+                    status={atoStatus}
+                    className="display-flex flex-align-center margin-right-1"
+                  />
+                  {oaStatus === 'OA Member' && (
+                    <span className="display-flex flex-align-center text-base">
+                      {t('spaces.ato.atoOngoing')}
+                    </span>
+                  )}
+                  {oaStatus !== 'OA Member' && dateAuthorizationMemoExpires && (
+                    <span className="display-flex flex-align-center text-base">
+                      {atoStatus === 'Expired' ? 'Expired' : 'Expires'}{' '}
+                      {formatDateUtc(
+                        dateAuthorizationMemoExpires,
+                        'MM/dd/yyyy'
+                      )}
+                    </span>
+                  )}
+                </div>
+              )
+            )}
             <p>
               <strong>{t('spaces.ato.isso')}</strong>
               <br />

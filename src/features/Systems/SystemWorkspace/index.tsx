@@ -46,19 +46,19 @@ export const SystemWorkspace = () => {
     }
   });
 
-  const { data: atoData } = useGetSystemWorkspaceAtoQuery({
+  const { data: atoData, error: atoError } = useGetSystemWorkspaceAtoQuery({
     variables: {
       cedarSystemId: systemId
     },
-    errorPolicy: 'ignore'
+    errorPolicy: 'all'
   });
 
   const cedarSystem = data?.cedarSystemWorkspace?.cedarSystem;
   const ato = atoData?.cedarAuthorityToOperate?.[0];
-  const atoStatus = getAtoStatus(
-    ato?.dateAuthorizationMemoExpires,
-    ato?.oaStatus
-  );
+  const atoUnavailable = !!atoError;
+  const atoStatus = atoUnavailable
+    ? undefined
+    : getAtoStatus(ato?.dateAuthorizationMemoExpires, ato?.oaStatus);
 
   const { isso } = useMemo(
     () => ({
@@ -160,6 +160,7 @@ export const SystemWorkspace = () => {
 
             <AtoCard
               atoStatus={atoStatus}
+              atoUnavailable={atoUnavailable}
               oaStatus={ato?.oaStatus}
               dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
               isso={isso}
