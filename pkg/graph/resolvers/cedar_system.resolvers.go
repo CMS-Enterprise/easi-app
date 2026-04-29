@@ -164,7 +164,7 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+	if err := authorizeUserCanAccessCEDARSystemDirectory(ctx); err != nil {
 		return nil, err
 	}
 

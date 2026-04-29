@@ -78,6 +78,15 @@ func authorizeUserCanAccessCEDARTeamMetadata(
 	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar team metadata")}
 }
 
+func authorizeUserCanAccessCEDARSystemDirectory(ctx context.Context) error {
+	principal := appcontext.Principal(ctx)
+	if principal.AllowEASi() || principal.AllowGRT() {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar system directory")}
+}
+
 func authorizeUserCanAccessCEDARReadQueries(ctx context.Context) error {
 	if appcontext.Principal(ctx).AllowEASi() {
 		return nil

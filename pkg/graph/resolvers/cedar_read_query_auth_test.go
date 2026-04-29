@@ -95,3 +95,42 @@ func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
 		})
 	}
 }
+
+func TestCedarSystemsAllowsGRTWithoutEASI(t *testing.T) {
+	t.Parallel()
+
+	resolver := &queryResolver{&Resolver{
+		service: ResolverService{
+			SearchCommonNameContains: func(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
+				return []*models.UserInfo{}, nil
+			},
+		},
+		cedarCoreClient: cedarcore.NewClient(
+			appcontext.WithLogger(context.Background(), zap.NewNop()),
+			"fake",
+			"fake",
+			"1.0.0",
+			false,
+			true,
+		),
+	}}
+
+	ctx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "GRT1",
+		JobCodeGRT:  true,
+		UserAccount: &authentication.UserAccount{Username: "GRT1"},
+	})
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+
+	require.NoError(t, authorizeUserCanAccessCEDARSystemDirectory(ctx))
+
+	systems, err := resolver.CedarSystems(ctx)
+	require.NoError(t, err)
+	require.NotNil(t, systems)
+
+	_, err = resolver.CedarAuthorityToOperate(ctx, cedarSystemID)
+	require.Error(t, err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	require.True(t, errors.As(err, &unauthorizedErr))
+}
