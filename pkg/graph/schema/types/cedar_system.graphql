@@ -41,7 +41,7 @@ type CedarSystemDetails {
 
 extend type Query {
   cedarSystem(cedarSystemId: UUID!): CedarSystem @hasRole(role: EASI_USER)
-  cedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
+  cedarSystems: [CedarSystem!]
   myCedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
 
   """

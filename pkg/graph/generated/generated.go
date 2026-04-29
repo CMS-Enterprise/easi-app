@@ -11683,7 +11683,7 @@ type CedarSystemDetails {
 
 extend type Query {
   cedarSystem(cedarSystemId: UUID!): CedarSystem @hasRole(role: EASI_USER)
-  cedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
+  cedarSystems: [CedarSystem!]
   myCedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
 
   """
@@ -35424,25 +35424,7 @@ func (ec *executionContext) _Query_cedarSystems(ctx context.Context, field graph
 		func(ctx context.Context) (any, error) {
 			return ec.resolvers.Query().CedarSystems(ctx)
 		},
-		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
-			directive0 := next
-
-			directive1 := func(ctx context.Context) (any, error) {
-				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
-				if err != nil {
-					var zeroVal []*models.CedarSystem
-					return zeroVal, err
-				}
-				if ec.directives.HasRole == nil {
-					var zeroVal []*models.CedarSystem
-					return zeroVal, errors.New("directive hasRole is not implemented")
-				}
-				return ec.directives.HasRole(ctx, nil, directive0, role)
-			}
-
-			next = directive1
-			return next
-		},
+		nil,
 		ec.marshalOCedarSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ,
 		true,
 		false,
