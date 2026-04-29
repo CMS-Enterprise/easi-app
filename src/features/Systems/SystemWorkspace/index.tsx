@@ -9,7 +9,10 @@ import {
   GridContainer
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
+import {
+  useGetSystemWorkspaceAtoQuery,
+  useGetSystemWorkspaceQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import getAtoStatus from 'components/AtoStatus/getAtoStatus';
@@ -43,8 +46,15 @@ export const SystemWorkspace = () => {
     }
   });
 
-  const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
-  const ato = data?.cedarAuthorityToOperate?.[0];
+  const { data: atoData } = useGetSystemWorkspaceAtoQuery({
+    variables: {
+      cedarSystemId: systemId
+    },
+    errorPolicy: 'ignore'
+  });
+
+  const cedarSystem = data?.cedarSystemWorkspace?.cedarSystem;
+  const ato = atoData?.cedarAuthorityToOperate?.[0];
   const atoStatus = getAtoStatus(
     ato?.dateAuthorizationMemoExpires,
     ato?.oaStatus
@@ -52,8 +62,8 @@ export const SystemWorkspace = () => {
 
   const { isso } = useMemo(
     () => ({
-      isso: data?.cedarSystemDetails?.roles?.length
-        ? data.cedarSystemDetails.roles?.find(
+      isso: data?.cedarSystemWorkspace?.roles?.length
+        ? data.cedarSystemWorkspace.roles?.find(
             role => role.roleTypeName === RoleTypeName.ISSO
           )
         : undefined
@@ -74,14 +84,14 @@ export const SystemWorkspace = () => {
     return <PageLoading />;
   }
 
-  if (error || !data || !data.cedarSystemDetails || !cedarSystem) {
+  if (error || !data || !data.cedarSystemWorkspace || !cedarSystem) {
     return <NotFound />;
   }
 
   const { isBookmarked } = cedarSystem;
 
   // Redirect to system profile if not a team member for the system
-  if (flags.systemWorkspace && !data.cedarSystemDetails.isMySystem) {
+  if (flags.systemWorkspace && !data.cedarSystemWorkspace.isMySystem) {
     return <Redirect to={`/systems/${systemId}`} />;
   }
 
@@ -171,7 +181,7 @@ export const SystemWorkspace = () => {
         <div className="bg-base-lightest padding-top-6 padding-bottom-10">
           <GridContainer>
             <CardGroup>
-              <TeamCard roles={data.cedarSystemDetails.roles || []} />
+              <TeamCard roles={data.cedarSystemWorkspace.roles || []} />
             </CardGroup>
           </GridContainer>
         </div>

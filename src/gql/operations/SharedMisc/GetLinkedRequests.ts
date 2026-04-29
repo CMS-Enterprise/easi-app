@@ -6,7 +6,12 @@ export default gql(/* GraphQL */ `
     $systemIntakeState: SystemIntakeState!
     $trbRequestState: TRBRequestState!
   ) {
-    cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+    cedarSystemWorkspace(cedarSystemId: $cedarSystemId) {
+      id
+      isMySystem
+      roles {
+        ...CedarRoleFragment
+      }
       cedarSystem {
         id
         linkedSystemIntakes: linkedSystemIntakes(state: $systemIntakeState) {

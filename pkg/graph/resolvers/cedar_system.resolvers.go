@@ -191,6 +191,35 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 	return systems, nil
 }
 
+// CedarSystemWorkspace is the resolver for the cedarSystemWorkspace field.
+func (r *queryResolver) CedarSystemWorkspace(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemWorkspace, error) {
+	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
+		return nil, err
+	}
+
+	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	userEua := appcontext.Principal(ctx).ID()
+	isMySystem := slices.ContainsFunc(cedarRoles, func(role *models.CedarRole) bool {
+		return role.AssigneeUsername.String == userEua
+	})
+
+	return &models.CedarSystemWorkspace{
+		ID:          cedarSystem.ID,
+		CedarSystem: cedarSystem,
+		Roles:       cedarRoles,
+		IsMySystem:  isMySystem,
+	}, nil
+}
+
 // CedarSystemDetails is the resolver for the cedarSystemDetails field.
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error) {
 	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {

@@ -40,9 +40,9 @@ describe('System Workspace Requests Table', () => {
       result: {
         data: {
           __typename: 'Query',
-          cedarAuthorityToOperate: [],
-          cedarSystemDetails: {
-            __typename: 'CedarSystemDetails',
+          cedarSystemWorkspace: {
+            __typename: 'CedarSystemWorkspace',
+            id: cedarSystemId,
             isMySystem: true,
             cedarSystem: {
               __typename: 'CedarSystem',
@@ -61,14 +61,17 @@ describe('System Workspace Requests Table', () => {
     const result: FetchResult<GetLinkedRequestsQuery> = {
       data: {
         __typename: 'Query',
-        cedarSystemDetails: {
-          __typename: 'CedarSystemDetails',
+        cedarSystemWorkspace: {
+          __typename: 'CedarSystemWorkspace',
+          id: cedarSystemId,
           cedarSystem: {
             __typename: 'CedarSystem',
             id: cedarSystemId,
             linkedSystemIntakes,
             linkedTrbRequests
-          }
+          },
+          isMySystem: true,
+          roles: []
         }
       }
     };
@@ -162,9 +165,9 @@ describe('System Workspace Requests Table', () => {
       result: {
         data: {
           __typename: 'Query',
-          cedarAuthorityToOperate: [],
-          cedarSystemDetails: {
-            __typename: 'CedarSystemDetails',
+          cedarSystemWorkspace: {
+            __typename: 'CedarSystemWorkspace',
+            id: cedarSystemId,
             isMySystem: false,
             cedarSystem: {
               __typename: 'CedarSystem',

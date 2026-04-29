@@ -153,6 +153,15 @@ type CedarSystemMaintainerInformation struct {
 	YearToRetireReplace                   *string    `json:"yearToRetireReplace,omitempty"`
 }
 
+// This is the subset of CEDAR system data that a system team member can use to
+// access workspace-scoped features without broader EASi-only read permissions.
+type CedarSystemWorkspace struct {
+	ID          uuid.UUID    `json:"id"`
+	CedarSystem *CedarSystem `json:"cedarSystem"`
+	Roles       []*CedarRole `json:"roles"`
+	IsMySystem  bool         `json:"isMySystem"`
+}
+
 // The input needed to close a TRB request
 type CloseTRBRequestInput struct {
 	ID             uuid.UUID `json:"id"`

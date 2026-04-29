@@ -436,6 +436,13 @@ type ComplexityRoot struct {
 		YearToRetireReplace                   func(childComplexity int) int
 	}
 
+	CedarSystemWorkspace struct {
+		CedarSystem func(childComplexity int) int
+		ID          func(childComplexity int) int
+		IsMySystem  func(childComplexity int) int
+		Roles       func(childComplexity int) int
+	}
+
 	CedarThreat struct {
 		AlternativeID     func(childComplexity int) int
 		ControlFamily     func(childComplexity int) int
@@ -682,6 +689,7 @@ type ComplexityRoot struct {
 		CedarSystem                      func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSystemBookmarks             func(childComplexity int) int
 		CedarSystemDetails               func(childComplexity int, cedarSystemID uuid.UUID) int
+		CedarSystemWorkspace             func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSystems                     func(childComplexity int) int
 		CedarThreat                      func(childComplexity int, cedarSystemID uuid.UUID) int
 		CompareGRBReviewersByIntakeID    func(childComplexity int, id uuid.UUID) int
@@ -1463,6 +1471,7 @@ type QueryResolver interface {
 	CedarSystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
+	CedarSystemWorkspace(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemWorkspace, error)
 	CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error)
 	CurrentUser(ctx context.Context) (*models.CurrentUser, error)
 	SystemProfileSectionLocks(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error)
@@ -3449,6 +3458,31 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.CedarSystemMaintainerInformation.YearToRetireReplace(childComplexity), true
 
+	case "CedarSystemWorkspace.cedarSystem":
+		if e.complexity.CedarSystemWorkspace.CedarSystem == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemWorkspace.CedarSystem(childComplexity), true
+	case "CedarSystemWorkspace.id":
+		if e.complexity.CedarSystemWorkspace.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemWorkspace.ID(childComplexity), true
+	case "CedarSystemWorkspace.isMySystem":
+		if e.complexity.CedarSystemWorkspace.IsMySystem == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemWorkspace.IsMySystem(childComplexity), true
+	case "CedarSystemWorkspace.roles":
+		if e.complexity.CedarSystemWorkspace.Roles == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemWorkspace.Roles(childComplexity), true
+
 	case "CedarThreat.alternativeId":
 		if e.complexity.CedarThreat.AlternativeID == nil {
 			break
@@ -5090,6 +5124,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.CedarSystemDetails(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
+	case "Query.cedarSystemWorkspace":
+		if e.complexity.Query.CedarSystemWorkspace == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarSystemWorkspace_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarSystemWorkspace(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.cedarSystems":
 		if e.complexity.Query.CedarSystems == nil {
 			break
@@ -11681,10 +11726,22 @@ type CedarSystemDetails {
   atoExpirationDate: Time
 }
 
+"""
+This is the subset of CEDAR system data that a system team member can use to
+access workspace-scoped features without broader EASi-only read permissions.
+"""
+type CedarSystemWorkspace {
+  id: UUID!
+  cedarSystem: CedarSystem!
+  roles: [CedarRole!]!
+  isMySystem: Boolean!
+}
+
 extend type Query {
   cedarSystem(cedarSystemId: UUID!): CedarSystem @hasRole(role: EASI_USER)
   cedarSystems: [CedarSystem!]
   myCedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
+  cedarSystemWorkspace(cedarSystemId: UUID!): CedarSystemWorkspace!
 
   """
   Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
@@ -13077,6 +13134,17 @@ func (ec *executionContext) field_Query_cedarSubSystems_args(ctx context.Context
 }
 
 func (ec *executionContext) field_Query_cedarSystemDetails_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
+	if err != nil {
+		return nil, err
+	}
+	args["cedarSystemId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarSystemWorkspace_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
 	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
@@ -22844,6 +22912,194 @@ func (ec *executionContext) fieldContext_CedarSystemMaintainerInformation_yearTo
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystemWorkspace_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemWorkspace) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_CedarSystemWorkspace_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemWorkspace_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemWorkspace",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystemWorkspace_cedarSystem(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemWorkspace) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_CedarSystemWorkspace_cedarSystem,
+		func(ctx context.Context) (any, error) {
+			return obj.CedarSystem, nil
+		},
+		nil,
+		ec.marshalNCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemWorkspace_cedarSystem(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemWorkspace",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "name":
+				return ec.fieldContext_CedarSystem_name(ctx, field)
+			case "description":
+				return ec.fieldContext_CedarSystem_description(ctx, field)
+			case "acronym":
+				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
+			case "status":
+				return ec.fieldContext_CedarSystem_status(ctx, field)
+			case "businessOwnerOrg":
+				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
+			case "businessOwnerOrgComp":
+				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
+			case "systemMaintainerOrg":
+				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
+			case "systemMaintainerOrgComp":
+				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
+			case "versionId":
+				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedTrbRequests":
+				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
+			case "linkedSystemIntakes":
+				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystemWorkspace_roles(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemWorkspace) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_CedarSystemWorkspace_roles,
+		func(ctx context.Context) (any, error) {
+			return obj.Roles, nil
+		},
+		nil,
+		ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemWorkspace_roles(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemWorkspace",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "application":
+				return ec.fieldContext_CedarRole_application(ctx, field)
+			case "objectID":
+				return ec.fieldContext_CedarRole_objectID(ctx, field)
+			case "roleTypeID":
+				return ec.fieldContext_CedarRole_roleTypeID(ctx, field)
+			case "assigneeType":
+				return ec.fieldContext_CedarRole_assigneeType(ctx, field)
+			case "assigneeUsername":
+				return ec.fieldContext_CedarRole_assigneeUsername(ctx, field)
+			case "assigneeEmail":
+				return ec.fieldContext_CedarRole_assigneeEmail(ctx, field)
+			case "assigneeOrgID":
+				return ec.fieldContext_CedarRole_assigneeOrgID(ctx, field)
+			case "assigneeOrgName":
+				return ec.fieldContext_CedarRole_assigneeOrgName(ctx, field)
+			case "assigneeFirstName":
+				return ec.fieldContext_CedarRole_assigneeFirstName(ctx, field)
+			case "assigneeLastName":
+				return ec.fieldContext_CedarRole_assigneeLastName(ctx, field)
+			case "assigneePhone":
+				return ec.fieldContext_CedarRole_assigneePhone(ctx, field)
+			case "assigneeDesc":
+				return ec.fieldContext_CedarRole_assigneeDesc(ctx, field)
+			case "roleTypeName":
+				return ec.fieldContext_CedarRole_roleTypeName(ctx, field)
+			case "roleTypeDesc":
+				return ec.fieldContext_CedarRole_roleTypeDesc(ctx, field)
+			case "roleID":
+				return ec.fieldContext_CedarRole_roleID(ctx, field)
+			case "objectType":
+				return ec.fieldContext_CedarRole_objectType(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarRole", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystemWorkspace_isMySystem(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemWorkspace) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_CedarSystemWorkspace_isMySystem,
+		func(ctx context.Context) (any, error) {
+			return obj.IsMySystem, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemWorkspace_isMySystem(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemWorkspace",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -35563,6 +35819,57 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(_ context.Context,
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_cedarSystemWorkspace(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_cedarSystemWorkspace,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().CedarSystemWorkspace(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
+		},
+		nil,
+		ec.marshalNCedarSystemWorkspace2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemWorkspace,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_cedarSystemWorkspace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_CedarSystemWorkspace_id(ctx, field)
+			case "cedarSystem":
+				return ec.fieldContext_CedarSystemWorkspace_cedarSystem(ctx, field)
+			case "roles":
+				return ec.fieldContext_CedarSystemWorkspace_roles(ctx, field)
+			case "isMySystem":
+				return ec.fieldContext_CedarSystemWorkspace_isMySystem(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarSystemWorkspace", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarSystemWorkspace_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -58145,6 +58452,60 @@ func (ec *executionContext) _CedarSystemMaintainerInformation(ctx context.Contex
 	return out
 }
 
+var cedarSystemWorkspaceImplementors = []string{"CedarSystemWorkspace"}
+
+func (ec *executionContext) _CedarSystemWorkspace(ctx context.Context, sel ast.SelectionSet, obj *models.CedarSystemWorkspace) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarSystemWorkspaceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarSystemWorkspace")
+		case "id":
+			out.Values[i] = ec._CedarSystemWorkspace_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "cedarSystem":
+			out.Values[i] = ec._CedarSystemWorkspace_cedarSystem(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "roles":
+			out.Values[i] = ec._CedarSystemWorkspace_roles(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "isMySystem":
+			out.Values[i] = ec._CedarSystemWorkspace_isMySystem(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var cedarThreatImplementors = []string{"CedarThreat"}
 
 func (ec *executionContext) _CedarThreat(ctx context.Context, sel ast.SelectionSet, obj *models.CedarThreat) graphql.Marshaler {
@@ -60606,6 +60967,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_myCedarSystems(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "cedarSystemWorkspace":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarSystemWorkspace(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -67732,6 +68115,50 @@ func (ec *executionContext) marshalNCedarExchangeTypeOfDataItem2ᚖgithubᚗcom�
 	return ec._CedarExchangeTypeOfDataItem(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarRole) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarRole2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRole(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNCedarRole2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRole(ctx context.Context, sel ast.SelectionSet, v *models.CedarRole) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -67966,6 +68393,20 @@ func (ec *executionContext) marshalNCedarSystemBookmark2ᚖgithubᚗcomᚋcmsᚑ
 		return graphql.Null
 	}
 	return ec._CedarSystemBookmark(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarSystemWorkspace2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemWorkspace(ctx context.Context, sel ast.SelectionSet, v models.CedarSystemWorkspace) graphql.Marshaler {
+	return ec._CedarSystemWorkspace(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCedarSystemWorkspace2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemWorkspace(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystemWorkspace) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarSystemWorkspace(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCedarThreat2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreat(ctx context.Context, sel ast.SelectionSet, v *models.CedarThreat) graphql.Marshaler {

@@ -62,7 +62,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
   });
 
   const { linkedSystemIntakes, linkedTrbRequests } =
-    data?.cedarSystemDetails?.cedarSystem || {};
+    data?.cedarSystemWorkspace?.cedarSystem || {};
 
   const tableData: SystemLinkedRequest[] = useMemo(
     () =>
@@ -385,8 +385,8 @@ function SystemWorkspaceRequests() {
 
   if (
     workspaceError ||
-    !workspaceData?.cedarSystemDetails?.cedarSystem ||
-    !workspaceData.cedarSystemDetails.isMySystem
+    !workspaceData?.cedarSystemWorkspace?.cedarSystem ||
+    !workspaceData.cedarSystemWorkspace.isMySystem
   ) {
     return <NotFoundPartial />;
   }

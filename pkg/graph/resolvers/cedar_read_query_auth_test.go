@@ -134,3 +134,41 @@ func TestCedarSystemsAllowsGRTWithoutEASI(t *testing.T) {
 	var unauthorizedErr *apperrors.UnauthorizedError
 	require.True(t, errors.As(err, &unauthorizedErr))
 }
+
+func TestCedarSystemWorkspaceAllowsTeamMemberWithoutEASI(t *testing.T) {
+	t.Parallel()
+
+	resolver := &queryResolver{&Resolver{
+		service: ResolverService{
+			SearchCommonNameContains: func(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
+				return []*models.UserInfo{}, nil
+			},
+		},
+		cedarCoreClient: cedarcore.NewClient(
+			appcontext.WithLogger(context.Background(), zap.NewNop()),
+			"fake",
+			"fake",
+			"1.0.0",
+			false,
+			true,
+		),
+	}}
+
+	ctx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+
+	workspace, err := resolver.CedarSystemWorkspace(ctx, cedarSystemID)
+	require.NoError(t, err)
+	require.NotNil(t, workspace)
+	require.NotNil(t, workspace.CedarSystem)
+	require.True(t, workspace.IsMySystem)
+
+	_, err = resolver.CedarAuthorityToOperate(ctx, cedarSystemID)
+	require.Error(t, err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	require.True(t, errors.As(err, &unauthorizedErr))
+}

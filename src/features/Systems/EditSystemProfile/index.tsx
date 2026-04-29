@@ -37,17 +37,17 @@ const EditSystemProfile = () => {
 
   if (loading) return <PageLoading />;
 
-  const cedarSystemDetails = data?.cedarSystemDetails;
+  const cedarSystemWorkspace = data?.cedarSystemWorkspace;
 
   if (
     error ||
-    !cedarSystemDetails?.cedarSystem ||
-    !cedarSystemDetails.isMySystem
+    !cedarSystemWorkspace?.cedarSystem ||
+    !cedarSystemWorkspace.isMySystem
   ) {
     return <NotFound />;
   }
 
-  const { name: systemName = '' } = cedarSystemDetails.cedarSystem;
+  const { name: systemName = '' } = cedarSystemWorkspace.cedarSystem;
 
   return (
     <SystemSectionLockContextProvider>

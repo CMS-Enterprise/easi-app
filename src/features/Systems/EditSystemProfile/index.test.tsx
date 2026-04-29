@@ -45,9 +45,9 @@ const getSystemWorkspaceQuery: MockedQuery<
   result: {
     data: {
       __typename: 'Query',
-      cedarAuthorityToOperate: [],
-      cedarSystemDetails: {
-        __typename: 'CedarSystemDetails',
+      cedarSystemWorkspace: {
+        __typename: 'CedarSystemWorkspace',
+        id: cedarSystemId,
         isMySystem: true,
         cedarSystem: {
           __typename: 'CedarSystem',
@@ -93,13 +93,7 @@ describe('EditSystemProfile', () => {
           cedarSystemId: 'invalid'
         }
       },
-      result: {
-        data: {
-          __typename: 'Query',
-          cedarAuthorityToOperate: [],
-          cedarSystemDetails: null
-        }
-      }
+      error: new Error('System not found')
     };
 
     render(
