@@ -21,6 +21,15 @@ func SetSystemIntakeRelationExistingService(
 	store *storage.Store,
 	input *models.SetSystemIntakeRelationExistingServiceInput,
 ) (*models.SystemIntake, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
@@ -56,6 +65,15 @@ func SetSystemIntakeRelationNewSystem(
 	store *storage.Store,
 	input *models.SetSystemIntakeRelationNewSystemInput,
 ) (*models.SystemIntake, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
@@ -91,6 +109,15 @@ func SetSystemIntakeRelationExistingSystem(
 	getCedarSystem func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error),
 	input *models.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
@@ -132,6 +159,15 @@ func SetSystemSupportAndUnlinkSystemIntakeRelation(
 	intakeID uuid.UUID,
 	doesNotSupportSystems bool,
 ) (*models.SystemIntake, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, intakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)

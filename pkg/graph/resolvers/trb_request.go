@@ -124,6 +124,36 @@ func GetTRBRequestByID(ctx context.Context, store *storage.Store, id uuid.UUID) 
 	return store.GetTRBRequestByID(ctx, id)
 }
 
+func GetTRBRequest(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequest, error) {
+	trbRequest, err := GetTRBRequestByID(ctx, store, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanViewTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
+	return trbRequest, nil
+}
+
+func GetTRBRequestLCIDOptions(
+	ctx context.Context,
+	store *storage.Store,
+	trbRequestID uuid.UUID,
+) ([]*models.SystemIntakeLCIDOption, error) {
+	trbRequest, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
+	return store.GetSystemIntakeLCIDOptions(ctx)
+}
+
 // GetTRBRequests returns all TRB Requests
 func GetTRBRequests(ctx context.Context, store *storage.Store, archived bool) ([]*models.TRBRequest, error) {
 	return store.GetTRBRequests(ctx, archived)

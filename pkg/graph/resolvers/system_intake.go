@@ -15,6 +15,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -251,6 +252,10 @@ func UpdateSystemIntakeRequestType(ctx context.Context, store *storage.Store, sy
 		return nil, err
 	}
 
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	// Update request type and set UpdatedAt
 	intake.RequestType = newType
 	intake.UpdatedAt = helpers.PointerTo(time.Now())
@@ -269,6 +274,11 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	if err != nil {
 		return nil, err
 	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
@@ -308,6 +318,11 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	if err != nil {
 		return nil, err
 	}
+
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 	if input.GovernanceTeams.IsPresent != nil {
@@ -356,6 +371,10 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
 		if err != nil {
+			return nil, err
+		}
+
+		if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
 			return nil, err
 		}
 
@@ -464,6 +483,10 @@ func SubmitIntake(
 		return nil, err
 	}
 
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	actorEUAID := appcontext.Principal(ctx).ID()
 	actorInfo, err := fetchUserInfo(ctx, actorEUAID)
 	if err != nil {
@@ -498,6 +521,10 @@ func SubmitIntake(
 
 // SystemIntakes returns a list of System Intakes for the admin table (which is why it uses the FetchSystemIntakesByStateForAdmins store method)
 func SystemIntakes(ctx context.Context, store *storage.Store, openRequests bool) ([]*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	var stateFilter models.SystemIntakeState
 	if openRequests {
 		stateFilter = models.SystemIntakeStateOpen
@@ -535,6 +562,9 @@ func GetRequesterUpdateEmailData(
 	store *storage.Store,
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 ) ([]*models.RequesterUpdateEmailData, error) {
+	if !appcontext.Principal(ctx).AllowGRT() {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch requester update email data")}
+	}
 
 	// first, get data from store
 	data, err := store.GetRequesterUpdateEmailData(ctx)
@@ -595,4 +625,126 @@ func GetRequesterUpdateEmailData(
 	}
 
 	return data, nil
+}
+
+func UpdateSystemIntakeAdminLead(
+	ctx context.Context,
+	store *storage.Store,
+	input models.UpdateSystemIntakeAdminLeadInput,
+) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
+	savedAdminLead, err := store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
+	systemIntake := models.SystemIntake{
+		AdminLead: null.StringFrom(savedAdminLead),
+		ID:        input.ID,
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: &systemIntake,
+	}, err
+}
+
+func UpdateSystemIntakeReviewDates(
+	ctx context.Context,
+	store *storage.Store,
+	input models.UpdateSystemIntakeReviewDatesInput,
+) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
+	intake, err := store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func GetSystemIntake(
+	ctx context.Context,
+	store *storage.Store,
+	id uuid.UUID,
+) (*models.SystemIntake, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanViewSystemIntake(ctx, store, intake); err != nil {
+		return nil, err
+	}
+
+	return intake, nil
+}
+
+func GetSystemIntakesWithLCIDs(
+	ctx context.Context,
+	store *storage.Store,
+) ([]*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
+	return store.GetSystemIntakesWithLCIDs(ctx)
+}
+
+func ArchiveSystemIntake(
+	ctx context.Context,
+	store *storage.Store,
+	emailClient *email.Client,
+	id uuid.UUID,
+) (*models.SystemIntake, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	currentStatus, err := IntakeFormStatus(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if currentStatus != models.ITGISReady && currentStatus != models.ITGISInProgress {
+		return nil, errors.New("cannot remove system intake unless in Ready or In Progress status")
+	}
+
+	if !userOwnsSystemIntake(ctx, intake) {
+		return nil, errors.New("user is unauthorized to archive system intake")
+	}
+
+	now := helpers.PointerTo(time.Now())
+
+	if intake.BusinessCaseID != nil {
+		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)
+		if err != nil {
+			return nil, err
+		}
+
+		if businessCase.Status != models.BusinessCaseStatusCLOSED {
+			businessCase.UpdatedAt = now
+			businessCase.Status = models.BusinessCaseStatusCLOSED
+
+			if _, err := store.UpdateBusinessCase(ctx, businessCase); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	intake.UpdatedAt = now
+	intake.ArchivedAt = now
+
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if intake.SubmittedAt != nil {
+		if err := emailClient.SendWithdrawRequestEmail(ctx, intake.ProjectName.String); err != nil {
+			return nil, err
+		}
+	}
+
+	return updatedIntake, nil
 }

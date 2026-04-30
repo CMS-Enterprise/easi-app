@@ -7,11 +7,8 @@ package resolvers
 import (
 	"context"
 	"errors"
-	"slices"
-	"sync"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
@@ -215,30 +212,12 @@ func (r *cedarSystemWorkspaceSystemResolver) LinkedSystemIntakes(ctx context.Con
 
 // CedarSystem is the resolver for the cedarSystem field.
 func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error) {
-	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
-		return nil, err
-	}
-
-	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
-	return cedarSystem, nil
+	return GetCedarSystem(ctx, r.cedarCoreClient, cedarSystemID)
 }
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	if err := authorizeUserCanAccessCEDARSystemDirectory(ctx); err != nil {
-		return nil, err
-	}
-
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return systems, nil
+	return GetCedarSystems(ctx, r.cedarCoreClient)
 }
 
 // MyCedarSystems is the resolver for the myCedarSystems field.
@@ -254,124 +233,12 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 
 // CedarSystemWorkspace is the resolver for the cedarSystemWorkspace field.
 func (r *queryResolver) CedarSystemWorkspace(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemWorkspace, error) {
-	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
-		return nil, err
-	}
-
-	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
-	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	userEua := appcontext.Principal(ctx).ID()
-	isMySystem := slices.ContainsFunc(cedarRoles, func(role *models.CedarRole) bool {
-		return role.AssigneeUsername.String == userEua
-	})
-
-	return &models.CedarSystemWorkspace{
-		ID: cedarSystem.ID,
-		CedarSystem: &models.CedarSystemWorkspaceSystem{
-			ID:   cedarSystem.ID,
-			Name: cedarSystem.Name.String,
-		},
-		Roles:      cedarRoles,
-		IsMySystem: isMySystem,
-	}, nil
+	return GetCedarSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID)
 }
 
 // CedarSystemDetails is the resolver for the cedarSystemDetails field.
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error) {
-	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
-		return nil, err
-	}
-
-	// TODO: consider refactoring this to work with the main CEDAR system implementation instead of using go funcs
-	logger := appcontext.ZLogger(ctx)
-
-	var sysDetail *models.CedarSystemDetails
-	var errS error
-	var cedarRoles []*models.CedarRole
-	var cedarDeployments []*models.CedarDeployment
-	var cedarThreats []*models.CedarThreat
-	var cedarURLs []*models.CedarURL
-
-	// Fetch sysDetail first - this is required, so if it fails, the entire resolver should fail
-	sysDetail, errS = r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
-	if errS != nil {
-		return nil, errS
-	}
-
-	// Fetch other fields in parallel - these are now nullable, so errors should be logged but not fail the resolver
-	var wg sync.WaitGroup
-	wg.Add(4)
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarRoles, err = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
-		if err != nil {
-			logger.Error("problem fetching roles for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarRoles = nil
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarDeployments, err = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
-		if err != nil {
-			logger.Error("problem fetching deployments for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarDeployments = nil
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarThreats, err = r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
-		if err != nil {
-			logger.Error("problem fetching threats for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarThreats = nil
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarURLs, err = r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
-		if err != nil {
-			logger.Error("problem fetching urls for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarURLs = nil
-		}
-	}()
-
-	wg.Wait()
-
-	userEua := appcontext.Principal(ctx).ID()
-	isMySystem := false
-	if cedarRoles != nil {
-		isMySystem = slices.ContainsFunc(cedarRoles, func(role *models.CedarRole) bool {
-			return role.AssigneeUsername.String == userEua
-		})
-	}
-
-	dCedarSys := models.CedarSystemDetails{
-		CedarSystem:                 sysDetail.CedarSystem,
-		BusinessOwnerInformation:    sysDetail.BusinessOwnerInformation,
-		SystemMaintainerInformation: sysDetail.SystemMaintainerInformation,
-		Roles:                       cedarRoles,
-		Deployments:                 cedarDeployments,
-		Threats:                     cedarThreats,
-		URLs:                        cedarURLs,
-		IsMySystem:                  isMySystem,
-	}
-
-	return &dCedarSys, nil
+	return GetCedarSystemDetails(ctx, r.cedarCoreClient, cedarSystemID)
 }
 
 // CedarSystem returns generated.CedarSystemResolver implementation.

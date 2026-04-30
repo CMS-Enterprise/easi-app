@@ -53,6 +53,10 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		return nil, err
 	}
 
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	isComplete, err := isGRBReviewCompleted(ctx, intake)
 	if err != nil {
 		return nil, err
@@ -176,6 +180,10 @@ func UploadSystemIntakeGRBPresentationDeck(
 		return nil, errors.New("system intake not found")
 	}
 
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, systemIntake); err != nil {
+		return nil, err
+	}
+
 	isReviewCompleted, err := isGRBReviewCompleted(ctx, systemIntake)
 	if err != nil {
 		return nil, err
@@ -183,10 +191,6 @@ func UploadSystemIntakeGRBPresentationDeck(
 
 	if isReviewCompleted {
 		return nil, errors.New("cannot upload presentation deck for completed GRB review")
-	}
-
-	if systemIntake.EUAUserID.ValueOrZero() != principal.ID() {
-		return nil, errors.New("unauthorized: only the system intake requester can upload a presentation deck")
 	}
 
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
@@ -311,6 +315,23 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context
 	}
 
 	return helpers.PointerTo(data.URL), nil
+}
+
+func DeleteSystemIntakeGRBPresentationLinks(
+	ctx context.Context,
+	store *storage.Store,
+	input models.DeleteSystemIntakeGRBPresentationLinksInput,
+) (uuid.UUID, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if err := authorizeUserCanDeleteSystemIntakeGRBPresentationLinks(ctx, intake); err != nil {
+		return uuid.Nil, err
+	}
+
+	return input.SystemIntakeID, store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
 }
 
 func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Context, logger *zap.Logger, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
