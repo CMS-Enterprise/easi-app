@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
@@ -33,7 +32,6 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUnlinkTrbRequestRelationMutation
 } from 'gql/generated/graphql';
-import { AppState } from 'stores/reducers/rootReducer';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -74,7 +72,6 @@ const RequestLinkForm = ({
   const { id } = useParams<{
     id: string;
   }>();
-  const { euaId, isUserSet } = useSelector((state: AppState) => state.auth);
   const history = useHistory();
 
   const { t } = useTranslation([
@@ -201,11 +198,7 @@ const RequestLinkForm = ({
     requestType === 'itgov' && data && 'systemIntake' in data
       ? data.systemIntake
       : undefined;
-  const isRequester = isSystemIntakeRequester({
-    euaId,
-    intake: requesterIntake,
-    isUserSet
-  });
+  const isRequester = isSystemIntakeRequester({ intake: requesterIntake });
 
   // This form doesn't use field validation feedback
   // Instead the submission button is disabled according to field requirements

@@ -42,9 +42,7 @@ import LinkedSystemsTable from './LinkedSystemsTable';
 const LinkedSystems = () => {
   // Id refers to system intake
   const { id } = useParams<{ id: string }>();
-  const { groups, euaId, isUserSet } = useSelector(
-    (state: AppState) => state.auth
-  );
+  const { groups } = useSelector((state: AppState) => state.auth);
   const flags = useFlags();
 
   const history = useHistory();
@@ -100,9 +98,7 @@ const LinkedSystems = () => {
   const noSystemsUsed = !!systemData?.systemIntake?.doesNotSupportSystems;
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
   const isRequester = isSystemIntakeRequester({
-    euaId,
-    intake: systemData?.systemIntake,
-    isUserSet
+    intake: systemData?.systemIntake
   });
 
   // Local UI state

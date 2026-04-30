@@ -135,11 +135,12 @@ describe('The System Intake page', () => {
     expect(screen.getByTestId('system-intake')).toBeInTheDocument();
   });
 
-  it('renders not found when requester contact overrides a stale euaUserId', async () => {
+  it('renders when server-side requester authorization allows the viewer', async () => {
     renderSystemIntake({
       route: `/system/${systemIntake.id}/view`,
       mocks: [
         getSystemIntakeQuery({
+          viewerIsRequester: true,
           euaUserId: requester.userAccount.username,
           requester: {
             ...systemIntake.requester!,
@@ -148,6 +149,22 @@ describe('The System Intake page', () => {
               username: 'STALE'
             }
           }
+        }),
+        getSystemIntakeContactsQuery()
+      ]
+    });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(screen.getByTestId('system-intake')).toBeInTheDocument();
+  });
+
+  it('renders not found when the viewer is not the requester', async () => {
+    renderSystemIntake({
+      route: `/system/${systemIntake.id}/view`,
+      mocks: [
+        getSystemIntakeQuery({
+          viewerIsRequester: false
         }),
         getSystemIntakeContactsQuery()
       ]

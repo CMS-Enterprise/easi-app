@@ -839,6 +839,7 @@ type ComplexityRoot struct {
 		UpdatedAt                                         func(childComplexity int) int
 		UsesAITech                                        func(childComplexity int) int
 		UsingSoftware                                     func(childComplexity int) int
+		ViewerIsRequester                                 func(childComplexity int) int
 	}
 
 	SystemIntakeAction struct {
@@ -1531,6 +1532,7 @@ type SystemIntakeResolver interface {
 	RequestName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContact, error)
+	ViewerIsRequester(ctx context.Context, obj *models.SystemIntake) (bool, error)
 
 	Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error)
 
@@ -6057,6 +6059,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.UsingSoftware(childComplexity), true
+	case "SystemIntake.viewerIsRequester":
+		if e.complexity.SystemIntake.ViewerIsRequester == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.ViewerIsRequester(childComplexity), true
 
 	case "SystemIntakeAction.actor":
 		if e.complexity.SystemIntakeAction.Actor == nil {
@@ -8986,6 +8994,10 @@ type SystemIntake {
   The contact who made the IT governance request. Note that this shouldn't be null, but for some legacy contacts a requester is not set.
   """
   requester: SystemIntakeContact
+  """
+  True when the current viewer is authorized to act as the requester for this intake.
+  """
+  viewerIsRequester: Boolean!
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
@@ -14510,6 +14522,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -21056,6 +21070,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -23488,6 +23504,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -26995,6 +27013,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -27240,6 +27260,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -29458,6 +29480,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -33204,6 +33228,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -33431,6 +33457,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -33657,6 +33685,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -33872,6 +33902,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -34087,6 +34119,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -38686,6 +38720,35 @@ func (ec *executionContext) fieldContext_SystemIntake_requester(_ context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_viewerIsRequester(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_viewerIsRequester,
+		func(ctx context.Context) (any, error) {
+			return ec.resolvers.SystemIntake().ViewerIsRequester(ctx, obj)
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_viewerIsRequester(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_state(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -39685,6 +39748,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -40467,6 +40532,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -47981,6 +48048,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -50048,6 +50117,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -50640,6 +50711,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "viewerIsRequester":
+				return ec.fieldContext_SystemIntake_viewerIsRequester(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -62732,6 +62805,42 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_requester(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "viewerIsRequester":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_viewerIsRequester(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 

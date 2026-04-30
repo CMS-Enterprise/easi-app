@@ -82,6 +82,7 @@ export default gql(/* GraphQL */ `
         ...UserAccount
       }
     }
+    viewerIsRequester
     requestName
     projectAcronym
     requestType

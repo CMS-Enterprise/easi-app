@@ -1,66 +1,40 @@
 import isSystemIntakeRequester from './isSystemIntakeRequester';
 
 describe('isSystemIntakeRequester', () => {
-  it('returns true when the requester username matches', () => {
+  it('returns true when the viewer is the requester', () => {
     expect(
       isSystemIntakeRequester({
-        euaId: 'ABCD',
         intake: {
-          euaUserId: 'ZZZZ',
-          requester: {
-            userAccount: {
-              username: 'ABCD'
-            }
-          }
-        },
-        isUserSet: true
+          viewerIsRequester: true
+        }
       })
     ).toBe(true);
   });
 
-  it('returns true when the legacy euaUserId matches', () => {
+  it('returns false when the viewer is not the requester', () => {
     expect(
       isSystemIntakeRequester({
-        euaId: 'ABCD',
         intake: {
-          euaUserId: 'ABCD',
-          requester: null
-        },
-        isUserSet: true
-      })
-    ).toBe(true);
-  });
-
-  it('returns false when the requester username is stale', () => {
-    expect(
-      isSystemIntakeRequester({
-        euaId: 'ABCD',
-        intake: {
-          euaUserId: 'ABCD',
-          requester: {
-            userAccount: {
-              username: 'STALE'
-            }
-          }
-        },
-        isUserSet: true
+          viewerIsRequester: false
+        }
       })
     ).toBe(false);
   });
 
-  it('returns false when neither identifier matches', () => {
+  it('returns true when server fallback still authorizes the viewer', () => {
     expect(
       isSystemIntakeRequester({
-        euaId: 'ABCD',
         intake: {
-          euaUserId: 'WXYZ',
-          requester: {
-            userAccount: {
-              username: 'TEST'
-            }
-          }
-        },
-        isUserSet: true
+          viewerIsRequester: true
+        }
+      })
+    ).toBe(true);
+  });
+
+  it('returns false when intake data is missing', () => {
+    expect(
+      isSystemIntakeRequester({
+        intake: null
       })
     ).toBe(false);
   });

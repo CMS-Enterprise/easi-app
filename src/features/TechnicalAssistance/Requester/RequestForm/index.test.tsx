@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetTRBRequestQuery,
@@ -13,9 +13,7 @@ import {
 import i18next from 'i18next';
 import {
   attendees,
-  getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
-  requester,
   trbRequest
 } from 'tests/mock/trbRequest';
 
@@ -125,52 +123,5 @@ describe('TRB Request Form Feedback', () => {
     expect(sortedDates[1]).toHaveTextContent('January 30, 2023');
 
     expect(asFragment()).toMatchSnapshot();
-  });
-
-  it('prevents a non-requester from viewing the requester form', async () => {
-    const store = easiMockStore({
-      euaUserId: 'TEST',
-      groups: ['EASI_TRB_ADMIN_D']
-    });
-    const attendeesResult = vi.fn(() => ({
-      data: {
-        __typename: 'Query',
-        trbRequest: {
-          __typename: 'TRBRequest',
-          id: mockTrbRequestId,
-          attendees: [requester, ...attendees]
-        }
-      }
-    }));
-
-    render(
-      <MemoryRouter
-        initialEntries={[`/trb/requests/${mockTrbRequestId}/basic`]}
-      >
-        <MockedProvider
-          mocks={[
-            getTrbRequestQuery,
-            {
-              ...getTRBRequestAttendeesQuery,
-              result: attendeesResult
-            }
-          ]}
-        >
-          <Route exact path="/trb/requests/:id/:step?/:view?">
-            <Provider store={store}>
-              <RequestForm />
-            </Provider>
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-
-    expect(
-      await screen.findByRole('heading', {
-        name: i18next.t<string>('error:notFound.heading')
-      })
-    ).toBeInTheDocument();
-
-    expect(attendeesResult).not.toHaveBeenCalled();
   });
 });

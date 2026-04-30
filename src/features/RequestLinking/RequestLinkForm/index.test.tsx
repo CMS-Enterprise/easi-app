@@ -40,6 +40,7 @@ describe('IT Gov Request relation link form', () => {
                   data: {
                     systemIntake: {
                       id,
+                      viewerIsRequester: true,
                       relationType: null,
                       contractName: null,
                       requester: {

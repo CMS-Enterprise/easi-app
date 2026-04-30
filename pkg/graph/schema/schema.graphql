@@ -747,6 +747,10 @@ type SystemIntake {
   The contact who made the IT governance request. Note that this shouldn't be null, but for some legacy contacts a requester is not set.
   """
   requester: SystemIntakeContact
+  """
+  True when the current viewer is authorized to act as the requester for this intake.
+  """
+  viewerIsRequester: Boolean!
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time

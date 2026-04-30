@@ -149,9 +149,7 @@ const LinkedSystemsForm = () => {
     systemIntakeID: string;
     linkedSystemID?: string;
   }>();
-  const { groups, euaId, isUserSet } = useSelector(
-    (state: AppState) => state.auth
-  );
+  const { groups } = useSelector((state: AppState) => state.auth);
   const flags = useFlags();
 
   const history = useHistory();
@@ -220,9 +218,7 @@ const LinkedSystemsForm = () => {
   const doesNotSupportSystems = systemData?.systemIntake?.doesNotSupportSystems;
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
   const isRequester = isSystemIntakeRequester({
-    euaId,
-    intake: systemData?.systemIntake,
-    isUserSet
+    intake: systemData?.systemIntake
   });
 
   const filteredCedarSystemIdOptions = useMemo<

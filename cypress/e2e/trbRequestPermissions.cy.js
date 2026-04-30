@@ -139,6 +139,35 @@ describe('TRB request permissions', () => {
     });
   });
 
+  it('keeps the requester form accessible when requesterInfo is unavailable', () => {
+    loginAs(owner);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetTRBRequest') {
+        req.alias = 'getTrbRequest';
+        req.continue(res => {
+          if (res.body?.data?.trbRequest?.requesterInfo) {
+            res.body.data.trbRequest.requesterInfo.euaUserId = '';
+          }
+        });
+      }
+
+      if (req.body.operationName === 'GetTRBRequestAttendees') {
+        req.alias = 'getTrbRequestAttendees';
+      }
+    });
+
+    cy.visit(requestUrls.draft.requesterBasicHref);
+    cy.wait('@getTrbRequest');
+    cy.wait('@getTrbRequestAttendees');
+
+    cy.contains(
+      '.usa-step-indicator__heading-text .long',
+      'Basic request details'
+    ).should('be.visible');
+    cy.contains('h1', notFoundHeading).should('not.exist');
+  });
+
   it('blocks an unrelated user from the requester task list view', () => {
     loginAs(unrelatedUser);
 

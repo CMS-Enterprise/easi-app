@@ -2405,6 +2405,11 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 	return SystemIntakeContactGetRequester(ctx, obj.ID)
 }
 
+// ViewerIsRequester is the resolver for the viewerIsRequester field.
+func (r *systemIntakeResolver) ViewerIsRequester(ctx context.Context, obj *models.SystemIntake) (bool, error) {
+	return userOwnsSystemIntake(ctx, obj), nil
+}
+
 // Documents is the resolver for the documents field.
 func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
 	return GetSystemIntakeDocumentsByRequestID(ctx, obj.ID)
