@@ -671,7 +671,6 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeGRBReviewFormTimeframeAsync       func(childComplexity int, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) int
 		UpdateSystemIntakeGRBReviewType                     func(childComplexity int, input models.UpdateSystemIntakeGRBReviewTypeInput) int
 		UpdateSystemIntakeGRBReviewer                       func(childComplexity int, input models.UpdateSystemIntakeGRBReviewerInput) int
-		UpdateSystemIntakeLinkedCedarSystem                 func(childComplexity int, input models.UpdateSystemIntakeLinkedCedarSystemInput) int
 		UpdateSystemIntakeNote                              func(childComplexity int, input models.UpdateSystemIntakeNoteInput) int
 		UpdateSystemIntakeRequestDetails                    func(childComplexity int, input models.UpdateSystemIntakeRequestDetailsInput) int
 		UpdateSystemIntakeRequestType                       func(childComplexity int, id uuid.UUID, newType models.SystemIntakeRequestType) int
@@ -698,7 +697,6 @@ type ComplexityRoot struct {
 		CedarSoftwareProducts            func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSubSystems                  func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSystem                      func(childComplexity int, cedarSystemID uuid.UUID) int
-		CedarSystemBookmarks             func(childComplexity int) int
 		CedarSystemDetails               func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSystemWorkspace             func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSystems                     func(childComplexity int) int
@@ -1404,7 +1402,6 @@ type MutationResolver interface {
 	UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error)
 	ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error)
 	RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error)
-	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error)
@@ -1471,7 +1468,6 @@ type QueryResolver interface {
 	CedarSoftwareProducts(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSoftwareProducts, error)
 	CedarSubSystems(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarSubSystem, error)
 	CedarContractsBySystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarContract, error)
-	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
 	CedarThreat(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarThreat, error)
 	Deployments(ctx context.Context, cedarSystemID uuid.UUID, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
 	RoleTypes(ctx context.Context) ([]*models.CedarRoleType, error)
@@ -4915,17 +4911,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.UpdateSystemIntakeGRBReviewer(childComplexity, args["input"].(models.UpdateSystemIntakeGRBReviewerInput)), true
-	case "Mutation.updateSystemIntakeLinkedCedarSystem":
-		if e.complexity.Mutation.UpdateSystemIntakeLinkedCedarSystem == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateSystemIntakeLinkedCedarSystem_args(ctx, rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateSystemIntakeLinkedCedarSystem(childComplexity, args["input"].(models.UpdateSystemIntakeLinkedCedarSystemInput)), true
 	case "Mutation.updateSystemIntakeNote":
 		if e.complexity.Mutation.UpdateSystemIntakeNote == nil {
 			break
@@ -5180,12 +5165,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.CedarSystem(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
-	case "Query.cedarSystemBookmarks":
-		if e.complexity.Query.CedarSystemBookmarks == nil {
-			break
-		}
-
-		return e.complexity.Query.CedarSystemBookmarks(childComplexity), true
 	case "Query.cedarSystemDetails":
 		if e.complexity.Query.CedarSystemDetails == nil {
 			break
@@ -8127,7 +8106,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeContactInput,
 		ec.unmarshalInputUpdateSystemIntakeContractDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeGRBReviewerInput,
-		ec.unmarshalInputUpdateSystemIntakeLinkedCedarSystemInput,
 		ec.unmarshalInputUpdateSystemIntakeNoteInput,
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
@@ -9391,13 +9369,6 @@ type SystemIntakeSystem {
   cedarSystem: CedarSystem
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
-}
-"""
-Input data for updating a system intake's relationship to a CEDAR system
-"""
-input UpdateSystemIntakeLinkedCedarSystemInput {
-  id: UUID!
-  cedarSystemId: UUID
 }
 
 # RequestRelationType.NEW_SYSTEM
@@ -11218,10 +11189,6 @@ type Mutation {
     input: RestartGRBReviewInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
-  updateSystemIntakeLinkedCedarSystem(
-    input: UpdateSystemIntakeLinkedCedarSystemInput!
-  ): UpdateSystemIntakePayload
-
   setSystemIntakeGRBPresentationLinks(
     input: SystemIntakeGRBPresentationLinksInput!
   ): SystemIntakeGRBPresentationLinks
@@ -11361,7 +11328,6 @@ type Query {
     @hasRole(role: EASI_USER)
   cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]
     @hasRole(role: EASI_USER)
-  cedarSystemBookmarks: [CedarSystemBookmark!]! @hasRole(role: EASI_USER)
   cedarThreat(cedarSystemId: UUID!): [CedarThreat!] @hasRole(role: EASI_USER)
   deployments(
     cedarSystemId: UUID!
@@ -12974,17 +12940,6 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewer_args(ct
 	var err error
 	args := map[string]any{}
 	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpdateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewerInput)
-	if err != nil {
-		return nil, err
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateSystemIntakeLinkedCedarSystem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpdateSystemIntakeLinkedCedarSystemInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeLinkedCedarSystemInput)
 	if err != nil {
 		return nil, err
 	}
@@ -29140,53 +29095,6 @@ func (ec *executionContext) fieldContext_Mutation_restartGRBReviewAsync(ctx cont
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateSystemIntakeLinkedCedarSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	return graphql.ResolveField(
-		ctx,
-		ec.OperationContext,
-		field,
-		ec.fieldContext_Mutation_updateSystemIntakeLinkedCedarSystem,
-		func(ctx context.Context) (any, error) {
-			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().UpdateSystemIntakeLinkedCedarSystem(ctx, fc.Args["input"].(models.UpdateSystemIntakeLinkedCedarSystemInput))
-		},
-		nil,
-		ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload,
-		true,
-		false,
-	)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeLinkedCedarSystem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "systemIntake":
-				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateSystemIntakeLinkedCedarSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_setSystemIntakeGRBPresentationLinks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -34957,59 +34865,6 @@ func (ec *executionContext) fieldContext_Query_cedarContractsBySystem(ctx contex
 	if fc.Args, err = ec.field_Query_cedarContractsBySystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_cedarSystemBookmarks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	return graphql.ResolveField(
-		ctx,
-		ec.OperationContext,
-		field,
-		ec.fieldContext_Query_cedarSystemBookmarks,
-		func(ctx context.Context) (any, error) {
-			return ec.resolvers.Query().CedarSystemBookmarks(ctx)
-		},
-		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
-			directive0 := next
-
-			directive1 := func(ctx context.Context) (any, error) {
-				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
-				if err != nil {
-					var zeroVal []*models.CedarSystemBookmark
-					return zeroVal, err
-				}
-				if ec.directives.HasRole == nil {
-					var zeroVal []*models.CedarSystemBookmark
-					return zeroVal, errors.New("directive hasRole is not implemented")
-				}
-				return ec.directives.HasRole(ctx, nil, directive0, role)
-			}
-
-			next = directive1
-			return next
-		},
-		ec.marshalNCedarSystemBookmark2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmarkᚄ,
-		true,
-		true,
-	)
-}
-
-func (ec *executionContext) fieldContext_Query_cedarSystemBookmarks(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "euaUserId":
-				return ec.fieldContext_CedarSystemBookmark_euaUserId(ctx, field)
-			case "cedarSystemId":
-				return ec.fieldContext_CedarSystemBookmark_cedarSystemId(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type CedarSystemBookmark", field.Name)
-		},
 	}
 	return fc, nil
 }
@@ -56120,40 +55975,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateSystemIntakeLinkedCedarSystemInput(ctx context.Context, obj any) (models.UpdateSystemIntakeLinkedCedarSystemInput, error) {
-	var it models.UpdateSystemIntakeLinkedCedarSystemInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "cedarSystemId"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ID = data
-		case "cedarSystemId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.CedarSystemID = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeNoteInput(ctx context.Context, obj any) (models.UpdateSystemIntakeNoteInput, error) {
 	var it models.UpdateSystemIntakeNoteInput
 	asMap := map[string]any{}
@@ -60818,10 +60639,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_restartGRBReviewAsync(ctx, field)
 			})
-		case "updateSystemIntakeLinkedCedarSystem":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateSystemIntakeLinkedCedarSystem(ctx, field)
-			})
 		case "setSystemIntakeGRBPresentationLinks":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setSystemIntakeGRBPresentationLinks(ctx, field)
@@ -61447,28 +61264,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarContractsBySystem(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "cedarSystemBookmarks":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_cedarSystemBookmarks(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -69245,60 +69040,6 @@ func (ec *executionContext) marshalNCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpri
 	return ec._CedarSystem(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCedarSystemBookmark2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmarkᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSystemBookmark) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCedarSystemBookmark2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmark(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNCedarSystemBookmark2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemBookmark(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystemBookmark) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._CedarSystemBookmark(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalNCedarSystemWorkspace2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemWorkspace(ctx context.Context, sel ast.SelectionSet, v models.CedarSystemWorkspace) graphql.Marshaler {
 	return ec._CedarSystemWorkspace(ctx, sel, &v)
 }
@@ -72766,11 +72507,6 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeContractDetailsInput2git
 
 func (ec *executionContext) unmarshalNUpdateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewerInput(ctx context.Context, v any) (models.UpdateSystemIntakeGRBReviewerInput, error) {
 	res, err := ec.unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateSystemIntakeLinkedCedarSystemInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeLinkedCedarSystemInput(ctx context.Context, v any) (models.UpdateSystemIntakeLinkedCedarSystemInput, error) {
-	res, err := ec.unmarshalInputUpdateSystemIntakeLinkedCedarSystemInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

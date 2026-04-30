@@ -1129,13 +1129,6 @@ type SystemIntakeSystem {
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
-"""
-Input data for updating a system intake's relationship to a CEDAR system
-"""
-input UpdateSystemIntakeLinkedCedarSystemInput {
-  id: UUID!
-  cedarSystemId: UUID
-}
 
 # RequestRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
@@ -2955,10 +2948,6 @@ type Mutation {
     input: RestartGRBReviewInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
-  updateSystemIntakeLinkedCedarSystem(
-    input: UpdateSystemIntakeLinkedCedarSystemInput!
-  ): UpdateSystemIntakePayload
-
   setSystemIntakeGRBPresentationLinks(
     input: SystemIntakeGRBPresentationLinksInput!
   ): SystemIntakeGRBPresentationLinks
@@ -3098,7 +3087,6 @@ type Query {
     @hasRole(role: EASI_USER)
   cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]
     @hasRole(role: EASI_USER)
-  cedarSystemBookmarks: [CedarSystemBookmark!]! @hasRole(role: EASI_USER)
   cedarThreat(cedarSystemId: UUID!): [CedarThreat!] @hasRole(role: EASI_USER)
   deployments(
     cedarSystemId: UUID!

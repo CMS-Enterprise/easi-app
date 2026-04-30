@@ -951,12 +951,6 @@ type UpdateSystemIntakeGRBReviewerInput struct {
 	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
 }
 
-// Input data for updating a system intake's relationship to a CEDAR system
-type UpdateSystemIntakeLinkedCedarSystemInput struct {
-	ID            uuid.UUID  `json:"id"`
-	CedarSystemID *uuid.UUID `json:"cedarSystemId,omitempty"`
-}
-
 // Input data for updating an IT governance admin note
 type UpdateSystemIntakeNoteInput struct {
 	Content    HTML      `json:"content"`

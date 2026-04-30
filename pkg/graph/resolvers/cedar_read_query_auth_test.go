@@ -75,13 +75,6 @@ func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
 			},
 		},
 		{
-			name: "cedarSystemBookmarks",
-			call: func() error {
-				_, err := resolver.CedarSystemBookmarks(ctx)
-				return err
-			},
-		},
-		{
 			name: "cedarBudgetSystemCost",
 			call: func() error {
 				_, err := resolver.CedarBudgetSystemCost(ctx, cedarSystemID)

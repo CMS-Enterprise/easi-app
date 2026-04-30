@@ -235,13 +235,6 @@ func (s *ResolverSuite) TestSystemIntakeRelationManagementPermissions() {
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil
-
-	_, err = mutationResolver.UpdateSystemIntakeLinkedCedarSystem(
-		reviewerCtx,
-		models.UpdateSystemIntakeLinkedCedarSystemInput{ID: intake.ID},
-	)
-	s.Error(err)
-	s.True(errors.As(err, &unauthorizedErr))
 }
 
 func (s *ResolverSuite) TestSystemIntakeNestedFieldPermissions() {

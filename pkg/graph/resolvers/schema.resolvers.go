@@ -1134,41 +1134,6 @@ func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input mode
 	return RestartGRBReviewAsync(ctx, r.store, r.emailClient, input)
 }
 
-// UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
-func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
-	if err := r.guardSystemIntakeEditing(ctx); err != nil {
-		return nil, err
-	}
-
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
-		return nil, err
-	}
-
-	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
-	if input.CedarSystemID != nil && *input.CedarSystemID != uuid.Nil {
-		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	intake, err = r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, input.CedarSystemID)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &models.UpdateSystemIntakePayload{
-		SystemIntake: intake,
-	}, nil
-}
-
 // SetSystemIntakeGRBPresentationLinks is the resolver for the setSystemIntakeGRBPresentationLinks field.
 func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
 	if err := r.guardSystemIntakeEditing(ctx); err != nil {
@@ -1890,19 +1855,6 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 	}
 
 	return r.cedarCoreClient.GetContractBySystem(ctx, cedarSystemID)
-}
-
-// CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
-func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error) {
-	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
-		return nil, err
-	}
-
-	cedarSystemBookmarks, err := r.store.FetchCedarSystemBookmarks(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return cedarSystemBookmarks, nil
 }
 
 // CedarThreat is the resolver for the cedarThreat field.

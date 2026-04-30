@@ -1162,7 +1162,6 @@ export type Mutation = {
   updateSystemIntakeGRBReviewFormTimeframeAsync?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeGRBReviewType?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeGRBReviewer: SystemIntakeGRBReviewer;
-  updateSystemIntakeLinkedCedarSystem?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeNote: SystemIntakeNote;
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeRequestType: SystemIntake;
@@ -1690,12 +1689,6 @@ export type MutationUpdateSystemIntakeGRBReviewerArgs = {
 
 
 /** Defines the mutations for the schema */
-export type MutationUpdateSystemIntakeLinkedCedarSystemArgs = {
-  input: UpdateSystemIntakeLinkedCedarSystemInput;
-};
-
-
-/** Defines the mutations for the schema */
 export type MutationUpdateSystemIntakeNoteArgs = {
   input: UpdateSystemIntakeNoteInput;
 };
@@ -1811,7 +1804,6 @@ export type Query = {
   cedarSoftwareProducts?: Maybe<CedarSoftwareProducts>;
   cedarSubSystems?: Maybe<Array<CedarSubSystem>>;
   cedarSystem?: Maybe<CedarSystem>;
-  cedarSystemBookmarks: Array<CedarSystemBookmark>;
   /**
    * Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
    * TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
@@ -3580,12 +3572,6 @@ export type UpdateSystemIntakeGRBReviewerInput = {
   grbRole: SystemIntakeGRBReviewerRole;
   reviewerID: Scalars['UUID']['input'];
   votingRole: SystemIntakeGRBReviewerVotingRole;
-};
-
-/** Input data for updating a system intake's relationship to a CEDAR system */
-export type UpdateSystemIntakeLinkedCedarSystemInput = {
-  cedarSystemId?: InputMaybe<Scalars['UUID']['input']>;
-  id: Scalars['UUID']['input'];
 };
 
 /** Input data for updating an IT governance admin note */

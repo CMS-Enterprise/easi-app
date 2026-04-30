@@ -289,15 +289,6 @@ func (s *ResolverSuite) TestCEDARReadQueryPermissions() {
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil
 
-	bookmarks, err := resolver.CedarSystemBookmarks(easiCtx)
-	s.NoError(err)
-	s.NotNil(bookmarks)
-
-	_, err = resolver.CedarSystemBookmarks(nonEasiCtx)
-	s.Error(err)
-	s.True(errors.As(err, &unauthorizedErr))
-	unauthorizedErr = nil
-
 	contacts, err := resolver.CedarPersonsByCommonName(easiCtx, "AB")
 	s.NoError(err)
 	s.NotNil(contacts)
