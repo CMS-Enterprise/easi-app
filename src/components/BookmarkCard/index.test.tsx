@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { mockSystemInfo } from 'features/Systems/SystemProfile/data/mockSystemData';
 
 import { mapCedarStatusToIcon } from 'types/iconStatus';
@@ -41,6 +41,49 @@ describe('BookmarkCard', () => {
     expect(getByText('Happiness Achievement Module')).toBeInTheDocument();
     expect(getByText('CMS Component')).toBeInTheDocument();
     // expect(getByText('ATO Status')).toBeInTheDocument();
+  });
+
+  it('routes to the workspace when profile access is unavailable', () => {
+    render(
+      <MemoryRouter>
+        <MockedProvider>
+          <BookmarkCard
+            type="systemProfile"
+            statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
+            {...mockSystemInfo[0]}
+            viewerCanAccessProfile={false}
+            viewerCanAccessWorkspace
+          />
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('link', { name: 'Happiness Achievement Module' })
+    ).toHaveAttribute('href', '/systems/1/workspace');
+  });
+
+  it('renders plain text when no system destination is allowed', () => {
+    render(
+      <MemoryRouter>
+        <MockedProvider>
+          <BookmarkCard
+            type="systemProfile"
+            statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
+            {...mockSystemInfo[0]}
+            viewerCanAccessProfile={false}
+            viewerCanAccessWorkspace={false}
+          />
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByText('Happiness Achievement Module')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Happiness Achievement Module' })
+    ).not.toBeInTheDocument();
   });
 
   //

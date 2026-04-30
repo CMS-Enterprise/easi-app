@@ -1,12 +1,15 @@
 package scheduler
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
+	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/testconfig"
 	"github.com/cms-enterprise/easi-app/pkg/testconfig/cedartestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testconfig/dataloadertestconfigs"
@@ -28,13 +31,35 @@ func (suite *SchedulerTestSuite) SetupTest() {
 
 	err := suite.testConfigs.GenericSetupTests()
 	suite.NoError(err)
-	suite.testConfigs.Context = dataloadertestconfigs.DecorateTestContextWithDataLoader(suite.testConfigs.Context, suite.testConfigs.Store, suite.testConfigs.StubFetchUserInfos, cedartestconfigs.StubGetCedarSystems)
+	suite.testConfigs.Context = dataloadertestconfigs.DecorateTestContextWithDataLoader(
+		suite.testConfigs.Context,
+		suite.testConfigs.Store,
+		suite.testConfigs.StubFetchUserInfos,
+		cedartestconfigs.StubGetCedarSystems,
+		suite.stubGetMyCedarSystems,
+	)
 
 	//TODO: verify if anything else is needed for this test suite
 }
 
 func (suite *SchedulerTestSuite) buildDataLoaders() dataloaders.BuildDataloaders {
-	return dataloadertestconfigs.BuildDataLoaders(suite.testConfigs.Store, suite.testConfigs.StubFetchUserInfos, cedartestconfigs.StubGetCedarSystems)
+	return dataloadertestconfigs.BuildDataLoaders(
+		suite.testConfigs.Store,
+		suite.testConfigs.StubFetchUserInfos,
+		cedartestconfigs.StubGetCedarSystems,
+		suite.stubGetMyCedarSystems,
+	)
+}
+
+func (suite *SchedulerTestSuite) stubGetMyCedarSystems(
+	ctx context.Context,
+	euaUserID string,
+) ([]*models.CedarSystem, error) {
+	mockClient := cedartestconfigs.GetCedarMockClient(ctx)
+	return mockClient.GetSystemSummary(
+		ctx,
+		cedarcore.SystemSummaryOpts.WithEuaIDFilter(euaUserID),
+	)
 }
 
 // TestSchedulerSuite runs the test suite

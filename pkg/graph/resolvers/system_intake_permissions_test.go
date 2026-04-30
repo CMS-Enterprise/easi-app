@@ -582,6 +582,173 @@ func (s *ResolverSuite) TestSystemIntakeAdminWorkflowPermissions() {
 	}
 }
 
+func (s *ResolverSuite) TestSystemIntakeAdminLCIDActionPermissions() {
+	mutationResolver := s.systemIntakeMutationResolver()
+	adminCtx, _ := s.getTestContextWithPrincipal("ABCD", true)
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+	reviewerCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+
+	now := time.Now().UTC()
+
+	createIntakeWithReviewer := func(callback func(*models.SystemIntake)) *models.SystemIntake {
+		intake := s.createNewIntakeWithResolver(callback)
+		s.addReviewerToSystemIntake(intake.ID, "USR2")
+		return intake
+	}
+
+	testCases := []struct {
+		name        string
+		createCall  func(context.Context, uuid.UUID) (*models.UpdateSystemIntakePayload, error)
+		setupIntake func() *models.SystemIntake
+		assert      func(*models.UpdateSystemIntakePayload)
+	}{
+		{
+			name: "expire LCID",
+			setupIntake: func() *models.SystemIntake {
+				expiration := now.AddDate(2, 0, 0)
+				return createIntakeWithReviewer(func(intake *models.SystemIntake) {
+					intake.LifecycleID = null.StringFrom("123456")
+					intake.LifecycleExpiresAt = &expiration
+				})
+			},
+			createCall: func(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+				return mutationResolver.CreateSystemIntakeActionExpireLcid(ctx, models.SystemIntakeExpireLCIDInput{
+					SystemIntakeID: intakeID,
+					Reason:         models.HTML("Expire this LCID"),
+					NextSteps:      models.HTMLPointer("Expired next steps"),
+				})
+			},
+			assert: func(payload *models.UpdateSystemIntakePayload) {
+				s.NotNil(payload.SystemIntake)
+				s.EqualValues(models.HTMLPointer("Expired next steps"), payload.SystemIntake.DecisionNextSteps)
+			},
+		},
+		{
+			name: "update LCID",
+			setupIntake: func() *models.SystemIntake {
+				return createIntakeWithReviewer(func(intake *models.SystemIntake) {
+					intake.LifecycleID = null.StringFrom("123457")
+				})
+			},
+			createCall: func(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+				return mutationResolver.CreateSystemIntakeActionUpdateLcid(ctx, models.SystemIntakeUpdateLCIDInput{
+					SystemIntakeID: intakeID,
+					Scope:          models.HTMLPointer("Updated LCID scope"),
+				})
+			},
+			assert: func(payload *models.UpdateSystemIntakePayload) {
+				s.NotNil(payload.SystemIntake)
+				s.EqualValues(models.HTMLPointer("Updated LCID scope"), payload.SystemIntake.LifecycleScope)
+			},
+		},
+		{
+			name: "retire LCID",
+			setupIntake: func() *models.SystemIntake {
+				return createIntakeWithReviewer(func(intake *models.SystemIntake) {
+					intake.LifecycleID = null.StringFrom("123458")
+				})
+			},
+			createCall: func(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+				retirementDate := now.AddDate(3, 0, 0)
+				return mutationResolver.CreateSystemIntakeActionRetireLcid(ctx, models.SystemIntakeRetireLCIDInput{
+					SystemIntakeID: intakeID,
+					RetiresAt:      retirementDate,
+				})
+			},
+			assert: func(payload *models.UpdateSystemIntakePayload) {
+				expectedRetirementDate := now.AddDate(3, 0, 0)
+				s.NotNil(payload.SystemIntake)
+				s.NotNil(payload.SystemIntake.LifecycleRetiresAt)
+				s.WithinDuration(expectedRetirementDate, *payload.SystemIntake.LifecycleRetiresAt, time.Microsecond)
+			},
+		},
+		{
+			name: "unretire LCID",
+			setupIntake: func() *models.SystemIntake {
+				retirementDate := now.AddDate(2, 0, 0)
+				return createIntakeWithReviewer(func(intake *models.SystemIntake) {
+					intake.LifecycleID = null.StringFrom("123459")
+					intake.LifecycleRetiresAt = &retirementDate
+				})
+			},
+			createCall: func(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+				return mutationResolver.CreateSystemIntakeActionUnretireLcid(ctx, models.SystemIntakeUnretireLCIDInput{
+					SystemIntakeID: intakeID,
+				})
+			},
+			assert: func(payload *models.UpdateSystemIntakePayload) {
+				s.NotNil(payload.SystemIntake)
+				s.Nil(payload.SystemIntake.LifecycleRetiresAt)
+			},
+		},
+		{
+			name: "change LCID retirement date",
+			setupIntake: func() *models.SystemIntake {
+				retirementDate := now.AddDate(2, 0, 0)
+				return createIntakeWithReviewer(func(intake *models.SystemIntake) {
+					intake.LifecycleID = null.StringFrom("123460")
+					intake.LifecycleRetiresAt = &retirementDate
+				})
+			},
+			createCall: func(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+				newRetirementDate := now.AddDate(4, 0, 0)
+				return mutationResolver.CreateSystemIntakeActionChangeLCIDRetirementDate(ctx, models.SystemIntakeChangeLCIDRetirementDateInput{
+					SystemIntakeID: intakeID,
+					RetiresAt:      newRetirementDate,
+				})
+			},
+			assert: func(payload *models.UpdateSystemIntakePayload) {
+				expectedRetirementDate := now.AddDate(4, 0, 0)
+				s.NotNil(payload.SystemIntake)
+				s.NotNil(payload.SystemIntake.LifecycleRetiresAt)
+				s.WithinDuration(expectedRetirementDate, *payload.SystemIntake.LifecycleRetiresAt, time.Microsecond)
+			},
+		},
+		{
+			name: "confirm LCID",
+			setupIntake: func() *models.SystemIntake {
+				return createIntakeWithReviewer(func(intake *models.SystemIntake) {
+					intake.LifecycleID = null.StringFrom("123461")
+				})
+			},
+			createCall: func(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+				return mutationResolver.CreateSystemIntakeActionConfirmLcid(ctx, models.SystemIntakeConfirmLCIDInput{
+					SystemIntakeID: intakeID,
+					ExpiresAt:      now.AddDate(1, 0, 0),
+					Scope:          models.HTML("Confirmed LCID scope"),
+					NextSteps:      models.HTML("Confirmed LCID next steps"),
+					TrbFollowUp:    models.TRBFRStronglyRecommended,
+				})
+			},
+			assert: func(payload *models.UpdateSystemIntakePayload) {
+				expectedScope := models.HTML("Confirmed LCID scope")
+				s.NotNil(payload.SystemIntake)
+				s.EqualValues(&expectedScope, payload.SystemIntake.LifecycleScope)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		tc := tc
+		s.Run(tc.name, func() {
+			intake := tc.setupIntake()
+
+			for _, unauthorizedCtx := range []context.Context{ownerCtx, reviewerCtx} {
+				_, err := tc.createCall(unauthorizedCtx, intake.ID)
+				s.Error(err)
+
+				var unauthorizedErr *apperrors.UnauthorizedError
+				s.True(errors.As(err, &unauthorizedErr))
+			}
+
+			payload, err := tc.createCall(adminCtx, intake.ID)
+			s.NoError(err)
+			s.NotNil(payload)
+			tc.assert(payload)
+		})
+	}
+}
+
 func (s *ResolverSuite) TestSystemIntakeAdminListQueryPermissions() {
 	queryResolver := s.systemIntakeQueryResolver()
 	intake := s.createNewIntakeWithResolver()

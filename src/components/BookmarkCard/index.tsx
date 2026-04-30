@@ -10,6 +10,7 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { IconStatus } from 'types/iconStatus';
+import getCedarSystemRoute from 'utils/getCedarSystemRoute';
 
 import './index.scss';
 
@@ -28,12 +29,19 @@ const BookmarkCard = ({
   acronym,
   status,
   statusIcon,
-  businessOwnerOrg
+  businessOwnerOrg,
+  viewerCanAccessProfile,
+  viewerCanAccessWorkspace
 }: BookmarkCardProps &
   NonNullable<NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]>) => {
   const { t } = useTranslation();
 
   const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
+  const systemRoute = getCedarSystemRoute({
+    id,
+    viewerCanAccessProfile,
+    viewerCanAccessWorkspace
+  });
 
   const handleDeleteBookmark = (cedarSystemId: string) => {
     deleteMutate({
@@ -59,9 +67,11 @@ const BookmarkCard = ({
       <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
           <h3 className="bookmark__title margin-top-0 margin-bottom-1">
-            <UswdsReactLink to={`/systems/${id}/home/top`}>
-              {name}
-            </UswdsReactLink>
+            {systemRoute ? (
+              <UswdsReactLink to={systemRoute}>{name}</UswdsReactLink>
+            ) : (
+              name
+            )}
           </h3>
           <Button
             onClick={() => handleDeleteBookmark(id)}

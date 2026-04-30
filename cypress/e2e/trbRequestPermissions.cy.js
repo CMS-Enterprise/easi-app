@@ -9,12 +9,16 @@ const requestNames = {
   draftGuidanceLetter: 'Case 6 - Draft guidance letter',
   completedGuidanceLetter: 'Case 9 - Guidance letter sent',
   relation: 'Case 12 - Completed request form with New System Relation',
+  withAttendees: 'Case 15 - Completed request form with Attendees',
   relatedTable: 'Case 17 - Completed request with related system (0A)'
 };
 
 const notFoundHeading = 'This page cannot be found.';
 const taskListHeading = 'Task list';
+const attendeesHeading = 'Attendees';
+const addAttendeeHeading = 'Add an attendee';
 const supportingDocumentsHeading = 'Supporting documents';
+const uploadDocumentHeading = 'Upload a document';
 const adminRequestHeading = 'TRB request details';
 const guidanceLetterIncompleteHeading = 'Guidance letter incomplete';
 const guidanceLetterDownloadLabel = 'Download guidance letter as PDF';
@@ -22,6 +26,8 @@ const guidanceLetterQuestionsHeading =
   'Have questions about this guidance letter?';
 const relatedLcidsLabel =
   'Select any Life Cycle IDs (LCIDs) pertaining to this request.';
+const assignLeadHeading = 'Assign an Admin lead for this request';
+const cedarSystemId = '11AB1A00-1234-5678-ABC1-1A001B00CC0A';
 
 const requestUrls = {
   draft: null,
@@ -29,6 +35,7 @@ const requestUrls = {
   draftGuidanceLetter: null,
   completedGuidanceLetter: null,
   relation: null,
+  withAttendees: null,
   relatedTable: null
 };
 
@@ -57,8 +64,11 @@ const getRequestUrls = requestName => {
       return {
         id,
         taskListHref: `/trb/task-list/${id}`,
+        requesterAttendeesHref: `/trb/task-list/${id}/attendees`,
+        requesterAttendeesListHref: `/trb/task-list/${id}/attendees/list`,
         requesterBasicHref: `/trb/requests/${id}/basic`,
         requesterDocumentsHref: `/trb/task-list/${id}/documents`,
+        requesterDocumentUploadHref: `/trb/task-list/${id}/documents/upload`,
         adminRequestHref: `/trb/${id}/request`,
         adminDocumentsHref: `/trb/${id}/documents`,
         adminAdditionalInfoHref: `/trb/${id}/additional-information`,
@@ -93,6 +103,10 @@ describe('TRB request permissions', () => {
       requestUrls.relation = urls;
     });
 
+    getRequestUrls(requestNames.withAttendees).then(urls => {
+      requestUrls.withAttendees = urls;
+    });
+
     getRequestUrls(requestNames.relatedTable).then(urls => {
       requestUrls.relatedTable = urls;
     });
@@ -111,6 +125,140 @@ describe('TRB request permissions', () => {
     cy.visit(requestUrls.completed.requesterDocumentsHref);
     cy.contains('h1', supportingDocumentsHeading).should('be.visible');
     cy.contains('a', 'Add a document').should('be.visible');
+  });
+
+  it('lets the request owner reach the standalone attendees and upload routes', () => {
+    loginAs(owner);
+
+    cy.visit(requestUrls.withAttendees.requesterAttendeesHref);
+    cy.contains('h1', attendeesHeading).should('be.visible');
+
+    cy.visit(requestUrls.completed.requesterDocumentsHref);
+    cy.contains('h1', supportingDocumentsHeading).should('be.visible');
+
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.contains('h1', uploadDocumentHeading).should('be.visible');
+  });
+
+  it('lets the request owner add and remove attendees from the standalone attendees route', () => {
+    loginAs(owner);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestAttendee') {
+        req.alias = 'createTrbRequestAttendee';
+      }
+
+      if (req.body.operationName === 'UpdateTRBRequestAttendee') {
+        req.alias = 'updateTrbRequestAttendee';
+      }
+
+      if (req.body.operationName === 'DeleteTRBRequestAttendee') {
+        req.alias = 'deleteTrbRequestAttendee';
+      }
+    });
+
+    cy.visit(requestUrls.withAttendees.requesterAttendeesListHref);
+    cy.trbRequest.attendees.fillRequiredFields({
+      userInfo: {
+        commonName: 'Anabelle Jerde',
+        euaUserId: 'JTTC'
+      },
+      component: 'Center for Medicare',
+      role: 'PRIVACY_ADVISOR'
+    });
+    cy.contains('button', 'Add attendee').click();
+
+    cy.wait('@createTrbRequestAttendee')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.contains('.usa-alert__text', 'Your attendee has been added.').should(
+      'be.visible'
+    );
+    cy.get('#trbAttendee-JTTC').as('newAttendee').should('be.visible');
+
+    cy.get('@newAttendee').contains('Edit').click();
+    cy.trbRequest.attendees.fillRequiredFields({
+      role: 'CRA'
+    });
+    cy.contains('button', 'Save').click();
+
+    cy.wait('@updateTrbRequestAttendee')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.contains('.usa-alert__text', 'Your attendee has been updated.').should(
+      'be.visible'
+    );
+    cy.get('@newAttendee').contains('CRA').should('be.visible');
+
+    cy.get('@newAttendee').contains('button', 'Remove').click();
+    cy.contains('button', 'Remove attendee').click();
+
+    cy.wait('@deleteTrbRequestAttendee')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.contains('.usa-alert__text', 'Your attendee has been removed.').should(
+      'be.visible'
+    );
+    cy.get('@newAttendee').should('not.exist');
+  });
+
+  it('lets the request owner upload documents from the standalone upload route', () => {
+    loginAs(owner);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestDocument') {
+        req.alias = 'createTrbRequestDocument';
+      }
+
+      if (req.body.operationName === 'DeleteTRBRequestDocument') {
+        req.alias = 'deleteTrbRequestDocument';
+      }
+    });
+
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').click();
+
+    cy.wait('@createTrbRequestDocument')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
+    cy.contains(
+      '.usa-alert__text',
+      'Your document has been uploaded and is being scanned.'
+    ).should('be.visible');
+
+    cy.contains('td', 'test.pdf').should('be.visible');
+    cy.contains('td', 'Virus scan in progress...').should('be.visible');
+
+    cy.get('[data-testurl]')
+      .first()
+      .within(el => {
+        const url = el.attr('data-testurl');
+        const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
+        cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+      });
+
+    cy.reload();
+
+    cy.contains('td', 'test.pdf')
+      .first()
+      .parent('tr')
+      .as('uploadedDocument')
+      .should('be.visible');
+
+    cy.get('@uploadedDocument').contains('button', 'Remove').click();
+    cy.contains('button', 'Remove document').click();
+
+    cy.wait('@deleteTrbRequestDocument')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.contains(
+      '.usa-alert__text',
+      'You have successfully removed test.pdf.'
+    ).should('be.visible');
+    cy.get('@uploadedDocument').should('not.exist');
   });
 
   it('uses the requester-safe LCID lookup on the TRB basic form', () => {
@@ -137,6 +285,38 @@ describe('TRB request permissions', () => {
       expect(operationNames).to.include('GetTRBRequestLcidOptions');
       expect(operationNames).not.to.include('GetSystemIntakesWithLCIDS');
     });
+  });
+
+  it('lets the request owner save TRB basic form changes from the seeded request flow', () => {
+    loginAs(owner);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateTRBRequestAndForm') {
+        req.alias = 'updateTrbRequestAndForm';
+      }
+    });
+
+    cy.visit(requestUrls.draft.requesterBasicHref);
+
+    cy.get('[name=name]').clear().type('Case 1 - Draft request form updated');
+    cy.get('#systemIntakes').click({ force: true });
+    cy.contains('000001').click({ force: true });
+
+    cy.contains('button', 'Save and exit').click();
+
+    cy.wait('@updateTrbRequestAndForm')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.url().should('include', requestUrls.draft.taskListHref);
+
+    cy.visit(requestUrls.draft.requesterBasicHref);
+    cy.get('[name=name]').should(
+      'have.value',
+      'Case 1 - Draft request form updated'
+    );
+    cy.get('[class*="multiselect-tag"]')
+      .contains('000001')
+      .should('be.visible');
   });
 
   it('keeps the requester form accessible when requesterInfo is unavailable', () => {
@@ -192,6 +372,52 @@ describe('TRB request permissions', () => {
     });
   });
 
+  it('shows an unrelated user the standalone document upload route', () => {
+    loginAs(unrelatedUser);
+
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.contains('h1', uploadDocumentHeading).should('be.visible');
+  });
+
+  it('shows an unrelated user the standalone documents route even when the query is denied', () => {
+    loginAs(unrelatedUser);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetTRBRequestDocuments') {
+        req.alias = 'getTrbRequestDocuments';
+      }
+    });
+
+    cy.visit(requestUrls.completed.requesterDocumentsHref);
+    cy.wait('@getTrbRequestDocuments')
+      .its('response.body.errors.0.message')
+      .should('include', 'unauthorized to access TRB request');
+
+    cy.contains('h1', supportingDocumentsHeading).should('be.visible');
+    cy.contains('a', 'Add a document').should('be.visible');
+  });
+
+  it('shows an unrelated user the standalone attendees route even when the query is denied', () => {
+    loginAs(unrelatedUser);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetTRBRequestAttendees') {
+        req.alias = 'getTrbRequestAttendees';
+      }
+    });
+
+    cy.visit(requestUrls.withAttendees.requesterAttendeesHref);
+    cy.wait('@getTrbRequestAttendees')
+      .its('response.body.errors.0.message')
+      .should('include', 'unauthorized to access TRB request');
+
+    cy.url().should(
+      'include',
+      requestUrls.withAttendees.requesterAttendeesListHref
+    );
+    cy.contains('h1', addAttendeeHeading).should('be.visible');
+  });
+
   it('blocks a TRB lead from the requester task list view', () => {
     loginAs(trbLead);
 
@@ -217,6 +443,162 @@ describe('TRB request permissions', () => {
     cy.contains('h1', supportingDocumentsHeading).should('be.visible');
     cy.contains('a', 'Add a document').should('not.exist');
     cy.contains('button', 'Remove').should('not.exist');
+  });
+
+  it('loads TRB lead options on the admin request page', () => {
+    loginAs(admin);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetTRBLeadOptions') {
+        req.alias = 'getTrbLeadOptions';
+      }
+    });
+
+    cy.visit(requestUrls.draft.adminRequestHref);
+    cy.wait('@getTrbLeadOptions')
+      .its('response.body.data.trbLeadOptions')
+      .should('have.length.greaterThan', 0);
+    cy.contains('h1', adminRequestHeading).should('be.visible');
+    cy.contains('button', 'Assign lead').click();
+    cy.contains(assignLeadHeading).should('be.visible');
+  });
+
+  it('lets a TRB admin reach the standalone requester attendees and upload routes', () => {
+    loginAs(admin);
+
+    cy.visit(requestUrls.withAttendees.requesterAttendeesHref);
+    cy.contains('h1', attendeesHeading).should('be.visible');
+
+    cy.visit(requestUrls.completed.requesterDocumentsHref);
+    cy.contains('h1', supportingDocumentsHeading).should('be.visible');
+    cy.contains('a', 'Add a document').should('be.visible');
+
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.contains('h1', uploadDocumentHeading).should('be.visible');
+  });
+
+  it('denies attendee creation for a TRB admin on the standalone requester attendees route', () => {
+    loginAs(admin);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestAttendee') {
+        req.alias = 'createTrbRequestAttendee';
+      }
+    });
+
+    cy.visit(requestUrls.withAttendees.requesterAttendeesListHref);
+    cy.trbRequest.attendees.fillRequiredFields({
+      userInfo: {
+        commonName: 'Anabelle Jerde',
+        euaUserId: 'JTTC'
+      },
+      component: 'Center for Medicare',
+      role: 'PRIVACY_ADVISOR'
+    });
+    cy.contains('button', 'Add attendee').click();
+
+    cy.wait('@createTrbRequestAttendee')
+      .its('response.body.errors.0.message')
+      .should('include', 'unauthorized to modify TRB request');
+    cy.contains('.usa-alert__text', 'Your attendee has been added.').should(
+      'not.exist'
+    );
+  });
+
+  it('denies document upload for a TRB admin on the standalone requester upload route', () => {
+    loginAs(admin);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestDocument') {
+        req.alias = 'createTrbRequestDocument';
+      }
+    });
+
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').click();
+
+    cy.wait('@createTrbRequestDocument')
+      .its('response.body.errors.0.message')
+      .should('include', 'unauthorized to modify TRB request');
+    cy.url().should(
+      'include',
+      requestUrls.completed.requesterDocumentUploadHref
+    );
+    cy.contains(
+      '.usa-alert__text',
+      'Your document has been uploaded and is being scanned.'
+    ).should('not.exist');
+  });
+
+  it('lets a TRB lead reach the standalone requester attendees and upload routes', () => {
+    loginAs(trbLead);
+
+    cy.visit(requestUrls.withAttendees.requesterAttendeesHref);
+    cy.contains('h1', attendeesHeading).should('be.visible');
+
+    cy.visit(requestUrls.completed.requesterDocumentsHref);
+    cy.contains('h1', supportingDocumentsHeading).should('be.visible');
+    cy.contains('a', 'Add a document').should('be.visible');
+
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.contains('h1', uploadDocumentHeading).should('be.visible');
+  });
+
+  it('denies attendee creation for a TRB lead on the standalone requester attendees route', () => {
+    loginAs(trbLead);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestAttendee') {
+        req.alias = 'createTrbRequestAttendee';
+      }
+    });
+
+    cy.visit(requestUrls.withAttendees.requesterAttendeesListHref);
+    cy.trbRequest.attendees.fillRequiredFields({
+      userInfo: {
+        commonName: 'Anabelle Jerde',
+        euaUserId: 'JTTC'
+      },
+      component: 'Center for Medicare',
+      role: 'PRIVACY_ADVISOR'
+    });
+    cy.contains('button', 'Add attendee').click();
+
+    cy.wait('@createTrbRequestAttendee')
+      .its('response.body.errors.0.message')
+      .should('include', 'unauthorized to modify TRB request');
+    cy.contains('.usa-alert__text', 'Your attendee has been added.').should(
+      'not.exist'
+    );
+  });
+
+  it('denies document upload for a TRB lead on the standalone requester upload route', () => {
+    loginAs(trbLead);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestDocument') {
+        req.alias = 'createTrbRequestDocument';
+      }
+    });
+
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').click();
+
+    cy.wait('@createTrbRequestDocument')
+      .its('response.body.errors.0.message')
+      .should('include', 'unauthorized to modify TRB request');
+    cy.url().should(
+      'include',
+      requestUrls.completed.requesterDocumentUploadHref
+    );
+    cy.contains(
+      '.usa-alert__text',
+      'Your document has been uploaded and is being scanned.'
+    ).should('not.exist');
   });
 
   it('shows draft guidance letters as incomplete to the requester', () => {
@@ -260,6 +642,89 @@ describe('TRB request permissions', () => {
     cy.contains(
       'This request is for a completely new system, service, or contract and may not have other requests related to it.'
     ).should('be.visible');
+  });
+
+  it('lets a TRB admin update and unlink request relations from the admin relation form', () => {
+    loginAs(admin);
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetTRBRequestRelation') {
+        req.alias = 'getTrbRequestRelation';
+      }
+
+      if (req.body.operationName === 'SetTrbRequestRelationExistingService') {
+        req.alias = 'setTrbRequestRelationExistingService';
+      }
+
+      if (req.body.operationName === 'SetTrbRequestRelationExistingSystem') {
+        req.alias = 'setTrbRequestRelationExistingSystem';
+      }
+
+      if (req.body.operationName === 'SetTrbRequestRelationNewSystem') {
+        req.alias = 'setTrbRequestRelationNewSystem';
+      }
+
+      if (req.body.operationName === 'UnlinkTrbRequestRelation') {
+        req.alias = 'unlinkTrbRequestRelation';
+      }
+    });
+
+    cy.visit(requestUrls.relation.adminRelationHref);
+    cy.wait('@getTrbRequestRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#relationType-existingService').check({ force: true });
+    cy.get('#contractName').clear().type('TRB existing service contract');
+    cy.contains('button', 'Save changes').click();
+
+    cy.wait('@setTrbRequestRelationExistingService')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.url().should('include', requestUrls.relation.adminAdditionalInfoHref);
+
+    cy.visit(
+      `${requestUrls.relation.adminRelationHref}?linkCedarSystemId=${encodeURIComponent(
+        cedarSystemId
+      )}`
+    );
+    cy.wait('@getTrbRequestRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#relationType-existingSystem').check({ force: true });
+    cy.contains('button', 'Save changes').click();
+
+    cy.wait('@setTrbRequestRelationExistingSystem')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.url().should('include', requestUrls.relation.adminAdditionalInfoHref);
+
+    cy.visit(requestUrls.relation.adminRelationHref);
+    cy.wait('@getTrbRequestRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#relationType-newSystem').check({ force: true });
+    cy.contains('button', 'Save changes').click();
+
+    cy.wait('@setTrbRequestRelationNewSystem')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.url().should('include', requestUrls.relation.adminAdditionalInfoHref);
+
+    cy.visit(requestUrls.relation.adminRelationHref);
+    cy.wait('@getTrbRequestRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.contains('button', 'or, unlink all information').click();
+    cy.contains('button', 'Unlink').click();
+
+    cy.wait('@unlinkTrbRequestRelation')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.url().should('include', requestUrls.relation.adminAdditionalInfoHref);
   });
 
   it('shows related TRB rows and hides inaccessible IT Gov rows on the admin related-requests table', () => {

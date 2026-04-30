@@ -24,6 +24,13 @@ type CedarSystem struct {
 	OaStatus                zero.String `json:"oaStatus"`
 }
 
+// CedarSystemViewerCapabilities contains the current viewer's navigation
+// capabilities for a CEDAR system.
+type CedarSystemViewerCapabilities struct {
+	ViewerCanAccessProfile   bool
+	ViewerCanAccessWorkspace bool
+}
+
 type CedarSubSystem struct {
 	ID          uuid.UUID   `json:"id"`
 	Name        zero.String `json:"name"`

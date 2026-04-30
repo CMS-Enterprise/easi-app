@@ -46,6 +46,13 @@ const reviewedIntakeRoutes = {
   linkedSystems: `/linked-systems/${reviewedIntakeId}`
 };
 
+const addSystemLinkRoute = `/linked-systems-form/${requesterFormIntakeId}`;
+const linkedSystemsRoute = `/linked-systems/${requesterFormIntakeId}`;
+const linkedAdminSystemsRoute = `/linked-systems/${adminManagedIntakeId}`;
+const adminSystemInformationLinkRoute = `/it-governance/${adminManagedIntakeId}/system-information/link`;
+const cedarSystemId = '11AB1A00-1234-5678-ABC1-1A001B00CC0A';
+const systemName = 'Centers for Management Services';
+
 describe('System intake permissions', () => {
   it('lets an IT Gov admin access requester update email configuration from the admin home', () => {
     cy.intercept('POST', '/api/graph/query', req => {
@@ -134,5 +141,252 @@ describe('System intake permissions', () => {
 
     cy.visit(reviewedIntakeRoutes.linkedSystems);
     cy.contains('h1', notFoundHeading).should('be.visible');
+  });
+
+  it('lets the owner add, edit, remove, and unlink systems from linked-systems routes', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntakeSystems') {
+        req.alias = 'getSystemIntakeSystems';
+      }
+
+      if (req.body.operationName === 'GetSystemIntake') {
+        req.alias = 'getSystemIntake';
+      }
+
+      if (req.body.operationName === 'GetCedarSystems') {
+        req.alias = 'getCedarSystems';
+      }
+
+      if (req.body.operationName === 'GetSystemIntakeSystem') {
+        req.alias = 'getSystemIntakeSystem';
+      }
+
+      if (req.body.operationName === 'AddSystemLink') {
+        req.alias = 'addSystemLink';
+      }
+
+      if (req.body.operationName === 'UpdateSystemLink') {
+        req.alias = 'updateSystemLink';
+      }
+
+      if (req.body.operationName === 'DeleteSystemLink') {
+        req.alias = 'deleteSystemLink';
+      }
+
+      if (req.body.operationName === 'UnlinkSystemIntakeRelation') {
+        req.alias = 'unlinkSystemIntakeRelation';
+      }
+    });
+
+    loginAs(owner);
+
+    cy.visit(addSystemLinkRoute);
+    cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
+    cy.contains('h1', 'Add a system link').should('be.visible');
+
+    cy.getByTestId('cedarSystemID').select(1);
+    cy.get('#primarySupport').check({ force: true });
+    cy.contains('button', 'Add system').click();
+
+    cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
+    cy.contains('You linked').should('be.visible');
+    cy.contains(systemName).should('be.visible');
+
+    cy.contains('tr', systemName).within(() => {
+      cy.contains('button', 'Edit').click();
+    });
+
+    cy.wait('@getSystemIntakeSystem')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.contains('h1', 'Edit a system link').should('be.visible');
+    cy.get('#partialSupport').check({ force: true });
+    cy.contains('button', 'Save changes').click();
+
+    cy.wait('@updateSystemLink').its('response.statusCode').should('eq', 200);
+    cy.contains('You saved changes').should('be.visible');
+    cy.contains('tr', systemName).contains(
+      'partially contributes financially',
+      {
+        matchCase: false
+      }
+    );
+
+    cy.contains('tr', systemName).within(() => {
+      cy.contains('button', 'Remove').click();
+    });
+    cy.contains('button', 'Remove linked system').click();
+
+    cy.wait('@deleteSystemLink').its('response.statusCode').should('eq', 200);
+    cy.contains('You have removed a linked system').should('be.visible');
+
+    cy.visit(addSystemLinkRoute);
+    cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
+    cy.getByTestId('cedarSystemID').select(1);
+    cy.get('#primarySupport').check({ force: true });
+    cy.contains('button', 'Add system').click();
+
+    cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
+    cy.visit(linkedSystemsRoute);
+    cy.wait('@getSystemIntakeSystems')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#systemsUsed').check({ force: true });
+    cy.contains('button', 'Remove linked systems').click();
+
+    cy.wait('@unlinkSystemIntakeRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.contains('You have removed all linked systems').should('be.visible');
+  });
+
+  it('lets an IT Gov admin manage linked systems through the linked systems page', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntakeSystems') {
+        req.alias = 'getSystemIntakeSystems';
+      }
+
+      if (req.body.operationName === 'GetSystemIntake') {
+        req.alias = 'getSystemIntake';
+      }
+
+      if (req.body.operationName === 'GetCedarSystems') {
+        req.alias = 'getCedarSystems';
+      }
+
+      if (req.body.operationName === 'AddSystemLink') {
+        req.alias = 'addSystemLink';
+      }
+
+      if (req.body.operationName === 'DeleteSystemLink') {
+        req.alias = 'deleteSystemLink';
+      }
+    });
+
+    loginAs(admin);
+
+    cy.visit(adminManagedIntakeRoutes.adminSystemInformation);
+    cy.contains('a', editSystemInformationLink).click();
+
+    cy.wait('@getSystemIntakeSystems')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.url().should('include', linkedAdminSystemsRoute);
+
+    cy.contains('button', 'Add a system').click();
+    cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
+    cy.contains('h1', 'Add a system link').should('be.visible');
+
+    cy.getByTestId('cedarSystemID').select(1);
+    cy.get('#primarySupport').check({ force: true });
+    cy.contains('button', 'Add system').click();
+
+    cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
+    cy.contains('You linked').should('be.visible');
+    cy.contains(systemName).should('be.visible');
+
+    cy.contains('tr', systemName).within(() => {
+      cy.contains('button', 'Remove').click();
+    });
+    cy.contains('button', 'Remove linked system').click();
+
+    cy.wait('@deleteSystemLink').its('response.statusCode').should('eq', 200);
+    cy.contains('You have removed a linked system').should('be.visible');
+  });
+
+  it('lets an IT Gov admin mark a request as a new system from the link form', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntakeRelation') {
+        req.alias = 'getSystemIntakeRelation';
+      }
+
+      if (req.body.operationName === 'SetSystemIntakeRelationNewSystem') {
+        req.alias = 'setNewSystemRelation';
+      }
+    });
+
+    loginAs(admin);
+
+    cy.visit(adminSystemInformationLinkRoute);
+    cy.wait('@getSystemIntakeRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#relationType-newSystem').check({ force: true });
+    cy.contains('button', 'Save changes').click();
+
+    cy.wait('@setNewSystemRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.location('pathname').should(
+      'eq',
+      `/it-governance/${adminManagedIntakeId}/system-information`
+    );
+  });
+
+  it('lets an IT Gov admin link a request to an existing service from the link form', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntakeRelation') {
+        req.alias = 'getSystemIntakeRelation';
+      }
+
+      if (req.body.operationName === 'SetSystemIntakeRelationExistingService') {
+        req.alias = 'setExistingServiceRelation';
+      }
+    });
+
+    loginAs(admin);
+
+    cy.visit(adminSystemInformationLinkRoute);
+    cy.wait('@getSystemIntakeRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#relationType-existingService').check({ force: true });
+    cy.get('#contractName').clear().type('Existing service contract');
+    cy.contains('button', 'Save changes').click();
+
+    cy.wait('@setExistingServiceRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.location('pathname').should(
+      'eq',
+      `/it-governance/${adminManagedIntakeId}/system-information`
+    );
+  });
+
+  it('lets an IT Gov admin link a request to an existing system from the link form', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntakeRelation') {
+        req.alias = 'getSystemIntakeRelation';
+      }
+
+      if (req.body.operationName === 'SetSystemIntakeRelationExistingSystem') {
+        req.alias = 'setExistingSystemRelation';
+      }
+    });
+
+    loginAs(admin);
+
+    cy.visit(
+      `${adminSystemInformationLinkRoute}?linkCedarSystemId=${encodeURIComponent(
+        cedarSystemId
+      )}`
+    );
+    cy.wait('@getSystemIntakeRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#relationType-existingSystem').check({ force: true });
+    cy.contains('button', 'Save changes').click();
+
+    cy.wait('@setExistingSystemRelation')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.location('pathname').should(
+      'eq',
+      `/it-governance/${adminManagedIntakeId}/system-information`
+    );
   });
 });

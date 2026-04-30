@@ -138,6 +138,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 			store,
 			oktaAPIClient.FetchUserInfos,
 			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+			func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error) { return nil, nil },
 		)
 	}
 

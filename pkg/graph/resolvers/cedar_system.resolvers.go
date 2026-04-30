@@ -34,6 +34,26 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 	return GetCedarSystemIsBookmarked(ctx, obj.ID)
 }
 
+// ViewerCanAccessProfile is the resolver for the viewerCanAccessProfile field.
+func (r *cedarSystemResolver) ViewerCanAccessProfile(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
+	if err != nil {
+		return false, err
+	}
+
+	return capabilities.ViewerCanAccessProfile, nil
+}
+
+// ViewerCanAccessWorkspace is the resolver for the viewerCanAccessWorkspace field.
+func (r *cedarSystemResolver) ViewerCanAccessWorkspace(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
+	if err != nil {
+		return false, err
+	}
+
+	return capabilities.ViewerCanAccessWorkspace, nil
+}
+
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
 	trbRequests, err := CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
@@ -223,10 +243,6 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
-		return nil, err
-	}
-
 	requesterEUAID := appcontext.Principal(ctx).ID()
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(requesterEUAID))
 	if err != nil {

@@ -18,6 +18,8 @@ type CedarSystem {
   systemMaintainerOrgComp: String
   versionId: String
   isBookmarked: Boolean!
+  viewerCanAccessProfile: Boolean! @goField(forceResolver: true)
+  viewerCanAccessWorkspace: Boolean! @goField(forceResolver: true)
   linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
   linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
   uuid: String
@@ -68,7 +70,7 @@ type CedarSystemWorkspace {
 extend type Query {
   cedarSystem(cedarSystemId: UUID!): CedarSystem @hasRole(role: EASI_USER)
   cedarSystems: [CedarSystem!]
-  myCedarSystems: [CedarSystem!] @hasRole(role: EASI_USER)
+  myCedarSystems: [CedarSystem!]
   cedarSystemWorkspace(cedarSystemId: UUID!): CedarSystemWorkspace!
 
   """

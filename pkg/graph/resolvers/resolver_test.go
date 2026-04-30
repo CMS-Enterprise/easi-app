@@ -332,9 +332,12 @@ func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
 		return coreClient.GetSystemSummary(ctx)
 	}
+	getMyCedarSystems := func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(euaUserID))
+	}
 
 	buildDataloaders := func() *dataloaders.Dataloaders {
-		return dataloaders.NewDataloaders(s.testConfigs.Store, s.testConfigs.UserSearchClient.FetchUserInfos, getCedarSystems)
+		return dataloaders.NewDataloaders(s.testConfigs.Store, s.testConfigs.UserSearchClient.FetchUserInfos, getCedarSystems, getMyCedarSystems)
 	}
 
 	// Set up mocked dataloaders for the test context

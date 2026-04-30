@@ -16,6 +16,31 @@ describe('Governance Review Team', () => {
       if (req.body.operationName === 'GetGovernanceTaskList') {
         req.alias = 'getGovernanceTaskList';
       }
+      if (
+        req.body.operationName === 'CreateSystemIntakeActionProgressToNewStep'
+      ) {
+        req.alias = 'progressToNewStep';
+      }
+      if (req.body.operationName === 'CreateSystemIntakeActionRequestEdits') {
+        req.alias = 'requestEdits';
+      }
+      if (req.body.operationName === 'CreateSystemIntakeActionRejectIntake') {
+        req.alias = 'rejectIntake';
+      }
+      if (req.body.operationName === 'CreateSystemIntakeActionCloseRequest') {
+        req.alias = 'closeRequest';
+      }
+      if (req.body.operationName === 'CreateSystemIntakeActionReopenRequest') {
+        req.alias = 'reopenRequest';
+      }
+      if (
+        req.body.operationName === 'CreateSystemIntakeActionNotITGovRequest'
+      ) {
+        req.alias = 'notItGovRequest';
+      }
+      if (req.body.operationName === 'CreateSystemIntakeActionConfirmLCID') {
+        req.alias = 'confirmLcid';
+      }
       if (req.body.operationName === 'UpdateSystemIntakeNote') {
         req.alias = 'updateSystemIntakeNote';
       }
@@ -171,6 +196,75 @@ describe('Governance Review Team', () => {
 
       cy.get('[data-testid="user-note"]').should('have.length', numOfNotes - 1);
     });
+  });
+
+  it('can request edits to an intake form', () => {
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
+
+    cy.get('li.usa-sidenav__item a[href*="actions"]').click();
+
+    cy.get('#grt-action__request-edits').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#intakeFormStep').select('INITIAL_REQUEST_FORM');
+    cy.get('div#emailFeedback')
+      .type('Please update the intake request details before we continue.')
+      .should(
+        'contain.text',
+        'Please update the intake request details before we continue.'
+      );
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    cy.get('.easi-modal__content')
+      .contains('button', 'Complete action')
+      .click();
+
+    cy.wait('@requestEdits').its('response.statusCode').should('eq', 200);
+
+    cy.location('pathname').should(
+      'eq',
+      '/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/actions'
+    );
+    cy.get('div[data-testid="alert"]').contains(
+      'You have requested edits to the Intake Request form.'
+    );
+  });
+
+  it('can mark a request as not approved', () => {
+    cy.contains('a', 'A Completed Intake Form').should('be.visible').click();
+
+    cy.get('li.usa-sidenav__item a[href*="actions"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__not-approved').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.get('div#reason')
+      .type('The request is not ready for approval in its current state.')
+      .should('contain.text', 'The request is not ready for approval');
+    cy.get('div#nextSteps')
+      .type('Revise the proposal and return after resolving the GRB concerns.')
+      .should('contain.text', 'Revise the proposal and return');
+    cy.get('#stronglyRecommended').check({ force: true });
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    cy.get('.easi-modal__content')
+      .contains('button', 'Complete action')
+      .click();
+
+    cy.wait('@rejectIntake').its('response.statusCode').should('eq', 200);
+
+    cy.get('[data-testid="request-state"').contains('Closed');
+    cy.get('div[data-testid="alert"]').contains(
+      'This request was not approved by the GRB. This request is now closed.'
+    );
   });
 
   it('can issue a new Life Cycle ID', () => {
@@ -479,6 +573,34 @@ describe('Governance Review Team', () => {
     );
   });
 
+  it('can confirm a Life Cycle ID decision', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'LCID issued').should('be.visible').click();
+
+    cy.get('li.usa-sidenav__item a[href*="actions"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__issue-lcid').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.get('[data-testid="current-lcid"]').should('be.visible');
+    cy.contains(
+      'After you confirm this decision, you may continue to modify this LCID'
+    ).should('be.visible');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+    cy.wait('@confirmLcid').its('response.statusCode').should('eq', 200);
+
+    cy.get('div[data-testid="alert"]').contains(
+      /Life Cycle ID [0-9]{6} is issued for this request./
+    );
+  });
+
   it('can progress to the GRB meeting step', () => {
     cy.contains('a', 'Draft Business Case').should('be.visible').click();
 
@@ -508,6 +630,7 @@ describe('Governance Review Team', () => {
     cy.get('#meetingDate').type('01/01/2050');
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
+    cy.wait('@progressToNewStep').its('response.statusCode').should('eq', 200);
 
     // Check form submit was successful
     cy.get('div[data-testid="alert"]').contains(
@@ -548,6 +671,7 @@ describe('Governance Review Team', () => {
     cy.get('#reason').type('Reason for closing request');
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
+    cy.wait('@closeRequest').its('response.statusCode').should('eq', 200);
 
     // Check request state is set to Closed
     cy.get('[data-testid="request-state"').contains('Closed');
@@ -581,6 +705,7 @@ describe('Governance Review Team', () => {
     cy.get('#reason').type('Reason for re-opening request');
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
+    cy.wait('@reopenRequest').its('response.statusCode').should('eq', 200);
 
     // Check request state is set to Open
     cy.get('[data-testid="request-state"').contains('Open');
@@ -623,5 +748,33 @@ describe('Governance Review Team', () => {
 
     // Check that contact is automatically selected
     cy.get('input[value="aaron.adams@local.fake"]').should('be.checked');
+  });
+
+  it('can mark a request as not an IT Governance request', () => {
+    cy.contains('a', 'initial form filled and submitted')
+      .should('be.visible')
+      .click();
+
+    cy.get('li.usa-sidenav__item a[href*="actions"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__not-it-request').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.get('div#reason')
+      .type('This project should be handled outside of the IT Governance flow.')
+      .should('contain.text', 'outside of the IT Governance flow');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+    cy.wait('@notItGovRequest').its('response.statusCode').should('eq', 200);
+
+    cy.get('[data-testid="request-state"').contains('Closed');
+    cy.get('div[data-testid="alert"]').contains(
+      'This request is marked as Not an IT Governance request. This request is now closed.'
+    );
   });
 });

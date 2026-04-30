@@ -9,6 +9,10 @@ describe('GRB review', () => {
   // System intake ID: d9c931c6-0858-494d-b991-e02a94a42f38
   it('completes required fields for Asynchronous Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
+        req.alias = 'updateReviewType';
+      }
+
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
@@ -18,6 +22,18 @@ describe('GRB review', () => {
         'UpdateSystemIntakeGRBReviewAsyncPresentation'
       ) {
         req.alias = 'updatePresentation';
+      }
+
+      if (req.body.operationName === 'CreateSystemIntakeGRBReviewers') {
+        req.alias = 'createGrbReviewers';
+      }
+
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewer') {
+        req.alias = 'updateGrbReviewer';
+      }
+
+      if (req.body.operationName === 'DeleteSystemIntakeGRBReviewer') {
+        req.alias = 'deleteGrbReviewer';
       }
 
       if (
@@ -36,6 +52,7 @@ describe('GRB review', () => {
     cy.get('input#grbReviewTypeAsync').check({ force: true });
 
     cy.getByTestId('pager-next-button').click();
+    cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
 
     // Presentation page
 
@@ -100,6 +117,7 @@ describe('GRB review', () => {
       .should('have.value', 'CO_CHAIR_CIO');
 
     cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
+    cy.wait('@createGrbReviewers').its('response.statusCode').should('eq', 200);
 
     cy.url().should('include', '/participants');
 
@@ -132,6 +150,7 @@ describe('GRB review', () => {
     cy.get('#votingRole').should('have.value', 'ALTERNATE').select('Voting');
 
     cy.contains('button', 'Save changes').should('not.be.disabled').click();
+    cy.wait('@updateGrbReviewer').its('response.statusCode').should('eq', 200);
 
     cy.getByTestId('table').within(() => {
       // Check to see that Adeline Aarons is now a voting memeber
@@ -142,6 +161,15 @@ describe('GRB review', () => {
           cy.contains('td', 'Voting').should('exist');
         });
     });
+
+    cy.getByTestId('grbReviewer-ADMN').within(() => {
+      cy.contains('button', 'Remove').click();
+    });
+
+    cy.contains('button', 'Remove reviewer').click();
+    cy.wait('@deleteGrbReviewer').its('response.statusCode').should('eq', 200);
+
+    cy.getByTestId('grbReviewer-ADMN').should('not.exist');
 
     // Async review end date
     cy.getByTestId('date-picker-external-input').clear();
@@ -174,9 +202,21 @@ describe('GRB review', () => {
   // System intake ID: 8ef9d0fb-e673-441c-9876-f874b179f89c
   it('completes required fields for Standard Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
+        req.alias = 'updateReviewType';
+      }
+
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
+
+      if (
+        req.body.operationName ===
+        'UpdateSystemIntakeGRBReviewStandardPresentation'
+      ) {
+        req.alias = 'updatePresentation';
+      }
+
       if (req.body.operationName === 'StartGRBReview') {
         req.alias = 'startGRBReview';
       }
@@ -191,6 +231,7 @@ describe('GRB review', () => {
     cy.get('input#grbReviewTypeStandard').check({ force: true });
 
     cy.contains('button', 'Next').click();
+    cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
 
     cy.getByTestId('date-picker-external-input').clear();
 
@@ -205,6 +246,7 @@ describe('GRB review', () => {
     cy.contains('button', 'Reminder sent').should('be.disabled');
 
     cy.getByTestId('pager-next-button').click();
+    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
 
     // Additional documents page
     cy.url().should('include', '/documents');
@@ -297,6 +339,20 @@ describe('GRB review', () => {
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('can upload a presentation deck', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'SetSystemIntakeGRBPresentationLinks') {
+        req.alias = 'setPresentationLinks';
+      }
+
+      if (req.body.operationName === 'UploadSystemIntakeGRBPresentationDeck') {
+        req.alias = 'uploadPresentationDeck';
+      }
+
+      if (req.body.operationName === 'DeleteSystemIntakeGRBPresentationLinks') {
+        req.alias = 'deletePresentationLinks';
+      }
+    });
+
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
     cy.contains('a', 'Add asynchronous presentation links').click();
@@ -328,6 +384,12 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
+    cy.wait('@setPresentationLinks')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.wait('@uploadPresentationDeck')
+      .its('response.statusCode')
+      .should('eq', 200);
 
     cy.getByTestId('presentation-deck-virus-scanning').contains(
       'Virus scanning in progress'
@@ -364,11 +426,16 @@ describe('GRB review', () => {
       'cypress/fixtures/test.pdf'
     );
 
+    cy.get('#transcriptLink').clear();
+
     // Clear presentation deck file
     cy.get('button').contains('Clear file').click();
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
+    cy.wait('@setPresentationLinks')
+      .its('response.statusCode')
+      .should('eq', 200);
 
     // Mark file as passing virus scan
     cy.get('[data-testdeckurl]').within(el => {
@@ -382,12 +449,16 @@ describe('GRB review', () => {
 
     // Check that the presentation deck file was deleted
     cy.contains('button', 'View slide deck').should('not.exist');
+    cy.contains('button', 'View transcript').should('be.visible');
 
     // Remove all presentation links
     cy.contains('button', 'Remove all presentation links').click();
 
     // Modal remove button
     cy.contains('button', 'Remove presentation links').click();
+    cy.wait('@deletePresentationLinks')
+      .its('response.statusCode')
+      .should('eq', 200);
 
     // Returns to empty state with no links
     cy.contains('a', 'Add asynchronous presentation links').should(
@@ -398,6 +469,12 @@ describe('GRB review', () => {
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('Adds time to voting and Ends time to voting', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'ExtendGRBReviewDeadlineAsync') {
+        req.alias = 'extendGrbReviewDeadline';
+      }
+    });
+
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
     // Open Add Time modal
@@ -420,6 +497,9 @@ describe('GRB review', () => {
 
       // Click button to add time and close modal
       cy.getByTestId('addTimeModalButton').should('not.be.disabled').click();
+      cy.wait('@extendGrbReviewDeadline')
+        .its('response.statusCode')
+        .should('eq', 200);
 
       // Success alert text
       cy.getByTestId('alert').contains(
@@ -446,6 +526,12 @@ describe('GRB review', () => {
   // Request name: Async GRB review (voting complete)
   // System intake ID: b569ae1e-bf04-4c1b-96a5-b9604d74d979
   it('Restart GRB review', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'RestartGRBReviewAsync') {
+        req.alias = 'restartGrbReview';
+      }
+    });
+
     cy.visit('/it-governance/b569ae1e-bf04-4c1b-96a5-b9604d74d979/grb-review');
 
     cy.contains('button', 'Restart review').click();
@@ -467,6 +553,8 @@ describe('GRB review', () => {
 
           cy.contains('button', 'Restart').should('be.not.disabled').click();
         });
+
+      cy.wait('@restartGrbReview').its('response.statusCode').should('eq', 200);
 
       cy.get('[role="dialog"]').should('not.exist');
 

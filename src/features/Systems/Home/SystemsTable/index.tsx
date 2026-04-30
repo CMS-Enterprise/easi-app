@@ -42,6 +42,7 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { getComponentByName } from 'constants/cmsComponentsMap';
+import getCedarSystemRoute from 'utils/getCedarSystemRoute';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -86,7 +87,9 @@ export const Table = ({
     tableType || 'all-systems'
   );
 
-  const { loading, data: mySystems } = useGetMyCedarSystemsQuery();
+  const { loading, data: mySystems } = useGetMyCedarSystemsQuery({
+    skip: !isHomePage && systemTableType !== 'my-systems'
+  });
 
   const [createMutate] = useCreateCedarSystemBookmarkMutation();
   const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
@@ -186,10 +189,15 @@ export const Table = ({
       accessor: 'name',
       id: 'systemName',
       Cell: ({ row }: { row: Row<CedarSystem> }) => {
-        const url = `/systems/${row.original.id}/${
-          systemTableType === 'my-systems' ? 'workspace' : 'home/top'
-        }`;
-        return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
+        const url = getCedarSystemRoute(row.original, {
+          preferWorkspace: systemTableType === 'my-systems'
+        });
+
+        return url ? (
+          <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>
+        ) : (
+          <span>{row.original.name}</span>
+        );
       }
     });
 

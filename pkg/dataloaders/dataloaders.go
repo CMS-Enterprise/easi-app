@@ -17,16 +17,18 @@ type (
 	BuildDataloaders func() *Dataloaders
 
 	// for convenience and cleaner function definitions
-	fetchUserInfosFunc  func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error)
-	getCedarSystemsFunc func(ctx context.Context) ([]*models.CedarSystem, error)
+	fetchUserInfosFunc    func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error)
+	getCedarSystemsFunc   func(ctx context.Context) ([]*models.CedarSystem, error)
+	getMyCedarSystemsFunc func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error)
 )
 
 // dataReader's main responsibility is `db` access
 // it can also be used hold onto methods that can vary depending on environments (ex: test vs. prod)
 type dataReader struct {
-	db              *storage.Store
-	fetchUserInfos  fetchUserInfosFunc
-	getCedarSystems getCedarSystemsFunc
+	db                *storage.Store
+	fetchUserInfos    fetchUserInfosFunc
+	getCedarSystems   getCedarSystemsFunc
+	getMyCedarSystems getMyCedarSystemsFunc
 }
 
 // Dataloaders houses all dataloader-capable functionality
@@ -66,6 +68,7 @@ type dataReader struct {
 type Dataloaders struct {
 	BusinessCaseLifecycleCosts           *dataloadgen.Loader[uuid.UUID, []*models.EstimatedLifecycleCost]
 	CedarSystemBookmark                  *dataloadgen.Loader[models.BookmarkRequest, bool]
+	CedarSystemViewerCapabilities        *dataloadgen.Loader[uuid.UUID, *models.CedarSystemViewerCapabilities]
 	CedarSystemLinkedSystemIntakes       *dataloadgen.Loader[models.SystemIntakesByCedarSystemIDsRequest, []*models.SystemIntake]
 	CedarSystemLinkedTRBRequests         *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
 	FetchUserInfo                        *dataloadgen.Loader[string, *models.UserInfo]
@@ -103,15 +106,17 @@ type Dataloaders struct {
 }
 
 // NewDataloaders returns a new set of dataloaders
-func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, getCedarSystems getCedarSystemsFunc) *Dataloaders {
+func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, getCedarSystems getCedarSystemsFunc, getMyCedarSystems getMyCedarSystemsFunc) *Dataloaders {
 	dr := &dataReader{
-		db:              store,
-		fetchUserInfos:  fetchUserInfos,
-		getCedarSystems: getCedarSystems,
+		db:                store,
+		fetchUserInfos:    fetchUserInfos,
+		getCedarSystems:   getCedarSystems,
+		getMyCedarSystems: getMyCedarSystems,
 	}
 	return &Dataloaders{
 		BusinessCaseLifecycleCosts:           dataloadgen.NewLoader(dr.batchBusinessCaseLifecycleCostsByBizCaseIDs),
 		CedarSystemBookmark:                  dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
+		CedarSystemViewerCapabilities:        dataloadgen.NewLoader(dr.batchCedarSystemViewerCapabilities),
 		CedarSystemLinkedTRBRequests:         dataloadgen.NewLoader(dr.batchCedarSystemLinkedTRBRequests),
 		CedarSystemLinkedSystemIntakes:       dataloadgen.NewLoader(dr.batchCedarSystemLinkedSystemIntakes),
 		FetchUserInfo:                        dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
