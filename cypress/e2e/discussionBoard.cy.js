@@ -71,7 +71,7 @@ describe('Discussion Board', () => {
     );
 
     // New posts are at the beginning
-    cy.get('#grbDiscussionsNew li:first-child').within(() => {
+    cy.contains('#grbDiscussionsNew li', discussionText).within(() => {
       // Check contents
       cy.contains('p', `${mentionName} ${discussionText}`);
 
@@ -191,7 +191,7 @@ describe('Discussion Board', () => {
 
     // Reply to the discussion
 
-    cy.get('#grbDiscussionsNew li:first-child').within(() => {
+    cy.contains('#grbDiscussionsNew li', discussionText).within(() => {
       // Check contents
       cy.contains('p', discussionText);
 
@@ -235,6 +235,8 @@ describe('Discussion Board', () => {
       .click();
 
     cy.contains('h1', 'Internal GRB discussion board').should('be.visible');
-    cy.get('#grbDiscussionsNew li').its('length').should('be.gte', 1);
+    cy.get('#grbDiscussionsNew li, #grbDiscussionsWithReplies li')
+      .its('length')
+      .should('be.gte', 1);
   });
 });

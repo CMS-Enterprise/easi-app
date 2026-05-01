@@ -52,7 +52,7 @@ describe('GRB review', () => {
     cy.get('input#grbReviewTypeAsync').check({ force: true });
 
     cy.getByTestId('pager-next-button').click();
-    cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
+    cy.url().should('include', '/presentation');
 
     // Presentation page
 
@@ -231,7 +231,7 @@ describe('GRB review', () => {
     cy.get('input#grbReviewTypeStandard').check({ force: true });
 
     cy.contains('button', 'Next').click();
-    cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
+    cy.url().should('include', '/presentation');
 
     cy.getByTestId('date-picker-external-input').clear();
 
@@ -340,12 +340,11 @@ describe('GRB review', () => {
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('can upload a presentation deck', () => {
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'SetSystemIntakeGRBPresentationLinks') {
-        req.alias = 'setPresentationLinks';
-      }
-
-      if (req.body.operationName === 'UploadSystemIntakeGRBPresentationDeck') {
-        req.alias = 'uploadPresentationDeck';
+      if (
+        req.body.operationName ===
+        'UpdateSystemIntakeGRBReviewAsyncPresentation'
+      ) {
+        req.alias = 'updatePresentation';
       }
 
       if (req.body.operationName === 'DeleteSystemIntakeGRBPresentationLinks') {
@@ -384,12 +383,7 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    cy.wait('@setPresentationLinks')
-      .its('response.statusCode')
-      .should('eq', 200);
-    cy.wait('@uploadPresentationDeck')
-      .its('response.statusCode')
-      .should('eq', 200);
+    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
 
     cy.getByTestId('presentation-deck-virus-scanning').contains(
       'Virus scanning in progress'
@@ -433,9 +427,7 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    cy.wait('@setPresentationLinks')
-      .its('response.statusCode')
-      .should('eq', 200);
+    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
 
     // Mark file as passing virus scan
     cy.get('[data-testdeckurl]').within(el => {

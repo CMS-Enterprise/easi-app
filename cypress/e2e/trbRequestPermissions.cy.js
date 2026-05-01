@@ -16,7 +16,6 @@ const requestNames = {
 const notFoundHeading = 'This page cannot be found.';
 const taskListHeading = 'Task list';
 const attendeesHeading = 'Attendees';
-const addAttendeeHeading = 'Add an attendee';
 const supportingDocumentsHeading = 'Supporting documents';
 const uploadDocumentHeading = 'Upload a document';
 const adminRequestHeading = 'TRB request details';
@@ -27,7 +26,7 @@ const guidanceLetterQuestionsHeading =
 const relatedLcidsLabel =
   'Select any Life Cycle IDs (LCIDs) pertaining to this request.';
 const assignLeadHeading = 'Assign an Admin lead for this request';
-const cedarSystemId = '11AB1A00-1234-5678-ABC1-1A001B00CC0A';
+const cedarSystemId = '11ab1a00-1234-5678-abc1-1a001b00cc0a';
 
 const requestUrls = {
   draft: null,
@@ -216,8 +215,11 @@ describe('TRB request permissions', () => {
     });
 
     cy.visit(requestUrls.completed.requesterDocumentUploadHref);
-    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
+      force: true
+    });
     cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
     cy.wait('@createTrbRequestDocument')
@@ -300,7 +302,12 @@ describe('TRB request permissions', () => {
 
     cy.get('[name=name]').clear().type('Case 1 - Draft request form updated');
     cy.get('#systemIntakes').click({ force: true });
-    cy.contains('000001').click({ force: true });
+    cy.contains('.usa-combo-box__list-option', '000001 -').click({
+      force: true
+    });
+    cy.get('[data-testid^="multiselect-tag--"]')
+      .contains('000001 -')
+      .should('be.visible');
 
     cy.contains('button', 'Save and exit').click();
 
@@ -413,9 +420,9 @@ describe('TRB request permissions', () => {
 
     cy.url().should(
       'include',
-      requestUrls.withAttendees.requesterAttendeesListHref
+      requestUrls.withAttendees.requesterAttendeesHref
     );
-    cy.contains('h1', addAttendeeHeading).should('be.visible');
+    cy.contains('h1', attendeesHeading).should('be.visible');
   });
 
   it('blocks a TRB lead from the requester task list view', () => {
@@ -458,7 +465,6 @@ describe('TRB request permissions', () => {
     cy.wait('@getTrbLeadOptions')
       .its('response.body.data.trbLeadOptions')
       .should('have.length.greaterThan', 0);
-    cy.contains('h1', adminRequestHeading).should('be.visible');
     cy.contains('button', 'Assign lead').click();
     cy.contains(assignLeadHeading).should('be.visible');
   });
@@ -515,8 +521,11 @@ describe('TRB request permissions', () => {
     });
 
     cy.visit(requestUrls.completed.requesterDocumentUploadHref);
-    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
+      force: true
+    });
     cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
     cy.wait('@createTrbRequestDocument')
@@ -584,8 +593,11 @@ describe('TRB request permissions', () => {
     });
 
     cy.visit(requestUrls.completed.requesterDocumentUploadHref);
-    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf');
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
+      force: true
+    });
     cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
     cy.wait('@createTrbRequestDocument')

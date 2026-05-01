@@ -50,8 +50,9 @@ const addSystemLinkRoute = `/linked-systems-form/${requesterFormIntakeId}`;
 const linkedSystemsRoute = `/linked-systems/${requesterFormIntakeId}`;
 const linkedAdminSystemsRoute = `/linked-systems/${adminManagedIntakeId}`;
 const adminSystemInformationLinkRoute = `/it-governance/${adminManagedIntakeId}/system-information/link`;
-const cedarSystemId = '11AB1A00-1234-5678-ABC1-1A001B00CC0A';
+const cedarSystemId = '11ab1a00-1234-5678-abc1-1a001b00cc0a';
 const systemName = 'Centers for Management Services';
+const systemOption = `${systemName} (CMS)`;
 
 describe('System intake permissions', () => {
   it('lets an IT Gov admin access requester update email configuration from the admin home', () => {
@@ -184,7 +185,7 @@ describe('System intake permissions', () => {
     cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
     cy.contains('h1', 'Add a system link').should('be.visible');
 
-    cy.getByTestId('cedarSystemID').select(1);
+    cy.getByTestId('cedarSystemID').select(systemOption);
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
@@ -222,7 +223,7 @@ describe('System intake permissions', () => {
 
     cy.visit(addSystemLinkRoute);
     cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
-    cy.getByTestId('cedarSystemID').select(1);
+    cy.getByTestId('cedarSystemID').select(systemOption);
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
@@ -278,7 +279,7 @@ describe('System intake permissions', () => {
     cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
     cy.contains('h1', 'Add a system link').should('be.visible');
 
-    cy.getByTestId('cedarSystemID').select(1);
+    cy.getByTestId('cedarSystemID').select(systemOption);
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 

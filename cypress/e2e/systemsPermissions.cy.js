@@ -7,7 +7,7 @@ const grtOnlyUser = {
 const nonEasiTeamMember = { name: 'ABCD', allowEasi: false };
 
 const system = {
-  id: '11AB1A00-1234-5678-ABC1-1A001B00CC0A',
+  id: '11ab1a00-1234-5678-abc1-1a001b00cc0a',
   name: 'Centers for Management Services'
 };
 

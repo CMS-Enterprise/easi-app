@@ -139,7 +139,7 @@ describe('The System Intake Form', () => {
 
     cy.getByTestId('component-select')
       .select('Office of Information Technology (OIT)')
-      .should('have.value', 'Office of Information Technology');
+      .should('have.value', 'OFFICE_OF_INFORMATION_TECHNOLOGY_OIT');
 
     cy.contains('button', 'Save changes').click();
     cy.wait('@updateContact').its('response.statusCode').should('eq', 200);
