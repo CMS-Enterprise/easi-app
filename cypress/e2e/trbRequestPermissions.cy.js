@@ -41,12 +41,49 @@ const loginAs = ({ name, role } = {}) => {
   cy.localLogin({ name, role });
 };
 
+const getTrbRequestDocumentUrlsQuery = `
+  query GetTRBRequestDocumentUrls($id: UUID!) {
+    trbRequest(id: $id) {
+      id
+      documents {
+        id
+        url
+        fileName
+      }
+    }
+  }
+`;
+
+const markTrbDocumentAsClean = ({ requestId, fileName = 'test.pdf' }) =>
+  cy
+    .request('POST', '/api/graph/query', {
+      operationName: 'GetTRBRequestDocumentUrls',
+      query: getTrbRequestDocumentUrlsQuery,
+      variables: { id: requestId }
+    })
+    .then(({ body }) => {
+      expect(body.errors, 'document url query errors').to.equal(undefined);
+
+      const document = body.data?.trbRequest?.documents?.find(
+        item => item.fileName === fileName
+      );
+
+      expect(document, `document named "${fileName}"`).to.not.equal(undefined);
+      expect(document?.url, 'document url').to.be.a('string');
+
+      const filepath = document.url.match(
+        /(\/easi-app-file-uploads\/[^?]*)/
+      )[1];
+      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+    });
+
 const selectFirstRequestLinkSystem = () => {
   cy.get('.easi-multiselect input').click({ force: true });
-  cy.get('.usa-combo-box__list-option')
+  cy.get('.usa-combo-box__list-option:visible')
     .should('have.length.at.least', 1)
-    .first()
-    .click({ force: true });
+    .then($options => {
+      cy.wrap($options[0]).click({ force: true });
+    });
   cy.get('[data-testid^="multiselect-tag--"]').should(
     'have.length.at.least',
     1
@@ -242,13 +279,7 @@ describe('TRB request permissions', () => {
     cy.contains('td', 'test.pdf').should('be.visible');
     cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
-    cy.get('[data-testurl]')
-      .first()
-      .within(el => {
-        const url = el.attr('data-testurl');
-        const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
-        cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
-      });
+    markTrbDocumentAsClean({ requestId: requestUrls.completed.id });
 
     cy.reload();
 

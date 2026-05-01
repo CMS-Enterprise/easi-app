@@ -63,17 +63,19 @@ const selectAvailableLinkedSystem = () =>
       const label = option.text.trim();
       const name = label.replace(/\s+\([^)]+\)$/, '');
 
-      cy.getByTestId('cedarSystemID').select(label);
-
-      return { label, name };
+      return cy
+        .getByTestId('cedarSystemID')
+        .select(label)
+        .then(() => ({ label, name }));
     });
 
 const selectFirstRequestLinkSystem = () => {
   cy.get('.easi-multiselect input').click({ force: true });
-  cy.get('.usa-combo-box__list-option')
+  cy.get('.usa-combo-box__list-option:visible')
     .should('have.length.at.least', 1)
-    .first()
-    .click({ force: true });
+    .then($options => {
+      cy.wrap($options[0]).click({ force: true });
+    });
   cy.get('[data-testid^="multiselect-tag--"]').should(
     'have.length.at.least',
     1

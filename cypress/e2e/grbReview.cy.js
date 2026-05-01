@@ -423,6 +423,7 @@ describe('GRB review', () => {
       'cypress/fixtures/test.pdf'
     );
 
+    cy.get('#transcriptFields').contains('[role="tab"]', 'Add link').click();
     cy.get('#transcriptLink').clear();
 
     // Clear presentation deck file
