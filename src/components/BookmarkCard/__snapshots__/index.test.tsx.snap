@@ -26,6 +26,7 @@ exports[`BookmarkCard > matches the snapshot 1`] = `
             </a>
           </h3>
           <button
+            aria-label="Bookmarked"
             class="usa-button usa-button--unstyled"
             data-testid="button"
             type="button"

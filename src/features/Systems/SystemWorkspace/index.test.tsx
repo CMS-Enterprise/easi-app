@@ -91,7 +91,7 @@ const renderSystemWorkspace = (viewerCanAccessProfile: boolean) => {
 };
 
 describe('SystemWorkspace', () => {
-  it('hides the system profile link for workspace-only viewers', async () => {
+  it('routes workspace-only viewers to team management instead of the edit hub', async () => {
     renderSystemWorkspace(false);
 
     expect(
@@ -99,8 +99,11 @@ describe('SystemWorkspace', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: 'Edit system profile' })
+      screen.getByRole('button', { name: 'Manage system team' })
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Edit system profile' })
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: 'View system profile' })
     ).not.toBeInTheDocument();

@@ -1,5 +1,11 @@
 import React from 'react';
-import { Route, Switch, useParams } from 'react-router-dom';
+import {
+  matchPath,
+  Route,
+  Switch,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
 
@@ -28,6 +34,7 @@ const EditSystemProfile = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
+  const { pathname } = useLocation();
 
   const { data, loading, error } = useGetSystemWorkspaceQuery({
     variables: {
@@ -43,6 +50,18 @@ const EditSystemProfile = () => {
     error ||
     !cedarSystemWorkspace?.cedarSystem ||
     !cedarSystemWorkspace.isMySystem
+  ) {
+    return <NotFound />;
+  }
+
+  const workspaceTeamPathMatch = matchPath(pathname, {
+    path: '/systems/:systemId/edit/team/:action(team-member)?',
+    exact: true
+  });
+
+  if (
+    !cedarSystemWorkspace.cedarSystem.viewerCanAccessProfile &&
+    !workspaceTeamPathMatch
   ) {
     return <NotFound />;
   }

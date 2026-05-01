@@ -18,6 +18,7 @@ const routes = {
   profile: `/systems/${system.id}/home/top`,
   workspace: `/systems/${system.id}/workspace`,
   workspaceRequests: `/systems/${system.id}/workspace/requests`,
+  edit: `/systems/${system.id}/edit`,
   teamEdit: `/systems/${system.id}/edit/team?workspace`,
   teamMemberAdd: `/systems/${system.id}/edit/team/team-member?workspace`
 };
@@ -272,6 +273,8 @@ describe('Systems permissions', () => {
     cy.url().should('include', routes.workspace);
     cy.contains('h1', workspaceHeading).should('be.visible');
     cy.contains(`for ${system.name}`).should('be.visible');
+    cy.contains('button', 'Manage system team').should('be.visible');
+    cy.contains('button', 'Edit system profile').should('not.exist');
     cy.contains('button', 'View system profile').should('not.exist');
     cy.get(
       '[data-testid="is-bookmarked"], [data-testid="is-not-bookmarked"]'
@@ -353,6 +356,14 @@ describe('Systems permissions', () => {
     loginAs(nonEasiTeamMember);
 
     cy.visit(routes.profile);
+    cy.contains('h1', notFoundHeading).should('be.visible');
+  });
+
+  it('blocks the generic edit hub for a non-EASi team member', () => {
+    interceptSystemOperations([]);
+    loginAs(nonEasiTeamMember);
+
+    cy.visit(routes.edit);
     cy.contains('h1', notFoundHeading).should('be.visible');
   });
 });

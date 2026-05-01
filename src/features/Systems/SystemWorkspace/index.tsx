@@ -89,6 +89,15 @@ export const SystemWorkspace = () => {
   }
 
   const { isBookmarked, viewerCanAccessProfile } = cedarSystem;
+  const workspacePrimaryAction = viewerCanAccessProfile
+    ? {
+        label: t('systemProfile:editSystemProfile.heading'),
+        path: `/systems/${systemId}/edit`
+      }
+    : {
+        label: t('spaces.team.manage'),
+        path: `/systems/${systemId}/edit/team?workspace`
+      };
 
   // Redirect to system profile if not a team member for the system
   if (flags.systemWorkspace && !data.cedarSystemWorkspace.isMySystem) {
@@ -143,9 +152,9 @@ export const SystemWorkspace = () => {
                 <ButtonGroup>
                   <Button
                     type="button"
-                    onClick={() => history.push(`/systems/${systemId}/edit`)}
+                    onClick={() => history.push(workspacePrimaryAction.path)}
                   >
-                    {t('systemProfile:editSystemProfile.heading')}
+                    {workspacePrimaryAction.label}
                   </Button>
                   {viewerCanAccessProfile && (
                     <Button
