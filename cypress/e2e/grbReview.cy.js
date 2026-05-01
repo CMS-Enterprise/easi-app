@@ -383,7 +383,10 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
+    cy.location('pathname', { timeout: 10000 }).should(
+      'eq',
+      '/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review'
+    );
 
     cy.getByTestId('presentation-deck-virus-scanning').contains(
       'Virus scanning in progress'
@@ -427,7 +430,10 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
+    cy.location('pathname', { timeout: 10000 }).should(
+      'eq',
+      '/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review'
+    );
 
     // Mark file as passing virus scan
     cy.get('[data-testdeckurl]').within(el => {

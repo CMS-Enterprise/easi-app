@@ -50,9 +50,35 @@ const addSystemLinkRoute = `/linked-systems-form/${requesterFormIntakeId}`;
 const linkedSystemsRoute = `/linked-systems/${requesterFormIntakeId}`;
 const linkedAdminSystemsRoute = `/linked-systems/${adminManagedIntakeId}`;
 const adminSystemInformationLinkRoute = `/it-governance/${adminManagedIntakeId}/system-information/link`;
-const cedarSystemId = '11ab1a00-1234-5678-abc1-1a001b00cc0a';
-const systemName = 'Centers for Management Services';
-const systemOption = `${systemName} (CMS)`;
+
+const selectAvailableLinkedSystem = () =>
+  cy
+    .getByTestId('cedarSystemID')
+    .find('option')
+    .then($options => {
+      const option = [...$options].find(({ value }) => value);
+
+      expect(option, 'available cedar system option').not.to.equal(undefined);
+
+      const label = option.text.trim();
+      const name = label.replace(/\s+\([^)]+\)$/, '');
+
+      cy.getByTestId('cedarSystemID').select(label);
+
+      return { label, name };
+    });
+
+const selectFirstRequestLinkSystem = () => {
+  cy.get('.easi-multiselect input').click({ force: true });
+  cy.get('.usa-combo-box__list-option')
+    .should('have.length.at.least', 1)
+    .first()
+    .click({ force: true });
+  cy.get('[data-testid^="multiselect-tag--"]').should(
+    'have.length.at.least',
+    1
+  );
+};
 
 describe('System intake permissions', () => {
   it('lets an IT Gov admin access requester update email configuration from the admin home', () => {
@@ -185,16 +211,18 @@ describe('System intake permissions', () => {
     cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
     cy.contains('h1', 'Add a system link').should('be.visible');
 
-    cy.getByTestId('cedarSystemID').select(systemOption);
+    selectAvailableLinkedSystem().as('linkedSystem');
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
     cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
     cy.contains('You linked').should('be.visible');
-    cy.contains(systemName).should('be.visible');
+    cy.get('@linkedSystem').then(({ name }) => {
+      cy.contains(name).should('be.visible');
 
-    cy.contains('tr', systemName).within(() => {
-      cy.contains('button', 'Edit').click();
+      cy.contains('tr', name).within(() => {
+        cy.contains('button', 'Edit').click();
+      });
     });
 
     cy.wait('@getSystemIntakeSystem')
@@ -206,15 +234,14 @@ describe('System intake permissions', () => {
 
     cy.wait('@updateSystemLink').its('response.statusCode').should('eq', 200);
     cy.contains('You saved changes').should('be.visible');
-    cy.contains('tr', systemName).contains(
-      'partially contributes financially',
-      {
+    cy.get('@linkedSystem').then(({ name }) => {
+      cy.contains('tr', name).contains('partially contributes financially', {
         matchCase: false
-      }
-    );
+      });
 
-    cy.contains('tr', systemName).within(() => {
-      cy.contains('button', 'Remove').click();
+      cy.contains('tr', name).within(() => {
+        cy.contains('button', 'Remove').click();
+      });
     });
     cy.contains('button', 'Remove linked system').click();
 
@@ -223,7 +250,7 @@ describe('System intake permissions', () => {
 
     cy.visit(addSystemLinkRoute);
     cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
-    cy.getByTestId('cedarSystemID').select(systemOption);
+    selectAvailableLinkedSystem();
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
@@ -279,16 +306,18 @@ describe('System intake permissions', () => {
     cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
     cy.contains('h1', 'Add a system link').should('be.visible');
 
-    cy.getByTestId('cedarSystemID').select(systemOption);
+    selectAvailableLinkedSystem().as('linkedSystem');
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
     cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
     cy.contains('You linked').should('be.visible');
-    cy.contains(systemName).should('be.visible');
+    cy.get('@linkedSystem').then(({ name }) => {
+      cy.contains(name).should('be.visible');
 
-    cy.contains('tr', systemName).within(() => {
-      cy.contains('button', 'Remove').click();
+      cy.contains('tr', name).within(() => {
+        cy.contains('button', 'Remove').click();
+      });
     });
     cy.contains('button', 'Remove linked system').click();
 
@@ -370,17 +399,14 @@ describe('System intake permissions', () => {
 
     loginAs(admin);
 
-    cy.visit(
-      `${adminSystemInformationLinkRoute}?linkCedarSystemId=${encodeURIComponent(
-        cedarSystemId
-      )}`
-    );
+    cy.visit(adminSystemInformationLinkRoute);
     cy.wait('@getSystemIntakeRelation')
       .its('response.statusCode')
       .should('eq', 200);
 
     cy.get('#relationType-existingSystem').check({ force: true });
-    cy.contains('button', 'Save changes').click();
+    selectFirstRequestLinkSystem();
+    cy.contains('button', 'Save changes').should('not.be.disabled').click();
 
     cy.wait('@setExistingSystemRelation')
       .its('response.statusCode')

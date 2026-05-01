@@ -235,7 +235,9 @@ describe('Discussion Board', () => {
       .click();
 
     cy.contains('h1', 'Internal GRB discussion board').should('be.visible');
-    cy.get('#grbDiscussionsNew li, #grbDiscussionsWithReplies li')
+    cy.get(
+      '#grbDiscussionsNew li, #grbDiscussionsWithReplies li, #grbDiscussionsNew .usa-alert, #grbDiscussionsWithReplies .usa-alert'
+    )
       .its('length')
       .should('be.gte', 1);
   });

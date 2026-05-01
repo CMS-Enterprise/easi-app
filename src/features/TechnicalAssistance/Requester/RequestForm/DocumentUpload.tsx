@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { ApolloError } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -85,14 +84,16 @@ const DocumentUpload = ({
 
     const input: TrbRequestInputDocument = clone(formData);
 
-    const newFile = await fileToBase64File(input.fileData);
-
     // Clear out otherTypeDescription if documentType isn't OTHER
     if (input.documentType !== 'OTHER') {
       delete input.otherTypeDescription;
     }
 
     try {
+      const newFile = input.fileData
+        ? await fileToBase64File(input.fileData)
+        : input.fileData;
+
       const response = await createDocument({
         variables: {
           input: {
@@ -121,10 +122,8 @@ const DocumentUpload = ({
         // Go back to the prev page
         history.push(`/trb/${prevRoute}/${requestID}/documents`);
       }
-    } catch (error) {
-      if (error instanceof ApolloError) {
-        setUploadError(true);
-      }
+    } catch (_error) {
+      setUploadError(true);
     }
   });
 

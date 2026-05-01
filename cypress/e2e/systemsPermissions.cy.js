@@ -126,7 +126,9 @@ describe('Systems permissions', () => {
     });
     cy.url().should('include', routes.profile);
     cy.contains('h1', system.name).should('be.visible');
-    cy.contains('h2', 'URLs and locations').should('be.visible');
+    cy.get(`a[href="/systems/${system.id}/details#system-detail"]`).should(
+      'be.visible'
+    );
     cy.get(
       '[data-testid="is-bookmarked"], [data-testid="is-not-bookmarked"]'
     ).should('be.visible');

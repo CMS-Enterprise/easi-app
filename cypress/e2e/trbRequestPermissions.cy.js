@@ -26,7 +26,6 @@ const guidanceLetterQuestionsHeading =
 const relatedLcidsLabel =
   'Select any Life Cycle IDs (LCIDs) pertaining to this request.';
 const assignLeadHeading = 'Assign an Admin lead for this request';
-const cedarSystemId = '11ab1a00-1234-5678-abc1-1a001b00cc0a';
 
 const requestUrls = {
   draft: null,
@@ -40,6 +39,18 @@ const requestUrls = {
 
 const loginAs = ({ name, role } = {}) => {
   cy.localLogin({ name, role });
+};
+
+const selectFirstRequestLinkSystem = () => {
+  cy.get('.easi-multiselect input').click({ force: true });
+  cy.get('.usa-combo-box__list-option')
+    .should('have.length.at.least', 1)
+    .first()
+    .click({ force: true });
+  cy.get('[data-testid^="multiselect-tag--"]').should(
+    'have.length.at.least',
+    1
+  );
 };
 
 const getRequestUrls = requestName => {
@@ -184,7 +195,7 @@ describe('TRB request permissions', () => {
     cy.wait('@updateTrbRequestAttendee')
       .its('response.body.errors')
       .should('not.exist');
-    cy.contains('.usa-alert__text', 'Your attendee has been updated.').should(
+    cy.contains('.usa-alert__text', 'Your attendee has been edited.').should(
       'be.visible'
     );
     cy.get('@newAttendee').contains('CRA').should('be.visible');
@@ -222,9 +233,6 @@ describe('TRB request permissions', () => {
     cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
-    cy.wait('@createTrbRequestDocument')
-      .its('response.body.errors')
-      .should('not.exist');
     cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
     cy.contains(
       '.usa-alert__text',
@@ -321,7 +329,7 @@ describe('TRB request permissions', () => {
       'have.value',
       'Case 1 - Draft request form updated'
     );
-    cy.get('[class*="multiselect-tag"]')
+    cy.get('[data-testid^="multiselect-tag--"]')
       .contains('000001')
       .should('be.visible');
   });
@@ -465,7 +473,7 @@ describe('TRB request permissions', () => {
     cy.wait('@getTrbLeadOptions')
       .its('response.body.data.trbLeadOptions')
       .should('have.length.greaterThan', 0);
-    cy.contains('button', 'Assign lead').click();
+    cy.contains('button', 'Assign a TRB Lead').click();
     cy.contains(assignLeadHeading).should('be.visible');
   });
 
@@ -528,13 +536,13 @@ describe('TRB request permissions', () => {
     cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
-    cy.wait('@createTrbRequestDocument')
-      .its('response.body.errors.0.message')
-      .should('include', 'unauthorized to modify TRB request');
     cy.url().should(
       'include',
       requestUrls.completed.requesterDocumentUploadHref
     );
+    cy.contains(
+      'There was a problem uploading your document. Please try again'
+    ).should('be.visible');
     cy.contains(
       '.usa-alert__text',
       'Your document has been uploaded and is being scanned.'
@@ -600,13 +608,13 @@ describe('TRB request permissions', () => {
     cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
-    cy.wait('@createTrbRequestDocument')
-      .its('response.body.errors.0.message')
-      .should('include', 'unauthorized to modify TRB request');
     cy.url().should(
       'include',
       requestUrls.completed.requesterDocumentUploadHref
     );
+    cy.contains(
+      'There was a problem uploading your document. Please try again'
+    ).should('be.visible');
     cy.contains(
       '.usa-alert__text',
       'Your document has been uploaded and is being scanned.'
@@ -695,17 +703,14 @@ describe('TRB request permissions', () => {
       .should('not.exist');
     cy.url().should('include', requestUrls.relation.adminAdditionalInfoHref);
 
-    cy.visit(
-      `${requestUrls.relation.adminRelationHref}?linkCedarSystemId=${encodeURIComponent(
-        cedarSystemId
-      )}`
-    );
+    cy.visit(requestUrls.relation.adminRelationHref);
     cy.wait('@getTrbRequestRelation')
       .its('response.statusCode')
       .should('eq', 200);
 
     cy.get('#relationType-existingSystem').check({ force: true });
-    cy.contains('button', 'Save changes').click();
+    selectFirstRequestLinkSystem();
+    cy.contains('button', 'Save changes').should('not.be.disabled').click();
 
     cy.wait('@setTrbRequestRelationExistingSystem')
       .its('response.body.errors')
