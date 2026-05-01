@@ -142,7 +142,7 @@ func (s *ResolverSuite) TestTRBRequestAuthorizationHelpers() {
 	trb, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trb)
 	s.NoError(err)
 
-	ownerCtx := s.testConfigs.Context
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
 	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
 	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
 	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
@@ -196,6 +196,32 @@ func (s *ResolverSuite) TestTRBRequestLCIDOptionsPermissions() {
 	hiddenLCIDIntake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, hiddenLCIDIntake)
 	s.NoError(err)
 
+	hiddenRequester, err := SystemIntakeContactGetRequester(s.ctxWithNewDataloaders(), hiddenLCIDIntake.ID)
+	s.NoError(err)
+	s.NotNil(hiddenRequester)
+
+	usr2Account := s.getOrCreateUserAcct("USR2")
+	_, err = s.testConfigs.Store.NamedExecContext(
+		s.testConfigs.Context,
+		`UPDATE system_intake_contacts SET user_id = :user_id, is_requester = :is_requester WHERE id = :id`,
+		map[string]any{
+			"id":           hiddenRequester.ID,
+			"user_id":      usr2Account.ID,
+			"is_requester": true,
+		},
+	)
+	s.NoError(err)
+
+	_, err = s.testConfigs.Store.NamedExecContext(
+		s.testConfigs.Context,
+		`UPDATE system_intakes SET eua_user_id = :eua_user_id WHERE id = :id`,
+		map[string]any{
+			"id":          hiddenLCIDIntake.ID,
+			"eua_user_id": "USR2",
+		},
+	)
+	s.NoError(err)
+
 	trbRequest := s.createNewTRBRequest()
 
 	leadEUA := "LEAD"
@@ -203,9 +229,12 @@ func (s *ResolverSuite) TestTRBRequestLCIDOptionsPermissions() {
 	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
 	s.NoError(err)
 
-	ownerCtx := s.testConfigs.Context
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
 	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
 	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	_, err = GetSystemIntake(ownerCtx, s.testConfigs.Store, hiddenLCIDIntake.ID)
+	s.Error(err)
 
 	options, err := queryResolver.TrbRequestLcidOptions(ownerCtx, trbRequest.ID)
 	s.NoError(err)

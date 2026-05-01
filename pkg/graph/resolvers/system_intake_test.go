@@ -239,22 +239,20 @@ func (s *ResolverSuite) TestSystemIntakeWithReviewRequested() {
 }
 
 func (s *ResolverSuite) TestUpdateSystemIntakeRequestType() {
-	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
 
 	submittedAt := time.Now()
 
-	// Create a "new request" type system intake
-	openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
-		State:       models.SystemIntakeStateOpen,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-		SubmittedAt: &submittedAt,
+	openIntake := s.createNewIntakeWithResolver(func(intake *models.SystemIntake) {
+		intake.State = models.SystemIntakeStateOpen
+		intake.RequestType = models.SystemIntakeRequestTypeNEW
+		intake.SubmittedAt = &submittedAt
 	})
-	s.NoError(err)
 	s.NotNil(openIntake)
 	s.Equal(models.SystemIntakeRequestTypeNEW, openIntake.RequestType)
 
 	// Update the request type to SystemIntakeRequestTypeMAJORCHANGES
+	ctx, _ := s.getTestContextWithPrincipal("TEST", false)
 	intakeWithNewType, err := UpdateSystemIntakeRequestType(ctx, store, openIntake.ID, models.SystemIntakeRequestTypeMAJORCHANGES)
 	s.NoError(err)
 	s.NotNil(intakeWithNewType)
