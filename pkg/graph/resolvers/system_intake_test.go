@@ -6,8 +6,12 @@ import (
 	"slices"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -131,6 +135,41 @@ func (s *ResolverSuite) TestSystemIntakesQueryArchived() {
 	closedIntakes, err := SystemIntakes(ctx, store, false)
 	s.NoError(err)
 	s.Len(closedIntakes, 0)
+}
+
+func (s *ResolverSuite) TestSystemIntakeByIDLoaderReturnsPerKeyErrors() {
+	intake := s.createNewIntake()
+	missingID := uuid.New()
+
+	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true, true)
+	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx)
+	}
+	getMyCedarSystems := func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(euaUserID))
+	}
+
+	loaders := dataloaders.NewDataloaders(
+		s.testConfigs.Store,
+		s.testConfigs.UserSearchClient.FetchUserInfos,
+		getCedarSystems,
+		getMyCedarSystems,
+	)
+	ctx := dataloaders.CTXWithLoaders(s.testConfigs.Context, func() *dataloaders.Dataloaders {
+		return loaders
+	})
+
+	goodThunk := loaders.SystemIntakeByID.LoadThunk(ctx, intake.ID)
+	missingThunk := loaders.SystemIntakeByID.LoadThunk(ctx, missingID)
+
+	goodIntake, err := goodThunk()
+	s.NoError(err)
+	s.NotNil(goodIntake)
+	s.Equal(intake.ID, goodIntake.ID)
+
+	missingIntake, err := missingThunk()
+	s.Error(err)
+	s.Nil(missingIntake)
 }
 
 func (s *ResolverSuite) TestSystemIntakeWithReviewRequested() {
