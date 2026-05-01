@@ -63,6 +63,11 @@ func countIgnoredErrors(errorList gqlerror.List) int {
 			if errors.Is(err, context.Canceled) {
 				numIgnored++
 			}
+
+			// Ignore "input: no operation provided" errors
+			if err.Message == "input: no operation provided" {
+				numIgnored++
+			}
 		}
 	}
 	return numIgnored
