@@ -136,7 +136,7 @@ func GetSystemIntakeSystem(ctx context.Context, store *storage.Store, systemInta
 		return nil, nil
 	}
 
-	intake, err := store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +149,7 @@ func GetSystemIntakeSystem(ctx context.Context, store *storage.Store, systemInta
 }
 
 func GetSystemIntakeSystems(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}

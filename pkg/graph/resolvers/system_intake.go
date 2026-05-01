@@ -15,6 +15,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
@@ -667,7 +668,7 @@ func GetSystemIntake(
 	store *storage.Store,
 	id uuid.UUID,
 ) (*models.SystemIntake, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, id)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

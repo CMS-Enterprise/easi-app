@@ -233,7 +233,7 @@ func UploadSystemIntakeGRBPresentationDeck(
 }
 
 func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -287,7 +287,7 @@ func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, l
 }
 
 func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}

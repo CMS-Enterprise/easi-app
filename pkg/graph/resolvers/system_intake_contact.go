@@ -134,7 +134,7 @@ func SystemIntakeContactGetRequester(ctx context.Context, systemIntakeID uuid.UU
 }
 
 func GetSystemIntakeContacts(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}
