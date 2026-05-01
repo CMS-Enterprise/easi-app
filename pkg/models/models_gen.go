@@ -166,11 +166,12 @@ type CedarSystemWorkspace struct {
 // This is the subset of CEDAR system data that a system team member can use to
 // access workspace-scoped features without broader EASi-only read permissions.
 type CedarSystemWorkspaceSystem struct {
-	ID                  uuid.UUID       `json:"id"`
-	Name                string          `json:"name"`
-	IsBookmarked        bool            `json:"isBookmarked"`
-	LinkedTrbRequests   []*TRBRequest   `json:"linkedTrbRequests"`
-	LinkedSystemIntakes []*SystemIntake `json:"linkedSystemIntakes"`
+	ID                     uuid.UUID       `json:"id"`
+	Name                   string          `json:"name"`
+	IsBookmarked           bool            `json:"isBookmarked"`
+	ViewerCanAccessProfile bool            `json:"viewerCanAccessProfile"`
+	LinkedTrbRequests      []*TRBRequest   `json:"linkedTrbRequests"`
+	LinkedSystemIntakes    []*SystemIntake `json:"linkedSystemIntakes"`
 }
 
 // The input needed to close a TRB request

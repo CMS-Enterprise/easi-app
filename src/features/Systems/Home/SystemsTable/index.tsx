@@ -25,7 +25,6 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
-  GetCedarSystemIsBookmarkedDocument,
   GetCedarSystemsQuery,
   useCreateCedarSystemBookmarkMutation,
   useDeleteCedarSystemBookmarkMutation,
@@ -49,6 +48,7 @@ import {
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import updateCedarSystemBookmarkInCache from 'utils/updateCedarSystemBookmarkInCache';
 
 import '../index.scss';
 
@@ -141,12 +141,13 @@ export const Table = ({
             cedarSystemId
           }
         },
-        refetchQueries: [
-          {
-            query: GetCedarSystemIsBookmarkedDocument,
-            variables: { id: cedarSystemId }
-          }
-        ]
+        update: cache => {
+          updateCedarSystemBookmarkInCache(
+            cache,
+            cedarSystemId,
+            !isBookmarked(cedarSystemId)
+          );
+        }
       });
     };
 
@@ -167,6 +168,9 @@ export const Table = ({
             onClick={() => toggleBookmark(row.original.id)}
             type="button"
             unstyled
+            aria-label={t(
+              `bookmark.${isBookmarked(row.original.id) ? 'bookmarked' : 'bookmark'}`
+            )}
           >
             <Icon.Bookmark
               aria-hidden

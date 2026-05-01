@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Button, Card, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import {
-  GetCedarSystemIsBookmarkedDocument,
   GetCedarSystemsQuery,
   useDeleteCedarSystemBookmarkMutation
 } from 'gql/generated/graphql';
@@ -11,6 +10,7 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import { IconStatus } from 'types/iconStatus';
 import getCedarSystemRoute from 'utils/getCedarSystemRoute';
+import updateCedarSystemBookmarkInCache from 'utils/updateCedarSystemBookmarkInCache';
 
 import './index.scss';
 
@@ -50,12 +50,9 @@ const BookmarkCard = ({
           cedarSystemId
         }
       },
-      refetchQueries: [
-        {
-          query: GetCedarSystemIsBookmarkedDocument,
-          variables: { id: cedarSystemId }
-        }
-      ]
+      update: cache => {
+        updateCedarSystemBookmarkInCache(cache, cedarSystemId, false);
+      }
     });
   };
 
@@ -77,6 +74,7 @@ const BookmarkCard = ({
             onClick={() => handleDeleteBookmark(id)}
             type="button"
             unstyled
+            aria-label={t('systemProfile:bookmark.bookmarked')}
           >
             <Icon.Bookmark aria-hidden size={5} />
           </Button>

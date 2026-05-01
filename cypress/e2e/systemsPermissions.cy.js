@@ -18,8 +18,8 @@ const routes = {
   profile: `/systems/${system.id}/home/top`,
   workspace: `/systems/${system.id}/workspace`,
   workspaceRequests: `/systems/${system.id}/workspace/requests`,
-  teamEdit: `/systems/${system.id}/team/edit?workspace`,
-  teamMemberAdd: `/systems/${system.id}/team/edit/team-member?workspace`
+  teamEdit: `/systems/${system.id}/edit/team?workspace`,
+  teamMemberAdd: `/systems/${system.id}/edit/team/team-member?workspace`
 };
 
 const notFoundHeading = 'This page cannot be found.';
@@ -68,6 +68,30 @@ const interceptSystemOperations = operationNames => {
     if (req.body.operationName === 'GetCedarRoleTypes') {
       req.alias = 'getCedarRoleTypes';
     }
+
+    if (req.body.operationName === 'CreateCedarSystemBookmark') {
+      req.alias = 'createCedarSystemBookmark';
+    }
+
+    if (req.body.operationName === 'DeleteCedarSystemBookmark') {
+      req.alias = 'deleteCedarSystemBookmark';
+    }
+  });
+};
+
+const waitForBookmarkMutation = initialBookmarked => {
+  cy.wait(
+    initialBookmarked
+      ? '@deleteCedarSystemBookmark'
+      : '@createCedarSystemBookmark'
+  )
+    .its('response.statusCode')
+    .should('eq', 200);
+};
+
+const assertNoLegacyBookmarkRefetch = operationNames => {
+  cy.then(() => {
+    expect(operationNames).not.to.include('GetCedarSystemIsBookmarked');
   });
 };
 
@@ -112,7 +136,7 @@ describe('Systems permissions', () => {
     });
   });
 
-  it('refetches the bookmarked state from cedarSystem when toggling a bookmark', () => {
+  it('toggles a profile bookmark without refetching cedarSystem', () => {
     const operationNames = [];
 
     interceptSystemOperations(operationNames);
@@ -123,15 +147,20 @@ describe('Systems permissions', () => {
 
     cy.get('[data-testid="is-bookmarked"], [data-testid="is-not-bookmarked"]')
       .should('be.visible')
-      .closest('button')
-      .click();
+      .then($icon => {
+        const initialBookmarked = $icon.attr('data-testid') === 'is-bookmarked';
 
-    cy.wait('@getCedarSystemIsBookmarked')
-      .its('response.statusCode')
-      .should('eq', 200);
+        cy.wrap($icon).closest('button').click();
+
+        waitForBookmarkMutation(initialBookmarked);
+        cy.get(
+          initialBookmarked
+            ? '[data-testid="is-not-bookmarked"]'
+            : '[data-testid="is-bookmarked"]'
+        ).should('be.visible');
+      });
 
     cy.then(() => {
-      expect(operationNames).to.include('GetCedarSystemIsBookmarked');
       expect(
         operationNames.some(operationName =>
           ['CreateCedarSystemBookmark', 'DeleteCedarSystemBookmark'].includes(
@@ -140,6 +169,7 @@ describe('Systems permissions', () => {
         )
       ).to.eq(true);
     });
+    assertNoLegacyBookmarkRefetch(operationNames);
   });
 
   it('shows the empty My systems state for an EASi user with no team memberships', () => {
@@ -168,6 +198,30 @@ describe('Systems permissions', () => {
       expect(operationNames).not.to.include('GetSystemProfile');
       expect(operationNames).not.to.include('GetSystemWorkspace');
     });
+  });
+
+  it('lets a GRT-only user bookmark from the systems directory without a cedarSystem refetch', () => {
+    const operationNames = [];
+
+    interceptSystemOperations(operationNames);
+    loginAs(grtOnlyUser);
+
+    cy.visit(routes.allSystems);
+    cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
+
+    cy.contains('tbody tr', system.name).within(() => {
+      cy.get('button[aria-label="Bookmark"]').click();
+      cy.get('button[aria-label="Bookmarked"]').should('be.visible');
+    });
+
+    cy.wait('@createCedarSystemBookmark')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.contains('button', 'Bookmarked systems').click();
+    cy.contains('tbody th', system.name).should('be.visible');
+
+    assertNoLegacyBookmarkRefetch(operationNames);
   });
 
   it('shows the empty My systems state for a GRT-only user', () => {
@@ -218,9 +272,37 @@ describe('Systems permissions', () => {
     cy.url().should('include', routes.workspace);
     cy.contains('h1', workspaceHeading).should('be.visible');
     cy.contains(`for ${system.name}`).should('be.visible');
+    cy.contains('button', 'View system profile').should('not.exist');
     cy.get(
       '[data-testid="is-bookmarked"], [data-testid="is-not-bookmarked"]'
     ).should('be.visible');
+  });
+
+  it('lets a non-EASi team member toggle the workspace bookmark without a cedarSystem refetch', () => {
+    const operationNames = [];
+
+    interceptSystemOperations(operationNames);
+    loginAs(nonEasiTeamMember);
+
+    cy.contains('a', system.name).click();
+    cy.wait('@getSystemWorkspace').its('response.statusCode').should('eq', 200);
+
+    cy.get('[data-testid="is-bookmarked"], [data-testid="is-not-bookmarked"]')
+      .should('be.visible')
+      .then($icon => {
+        const initialBookmarked = $icon.attr('data-testid') === 'is-bookmarked';
+
+        cy.wrap($icon).closest('button').click();
+
+        waitForBookmarkMutation(initialBookmarked);
+        cy.get(
+          initialBookmarked
+            ? '[data-testid="is-not-bookmarked"]'
+            : '[data-testid="is-bookmarked"]'
+        ).should('be.visible');
+      });
+
+    assertNoLegacyBookmarkRefetch(operationNames);
   });
 
   it('lets a non-EASi team member open the workspace requests page from the workspace', () => {
@@ -240,7 +322,9 @@ describe('Systems permissions', () => {
   });
 
   it('lets a non-EASi team member manage team routes from the workspace', () => {
-    interceptSystemOperations([]);
+    const operationNames = [];
+
+    interceptSystemOperations(operationNames);
     loginAs(nonEasiTeamMember);
 
     cy.contains('a', system.name).click();
@@ -256,6 +340,12 @@ describe('Systems permissions', () => {
     cy.wait('@getCedarRoleTypes').its('response.statusCode').should('eq', 200);
     cy.url().should('include', routes.teamMemberAdd);
     cy.contains('h1', 'Add a team member').should('be.visible');
+
+    cy.then(() => {
+      expect(operationNames).not.to.include('GetSystemProfile');
+      expect(operationNames).to.include('GetSystemWorkspace');
+      expect(operationNames).to.include('GetCedarRoleTypes');
+    });
   });
 
   it('blocks the system profile route for a non-EASi team member', () => {

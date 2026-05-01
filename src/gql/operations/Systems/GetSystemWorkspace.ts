@@ -9,6 +9,7 @@ export default gql(/* GraphQL */ `
         id
         name
         isBookmarked
+        viewerCanAccessProfile
         linkedTrbRequests(state: OPEN) {
           id
         }

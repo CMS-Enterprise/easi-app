@@ -49,6 +49,7 @@ type CedarSystemWorkspaceSystem {
   id: UUID!
   name: String!
   isBookmarked: Boolean! @goField(forceResolver: true)
+  viewerCanAccessProfile: Boolean! @goField(forceResolver: true)
   linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
     @goField(forceResolver: true)
   linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!

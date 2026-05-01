@@ -129,9 +129,10 @@ const EditTeam = ({
   }>();
 
   const actionType = state?.user ? 'edit' : 'add';
+  const profileTeamEditPath = `/systems/${cedarSystemId}/team/edit`;
 
   const [updateRoles, { loading }] = useSetRolesForUserOnSystemMutation({
-    refetchQueries: ['GetSystemProfile']
+    refetchQueries: [isWorkspace ? 'GetSystemWorkspace' : 'GetSystemProfile']
   });
 
   /**
@@ -221,10 +222,7 @@ const EditTeam = ({
           {action === 'team-member' ? (
             <>
               <Breadcrumb>
-                <BreadcrumbLink
-                  asCustom={Link}
-                  to={`/systems/${cedarSystemId}/team/edit`}
-                >
+                <BreadcrumbLink asCustom={Link} to={profileTeamEditPath}>
                   {t('singleSystem.editTeam.title')}
                 </BreadcrumbLink>
               </Breadcrumb>

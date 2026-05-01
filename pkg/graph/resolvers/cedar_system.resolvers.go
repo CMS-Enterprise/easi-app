@@ -170,6 +170,16 @@ func (r *cedarSystemWorkspaceSystemResolver) IsBookmarked(ctx context.Context, o
 	return GetCedarSystemIsBookmarked(ctx, obj.ID)
 }
 
+// ViewerCanAccessProfile is the resolver for the viewerCanAccessProfile field.
+func (r *cedarSystemWorkspaceSystemResolver) ViewerCanAccessProfile(ctx context.Context, obj *models.CedarSystemWorkspaceSystem) (bool, error) {
+	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
+	if err != nil {
+		return false, err
+	}
+
+	return capabilities.ViewerCanAccessProfile, nil
+}
+
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemWorkspaceSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystemWorkspaceSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
 	trbRequests, err := CedarSystemLinkedTRBRequests(ctx, obj.ID, state)

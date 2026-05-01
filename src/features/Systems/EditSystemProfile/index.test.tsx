@@ -54,6 +54,7 @@ const getSystemWorkspaceQuery: MockedQuery<
           id: cedarSystemId,
           name: cedarSystemName,
           isBookmarked: false,
+          viewerCanAccessProfile: true,
           linkedTrbRequests: [],
           linkedSystemIntakes: []
         },

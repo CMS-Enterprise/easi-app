@@ -49,6 +49,7 @@ describe('System Workspace Requests Table', () => {
               id: cedarSystemId,
               name: 'Office of Funny Walks',
               isBookmarked: false,
+              viewerCanAccessProfile: true,
               linkedSystemIntakes,
               linkedTrbRequests
             },
@@ -174,6 +175,7 @@ describe('System Workspace Requests Table', () => {
               id: cedarSystemId,
               name: 'Office of Funny Walks',
               isBookmarked: false,
+              viewerCanAccessProfile: false,
               linkedSystemIntakes: [],
               linkedTrbRequests: []
             },

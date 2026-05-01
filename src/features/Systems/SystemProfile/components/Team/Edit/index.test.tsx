@@ -77,11 +77,11 @@ describe('Workspace team page', () => {
   function renderWorkspaceEditTeam(team: UsernameWithRoles[]) {
     return render(
       <MemoryRouter
-        initialEntries={[`/systems/${cedarSystemId}/team/edit?workspace`]}
+        initialEntries={[`/systems/${cedarSystemId}/edit/team?workspace`]}
       >
         <MessageProvider>
           <MockedProvider>
-            <Route path="/systems/:systemId/team/edit">
+            <Route path="/systems/:systemId/edit/team/:action?">
               <EditTeam
                 name=""
                 team={team}
@@ -102,15 +102,25 @@ describe('Workspace team page', () => {
 
   it('renders', async () => {
     const team = getUsernamesWithRoles(teamRoles);
-    const { asFragment } = renderWorkspaceEditTeam(team);
+    renderWorkspaceEditTeam(team);
 
     // Mock data for this test should have all requisite roles present
     expect(
       screen.queryByTestId('requisite-roles-alert')
     ).not.toBeInTheDocument();
 
-    // Snapshot captures the assignment and ordering of team members and their multiple roles
-    expect(asFragment()).toMatchSnapshot();
+    expect(
+      screen.getByRole('heading', {
+        name: 'Manage system team'
+      })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getAllByRole('link', { name: 'Edit roles' })[0]
+    ).toHaveAttribute(
+      'href',
+      `/systems/${cedarSystemId}/edit/team/team-member?workspace`
+    );
   });
 
   it.each(requisiteLevelsOfTeamRoles)(

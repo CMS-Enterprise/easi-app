@@ -88,7 +88,7 @@ export const SystemWorkspace = () => {
     return <NotFound />;
   }
 
-  const { isBookmarked } = cedarSystem;
+  const { isBookmarked, viewerCanAccessProfile } = cedarSystem;
 
   // Redirect to system profile if not a team member for the system
   if (flags.systemWorkspace && !data.cedarSystemWorkspace.isMySystem) {
@@ -147,13 +147,15 @@ export const SystemWorkspace = () => {
                   >
                     {t('systemProfile:editSystemProfile.heading')}
                   </Button>
-                  <Button
-                    type="button"
-                    outline
-                    onClick={() => history.push(`/systems/${systemId}/home`)}
-                  >
-                    {t('spaces.systemProfile.linktext')}
-                  </Button>
+                  {viewerCanAccessProfile && (
+                    <Button
+                      type="button"
+                      outline
+                      onClick={() => history.push(`/systems/${systemId}/home`)}
+                    >
+                      {t('spaces.systemProfile.linktext')}
+                    </Button>
+                  )}
                 </ButtonGroup>
               }
             />

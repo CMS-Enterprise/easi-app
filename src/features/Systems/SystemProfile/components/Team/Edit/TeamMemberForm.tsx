@@ -161,7 +161,9 @@ const TeamMemberForm = ({
           )
         );
         history.push({
-          pathname: `/systems/${cedarSystemId}/team/edit`,
+          pathname: isWorkspace
+            ? `/systems/${cedarSystemId}/edit/team`
+            : `/systems/${cedarSystemId}/team/edit`,
           search: isWorkspace ? 'workspace' : undefined
         });
       });

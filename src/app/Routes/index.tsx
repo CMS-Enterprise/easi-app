@@ -218,7 +218,7 @@ export const AppRoutes = () => {
                 component={SystemProfile}
               />
               <SecureRoute
-                path="/systems/:systemId/edit/:section?"
+                path="/systems/:systemId/edit/:section?/:action(team-member)?"
                 component={EditSystemProfile}
               />
               <SecureRoute

@@ -447,11 +447,12 @@ type ComplexityRoot struct {
 	}
 
 	CedarSystemWorkspaceSystem struct {
-		ID                  func(childComplexity int) int
-		IsBookmarked        func(childComplexity int) int
-		LinkedSystemIntakes func(childComplexity int, state models.SystemIntakeState) int
-		LinkedTrbRequests   func(childComplexity int, state models.TRBRequestState) int
-		Name                func(childComplexity int) int
+		ID                     func(childComplexity int) int
+		IsBookmarked           func(childComplexity int) int
+		LinkedSystemIntakes    func(childComplexity int, state models.SystemIntakeState) int
+		LinkedTrbRequests      func(childComplexity int, state models.TRBRequestState) int
+		Name                   func(childComplexity int) int
+		ViewerCanAccessProfile func(childComplexity int) int
 	}
 
 	CedarThreat struct {
@@ -1337,6 +1338,7 @@ type CedarSystemDetailsResolver interface {
 }
 type CedarSystemWorkspaceSystemResolver interface {
 	IsBookmarked(ctx context.Context, obj *models.CedarSystemWorkspaceSystem) (bool, error)
+	ViewerCanAccessProfile(ctx context.Context, obj *models.CedarSystemWorkspaceSystem) (bool, error)
 	LinkedTrbRequests(ctx context.Context, obj *models.CedarSystemWorkspaceSystem, state models.TRBRequestState) ([]*models.TRBRequest, error)
 	LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystemWorkspaceSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error)
 }
@@ -3551,6 +3553,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.CedarSystemWorkspaceSystem.Name(childComplexity), true
+	case "CedarSystemWorkspaceSystem.viewerCanAccessProfile":
+		if e.complexity.CedarSystemWorkspaceSystem.ViewerCanAccessProfile == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemWorkspaceSystem.ViewerCanAccessProfile(childComplexity), true
 
 	case "CedarThreat.alternativeId":
 		if e.complexity.CedarThreat.AlternativeID == nil {
@@ -11785,6 +11793,7 @@ type CedarSystemWorkspaceSystem {
   id: UUID!
   name: String!
   isBookmarked: Boolean! @goField(forceResolver: true)
+  viewerCanAccessProfile: Boolean! @goField(forceResolver: true)
   linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
     @goField(forceResolver: true)
   linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
@@ -23119,6 +23128,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspace_cedarSystem(_ cont
 				return ec.fieldContext_CedarSystemWorkspaceSystem_name(ctx, field)
 			case "isBookmarked":
 				return ec.fieldContext_CedarSystemWorkspaceSystem_isBookmarked(ctx, field)
+			case "viewerCanAccessProfile":
+				return ec.fieldContext_CedarSystemWorkspaceSystem_viewerCanAccessProfile(ctx, field)
 			case "linkedTrbRequests":
 				return ec.fieldContext_CedarSystemWorkspaceSystem_linkedTrbRequests(ctx, field)
 			case "linkedSystemIntakes":
@@ -23297,6 +23308,35 @@ func (ec *executionContext) _CedarSystemWorkspaceSystem_isBookmarked(ctx context
 }
 
 func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_isBookmarked(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemWorkspaceSystem",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystemWorkspaceSystem_viewerCanAccessProfile(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemWorkspaceSystem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_CedarSystemWorkspaceSystem_viewerCanAccessProfile,
+		func(ctx context.Context) (any, error) {
+			return ec.resolvers.CedarSystemWorkspaceSystem().ViewerCanAccessProfile(ctx, obj)
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_viewerCanAccessProfile(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarSystemWorkspaceSystem",
 		Field:      field,
@@ -59074,6 +59114,42 @@ func (ec *executionContext) _CedarSystemWorkspaceSystem(ctx context.Context, sel
 					}
 				}()
 				res = ec._CedarSystemWorkspaceSystem_isBookmarked(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "viewerCanAccessProfile":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSystemWorkspaceSystem_viewerCanAccessProfile(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}

@@ -84,8 +84,11 @@ const EditSystemProfile = () => {
                   <SubSystems />
                 </Route>
 
-                <Route path="/systems/:systemId/edit/team">
-                  <Team />
+                <Route path="/systems/:systemId/edit/team/:action(team-member)?">
+                  <Team
+                    systemName={systemName}
+                    roles={cedarSystemWorkspace.roles || []}
+                  />
                 </Route>
 
                 <Route path="/systems/:systemId/edit/contracts">
