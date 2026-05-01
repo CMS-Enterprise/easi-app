@@ -151,7 +151,26 @@ func GetTRBRequestLCIDOptions(
 		return nil, err
 	}
 
-	return store.GetSystemIntakeLCIDOptions(ctx)
+	intakes, err := dataloaders.GetSystemIntakesWithLCIDs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	visibleIntakes, err := filterVisibleSystemIntakes(ctx, store, intakes)
+	if err != nil {
+		return nil, err
+	}
+
+	options := make([]*models.SystemIntakeLCIDOption, 0, len(visibleIntakes))
+	for _, intake := range visibleIntakes {
+		options = append(options, &models.SystemIntakeLCIDOption{
+			ID:          intake.ID,
+			LCID:        intake.LifecycleID,
+			RequestName: intake.ProjectName,
+		})
+	}
+
+	return options, nil
 }
 
 // GetTRBRequests returns all TRB Requests

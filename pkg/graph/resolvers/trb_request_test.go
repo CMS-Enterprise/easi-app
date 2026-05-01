@@ -176,17 +176,36 @@ func (s *ResolverSuite) TestTRBRequestLCIDOptionsPermissions() {
 		intake.LifecycleID = null.StringFrom("000001")
 	})
 
+	otherCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+	hiddenLCIDIntake, err := CreateSystemIntake(
+		otherCtx,
+		s.testConfigs.Store,
+		models.CreateSystemIntakeInput{
+			Requester: &models.SystemIntakeRequesterInput{
+				Name: "Other User",
+			},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo),
+	)
+	s.NoError(err)
+	s.NotNil(hiddenLCIDIntake)
+
+	hiddenLCIDIntake.ProjectName = null.StringFrom("Hidden LCID source intake")
+	hiddenLCIDIntake.LifecycleID = null.StringFrom("999999")
+	hiddenLCIDIntake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, hiddenLCIDIntake)
+	s.NoError(err)
+
 	trbRequest := s.createNewTRBRequest()
 
 	leadEUA := "LEAD"
 	trbRequest.TRBLead = &leadEUA
-	trbRequest, err := s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
 	s.NoError(err)
 
 	ownerCtx := s.testConfigs.Context
 	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
 	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
-	otherCtx, _ := s.getTestContextWithPrincipal("USR2", false)
 
 	options, err := queryResolver.TrbRequestLcidOptions(ownerCtx, trbRequest.ID)
 	s.NoError(err)
@@ -200,6 +219,7 @@ func (s *ResolverSuite) TestTRBRequestLCIDOptionsPermissions() {
 	s.Contains(optionByID, lcidIntake.ID)
 	s.Equal("000001", optionByID[lcidIntake.ID].LCID.ValueOrZero())
 	s.Equal("LCID source intake", optionByID[lcidIntake.ID].RequestName.ValueOrZero())
+	s.NotContains(optionByID, hiddenLCIDIntake.ID)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
 	for _, ctx := range []context.Context{adminCtx, leadCtx, otherCtx} {

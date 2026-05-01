@@ -688,7 +688,7 @@ func GetSystemIntakesWithLCIDs(
 		return nil, err
 	}
 
-	return store.GetSystemIntakesWithLCIDs(ctx)
+	return dataloaders.GetSystemIntakesWithLCIDs(ctx)
 }
 
 func ArchiveSystemIntake(
