@@ -340,6 +340,14 @@ describe('GRB review', () => {
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('can upload a presentation deck', () => {
     const asyncReviewIntakeId = '5af245bc-fc54-4677-bab1-1b3e798bb43c';
+    const markPendingPresentationUploadAsClean = () => {
+      cy.getByTestId('presentation-deck-virus-scanning', { timeout: 20000 })
+        .should('be.visible')
+        .invoke('attr', 'data-testdeckurl')
+        .should('be.a', 'string')
+        .and('include', '/easi-app-file-uploads/')
+        .then(url => cy.markMinioUploadAsCleanByUrl(url));
+    };
 
     cy.intercept('POST', '/api/graph/query', req => {
       const requestBodyText =
@@ -405,18 +413,12 @@ describe('GRB review', () => {
       .click();
     cy.wait('@updatePresentation').then(({ response }) => {
       expect(response?.body?.errors).to.eq(undefined);
-
-      const deckUrl =
-        response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
-          ?.systemIntake?.grbPresentationLinks?.presentationDeckFileURL;
-
-      expect(deckUrl).to.be.a('string');
-      cy.markMinioUploadAsCleanByUrl(deckUrl);
     });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
+    markPendingPresentationUploadAsClean();
 
     cy.reload();
 
@@ -453,18 +455,12 @@ describe('GRB review', () => {
       .click();
     cy.wait('@updatePresentation').then(({ response }) => {
       expect(response?.body?.errors).to.eq(undefined);
-
-      const transcriptUrl =
-        response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
-          ?.systemIntake?.grbPresentationLinks?.transcriptFileURL;
-
-      expect(transcriptUrl).to.be.a('string');
-      cy.markMinioUploadAsCleanByUrl(transcriptUrl);
     });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
+    markPendingPresentationUploadAsClean();
 
     cy.reload();
 

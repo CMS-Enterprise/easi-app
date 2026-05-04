@@ -223,6 +223,14 @@ describe('TRB request permissions', () => {
     loginAs(owner);
 
     cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestDocument') {
+        req.alias = 'createTrbRequestDocument';
+      }
+
+      if (req.body.operationName === 'GetTRBRequestDocuments') {
+        req.alias = 'getTrbRequestDocuments';
+      }
+
       if (req.body.operationName === 'DeleteTRBRequestDocument') {
         req.alias = 'deleteTrbRequestDocument';
       }
@@ -236,23 +244,38 @@ describe('TRB request permissions', () => {
     cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
+    cy.wait('@createTrbRequestDocument')
+      .its('response.body.errors')
+      .should('not.exist');
     cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
     cy.contains(
       '.usa-alert__text',
       'Your document has been uploaded and is being scanned.'
     ).should('be.visible');
+    cy.wait('@getTrbRequestDocuments')
+      .its('response.body.errors')
+      .should('not.exist');
 
-    cy.contains('#systemIntakeDocuments tr', 'test.pdf')
+    cy.contains('#systemIntakeDocuments td', 'test.pdf', {
+      timeout: 20000
+    })
       .should('be.visible')
-      .within(() => {
-        cy.contains('Virus scan in progress...').should('be.visible');
-        cy.get('[data-testurl]')
-          .invoke('attr', 'data-testurl')
-          .should('be.a', 'string')
-          .then(url => cy.markMinioUploadAsCleanByUrl(url));
-      });
+      .closest('tr')
+      .as('uploadedDocumentRow');
+
+    cy.get('@uploadedDocumentRow').within(() => {
+      cy.contains('Virus scan in progress...').should('be.visible');
+      cy.get('[data-testurl]')
+        .invoke('attr', 'data-testurl')
+        .should('be.a', 'string')
+        .and('include', '/easi-app-file-uploads/')
+        .then(url => cy.markMinioUploadAsCleanByUrl(url));
+    });
 
     cy.reload();
+    cy.wait('@getTrbRequestDocuments')
+      .its('response.body.errors')
+      .should('not.exist');
 
     cy.contains('#systemIntakeDocuments td', 'test.pdf', {
       timeout: 20000
