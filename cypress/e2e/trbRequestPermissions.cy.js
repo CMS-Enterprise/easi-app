@@ -296,17 +296,27 @@ describe('TRB request permissions', () => {
       'Your document has been uploaded and is being scanned.'
     ).should('be.visible');
 
-    waitForTrbDocument(document => document.fileName === 'test.pdf').then(
-      document => {
-        expect(document.status).to.eq('PENDING');
-        expect(document.url).to.include('/easi-app-file-uploads/');
-        cy.markMinioUploadAsCleanByUrl(document.url);
-      }
-    );
+    waitForTrbDocument(
+      document =>
+        document.fileName === 'test.pdf' && document.status === 'PENDING'
+    ).then(document => {
+      expect(document.url).to.include('/easi-app-file-uploads/');
+    });
 
-    cy.contains('#systemIntakeDocuments td', 'Virus scan in progress...', {
+    cy.getByTestId('page-loading', { timeout: 20000 }).should('not.exist');
+    cy.contains('#systemIntakeDocuments tr', 'test.pdf', {
       timeout: 20000
-    }).should('be.visible');
+    })
+      .should('be.visible')
+      .within(() => {
+        cy.contains('Virus scan in progress...').should('be.visible');
+        cy.get('[data-testurl]')
+          .invoke('attr', 'data-testurl')
+          .then(url => {
+            expect(url).to.include('/easi-app-file-uploads/');
+            cy.markMinioUploadAsCleanByUrl(url);
+          });
+      });
 
     cy.reload();
 
@@ -315,9 +325,7 @@ describe('TRB request permissions', () => {
         document.fileName === 'test.pdf' && document.status === 'AVAILABLE'
     );
 
-    cy.contains('#systemIntakeDocuments td', 'test.pdf', {
-      timeout: 20000
-    }).should('be.visible');
+    cy.getByTestId('page-loading', { timeout: 20000 }).should('not.exist');
 
     cy.contains('#systemIntakeDocuments tr', 'test.pdf')
       .should('be.visible')

@@ -364,8 +364,10 @@ describe('GRB review', () => {
       return cy.markMinioUploadAsCleanByUrl(pendingUploadUrl);
     };
 
-    const waitForPresentationLinksToFinishScanning = (
-      attemptsRemaining = 6
+    const waitForPresentationLinks = (
+      predicate,
+      description,
+      attemptsRemaining = 8
     ) => {
       return cy
         .reload()
@@ -376,21 +378,19 @@ describe('GRB review', () => {
           const presentationLinks =
             response?.body?.data?.systemIntake?.grbPresentationLinks;
 
-          const isVirusScanning =
-            presentationLinks?.presentationDeckFileStatus === 'PENDING' ||
-            presentationLinks?.transcriptFileStatus === 'PENDING';
-
-          if (!isVirusScanning) {
+          if (predicate(presentationLinks)) {
             return presentationLinks;
           }
 
           if (attemptsRemaining <= 1) {
             throw new Error(
-              'Timed out waiting for GRB presentation links to finish virus scanning'
+              `Timed out waiting for GRB presentation links to ${description}`
             );
           }
 
-          return waitForPresentationLinksToFinishScanning(
+          return waitForPresentationLinks(
+            predicate,
+            description,
             attemptsRemaining - 1
           );
         });
@@ -474,15 +474,26 @@ describe('GRB review', () => {
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
 
-    waitForPresentationLinksToFinishScanning();
+    waitForPresentationLinks(
+      presentationLinks =>
+        presentationLinks?.recordingLink?.trim() ===
+          'https://example.com/recording' &&
+        presentationLinks?.recordingPasscode === '3465376' &&
+        presentationLinks?.transcriptLink?.trim() ===
+          'https://example.com/transcript' &&
+        presentationLinks?.presentationDeckFileStatus === 'AVAILABLE' &&
+        !!presentationLinks?.presentationDeckFileURL,
+      'show the saved presentation links and uploaded slide deck'
+    );
 
     // Verify presentation deck is uploaded as well as other details
 
     cy.getByTestId('presentation-links-card').within(() => {
-      cy.contains('button', 'View recording').should('be.visible');
+      cy.getByTestId('presentation-deck-virus-scanning').should('not.exist');
+      cy.contains('View recording', { timeout: 20000 }).should('be.visible');
       cy.contains('span', '(Passcode: 3465376)').should('be.visible');
-      cy.contains('button', 'View transcript').should('be.visible');
-      cy.contains('button', 'View slide deck').should('be.visible');
+      cy.contains('View transcript').should('be.visible');
+      cy.contains('View slide deck').should('be.visible');
     });
 
     // Edit presentation links
@@ -516,11 +527,21 @@ describe('GRB review', () => {
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
 
-    waitForPresentationLinksToFinishScanning();
+    waitForPresentationLinks(
+      presentationLinks =>
+        presentationLinks?.transcriptFileStatus === 'AVAILABLE' &&
+        !!presentationLinks?.transcriptFileURL &&
+        !presentationLinks?.transcriptLink?.trim() &&
+        !presentationLinks?.presentationDeckFileURL,
+      'show the uploaded transcript file after removing the slide deck'
+    );
 
     // Check that the presentation deck file was deleted
-    cy.contains('button', 'View slide deck').should('not.exist');
-    cy.contains('button', 'View transcript').should('be.visible');
+    cy.getByTestId('presentation-links-card').within(() => {
+      cy.getByTestId('presentation-deck-virus-scanning').should('not.exist');
+      cy.contains('View slide deck').should('not.exist');
+      cy.contains('View transcript').should('be.visible');
+    });
 
     // Remove all presentation links
     cy.contains('button', 'Remove all presentation links').click();
