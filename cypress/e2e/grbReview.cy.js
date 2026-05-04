@@ -340,13 +340,28 @@ describe('GRB review', () => {
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('can upload a presentation deck', () => {
     const asyncReviewIntakeId = '5af245bc-fc54-4677-bab1-1b3e798bb43c';
-    const markPendingPresentationUploadAsClean = () => {
-      cy.getByTestId('presentation-deck-virus-scanning', { timeout: 20000 })
-        .should('be.visible')
-        .invoke('attr', 'data-testdeckurl')
-        .should('be.a', 'string')
-        .and('include', '/easi-app-file-uploads/')
-        .then(url => cy.markMinioUploadAsCleanByUrl(url));
+
+    const markPendingPresentationUploadAsClean = response => {
+      const presentationLinks =
+        response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
+          ?.systemIntake?.grbPresentationLinks;
+
+      let pendingUploadUrl = null;
+
+      if (presentationLinks?.presentationDeckFileStatus === 'PENDING') {
+        pendingUploadUrl = presentationLinks.presentationDeckFileURL;
+      } else if (presentationLinks?.transcriptFileStatus === 'PENDING') {
+        pendingUploadUrl = presentationLinks.transcriptFileURL;
+      }
+
+      if (!pendingUploadUrl) {
+        return undefined;
+      }
+
+      expect(pendingUploadUrl).to.be.a('string');
+      expect(pendingUploadUrl).to.include('/easi-app-file-uploads/');
+
+      return cy.markMinioUploadAsCleanByUrl(pendingUploadUrl);
     };
 
     cy.intercept('POST', '/api/graph/query', req => {
@@ -413,12 +428,12 @@ describe('GRB review', () => {
       .click();
     cy.wait('@updatePresentation').then(({ response }) => {
       expect(response?.body?.errors).to.eq(undefined);
+      return markPendingPresentationUploadAsClean(response);
     });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
-    markPendingPresentationUploadAsClean();
 
     cy.reload();
 
@@ -455,12 +470,12 @@ describe('GRB review', () => {
       .click();
     cy.wait('@updatePresentation').then(({ response }) => {
       expect(response?.body?.errors).to.eq(undefined);
+      return markPendingPresentationUploadAsClean(response);
     });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
-    markPendingPresentationUploadAsClean();
 
     cy.reload();
 

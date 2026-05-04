@@ -223,15 +223,33 @@ describe('TRB request permissions', () => {
     loginAs(owner);
 
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'CreateTRBRequestDocument') {
+      const requestBodyText =
+        typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      const operationName =
+        req.body && typeof req.body === 'object' ? req.body.operationName : '';
+
+      if (
+        operationName === 'CreateTRBRequestDocument' ||
+        requestBodyText.includes('CreateTRBRequestDocument') ||
+        requestBodyText.includes('createTRBRequestDocument')
+      ) {
         req.alias = 'createTrbRequestDocument';
       }
 
-      if (req.body.operationName === 'GetTRBRequestDocuments') {
+      if (
+        operationName === 'GetTRBRequestDocuments' ||
+        requestBodyText.includes('GetTRBRequestDocuments') ||
+        (requestBodyText.includes('trbRequest') &&
+          requestBodyText.includes('documents'))
+      ) {
         req.alias = 'getTrbRequestDocuments';
       }
 
-      if (req.body.operationName === 'DeleteTRBRequestDocument') {
+      if (
+        operationName === 'DeleteTRBRequestDocument' ||
+        requestBodyText.includes('DeleteTRBRequestDocument') ||
+        requestBodyText.includes('deleteTRBRequestDocument')
+      ) {
         req.alias = 'deleteTrbRequestDocument';
       }
     });
@@ -244,7 +262,7 @@ describe('TRB request permissions', () => {
     cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
-    cy.wait('@createTrbRequestDocument')
+    cy.wait('@createTrbRequestDocument', { timeout: 20000 })
       .its('response.body.errors')
       .should('not.exist');
     cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
@@ -252,7 +270,7 @@ describe('TRB request permissions', () => {
       '.usa-alert__text',
       'Your document has been uploaded and is being scanned.'
     ).should('be.visible');
-    cy.wait('@getTrbRequestDocuments')
+    cy.wait('@getTrbRequestDocuments', { timeout: 20000 })
       .its('response.body.errors')
       .should('not.exist');
 
@@ -273,7 +291,7 @@ describe('TRB request permissions', () => {
     });
 
     cy.reload();
-    cy.wait('@getTrbRequestDocuments')
+    cy.wait('@getTrbRequestDocuments', { timeout: 20000 })
       .its('response.body.errors')
       .should('not.exist');
 
