@@ -416,6 +416,13 @@ describe('GRB review', () => {
       });
     };
 
+    const clearPresentationDeckFile = () => {
+      return cy
+        .getByTestId('presentation-deck-upload-card')
+        .contains('button', 'Clear file')
+        .click();
+    };
+
     cy.intercept('POST', '/api/graph/query', req => {
       const requestBodyText =
         typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
@@ -522,7 +529,9 @@ describe('GRB review', () => {
 
     cy.contains('button', 'Save presentation details').should('be.disabled');
 
-    cy.contains('button', 'Upload document').click();
+    cy.get('#transcriptFields')
+      .contains('[role="tab"]', 'Upload document')
+      .click();
 
     // Upload transcript file
     cy.get('input[name=transcriptFileData]').selectFile(
@@ -533,7 +542,7 @@ describe('GRB review', () => {
     cy.get('#transcriptLink').clear();
 
     // Clear presentation deck file
-    cy.get('button').contains('Clear file').click();
+    clearPresentationDeckFile();
 
     // Submit form
     cy.contains('button', 'Save presentation details')
