@@ -411,8 +411,8 @@ describe('GRB review', () => {
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
     cy.getByTestId('presentation-deck-virus-scanning')
-      .should('have.attr', 'data-testdeckurl')
       .invoke('attr', 'data-testdeckurl')
+      .should('be.a', 'string')
       .then(url => cy.markMinioUploadAsCleanByUrl(url));
 
     cy.reload();
@@ -456,8 +456,8 @@ describe('GRB review', () => {
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
     cy.getByTestId('presentation-deck-virus-scanning')
-      .should('have.attr', 'data-testdeckurl')
       .invoke('attr', 'data-testdeckurl')
+      .should('be.a', 'string')
       .then(url => cy.markMinioUploadAsCleanByUrl(url));
 
     cy.reload();

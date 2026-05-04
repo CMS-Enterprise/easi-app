@@ -80,20 +80,18 @@ Cypress.Commands.add('getTrbRequestDocuments', requestID =>
 );
 
 Cypress.Commands.add(
-  'getNewTrbRequestDocumentUrl',
-  (requestID, previousDocumentIDs = [], attempt = 0) =>
+  'getTrbRequestDocumentUrl',
+  (requestID, documentID, attempt = 0) =>
     getTrbRequestDocuments(requestID).then(documents => {
-      const newDocument = documents.find(
-        document => !previousDocumentIDs.includes(document.id)
-      );
+      const document = documents.find(doc => doc.id === documentID);
 
-      if (newDocument?.url) {
-        return newDocument.url;
+      if (document?.url) {
+        return document.url;
       }
 
       if (attempt >= 10) {
         throw new Error(
-          `A new TRB request document URL was not available after ${
+          `The TRB request document URL for ${documentID} was not available after ${
             attempt + 1
           } attempts`
         );
@@ -102,11 +100,7 @@ Cypress.Commands.add(
       return cy
         .wait(500)
         .then(() =>
-          cy.getNewTrbRequestDocumentUrl(
-            requestID,
-            previousDocumentIDs,
-            attempt + 1
-          )
+          cy.getTrbRequestDocumentUrl(requestID, documentID, attempt + 1)
         );
     })
 );

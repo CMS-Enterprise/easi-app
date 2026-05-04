@@ -223,25 +223,26 @@ describe('TRB request permissions', () => {
     loginAs(owner);
 
     cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestDocument') {
+        req.alias = 'createTrbRequestDocument';
+      }
+
       if (req.body.operationName === 'DeleteTRBRequestDocument') {
         req.alias = 'deleteTrbRequestDocument';
       }
     });
 
-    cy.getTrbRequestDocuments(requestUrls.completed.id).then(
-      existingDocuments => {
-        const existingDocumentIDs = existingDocuments.map(
-          document => document.id
-        );
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
+      force: true
+    });
+    cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').should('not.be.disabled');
+    cy.contains('button', 'Upload document').click();
 
-        cy.visit(requestUrls.completed.requesterDocumentUploadHref);
-        cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
-          force: true
-        });
-        cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
-        cy.contains('button', 'Upload document').should('not.be.disabled');
-        cy.contains('button', 'Upload document').click();
-
+    cy.wait('@createTrbRequestDocument')
+      .its('response.body.data.createTRBRequestDocument.document.id')
+      .then(documentID => {
         cy.url().should(
           'include',
           requestUrls.completed.requesterDocumentsHref
@@ -255,13 +256,9 @@ describe('TRB request permissions', () => {
         cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
         return cy
-          .getNewTrbRequestDocumentUrl(
-            requestUrls.completed.id,
-            existingDocumentIDs
-          )
+          .getTrbRequestDocumentUrl(requestUrls.completed.id, documentID)
           .then(url => cy.markMinioUploadAsCleanByUrl(url));
-      }
-    );
+      });
 
     cy.reload();
 
