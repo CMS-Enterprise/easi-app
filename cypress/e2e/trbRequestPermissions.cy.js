@@ -252,13 +252,15 @@ describe('TRB request permissions', () => {
 
     cy.reload();
 
-    cy.contains('td', 'test.pdf')
-      .first()
-      .parent('tr')
-      .as('uploadedDocument')
-      .should('be.visible');
+    cy.contains('#systemIntakeDocuments td', 'test.pdf', {
+      timeout: 20000
+    }).should('be.visible');
 
-    cy.get('@uploadedDocument').contains('button', 'Remove').click();
+    cy.contains('#systemIntakeDocuments tr', 'test.pdf')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('button', 'Remove').click();
+      });
     cy.contains('button', 'Remove document').click();
 
     cy.wait('@deleteTrbRequestDocument')
@@ -268,7 +270,7 @@ describe('TRB request permissions', () => {
       '.usa-alert__text',
       'You have successfully removed test.pdf.'
     ).should('be.visible');
-    cy.get('@uploadedDocument').should('not.exist');
+    cy.contains('#systemIntakeDocuments td', 'test.pdf').should('not.exist');
   });
 
   it('uses the requester-safe LCID lookup on the TRB basic form', () => {

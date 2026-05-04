@@ -342,14 +342,22 @@ describe('GRB review', () => {
     const asyncReviewIntakeId = '5af245bc-fc54-4677-bab1-1b3e798bb43c';
 
     cy.intercept('POST', '/api/graph/query', req => {
+      const { operationName } = req.body;
+      const queryText = req.body.query || '';
+
       if (
-        req.body.operationName ===
-        'UpdateSystemIntakeGRBReviewAsyncPresentation'
+        operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation' ||
+        operationName === 'updateSystemIntakeGRBReviewAsyncPresentation' ||
+        queryText.includes('setSystemIntakeGRBPresentationLinks') ||
+        queryText.includes('updateSystemIntakeGRBReviewFormPresentationAsync')
       ) {
         req.alias = 'updatePresentation';
       }
 
-      if (req.body.operationName === 'DeleteSystemIntakeGRBPresentationLinks') {
+      if (
+        operationName === 'DeleteSystemIntakeGRBPresentationLinks' ||
+        queryText.includes('deleteSystemIntakeGRBPresentationLinks')
+      ) {
         req.alias = 'deletePresentationLinks';
       }
     });

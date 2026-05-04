@@ -63,7 +63,9 @@ const selectAvailableLinkedSystem = () =>
       expect(option, 'available cedar system option').not.to.equal(undefined);
 
       const { value } = option;
-      const name = option.text.trim().replace(/\s+\([^)]+\)$/, '');
+      const name = (option.label || option.text || '')
+        .trim()
+        .replace(/\s+\([^)]+\)$/, '');
 
       return cy
         .getByTestId('cedarSystemID')
