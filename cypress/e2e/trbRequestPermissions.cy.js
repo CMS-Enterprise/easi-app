@@ -228,31 +228,26 @@ describe('TRB request permissions', () => {
       }
     });
 
-    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
-    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
-      force: true
-    });
-    cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
-    cy.contains('button', 'Upload document').should('not.be.disabled');
-    cy.contains('button', 'Upload document').click();
-
-    cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
-    cy.contains(
-      '.usa-alert__text',
-      'Your document has been uploaded and is being scanned.'
-    ).should('be.visible');
-
-    cy.contains('td', 'test.pdf').should('be.visible');
-    cy.contains('td', 'Virus scan in progress...').should('be.visible');
-
-    cy.contains(
-      '#systemIntakeDocuments [data-testurl]',
-      'Virus scan in progress...'
-    )
-      .invoke('attr', 'data-testurl')
-      .then(url => {
-        cy.markMinioUploadAsCleanByUrl(url);
+    cy.getLatestMinioUploadKey().then(previousKey => {
+      cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+      cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
+        force: true
       });
+      cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+      cy.contains('button', 'Upload document').should('not.be.disabled');
+      cy.contains('button', 'Upload document').click();
+
+      cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
+      cy.contains(
+        '.usa-alert__text',
+        'Your document has been uploaded and is being scanned.'
+      ).should('be.visible');
+
+      cy.contains('td', 'test.pdf').should('be.visible');
+      cy.contains('td', 'Virus scan in progress...').should('be.visible');
+
+      cy.markNewMinioUploadAsClean({ previousKey });
+    });
 
     cy.reload();
 
