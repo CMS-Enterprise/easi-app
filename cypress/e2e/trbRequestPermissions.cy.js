@@ -222,6 +222,31 @@ describe('TRB request permissions', () => {
   it('lets the request owner upload documents from the standalone upload route', () => {
     loginAs(owner);
 
+    const waitForTrbDocument = (predicate, attemptsRemaining = 5) => {
+      return cy
+        .wait('@getTrbRequestDocuments', { timeout: 20000 })
+        .then(({ response }) => {
+          expect(response?.body?.errors).to.eq(undefined);
+
+          const documents = response?.body?.data?.trbRequest?.documents || [];
+          const matchingDocument = documents.find(predicate);
+
+          if (matchingDocument) {
+            return matchingDocument;
+          }
+
+          if (attemptsRemaining <= 1) {
+            throw new Error(
+              'Timed out waiting for the TRB document upload to appear in the documents list'
+            );
+          }
+
+          cy.reload();
+
+          return waitForTrbDocument(predicate, attemptsRemaining - 1);
+        });
+    };
+
     cy.intercept('POST', '/api/graph/query', req => {
       const requestBodyText =
         typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
@@ -270,30 +295,25 @@ describe('TRB request permissions', () => {
       '.usa-alert__text',
       'Your document has been uploaded and is being scanned.'
     ).should('be.visible');
-    cy.wait('@getTrbRequestDocuments', { timeout: 20000 })
-      .its('response.body.errors')
-      .should('not.exist');
 
-    cy.contains('#systemIntakeDocuments td', 'test.pdf', {
+    waitForTrbDocument(document => document.fileName === 'test.pdf').then(
+      document => {
+        expect(document.status).to.eq('PENDING');
+        expect(document.url).to.include('/easi-app-file-uploads/');
+        cy.markMinioUploadAsCleanByUrl(document.url);
+      }
+    );
+
+    cy.contains('#systemIntakeDocuments td', 'Virus scan in progress...', {
       timeout: 20000
-    })
-      .should('be.visible')
-      .closest('tr')
-      .as('uploadedDocumentRow');
-
-    cy.get('@uploadedDocumentRow').within(() => {
-      cy.contains('Virus scan in progress...').should('be.visible');
-      cy.get('[data-testurl]')
-        .invoke('attr', 'data-testurl')
-        .should('be.a', 'string')
-        .and('include', '/easi-app-file-uploads/')
-        .then(url => cy.markMinioUploadAsCleanByUrl(url));
-    });
+    }).should('be.visible');
 
     cy.reload();
-    cy.wait('@getTrbRequestDocuments', { timeout: 20000 })
-      .its('response.body.errors')
-      .should('not.exist');
+
+    waitForTrbDocument(
+      document =>
+        document.fileName === 'test.pdf' && document.status === 'AVAILABLE'
+    );
 
     cy.contains('#systemIntakeDocuments td', 'test.pdf', {
       timeout: 20000

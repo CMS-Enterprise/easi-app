@@ -364,6 +364,38 @@ describe('GRB review', () => {
       return cy.markMinioUploadAsCleanByUrl(pendingUploadUrl);
     };
 
+    const waitForPresentationLinksToFinishScanning = (
+      attemptsRemaining = 6
+    ) => {
+      return cy
+        .reload()
+        .wait('@getGrbReview', { timeout: 20000 })
+        .then(({ response }) => {
+          expect(response?.body?.errors).to.eq(undefined);
+
+          const presentationLinks =
+            response?.body?.data?.systemIntake?.grbPresentationLinks;
+
+          const isVirusScanning =
+            presentationLinks?.presentationDeckFileStatus === 'PENDING' ||
+            presentationLinks?.transcriptFileStatus === 'PENDING';
+
+          if (!isVirusScanning) {
+            return presentationLinks;
+          }
+
+          if (attemptsRemaining <= 1) {
+            throw new Error(
+              'Timed out waiting for GRB presentation links to finish virus scanning'
+            );
+          }
+
+          return waitForPresentationLinksToFinishScanning(
+            attemptsRemaining - 1
+          );
+        });
+    };
+
     cy.intercept('POST', '/api/graph/query', req => {
       const requestBodyText =
         typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
@@ -390,6 +422,13 @@ describe('GRB review', () => {
         requestBodyText.includes('deleteSystemIntakeGRBPresentationLinks')
       ) {
         req.alias = 'deletePresentationLinks';
+      }
+
+      if (
+        operationName === 'GetSystemIntakeGRBReview' ||
+        requestBodyText.includes('GetSystemIntakeGRBReview')
+      ) {
+        req.alias = 'getGrbReview';
       }
     });
 
@@ -435,7 +474,7 @@ describe('GRB review', () => {
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
 
-    cy.reload();
+    waitForPresentationLinksToFinishScanning();
 
     // Verify presentation deck is uploaded as well as other details
 
@@ -477,7 +516,7 @@ describe('GRB review', () => {
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
 
-    cy.reload();
+    waitForPresentationLinksToFinishScanning();
 
     // Check that the presentation deck file was deleted
     cy.contains('button', 'View slide deck').should('not.exist');
