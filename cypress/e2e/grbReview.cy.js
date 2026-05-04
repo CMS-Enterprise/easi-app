@@ -1,3 +1,21 @@
+const markLatestPresentationUploadAsClean = () =>
+  cy.wait('@updatePresentation').then(({ response }) => {
+    expect(response?.body?.errors, 'presentation update errors').to.equal(
+      undefined
+    );
+
+    const links =
+      response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
+        ?.systemIntake?.grbPresentationLinks;
+    const url = links?.presentationDeckFileURL || links?.transcriptFileURL;
+    const filepath = url?.match(/(\/easi-app-file-uploads\/[^?]*)/)?.[1];
+
+    expect(url, 'uploaded presentation file URL').to.be.a('string');
+    expect(filepath, 'uploaded presentation file path').to.be.a('string');
+
+    cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+  });
+
 describe('GRB review', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
@@ -383,6 +401,7 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
+    markLatestPresentationUploadAsClean();
     cy.location('pathname', { timeout: 10000 }).should(
       'eq',
       '/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review'
@@ -391,14 +410,6 @@ describe('GRB review', () => {
     cy.getByTestId('presentation-deck-virus-scanning').contains(
       'Virus scanning in progress'
     );
-
-    // Mark file as passing virus scan
-    cy.get('[data-testdeckurl]').within(el => {
-      const url = el.attr('data-testdeckurl');
-
-      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
-      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
-    });
 
     cy.reload();
 
@@ -431,18 +442,11 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
+    markLatestPresentationUploadAsClean();
     cy.location('pathname', { timeout: 10000 }).should(
       'eq',
       '/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review'
     );
-
-    // Mark file as passing virus scan
-    cy.get('[data-testdeckurl]').within(el => {
-      const url = el.attr('data-testdeckurl');
-
-      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
-      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
-    });
 
     cy.reload();
 

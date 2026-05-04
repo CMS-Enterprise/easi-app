@@ -56,7 +56,9 @@ const selectAvailableLinkedSystem = () =>
     .getByTestId('cedarSystemID')
     .find('option')
     .then($options => {
-      const option = [...$options].find(({ value }) => value);
+      const option = [...$options].find(
+        ({ value, disabled }) => value && !disabled
+      );
 
       expect(option, 'available cedar system option').not.to.equal(undefined);
 
@@ -70,12 +72,13 @@ const selectAvailableLinkedSystem = () =>
     });
 
 const selectFirstRequestLinkSystem = () => {
-  cy.get('.easi-multiselect input').click({ force: true });
+  cy.get('.easi-multiselect input[id$="-input"]').first().click({
+    force: true
+  });
   cy.get('.usa-combo-box__list-option:visible')
     .should('have.length.at.least', 1)
-    .then($options => {
-      cy.wrap($options[0]).click({ force: true });
-    });
+    .first()
+    .click({ force: true });
   cy.get('[data-testid^="multiselect-tag--"]').should(
     'have.length.at.least',
     1

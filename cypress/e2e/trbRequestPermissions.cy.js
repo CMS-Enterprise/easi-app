@@ -54,7 +54,7 @@ const getTrbRequestDocumentUrlsQuery = `
   }
 `;
 
-const markTrbDocumentAsClean = ({ requestId, fileName = 'test.pdf' }) =>
+const getUploadedTrbDocumentUrl = ({ requestId, documentId, attempt = 0 }) =>
   cy
     .request('POST', '/api/graph/query', {
       operationName: 'GetTRBRequestDocumentUrls',
@@ -65,25 +65,47 @@ const markTrbDocumentAsClean = ({ requestId, fileName = 'test.pdf' }) =>
       expect(body.errors, 'document url query errors').to.equal(undefined);
 
       const document = body.data?.trbRequest?.documents?.find(
-        item => item.fileName === fileName
+        item => item.id === documentId
       );
 
-      expect(document, `document named "${fileName}"`).to.not.equal(undefined);
-      expect(document?.url, 'document url').to.be.a('string');
+      if (document?.url) {
+        return document.url;
+      }
 
-      const filepath = document.url.match(
-        /(\/easi-app-file-uploads\/[^?]*)/
-      )[1];
-      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+      if (attempt >= 10) {
+        throw new Error(
+          `document URL for "${documentId}" was not available after ${
+            attempt + 1
+          } attempts`
+        );
+      }
+
+      return cy.wait(500).then(() =>
+        getUploadedTrbDocumentUrl({
+          requestId,
+          documentId,
+          attempt: attempt + 1
+        })
+      );
     });
+
+const markTrbDocumentAsClean = ({ requestId, documentId }) =>
+  getUploadedTrbDocumentUrl({ requestId, documentId }).then(url => {
+    const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)?.[1];
+
+    expect(filepath, 'document file path').to.be.a('string');
+
+    cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+  });
 
 const selectFirstRequestLinkSystem = () => {
-  cy.get('.easi-multiselect input').click({ force: true });
+  cy.get('.easi-multiselect input[id$="-input"]').first().click({
+    force: true
+  });
   cy.get('.usa-combo-box__list-option:visible')
     .should('have.length.at.least', 1)
-    .then($options => {
-      cy.wrap($options[0]).click({ force: true });
-    });
+    .first()
+    .click({ force: true });
   cy.get('[data-testid^="multiselect-tag--"]').should(
     'have.length.at.least',
     1
@@ -279,7 +301,14 @@ describe('TRB request permissions', () => {
     cy.contains('td', 'test.pdf').should('be.visible');
     cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
-    markTrbDocumentAsClean({ requestId: requestUrls.completed.id });
+    cy.wait('@createTrbRequestDocument')
+      .its('response.body.data.createTRBRequestDocument.document.id')
+      .then(documentId => {
+        markTrbDocumentAsClean({
+          requestId: requestUrls.completed.id,
+          documentId
+        });
+      });
 
     cy.reload();
 
