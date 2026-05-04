@@ -223,44 +223,45 @@ describe('TRB request permissions', () => {
     loginAs(owner);
 
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'CreateTRBRequestDocument') {
-        req.alias = 'createTrbRequestDocument';
-      }
-
       if (req.body.operationName === 'DeleteTRBRequestDocument') {
         req.alias = 'deleteTrbRequestDocument';
       }
     });
 
-    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
-    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
-      force: true
-    });
-    cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
-    cy.contains('button', 'Upload document').should('not.be.disabled');
-    cy.contains('button', 'Upload document').click();
+    cy.getTrbRequestDocuments(requestUrls.completed.id).then(
+      existingDocuments => {
+        const existingDocumentIDs = existingDocuments.map(
+          document => document.id
+        );
 
-    cy.wait('@createTrbRequestDocument').then(({ response }) => {
-      expect(response?.body?.errors, 'mutation errors').to.equal(undefined);
+        cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+        cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
+          force: true
+        });
+        cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+        cy.contains('button', 'Upload document').should('not.be.disabled');
+        cy.contains('button', 'Upload document').click();
 
-      const documentId =
-        response?.body?.data?.createTRBRequestDocument?.document?.id;
+        cy.url().should(
+          'include',
+          requestUrls.completed.requesterDocumentsHref
+        );
+        cy.contains(
+          '.usa-alert__text',
+          'Your document has been uploaded and is being scanned.'
+        ).should('be.visible');
 
-      expect(documentId, 'uploaded TRB request document id').to.be.a('string');
+        cy.contains('td', 'test.pdf').should('be.visible');
+        cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
-      cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
-      cy.contains(
-        '.usa-alert__text',
-        'Your document has been uploaded and is being scanned.'
-      ).should('be.visible');
-
-      cy.contains('td', 'test.pdf').should('be.visible');
-      cy.contains('td', 'Virus scan in progress...').should('be.visible');
-
-      return cy
-        .getTrbRequestDocumentUrl(requestUrls.completed.id, documentId)
-        .then(url => cy.markMinioUploadAsCleanByUrl(url));
-    });
+        return cy
+          .getNewTrbRequestDocumentUrl(
+            requestUrls.completed.id,
+            existingDocumentIDs
+          )
+          .then(url => cy.markMinioUploadAsCleanByUrl(url));
+      }
+    );
 
     cy.reload();
 

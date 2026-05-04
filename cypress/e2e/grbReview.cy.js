@@ -393,27 +393,27 @@ describe('GRB review', () => {
     cy.get('#transcriptLink').clear();
     cy.get('#transcriptLink').type('https://example.com/transcript');
 
-    cy.getLatestMinioUploadKey().then(previousKey => {
-      // Upload presentation deck
-      cy.get('input[name=presentationDeckFileData]').selectFile(
-        'cypress/fixtures/test.pdf',
-        { force: true }
-      );
+    // Upload presentation deck
+    cy.get('input[name=presentationDeckFileData]').selectFile(
+      'cypress/fixtures/test.pdf',
+      { force: true }
+    );
 
-      // Submit form
-      cy.contains('button', 'Save presentation details')
-        .should('not.be.disabled')
-        .click();
-      cy.wait('@updatePresentation')
-        .its('response.body.errors')
-        .should('not.exist');
-      cy.location('pathname', { timeout: 20000 }).should(
-        'eq',
-        `/it-governance/${asyncReviewIntakeId}/grb-review`
-      );
-
-      return cy.markNewMinioUploadAsClean({ previousKey });
-    });
+    // Submit form
+    cy.contains('button', 'Save presentation details')
+      .should('not.be.disabled')
+      .click();
+    cy.wait('@updatePresentation')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.location('pathname', { timeout: 20000 }).should(
+      'eq',
+      `/it-governance/${asyncReviewIntakeId}/grb-review`
+    );
+    cy.getByTestId('presentation-deck-virus-scanning')
+      .should('have.attr', 'data-testdeckurl')
+      .invoke('attr', 'data-testdeckurl')
+      .then(url => cy.markMinioUploadAsCleanByUrl(url));
 
     cy.reload();
 
@@ -433,32 +433,32 @@ describe('GRB review', () => {
 
     cy.contains('button', 'Upload document').click();
 
-    cy.getLatestMinioUploadKey().then(previousKey => {
-      // Upload transcript file
-      cy.get('input[name=transcriptFileData]').selectFile(
-        'cypress/fixtures/test.pdf'
-      );
+    // Upload transcript file
+    cy.get('input[name=transcriptFileData]').selectFile(
+      'cypress/fixtures/test.pdf'
+    );
 
-      cy.get('#transcriptFields').contains('[role="tab"]', 'Add link').click();
-      cy.get('#transcriptLink').clear();
+    cy.get('#transcriptFields').contains('[role="tab"]', 'Add link').click();
+    cy.get('#transcriptLink').clear();
 
-      // Clear presentation deck file
-      cy.get('button').contains('Clear file').click();
+    // Clear presentation deck file
+    cy.get('button').contains('Clear file').click();
 
-      // Submit form
-      cy.contains('button', 'Save presentation details')
-        .should('not.be.disabled')
-        .click();
-      cy.wait('@updatePresentation')
-        .its('response.body.errors')
-        .should('not.exist');
-      cy.location('pathname', { timeout: 20000 }).should(
-        'eq',
-        `/it-governance/${asyncReviewIntakeId}/grb-review`
-      );
-
-      return cy.markNewMinioUploadAsClean({ previousKey });
-    });
+    // Submit form
+    cy.contains('button', 'Save presentation details')
+      .should('not.be.disabled')
+      .click();
+    cy.wait('@updatePresentation')
+      .its('response.body.errors')
+      .should('not.exist');
+    cy.location('pathname', { timeout: 20000 }).should(
+      'eq',
+      `/it-governance/${asyncReviewIntakeId}/grb-review`
+    );
+    cy.getByTestId('presentation-deck-virus-scanning')
+      .should('have.attr', 'data-testdeckurl')
+      .invoke('attr', 'data-testdeckurl')
+      .then(url => cy.markMinioUploadAsCleanByUrl(url));
 
     cy.reload();
 

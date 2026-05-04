@@ -56,104 +56,58 @@ const GET_TRB_REQUEST_DOCUMENT_URLS_QUERY = `
   }
 `;
 
-const listMinioUploads = () =>
+const getTrbRequestDocuments = requestID =>
   cy
-    .exec('/mc --no-color --json ls -r local/easi-app-file-uploads')
-    .then(({ stdout }) => {
-      const trimmed = stdout.trim();
-
-      if (!trimmed) {
-        return [];
+    .request('POST', '/api/graph/query', {
+      operationName: 'GetTRBRequestDocumentUrls',
+      query: GET_TRB_REQUEST_DOCUMENT_URLS_QUERY,
+      variables: { id: requestID }
+    })
+    .then(({ body }) => {
+      if (body?.errors?.length) {
+        throw new Error(body.errors[0].message);
       }
 
-      return trimmed
-        .split('\n')
-        .filter(Boolean)
-        .map(line => JSON.parse(line))
-        .filter(item => item.type === 'file');
+      return body?.data?.trbRequest?.documents || [];
     });
-
-Cypress.Commands.add('getLatestMinioUploadKey', () =>
-  listMinioUploads().then(files => {
-    const latestFile = [...files].sort(
-      (a, b) =>
-        new Date(b.lastModified).valueOf() - new Date(a.lastModified).valueOf()
-    )[0];
-
-    return latestFile?.key || null;
-  })
-);
 
 Cypress.Commands.add('markMinioUploadAsCleanByUrl', url =>
   cy.exec(`scripts/tag_minio_file ${getMinioUploadPathFromUrl(url)} CLEAN`)
 );
 
-Cypress.Commands.add(
-  'getTrbRequestDocumentUrl',
-  (requestID, documentID, attempt = 0) =>
-    cy
-      .request('POST', '/api/graph/query', {
-        operationName: 'GetTRBRequestDocumentUrls',
-        query: GET_TRB_REQUEST_DOCUMENT_URLS_QUERY,
-        variables: { id: requestID }
-      })
-      .then(({ body }) => {
-        if (body?.errors?.length) {
-          throw new Error(body.errors[0].message);
-        }
-
-        const document = body?.data?.trbRequest?.documents?.find(
-          item => item.id === documentID
-        );
-
-        if (document?.url) {
-          return document.url;
-        }
-
-        if (attempt >= 10) {
-          throw new Error(
-            `TRB request document URL for ${documentID} was not available after ${
-              attempt + 1
-            } attempts`
-          );
-        }
-
-        return cy
-          .wait(500)
-          .then(() =>
-            cy.getTrbRequestDocumentUrl(requestID, documentID, attempt + 1)
-          );
-      })
+Cypress.Commands.add('getTrbRequestDocuments', requestID =>
+  getTrbRequestDocuments(requestID)
 );
 
 Cypress.Commands.add(
-  'markNewMinioUploadAsClean',
-  ({ previousKey = null, attempt = 0 } = {}) =>
-    listMinioUploads().then(files => {
-      const latestFile = [...files].sort(
-        (a, b) =>
-          new Date(b.lastModified).valueOf() -
-          new Date(a.lastModified).valueOf()
-      )[0];
+  'getNewTrbRequestDocumentUrl',
+  (requestID, previousDocumentIDs = [], attempt = 0) =>
+    getTrbRequestDocuments(requestID).then(documents => {
+      const newDocument = documents.find(
+        document => !previousDocumentIDs.includes(document.id)
+      );
 
-      if (!latestFile || (previousKey && latestFile.key === previousKey)) {
-        if (attempt >= 10) {
-          throw new Error(
-            `A new MinIO upload was not available after ${attempt + 1} attempts`
-          );
-        }
+      if (newDocument?.url) {
+        return newDocument.url;
+      }
 
-        return cy.wait(500).then(() =>
-          cy.markNewMinioUploadAsClean({
-            previousKey,
-            attempt: attempt + 1
-          })
+      if (attempt >= 10) {
+        throw new Error(
+          `A new TRB request document URL was not available after ${
+            attempt + 1
+          } attempts`
         );
       }
 
-      return cy.exec(
-        `scripts/tag_minio_file /easi-app-file-uploads/${latestFile.key} CLEAN`
-      );
+      return cy
+        .wait(500)
+        .then(() =>
+          cy.getNewTrbRequestDocumentUrl(
+            requestID,
+            previousDocumentIDs,
+            attempt + 1
+          )
+        );
     })
 );
 
