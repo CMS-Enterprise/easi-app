@@ -41,69 +41,6 @@ const loginAs = ({ name, role } = {}) => {
   cy.localLogin({ name, role });
 };
 
-const getTrbRequestDocumentUrlsQuery = `
-  query GetTRBRequestDocumentUrls($id: UUID!) {
-    trbRequest(id: $id) {
-      id
-      documents {
-        id
-        url
-        fileName
-        uploadedAt
-      }
-    }
-  }
-`;
-
-const getUploadedTrbDocument = ({ requestId, fileName, attempt = 0 }) =>
-  cy
-    .request('POST', '/api/graph/query', {
-      operationName: 'GetTRBRequestDocumentUrls',
-      query: getTrbRequestDocumentUrlsQuery,
-      variables: { id: requestId }
-    })
-    .then(({ body }) => {
-      expect(body.errors, 'document url query errors').to.equal(undefined);
-
-      const document = [...(body.data?.trbRequest?.documents || [])]
-        .filter(item => item.fileName === fileName)
-        .sort(
-          (a, b) =>
-            new Date(b.uploadedAt).valueOf() - new Date(a.uploadedAt).valueOf()
-        )[0];
-
-      if (document?.url) {
-        return document;
-      }
-
-      if (attempt >= 10) {
-        throw new Error(
-          `document URL for "${fileName}" was not available after ${
-            attempt + 1
-          } attempts`
-        );
-      }
-
-      return cy.wait(500).then(() =>
-        getUploadedTrbDocument({
-          requestId,
-          fileName,
-          attempt: attempt + 1
-        })
-      );
-    });
-
-const markTrbDocumentAsClean = ({ requestId, fileName }) =>
-  getUploadedTrbDocument({ requestId, fileName }).then(document => {
-    const filepath = document.url.match(
-      /(\/easi-app-file-uploads\/[^?]*)/
-    )?.[1];
-
-    expect(filepath, 'document file path').to.be.a('string');
-
-    cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
-  });
-
 const selectFirstRequestLinkSystem = () => {
   cy.get('.easi-multiselect input[id$="-input"]')
     .first()
@@ -291,6 +228,7 @@ describe('TRB request permissions', () => {
       }
     });
 
+    cy.getLatestMinioUploadKey().as('latestMinioUploadKey');
     cy.visit(requestUrls.completed.requesterDocumentUploadHref);
     cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
       force: true
@@ -308,9 +246,8 @@ describe('TRB request permissions', () => {
     cy.contains('td', 'test.pdf').should('be.visible');
     cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
-    markTrbDocumentAsClean({
-      requestId: requestUrls.completed.id,
-      fileName: 'test.pdf'
+    cy.get('@latestMinioUploadKey').then(previousKey => {
+      cy.markNewMinioUploadAsClean({ previousKey });
     });
 
     cy.reload();

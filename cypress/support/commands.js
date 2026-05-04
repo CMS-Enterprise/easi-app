@@ -33,6 +33,65 @@ Cypress.Commands.add('getByTestId', (testId, options = {}) =>
   cy.get(`[data-testid="${testId}"]`, options)
 );
 
+const listMinioUploads = () =>
+  cy
+    .exec('/mc --no-color --json ls -r local/easi-app-file-uploads')
+    .then(({ stdout }) => {
+      const trimmed = stdout.trim();
+
+      if (!trimmed) {
+        return [];
+      }
+
+      return trimmed
+        .split('\n')
+        .filter(Boolean)
+        .map(line => JSON.parse(line))
+        .filter(item => item.type === 'file');
+    });
+
+Cypress.Commands.add('getLatestMinioUploadKey', () =>
+  listMinioUploads().then(files => {
+    const latestFile = [...files].sort(
+      (a, b) =>
+        new Date(b.lastModified).valueOf() - new Date(a.lastModified).valueOf()
+    )[0];
+
+    return latestFile?.key || null;
+  })
+);
+
+Cypress.Commands.add(
+  'markNewMinioUploadAsClean',
+  ({ previousKey = null, attempt = 0 } = {}) =>
+    listMinioUploads().then(files => {
+      const latestFile = [...files].sort(
+        (a, b) =>
+          new Date(b.lastModified).valueOf() -
+          new Date(a.lastModified).valueOf()
+      )[0];
+
+      if (!latestFile || (previousKey && latestFile.key === previousKey)) {
+        if (attempt >= 10) {
+          throw new Error(
+            `A new MinIO upload was not available after ${attempt + 1} attempts`
+          );
+        }
+
+        return cy.wait(500).then(() =>
+          cy.markNewMinioUploadAsClean({
+            previousKey,
+            attempt: attempt + 1
+          })
+        );
+      }
+
+      return cy.exec(
+        `scripts/tag_minio_file /easi-app-file-uploads/${latestFile.key} CLEAN`
+      );
+    })
+);
+
 /**
  * Returns a date string in MM/dd/yyyy format
  *

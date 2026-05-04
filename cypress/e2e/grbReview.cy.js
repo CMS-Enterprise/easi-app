@@ -1,61 +1,3 @@
-const getSystemIntakeGrbPresentationLinksQuery = `
-  query GetSystemIntakeGRBReview($id: UUID!) {
-    systemIntake(id: $id) {
-      id
-      grbPresentationLinks {
-        presentationDeckFileURL
-        transcriptFileURL
-      }
-    }
-  }
-`;
-
-const getUploadedPresentationFileUrl = ({
-  systemIntakeId,
-  field,
-  attempt = 0
-}) =>
-  cy
-    .request('POST', '/api/graph/query', {
-      operationName: 'GetSystemIntakeGRBReview',
-      query: getSystemIntakeGrbPresentationLinksQuery,
-      variables: { id: systemIntakeId }
-    })
-    .then(({ body }) => {
-      expect(body.errors, 'presentation links query errors').to.equal(
-        undefined
-      );
-
-      const url = body.data?.systemIntake?.grbPresentationLinks?.[field];
-
-      if (url) {
-        return url;
-      }
-
-      if (attempt >= 10) {
-        throw new Error(
-          `${field} was not available after ${attempt + 1} attempts`
-        );
-      }
-
-      return cy.wait(500).then(() =>
-        getUploadedPresentationFileUrl({
-          systemIntakeId,
-          field,
-          attempt: attempt + 1
-        })
-      );
-    });
-
-const markUploadedPresentationFileAsClean = ({ systemIntakeId, field }) =>
-  getUploadedPresentationFileUrl({ systemIntakeId, field }).then(url => {
-    const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)?.[1];
-
-    expect(filepath, 'uploaded presentation file path').to.be.a('string');
-
-    cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
-  });
-
 describe('GRB review', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
@@ -436,6 +378,7 @@ describe('GRB review', () => {
     cy.get('#transcriptLink').type('https://example.com/transcript');
 
     // Upload presentation deck
+    cy.getLatestMinioUploadKey().as('latestMinioUploadKey');
     cy.get('input[name=presentationDeckFileData]').selectFile(
       'cypress/fixtures/test.pdf',
       { force: true }
@@ -443,9 +386,9 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    markUploadedPresentationFileAsClean({
-      systemIntakeId: asyncReviewIntakeId,
-      field: 'presentationDeckFileURL'
+    cy.wait('@updatePresentation').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
     });
     cy.location('pathname', { timeout: 10000 }).should(
       'eq',
@@ -455,6 +398,9 @@ describe('GRB review', () => {
     cy.getByTestId('presentation-deck-virus-scanning').contains(
       'Virus scanning in progress'
     );
+    cy.get('@latestMinioUploadKey').then(previousKey => {
+      cy.markNewMinioUploadAsClean({ previousKey });
+    });
 
     cy.reload();
 
@@ -475,6 +421,7 @@ describe('GRB review', () => {
     cy.contains('button', 'Upload document').click();
 
     // Upload transcript file
+    cy.getLatestMinioUploadKey().as('latestMinioUploadKey');
     cy.get('input[name=transcriptFileData]').selectFile(
       'cypress/fixtures/test.pdf'
     );
@@ -487,14 +434,20 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    markUploadedPresentationFileAsClean({
-      systemIntakeId: asyncReviewIntakeId,
-      field: 'transcriptFileURL'
+    cy.wait('@updatePresentation').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
     });
     cy.location('pathname', { timeout: 10000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
+    cy.getByTestId('presentation-deck-virus-scanning').contains(
+      'Virus scanning in progress'
+    );
+    cy.get('@latestMinioUploadKey').then(previousKey => {
+      cy.markNewMinioUploadAsClean({ previousKey });
+    });
 
     cy.reload();
 
@@ -507,9 +460,10 @@ describe('GRB review', () => {
 
     // Modal remove button
     cy.contains('button', 'Remove presentation links').click();
-    cy.wait('@deletePresentationLinks')
-      .its('response.statusCode')
-      .should('eq', 200);
+    cy.wait('@deletePresentationLinks').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
 
     // Returns to empty state with no links
     cy.contains('a', 'Add asynchronous presentation links').should(

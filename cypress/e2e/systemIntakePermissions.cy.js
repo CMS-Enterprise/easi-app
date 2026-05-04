@@ -196,15 +196,24 @@ describe('System intake permissions', () => {
         req.alias = 'getSystemIntakeSystem';
       }
 
-      if (req.body.operationName === 'AddSystemLink') {
+      if (
+        req.body.operationName === 'AddSystemLink' ||
+        req.body.operationName === 'addSystemLink'
+      ) {
         req.alias = 'addSystemLink';
       }
 
-      if (req.body.operationName === 'UpdateSystemLink') {
+      if (
+        req.body.operationName === 'UpdateSystemLink' ||
+        req.body.operationName === 'updateSystemLink'
+      ) {
         req.alias = 'updateSystemLink';
       }
 
-      if (req.body.operationName === 'DeleteSystemLink') {
+      if (
+        req.body.operationName === 'DeleteSystemLink' ||
+        req.body.operationName === 'deleteSystemLink'
+      ) {
         req.alias = 'deleteSystemLink';
       }
 
@@ -223,7 +232,10 @@ describe('System intake permissions', () => {
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
-    cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
+    cy.wait('@addSystemLink').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
     cy.contains('You linked').should('be.visible');
     cy.get('@linkedSystem').then(({ name }) => {
       cy.contains(name).should('be.visible');
@@ -240,7 +252,10 @@ describe('System intake permissions', () => {
     cy.get('#partialSupport').check({ force: true });
     cy.contains('button', 'Save changes').click();
 
-    cy.wait('@updateSystemLink').its('response.statusCode').should('eq', 200);
+    cy.wait('@updateSystemLink').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
     cy.contains('You saved changes').should('be.visible');
     cy.get('@linkedSystem').then(({ name }) => {
       cy.contains('tr', name).contains('partially contributes financially', {
@@ -253,7 +268,10 @@ describe('System intake permissions', () => {
     });
     cy.contains('button', 'Remove linked system').click();
 
-    cy.wait('@deleteSystemLink').its('response.statusCode').should('eq', 200);
+    cy.wait('@deleteSystemLink').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
     cy.contains('You have removed a linked system').should('be.visible');
 
     cy.visit(addSystemLinkRoute);
@@ -262,7 +280,10 @@ describe('System intake permissions', () => {
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
-    cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
+    cy.wait('@addSystemLink').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
     cy.visit(linkedSystemsRoute);
     cy.wait('@getSystemIntakeSystems')
       .its('response.statusCode')
@@ -291,11 +312,17 @@ describe('System intake permissions', () => {
         req.alias = 'getCedarSystems';
       }
 
-      if (req.body.operationName === 'AddSystemLink') {
+      if (
+        req.body.operationName === 'AddSystemLink' ||
+        req.body.operationName === 'addSystemLink'
+      ) {
         req.alias = 'addSystemLink';
       }
 
-      if (req.body.operationName === 'DeleteSystemLink') {
+      if (
+        req.body.operationName === 'DeleteSystemLink' ||
+        req.body.operationName === 'deleteSystemLink'
+      ) {
         req.alias = 'deleteSystemLink';
       }
     });
@@ -318,7 +345,10 @@ describe('System intake permissions', () => {
     cy.get('#primarySupport').check({ force: true });
     cy.contains('button', 'Add system').click();
 
-    cy.wait('@addSystemLink').its('response.statusCode').should('eq', 200);
+    cy.wait('@addSystemLink').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
     cy.contains('You linked').should('be.visible');
     cy.get('@linkedSystem').then(({ name }) => {
       cy.contains(name).should('be.visible');
@@ -329,7 +359,10 @@ describe('System intake permissions', () => {
     });
     cy.contains('button', 'Remove linked system').click();
 
-    cy.wait('@deleteSystemLink').its('response.statusCode').should('eq', 200);
+    cy.wait('@deleteSystemLink').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
     cy.contains('You have removed a linked system').should('be.visible');
   });
 
