@@ -190,7 +190,9 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
             <td
               role="cell"
             >
-              <em>
+              <em
+                data-testurl=""
+              >
                 Virus scan in progress...
               </em>
             </td>

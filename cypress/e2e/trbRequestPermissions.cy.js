@@ -223,10 +223,6 @@ describe('TRB request permissions', () => {
     loginAs(owner);
 
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'CreateTRBRequestDocument') {
-        req.alias = 'createTrbRequestDocument';
-      }
-
       if (req.body.operationName === 'DeleteTRBRequestDocument') {
         req.alias = 'deleteTrbRequestDocument';
       }
@@ -240,23 +236,19 @@ describe('TRB request permissions', () => {
     cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
-    cy.wait('@createTrbRequestDocument')
-      .its('response.body.data.createTRBRequestDocument.document.id')
-      .then(documentID => {
-        cy.url().should(
-          'include',
-          requestUrls.completed.requesterDocumentsHref
-        );
-        cy.contains(
-          '.usa-alert__text',
-          'Your document has been uploaded and is being scanned.'
-        ).should('be.visible');
+    cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
+    cy.contains(
+      '.usa-alert__text',
+      'Your document has been uploaded and is being scanned.'
+    ).should('be.visible');
 
-        cy.contains('td', 'test.pdf').should('be.visible');
-        cy.contains('td', 'Virus scan in progress...').should('be.visible');
-
-        return cy
-          .getTrbRequestDocumentUrl(requestUrls.completed.id, documentID)
+    cy.contains('#systemIntakeDocuments tr', 'test.pdf')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('Virus scan in progress...').should('be.visible');
+        cy.get('[data-testurl]')
+          .invoke('attr', 'data-testurl')
+          .should('be.a', 'string')
           .then(url => cy.markMinioUploadAsCleanByUrl(url));
       });
 

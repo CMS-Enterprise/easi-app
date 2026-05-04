@@ -403,17 +403,20 @@ describe('GRB review', () => {
     cy.contains('button', 'Save presentation details')
       .should('not.be.disabled')
       .click();
-    cy.wait('@updatePresentation')
-      .its('response.body.errors')
-      .should('not.exist');
+    cy.wait('@updatePresentation').then(({ response }) => {
+      expect(response?.body?.errors).to.eq(undefined);
+
+      const deckUrl =
+        response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
+          ?.systemIntake?.grbPresentationLinks?.presentationDeckFileURL;
+
+      expect(deckUrl).to.be.a('string');
+      cy.markMinioUploadAsCleanByUrl(deckUrl);
+    });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
-    cy.getByTestId('presentation-deck-virus-scanning')
-      .invoke('attr', 'data-testdeckurl')
-      .should('be.a', 'string')
-      .then(url => cy.markMinioUploadAsCleanByUrl(url));
 
     cy.reload();
 
@@ -448,17 +451,20 @@ describe('GRB review', () => {
     cy.contains('button', 'Save presentation details')
       .should('not.be.disabled')
       .click();
-    cy.wait('@updatePresentation')
-      .its('response.body.errors')
-      .should('not.exist');
+    cy.wait('@updatePresentation').then(({ response }) => {
+      expect(response?.body?.errors).to.eq(undefined);
+
+      const transcriptUrl =
+        response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
+          ?.systemIntake?.grbPresentationLinks?.transcriptFileURL;
+
+      expect(transcriptUrl).to.be.a('string');
+      cy.markMinioUploadAsCleanByUrl(transcriptUrl);
+    });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
-    cy.getByTestId('presentation-deck-virus-scanning')
-      .invoke('attr', 'data-testdeckurl')
-      .should('be.a', 'string')
-      .then(url => cy.markMinioUploadAsCleanByUrl(url));
 
     cy.reload();
 

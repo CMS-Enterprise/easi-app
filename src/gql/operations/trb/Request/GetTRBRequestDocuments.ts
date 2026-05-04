@@ -7,6 +7,7 @@ export default gql(/* GraphQL */ `
       documents {
         id
         fileName
+        url
         documentType {
           commonType
           otherTypeDescription

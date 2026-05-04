@@ -43,66 +43,8 @@ const getMinioUploadPathFromUrl = url => {
   return match[1];
 };
 
-const GET_TRB_REQUEST_DOCUMENT_URLS_QUERY = `
-  query GetTRBRequestDocumentUrls($id: UUID!) {
-    trbRequest(id: $id) {
-      id
-      documents {
-        id
-        url
-        fileName
-      }
-    }
-  }
-`;
-
-const getTrbRequestDocuments = requestID =>
-  cy
-    .request('POST', '/api/graph/query', {
-      operationName: 'GetTRBRequestDocumentUrls',
-      query: GET_TRB_REQUEST_DOCUMENT_URLS_QUERY,
-      variables: { id: requestID }
-    })
-    .then(({ body }) => {
-      if (body?.errors?.length) {
-        throw new Error(body.errors[0].message);
-      }
-
-      return body?.data?.trbRequest?.documents || [];
-    });
-
 Cypress.Commands.add('markMinioUploadAsCleanByUrl', url =>
   cy.exec(`scripts/tag_minio_file ${getMinioUploadPathFromUrl(url)} CLEAN`)
-);
-
-Cypress.Commands.add('getTrbRequestDocuments', requestID =>
-  getTrbRequestDocuments(requestID)
-);
-
-Cypress.Commands.add(
-  'getTrbRequestDocumentUrl',
-  (requestID, documentID, attempt = 0) =>
-    getTrbRequestDocuments(requestID).then(documents => {
-      const document = documents.find(doc => doc.id === documentID);
-
-      if (document?.url) {
-        return document.url;
-      }
-
-      if (attempt >= 10) {
-        throw new Error(
-          `The TRB request document URL for ${documentID} was not available after ${
-            attempt + 1
-          } attempts`
-        );
-      }
-
-      return cy
-        .wait(500)
-        .then(() =>
-          cy.getTrbRequestDocumentUrl(requestID, documentID, attempt + 1)
-        );
-    })
 );
 
 /**
