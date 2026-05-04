@@ -62,17 +62,18 @@ const selectAvailableLinkedSystem = () =>
 
       expect(option, 'available cedar system option').not.to.equal(undefined);
 
-      const label = option.text.trim();
-      const name = label.replace(/\s+\([^)]+\)$/, '');
+      const { value } = option;
+      const name = option.text.trim().replace(/\s+\([^)]+\)$/, '');
 
       return cy
         .getByTestId('cedarSystemID')
-        .select(label)
-        .then(() => ({ label, name }));
+        .select(value)
+        .then(() => ({ value, name }));
     });
 
 const selectFirstRequestLinkSystem = () => {
-  cy.get('.easi-multiselect input[id$="-input"]').first().click({
+  cy.get('.easi-multiselect input[id$="-input"]').first().as('systemLinkInput');
+  cy.get('@systemLinkInput').click({
     force: true
   });
   cy.get('.usa-combo-box__list-option:visible')
@@ -83,6 +84,8 @@ const selectFirstRequestLinkSystem = () => {
     'have.length.at.least',
     1
   );
+  cy.get('@systemLinkInput').type('{esc}', { force: true });
+  cy.get('.usa-combo-box__list-option:visible').should('not.exist');
 };
 
 describe('System intake permissions', () => {

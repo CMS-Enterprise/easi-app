@@ -1,16 +1,56 @@
-const markLatestPresentationUploadAsClean = () =>
-  cy.wait('@updatePresentation').then(({ response }) => {
-    expect(response?.body?.errors, 'presentation update errors').to.equal(
-      undefined
-    );
+const getSystemIntakeGrbPresentationLinksQuery = `
+  query GetSystemIntakeGRBReview($id: UUID!) {
+    systemIntake(id: $id) {
+      id
+      grbPresentationLinks {
+        presentationDeckFileURL
+        transcriptFileURL
+      }
+    }
+  }
+`;
 
-    const links =
-      response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
-        ?.systemIntake?.grbPresentationLinks;
-    const url = links?.presentationDeckFileURL || links?.transcriptFileURL;
-    const filepath = url?.match(/(\/easi-app-file-uploads\/[^?]*)/)?.[1];
+const getUploadedPresentationFileUrl = ({
+  systemIntakeId,
+  field,
+  attempt = 0
+}) =>
+  cy
+    .request('POST', '/api/graph/query', {
+      operationName: 'GetSystemIntakeGRBReview',
+      query: getSystemIntakeGrbPresentationLinksQuery,
+      variables: { id: systemIntakeId }
+    })
+    .then(({ body }) => {
+      expect(body.errors, 'presentation links query errors').to.equal(
+        undefined
+      );
 
-    expect(url, 'uploaded presentation file URL').to.be.a('string');
+      const url = body.data?.systemIntake?.grbPresentationLinks?.[field];
+
+      if (url) {
+        return url;
+      }
+
+      if (attempt >= 10) {
+        throw new Error(
+          `${field} was not available after ${attempt + 1} attempts`
+        );
+      }
+
+      return cy.wait(500).then(() =>
+        getUploadedPresentationFileUrl({
+          systemIntakeId,
+          field,
+          attempt: attempt + 1
+        })
+      );
+    });
+
+const markUploadedPresentationFileAsClean = ({ systemIntakeId, field }) =>
+  getUploadedPresentationFileUrl({ systemIntakeId, field }).then(url => {
+    const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)?.[1];
+
     expect(filepath, 'uploaded presentation file path').to.be.a('string');
 
     cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
@@ -357,6 +397,8 @@ describe('GRB review', () => {
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('can upload a presentation deck', () => {
+    const asyncReviewIntakeId = '5af245bc-fc54-4677-bab1-1b3e798bb43c';
+
     cy.intercept('POST', '/api/graph/query', req => {
       if (
         req.body.operationName ===
@@ -370,7 +412,7 @@ describe('GRB review', () => {
       }
     });
 
-    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+    cy.visit(`/it-governance/${asyncReviewIntakeId}/grb-review`);
 
     cy.contains('a', 'Add asynchronous presentation links').click();
 
@@ -401,10 +443,13 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    markLatestPresentationUploadAsClean();
+    markUploadedPresentationFileAsClean({
+      systemIntakeId: asyncReviewIntakeId,
+      field: 'presentationDeckFileURL'
+    });
     cy.location('pathname', { timeout: 10000 }).should(
       'eq',
-      '/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review'
+      `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
 
     cy.getByTestId('presentation-deck-virus-scanning').contains(
@@ -442,10 +487,13 @@ describe('GRB review', () => {
 
     // Submit form
     cy.contains('button', 'Save presentation details').click();
-    markLatestPresentationUploadAsClean();
+    markUploadedPresentationFileAsClean({
+      systemIntakeId: asyncReviewIntakeId,
+      field: 'transcriptFileURL'
+    });
     cy.location('pathname', { timeout: 10000 }).should(
       'eq',
-      '/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review'
+      `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
 
     cy.reload();

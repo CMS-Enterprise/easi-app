@@ -49,12 +49,13 @@ const getTrbRequestDocumentUrlsQuery = `
         id
         url
         fileName
+        uploadedAt
       }
     }
   }
 `;
 
-const getUploadedTrbDocumentUrl = ({ requestId, documentId, attempt = 0 }) =>
+const getUploadedTrbDocument = ({ requestId, fileName, attempt = 0 }) =>
   cy
     .request('POST', '/api/graph/query', {
       operationName: 'GetTRBRequestDocumentUrls',
@@ -64,34 +65,39 @@ const getUploadedTrbDocumentUrl = ({ requestId, documentId, attempt = 0 }) =>
     .then(({ body }) => {
       expect(body.errors, 'document url query errors').to.equal(undefined);
 
-      const document = body.data?.trbRequest?.documents?.find(
-        item => item.id === documentId
-      );
+      const document = [...(body.data?.trbRequest?.documents || [])]
+        .filter(item => item.fileName === fileName)
+        .sort(
+          (a, b) =>
+            new Date(b.uploadedAt).valueOf() - new Date(a.uploadedAt).valueOf()
+        )[0];
 
       if (document?.url) {
-        return document.url;
+        return document;
       }
 
       if (attempt >= 10) {
         throw new Error(
-          `document URL for "${documentId}" was not available after ${
+          `document URL for "${fileName}" was not available after ${
             attempt + 1
           } attempts`
         );
       }
 
       return cy.wait(500).then(() =>
-        getUploadedTrbDocumentUrl({
+        getUploadedTrbDocument({
           requestId,
-          documentId,
+          fileName,
           attempt: attempt + 1
         })
       );
     });
 
-const markTrbDocumentAsClean = ({ requestId, documentId }) =>
-  getUploadedTrbDocumentUrl({ requestId, documentId }).then(url => {
-    const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)?.[1];
+const markTrbDocumentAsClean = ({ requestId, fileName }) =>
+  getUploadedTrbDocument({ requestId, fileName }).then(document => {
+    const filepath = document.url.match(
+      /(\/easi-app-file-uploads\/[^?]*)/
+    )?.[1];
 
     expect(filepath, 'document file path').to.be.a('string');
 
@@ -99,7 +105,10 @@ const markTrbDocumentAsClean = ({ requestId, documentId }) =>
   });
 
 const selectFirstRequestLinkSystem = () => {
-  cy.get('.easi-multiselect input[id$="-input"]').first().click({
+  cy.get('.easi-multiselect input[id$="-input"]')
+    .first()
+    .as('requestLinkInput');
+  cy.get('@requestLinkInput').click({
     force: true
   });
   cy.get('.usa-combo-box__list-option:visible')
@@ -110,6 +119,8 @@ const selectFirstRequestLinkSystem = () => {
     'have.length.at.least',
     1
   );
+  cy.get('@requestLinkInput').type('{esc}', { force: true });
+  cy.get('.usa-combo-box__list-option:visible').should('not.exist');
 };
 
 const getRequestUrls = requestName => {
@@ -275,10 +286,6 @@ describe('TRB request permissions', () => {
     loginAs(owner);
 
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'CreateTRBRequestDocument') {
-        req.alias = 'createTrbRequestDocument';
-      }
-
       if (req.body.operationName === 'DeleteTRBRequestDocument') {
         req.alias = 'deleteTrbRequestDocument';
       }
@@ -301,14 +308,10 @@ describe('TRB request permissions', () => {
     cy.contains('td', 'test.pdf').should('be.visible');
     cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
-    cy.wait('@createTrbRequestDocument')
-      .its('response.body.data.createTRBRequestDocument.document.id')
-      .then(documentId => {
-        markTrbDocumentAsClean({
-          requestId: requestUrls.completed.id,
-          documentId
-        });
-      });
+    markTrbDocumentAsClean({
+      requestId: requestUrls.completed.id,
+      fileName: 'test.pdf'
+    });
 
     cy.reload();
 
