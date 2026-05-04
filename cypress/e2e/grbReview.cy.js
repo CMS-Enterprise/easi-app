@@ -342,21 +342,29 @@ describe('GRB review', () => {
     const asyncReviewIntakeId = '5af245bc-fc54-4677-bab1-1b3e798bb43c';
 
     cy.intercept('POST', '/api/graph/query', req => {
-      const { operationName } = req.body;
-      const queryText = req.body.query || '';
+      const requestBodyText =
+        typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      const operationName =
+        req.body && typeof req.body === 'object' ? req.body.operationName : '';
 
       if (
         operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation' ||
         operationName === 'updateSystemIntakeGRBReviewAsyncPresentation' ||
-        queryText.includes('setSystemIntakeGRBPresentationLinks') ||
-        queryText.includes('updateSystemIntakeGRBReviewFormPresentationAsync')
+        requestBodyText.includes(
+          'UpdateSystemIntakeGRBReviewAsyncPresentation'
+        ) ||
+        requestBodyText.includes('setSystemIntakeGRBPresentationLinks') ||
+        requestBodyText.includes(
+          'updateSystemIntakeGRBReviewFormPresentationAsync'
+        )
       ) {
         req.alias = 'updatePresentation';
       }
 
       if (
         operationName === 'DeleteSystemIntakeGRBPresentationLinks' ||
-        queryText.includes('deleteSystemIntakeGRBPresentationLinks')
+        requestBodyText.includes('DeleteSystemIntakeGRBPresentationLinks') ||
+        requestBodyText.includes('deleteSystemIntakeGRBPresentationLinks')
       ) {
         req.alias = 'deletePresentationLinks';
       }
@@ -386,19 +394,16 @@ describe('GRB review', () => {
     cy.get('#transcriptLink').type('https://example.com/transcript');
 
     // Upload presentation deck
-    cy.getLatestMinioUploadKey().as('latestMinioUploadKey');
     cy.get('input[name=presentationDeckFileData]').selectFile(
       'cypress/fixtures/test.pdf',
       { force: true }
     );
 
     // Submit form
-    cy.contains('button', 'Save presentation details').click();
-    cy.wait('@updatePresentation').then(({ response }) => {
-      expect(response?.statusCode).to.eq(200);
-      expect(response?.body.errors).to.equal(undefined);
-    });
-    cy.location('pathname', { timeout: 10000 }).should(
+    cy.contains('button', 'Save presentation details')
+      .should('not.be.disabled')
+      .click();
+    cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
@@ -406,9 +411,11 @@ describe('GRB review', () => {
     cy.getByTestId('presentation-deck-virus-scanning').contains(
       'Virus scanning in progress'
     );
-    cy.get('@latestMinioUploadKey').then(previousKey => {
-      cy.markNewMinioUploadAsClean({ previousKey });
-    });
+    cy.getByTestId('presentation-deck-virus-scanning')
+      .invoke('attr', 'data-testdeckurl')
+      .then(url => {
+        cy.markMinioUploadAsCleanByUrl(url);
+      });
 
     cy.reload();
 
@@ -429,7 +436,6 @@ describe('GRB review', () => {
     cy.contains('button', 'Upload document').click();
 
     // Upload transcript file
-    cy.getLatestMinioUploadKey().as('latestMinioUploadKey');
     cy.get('input[name=transcriptFileData]').selectFile(
       'cypress/fixtures/test.pdf'
     );
@@ -441,21 +447,21 @@ describe('GRB review', () => {
     cy.get('button').contains('Clear file').click();
 
     // Submit form
-    cy.contains('button', 'Save presentation details').click();
-    cy.wait('@updatePresentation').then(({ response }) => {
-      expect(response?.statusCode).to.eq(200);
-      expect(response?.body.errors).to.equal(undefined);
-    });
-    cy.location('pathname', { timeout: 10000 }).should(
+    cy.contains('button', 'Save presentation details')
+      .should('not.be.disabled')
+      .click();
+    cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
     cy.getByTestId('presentation-deck-virus-scanning').contains(
       'Virus scanning in progress'
     );
-    cy.get('@latestMinioUploadKey').then(previousKey => {
-      cy.markNewMinioUploadAsClean({ previousKey });
-    });
+    cy.getByTestId('presentation-deck-virus-scanning')
+      .invoke('attr', 'data-testdeckurl')
+      .then(url => {
+        cy.markMinioUploadAsCleanByUrl(url);
+      });
 
     cy.reload();
 

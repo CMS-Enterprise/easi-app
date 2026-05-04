@@ -228,7 +228,6 @@ describe('TRB request permissions', () => {
       }
     });
 
-    cy.getLatestMinioUploadKey().as('latestMinioUploadKey');
     cy.visit(requestUrls.completed.requesterDocumentUploadHref);
     cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
       force: true
@@ -246,9 +245,14 @@ describe('TRB request permissions', () => {
     cy.contains('td', 'test.pdf').should('be.visible');
     cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
-    cy.get('@latestMinioUploadKey').then(previousKey => {
-      cy.markNewMinioUploadAsClean({ previousKey });
-    });
+    cy.contains(
+      '#systemIntakeDocuments [data-testurl]',
+      'Virus scan in progress...'
+    )
+      .invoke('attr', 'data-testurl')
+      .then(url => {
+        cy.markMinioUploadAsCleanByUrl(url);
+      });
 
     cy.reload();
 

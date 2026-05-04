@@ -33,6 +33,16 @@ Cypress.Commands.add('getByTestId', (testId, options = {}) =>
   cy.get(`[data-testid="${testId}"]`, options)
 );
 
+const getMinioUploadPathFromUrl = url => {
+  const match = url?.match(/(\/easi-app-file-uploads\/[^?]*)/);
+
+  if (!match) {
+    throw new Error(`Unable to determine MinIO upload path from URL: ${url}`);
+  }
+
+  return match[1];
+};
+
 const listMinioUploads = () =>
   cy
     .exec('/mc --no-color --json ls -r local/easi-app-file-uploads')
@@ -59,6 +69,10 @@ Cypress.Commands.add('getLatestMinioUploadKey', () =>
 
     return latestFile?.key || null;
   })
+);
+
+Cypress.Commands.add('markMinioUploadAsCleanByUrl', url =>
+  cy.exec(`scripts/tag_minio_file ${getMinioUploadPathFromUrl(url)} CLEAN`)
 );
 
 Cypress.Commands.add(
