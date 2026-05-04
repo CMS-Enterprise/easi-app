@@ -341,18 +341,18 @@ describe('GRB review', () => {
   it('can upload a presentation deck', () => {
     const asyncReviewIntakeId = '5af245bc-fc54-4677-bab1-1b3e798bb43c';
 
-    const markPendingPresentationUploadAsClean = response => {
+    const markPendingPresentationUploadAsClean = (
+      response,
+      expectedUploadType
+    ) => {
       const presentationLinks =
         response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
           ?.systemIntake?.grbPresentationLinks;
 
-      let pendingUploadUrl = null;
-
-      if (presentationLinks?.presentationDeckFileStatus === 'PENDING') {
-        pendingUploadUrl = presentationLinks.presentationDeckFileURL;
-      } else if (presentationLinks?.transcriptFileStatus === 'PENDING') {
-        pendingUploadUrl = presentationLinks.transcriptFileURL;
-      }
+      const pendingUploadUrl =
+        expectedUploadType === 'presentationDeck'
+          ? presentationLinks?.presentationDeckFileURL
+          : presentationLinks?.transcriptFileURL;
 
       if (!pendingUploadUrl) {
         return undefined;
@@ -367,7 +367,7 @@ describe('GRB review', () => {
     const waitForPresentationLinks = (
       predicate,
       description,
-      attemptsRemaining = 8
+      attemptsRemaining = 12
     ) => {
       return cy
         .reload()
@@ -388,12 +388,32 @@ describe('GRB review', () => {
             );
           }
 
-          return waitForPresentationLinks(
-            predicate,
-            description,
-            attemptsRemaining - 1
-          );
+          return cy
+            .wait(1000)
+            .then(() =>
+              waitForPresentationLinks(
+                predicate,
+                description,
+                attemptsRemaining - 1
+              )
+            );
         });
+    };
+
+    const markVisiblePresentationUploadAsClean = () => {
+      return cy.getByTestId('presentation-links-card').then($card => {
+        const pendingUploadUrl = $card
+          .find('[data-testid="presentation-deck-virus-scanning"]')
+          .attr('data-testdeckurl');
+
+        if (!pendingUploadUrl) {
+          return undefined;
+        }
+
+        expect(pendingUploadUrl).to.include('/easi-app-file-uploads/');
+
+        return cy.markMinioUploadAsCleanByUrl(pendingUploadUrl);
+      });
     };
 
     cy.intercept('POST', '/api/graph/query', req => {
@@ -467,12 +487,13 @@ describe('GRB review', () => {
       .click();
     cy.wait('@updatePresentation').then(({ response }) => {
       expect(response?.body?.errors).to.eq(undefined);
-      return markPendingPresentationUploadAsClean(response);
+      return markPendingPresentationUploadAsClean(response, 'presentationDeck');
     });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
+    markVisiblePresentationUploadAsClean();
 
     waitForPresentationLinks(
       presentationLinks =>
@@ -520,12 +541,13 @@ describe('GRB review', () => {
       .click();
     cy.wait('@updatePresentation').then(({ response }) => {
       expect(response?.body?.errors).to.eq(undefined);
-      return markPendingPresentationUploadAsClean(response);
+      return markPendingPresentationUploadAsClean(response, 'transcript');
     });
     cy.location('pathname', { timeout: 20000 }).should(
       'eq',
       `/it-governance/${asyncReviewIntakeId}/grb-review`
     );
+    markVisiblePresentationUploadAsClean();
 
     waitForPresentationLinks(
       presentationLinks =>

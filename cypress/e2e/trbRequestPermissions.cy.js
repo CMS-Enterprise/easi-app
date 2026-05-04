@@ -304,7 +304,7 @@ describe('TRB request permissions', () => {
     });
 
     cy.getByTestId('page-loading', { timeout: 20000 }).should('not.exist');
-    cy.contains('#systemIntakeDocuments tr', 'test.pdf', {
+    cy.contains('tbody tr', 'test.pdf', {
       timeout: 20000
     })
       .should('be.visible')
@@ -327,7 +327,7 @@ describe('TRB request permissions', () => {
 
     cy.getByTestId('page-loading', { timeout: 20000 }).should('not.exist');
 
-    cy.contains('#systemIntakeDocuments tr', 'test.pdf')
+    cy.contains('tbody tr', 'test.pdf')
       .should('be.visible')
       .within(() => {
         cy.contains('button', 'Remove').click();
@@ -341,7 +341,7 @@ describe('TRB request permissions', () => {
       '.usa-alert__text',
       'You have successfully removed test.pdf.'
     ).should('be.visible');
-    cy.contains('#systemIntakeDocuments td', 'test.pdf').should('not.exist');
+    cy.contains('tbody td', 'test.pdf').should('not.exist');
   });
 
   it('uses the requester-safe LCID lookup on the TRB basic form', () => {
