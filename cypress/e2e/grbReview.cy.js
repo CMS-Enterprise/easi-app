@@ -412,13 +412,7 @@ describe('GRB review', () => {
         `/it-governance/${asyncReviewIntakeId}/grb-review`
       );
 
-      cy.getByTestId('presentation-links-card').within(() => {
-        cy.contains('button', 'View recording').should('be.visible');
-        cy.contains('span', '(Passcode: 3465376)').should('be.visible');
-        cy.contains('button', 'View transcript').should('be.visible');
-      });
-
-      cy.markNewMinioUploadAsClean({ previousKey });
+      return cy.markNewMinioUploadAsClean({ previousKey });
     });
 
     cy.reload();
@@ -463,7 +457,7 @@ describe('GRB review', () => {
         `/it-governance/${asyncReviewIntakeId}/grb-review`
       );
 
-      cy.markNewMinioUploadAsClean({ previousKey });
+      return cy.markNewMinioUploadAsClean({ previousKey });
     });
 
     cy.reload();

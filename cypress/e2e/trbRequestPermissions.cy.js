@@ -223,19 +223,30 @@ describe('TRB request permissions', () => {
     loginAs(owner);
 
     cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'CreateTRBRequestDocument') {
+        req.alias = 'createTrbRequestDocument';
+      }
+
       if (req.body.operationName === 'DeleteTRBRequestDocument') {
         req.alias = 'deleteTrbRequestDocument';
       }
     });
 
-    cy.getLatestMinioUploadKey().then(previousKey => {
-      cy.visit(requestUrls.completed.requesterDocumentUploadHref);
-      cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
-        force: true
-      });
-      cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
-      cy.contains('button', 'Upload document').should('not.be.disabled');
-      cy.contains('button', 'Upload document').click();
+    cy.visit(requestUrls.completed.requesterDocumentUploadHref);
+    cy.get('input[name=fileData]').selectFile('cypress/fixtures/test.pdf', {
+      force: true
+    });
+    cy.get('#documentType-ARCHITECTURE_DIAGRAM').check({ force: true });
+    cy.contains('button', 'Upload document').should('not.be.disabled');
+    cy.contains('button', 'Upload document').click();
+
+    cy.wait('@createTrbRequestDocument').then(({ response }) => {
+      expect(response?.body?.errors, 'mutation errors').to.equal(undefined);
+
+      const documentId =
+        response?.body?.data?.createTRBRequestDocument?.document?.id;
+
+      expect(documentId, 'uploaded TRB request document id').to.be.a('string');
 
       cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
       cy.contains(
@@ -246,7 +257,9 @@ describe('TRB request permissions', () => {
       cy.contains('td', 'test.pdf').should('be.visible');
       cy.contains('td', 'Virus scan in progress...').should('be.visible');
 
-      cy.markNewMinioUploadAsClean({ previousKey });
+      return cy
+        .getTrbRequestDocumentUrl(requestUrls.completed.id, documentId)
+        .then(url => cy.markMinioUploadAsCleanByUrl(url));
     });
 
     cy.reload();
