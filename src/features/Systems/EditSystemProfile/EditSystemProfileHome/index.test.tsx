@@ -25,7 +25,11 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
-        <EditSystemProfileHome systemId="000-100-0" systemName="Test System" />
+        <EditSystemProfileHome
+          canManageTeam
+          systemId="000-100-0"
+          systemName="Test System"
+        />
       </MemoryRouter>
     );
 
@@ -38,6 +42,7 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
         <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
           <Route path="/systems/:systemId/edit">
             <EditSystemProfileHome
+              canManageTeam
               systemId="000-100-0"
               systemName="Test System"
             />
@@ -82,6 +87,7 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
         <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
           <Route path="/systems/:systemId/edit">
             <EditSystemProfileHome
+              canManageTeam
               systemId="000-100-0"
               systemName="Test System"
             />
@@ -117,6 +123,22 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
       }
     });
   });
+
+  it('hides the TEAM card when the viewer cannot manage team members', () => {
+    render(
+      <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+        <Route path="/systems/:systemId/edit">
+          <EditSystemProfileHome
+            canManageTeam={false}
+            systemId="000-100-0"
+            systemName="Test System"
+          />
+        </Route>
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByTestId('section-card-TEAM')).not.toBeInTheDocument();
+  });
 });
 
 // Snapshot for global feature flag override
@@ -130,7 +152,11 @@ describe('EditSystemProfileHome (editableSystemProfile flag enabled)', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
-        <EditSystemProfileHome systemId="000-100-0" systemName="Test System" />
+        <EditSystemProfileHome
+          canManageTeam
+          systemId="000-100-0"
+          systemName="Test System"
+        />
       </MemoryRouter>
     );
 

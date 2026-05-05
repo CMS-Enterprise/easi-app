@@ -40,85 +40,92 @@ const store = easiMockStore();
 const renderEditSystemProfile = ({
   initialEntry,
   allowGenericEdit = true,
-  viewerCanAccessProfile = true
+  viewerCanAccessProfile = true,
+  isMySystem = true
 }: {
   initialEntry: string;
   allowGenericEdit?: boolean;
   viewerCanAccessProfile?: boolean;
+  isMySystem?: boolean;
 }) => {
+  const isEditHomeRoute = initialEntry === `/systems/${cedarSystemId}/edit`;
   const isWorkspaceTeamRoute = initialEntry.startsWith(
     `/systems/${cedarSystemId}/edit/team`
   );
 
-  const mocks: MockedQuery[] = isWorkspaceTeamRoute
-    ? [
-        {
-          request: {
-            query: GetSystemWorkspaceDocument,
-            variables: {
-              cedarSystemId
-            }
-          },
-          result: {
-            data: {
-              __typename: 'Query',
-              cedarSystemWorkspace: {
-                __typename: 'CedarSystemWorkspace',
-                id: cedarSystemId,
-                isMySystem: true,
+  const mocks: MockedQuery[] = [];
+
+  if (!isWorkspaceTeamRoute) {
+    mocks.push(
+      allowGenericEdit
+        ? {
+            request: {
+              query: GetCedarSystemDocument,
+              variables: {
+                id: cedarSystemId
+              }
+            },
+            result: {
+              data: {
+                __typename: 'Query',
                 cedarSystem: {
-                  __typename: 'CedarSystemWorkspaceSystem',
+                  __typename: 'CedarSystem',
                   id: cedarSystemId,
                   name: cedarSystemName,
-                  isBookmarked: false,
-                  viewerCanAccessProfile,
-                  linkedTrbRequests: [],
-                  linkedSystemIntakes: []
-                },
-                roles: []
+                  description: null,
+                  acronym: null,
+                  status: null,
+                  businessOwnerOrg: null,
+                  businessOwnerOrgComp: null,
+                  systemMaintainerOrg: null,
+                  systemMaintainerOrgComp: null,
+                  isBookmarked: false
+                }
               }
             }
           }
-        }
-      ]
-    : [
-        allowGenericEdit
-          ? {
-              request: {
-                query: GetCedarSystemDocument,
-                variables: {
-                  id: cedarSystemId
-                }
-              },
-              result: {
-                data: {
-                  __typename: 'Query',
-                  cedarSystem: {
-                    __typename: 'CedarSystem',
-                    id: cedarSystemId,
-                    name: cedarSystemName,
-                    description: null,
-                    acronym: null,
-                    status: null,
-                    businessOwnerOrg: null,
-                    businessOwnerOrgComp: null,
-                    systemMaintainerOrg: null,
-                    systemMaintainerOrgComp: null,
-                    isBookmarked: false
-                  }
-                }
+        : {
+            request: {
+              query: GetCedarSystemDocument,
+              variables: {
+                id: cedarSystemId
               }
-            }
-          : {
-              request: {
-                query: GetCedarSystemDocument,
-                variables: {
-                  id: cedarSystemId
-                }
-              },
-              error: new Error('Unauthorized')
-            }
-      ];
+            },
+            error: new Error('Unauthorized')
+          }
+    );
+  }
+
+  if (isWorkspaceTeamRoute || (isEditHomeRoute && allowGenericEdit)) {
+    mocks.push({
+      request: {
+        query: GetSystemWorkspaceDocument,
+        variables: {
+          cedarSystemId
+        }
+      },
+      result: {
+        data: {
+          __typename: 'Query',
+          cedarSystemWorkspace: {
+            __typename: 'CedarSystemWorkspace',
+            id: cedarSystemId,
+            isMySystem,
+            cedarSystem: {
+              __typename: 'CedarSystemWorkspaceSystem',
+              id: cedarSystemId,
+              name: cedarSystemName,
+              isBookmarked: false,
+              viewerCanAccessProfile,
+              linkedTrbRequests: [],
+              linkedSystemIntakes: []
+            },
+            roles: []
+          }
+        }
+      }
+    });
+  }
 
   return render(
     <Provider store={store}>
@@ -142,6 +149,17 @@ describe('EditSystemProfile', () => {
     });
 
     await screen.findByText(`for ${cedarSystemName}`);
+  });
+
+  it('hides the team card for profile-only viewers on the generic edit hub', async () => {
+    renderEditSystemProfile({
+      initialEntry: `/systems/${cedarSystemId}/edit`,
+      isMySystem: false
+    });
+
+    await screen.findByText(`for ${cedarSystemName}`);
+
+    expect(screen.queryByTestId('section-card-TEAM')).not.toBeInTheDocument();
   });
 
   it('blocks workspace-only viewers from the generic edit hub', async () => {

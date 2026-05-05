@@ -38,12 +38,17 @@ const EditSystemProfile = () => {
     systemId: string;
   }>();
   const { pathname } = useLocation();
+  const editHomePathMatch = matchPath(pathname, {
+    path: '/systems/:systemId/edit',
+    exact: true
+  });
 
   const workspaceTeamPathMatch = matchPath(pathname, {
     path: '/systems/:systemId/edit/team/:action(team-member)?',
     exact: true
   });
   const isWorkspaceTeamRoute = !!workspaceTeamPathMatch;
+  const isEditHomeRoute = !!editHomePathMatch;
 
   const {
     data: cedarSystemData,
@@ -64,7 +69,9 @@ const EditSystemProfile = () => {
     variables: {
       cedarSystemId: systemId
     },
-    skip: !isWorkspaceTeamRoute
+    skip:
+      !isWorkspaceTeamRoute &&
+      !(isEditHomeRoute && !!cedarSystemData?.cedarSystem)
   });
 
   if (cedarSystemLoading || cedarSystemWorkspaceLoading) {
@@ -72,6 +79,7 @@ const EditSystemProfile = () => {
   }
 
   const cedarSystemWorkspace = cedarSystemWorkspaceData?.cedarSystemWorkspace;
+  const canManageTeam = cedarSystemWorkspace?.isMySystem === true;
 
   if (isWorkspaceTeamRoute) {
     if (
@@ -99,6 +107,7 @@ const EditSystemProfile = () => {
               <Switch>
                 <Route exact path="/systems/:systemId/edit">
                   <EditSystemProfileHome
+                    canManageTeam={canManageTeam}
                     systemId={systemId}
                     systemName={systemName}
                   />

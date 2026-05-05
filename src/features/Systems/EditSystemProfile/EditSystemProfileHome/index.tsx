@@ -13,6 +13,7 @@ import SystemProfileSectionCard from '../_components/SystemProfileSectionCard';
 import { getSystemProfileSectionMap } from '../util';
 
 type EditSystemProfileHomeProps = {
+  canManageTeam: boolean;
   systemId: string;
   systemName: string;
 };
@@ -23,6 +24,7 @@ type EditSystemProfileHomeProps = {
  * Displays cards with section information and links to view/edit.
  */
 const EditSystemProfileHome = ({
+  canManageTeam,
   systemId,
   systemName
 }: EditSystemProfileHomeProps) => {
@@ -100,9 +102,11 @@ const EditSystemProfileHome = ({
             readOnly={!sectionMap.SUB_SYSTEMS.isEnabled}
           />
 
-          <SystemProfileSectionCard
-            section={SystemProfileLockableSection.TEAM}
-          />
+          {canManageTeam && (
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.TEAM}
+            />
+          )}
 
           <SystemProfileSectionCard
             section="CONTRACTS"
