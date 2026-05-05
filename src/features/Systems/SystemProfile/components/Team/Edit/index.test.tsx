@@ -14,6 +14,23 @@ import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import EditTeam, { requisiteLevelsOfTeamRoles } from '.';
 
 const cedarSystemId = '000-0000-1';
+const useSetRolesForUserOnSystemMutationMock = vi.fn(() => [
+  vi.fn(),
+  { loading: false }
+]);
+
+vi.mock('gql/generated/graphql', async () => {
+  const actual = await vi.importActual<typeof import('gql/generated/graphql')>(
+    'gql/generated/graphql'
+  );
+
+  return {
+    ...actual,
+    useSetRolesForUserOnSystemMutation: (
+      ...args: Parameters<typeof useSetRolesForUserOnSystemMutationMock>
+    ) => useSetRolesForUserOnSystemMutationMock(...args)
+  };
+});
 
 describe('Edit team page', () => {
   it('Renders the edit team page', async () => {
@@ -98,6 +115,7 @@ describe('Workspace team page', () => {
   let user: ReturnType<typeof userEvent.setup>;
   beforeEach(() => {
     user = userEvent.setup();
+    useSetRolesForUserOnSystemMutationMock.mockClear();
   });
 
   it('renders', async () => {
@@ -120,6 +138,18 @@ describe('Workspace team page', () => {
     ).toHaveAttribute(
       'href',
       `/systems/${cedarSystemId}/edit/team/team-member?workspace`
+    );
+  });
+
+  it('refetches the workspace query for the edit hub team route', () => {
+    const team = getUsernamesWithRoles(teamRoles);
+    renderWorkspaceEditTeam(team);
+
+    expect(useSetRolesForUserOnSystemMutationMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        refetchQueries: ['GetSystemWorkspace'],
+        awaitRefetchQueries: true
+      })
     );
   });
 

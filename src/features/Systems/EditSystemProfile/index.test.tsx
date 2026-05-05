@@ -3,9 +3,10 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import {
-  GetSystemWorkspaceDocument,
-  GetSystemWorkspaceQuery,
-  GetSystemWorkspaceQueryVariables
+  GetCedarSystemDocument,
+  GetCedarSystemQuery,
+  GetCedarSystemQueryVariables,
+  GetSystemWorkspaceDocument
 } from 'gql/generated/graphql';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -38,46 +39,90 @@ const store = easiMockStore();
 
 const renderEditSystemProfile = ({
   initialEntry,
+  allowGenericEdit = true,
   viewerCanAccessProfile = true
 }: {
   initialEntry: string;
+  allowGenericEdit?: boolean;
   viewerCanAccessProfile?: boolean;
 }) => {
-  const getSystemWorkspaceQuery: MockedQuery<
-    GetSystemWorkspaceQuery,
-    GetSystemWorkspaceQueryVariables
-  > = {
-    request: {
-      query: GetSystemWorkspaceDocument,
-      variables: {
-        cedarSystemId
-      }
-    },
-    result: {
-      data: {
-        __typename: 'Query',
-        cedarSystemWorkspace: {
-          __typename: 'CedarSystemWorkspace',
-          id: cedarSystemId,
-          isMySystem: true,
-          cedarSystem: {
-            __typename: 'CedarSystemWorkspaceSystem',
-            id: cedarSystemId,
-            name: cedarSystemName,
-            isBookmarked: false,
-            viewerCanAccessProfile,
-            linkedTrbRequests: [],
-            linkedSystemIntakes: []
+  const isWorkspaceTeamRoute = initialEntry.startsWith(
+    `/systems/${cedarSystemId}/edit/team`
+  );
+
+  const mocks: MockedQuery[] = isWorkspaceTeamRoute
+    ? [
+        {
+          request: {
+            query: GetSystemWorkspaceDocument,
+            variables: {
+              cedarSystemId
+            }
           },
-          roles: []
+          result: {
+            data: {
+              __typename: 'Query',
+              cedarSystemWorkspace: {
+                __typename: 'CedarSystemWorkspace',
+                id: cedarSystemId,
+                isMySystem: true,
+                cedarSystem: {
+                  __typename: 'CedarSystemWorkspaceSystem',
+                  id: cedarSystemId,
+                  name: cedarSystemName,
+                  isBookmarked: false,
+                  viewerCanAccessProfile,
+                  linkedTrbRequests: [],
+                  linkedSystemIntakes: []
+                },
+                roles: []
+              }
+            }
+          }
         }
-      }
-    }
-  };
+      ]
+    : [
+        allowGenericEdit
+          ? {
+              request: {
+                query: GetCedarSystemDocument,
+                variables: {
+                  id: cedarSystemId
+                }
+              },
+              result: {
+                data: {
+                  __typename: 'Query',
+                  cedarSystem: {
+                    __typename: 'CedarSystem',
+                    id: cedarSystemId,
+                    name: cedarSystemName,
+                    description: null,
+                    acronym: null,
+                    status: null,
+                    businessOwnerOrg: null,
+                    businessOwnerOrgComp: null,
+                    systemMaintainerOrg: null,
+                    systemMaintainerOrgComp: null,
+                    isBookmarked: false
+                  }
+                }
+              }
+            }
+          : {
+              request: {
+                query: GetCedarSystemDocument,
+                variables: {
+                  id: cedarSystemId
+                }
+              },
+              error: new Error('Unauthorized')
+            }
+      ];
 
   return render(
     <Provider store={store}>
-      <VerboseMockedProvider mocks={[getSystemWorkspaceQuery]}>
+      <VerboseMockedProvider mocks={mocks}>
         <MemoryRouter initialEntries={[initialEntry]}>
           <MessageProvider>
             <Route path="/systems/:systemId/edit/:section?/:action?">
@@ -91,7 +136,7 @@ const renderEditSystemProfile = ({
 };
 
 describe('EditSystemProfile', () => {
-  it('renders the system name', async () => {
+  it('renders the system name for the generic edit hub', async () => {
     renderEditSystemProfile({
       initialEntry: `/systems/${cedarSystemId}/edit`
     });
@@ -102,7 +147,7 @@ describe('EditSystemProfile', () => {
   it('blocks workspace-only viewers from the generic edit hub', async () => {
     renderEditSystemProfile({
       initialEntry: `/systems/${cedarSystemId}/edit`,
-      viewerCanAccessProfile: false
+      allowGenericEdit: false
     });
 
     await screen.findByRole('heading', { name: 'This page cannot be found.' });
@@ -121,13 +166,13 @@ describe('EditSystemProfile', () => {
 
   it('renders page not found for invalid system id', async () => {
     const invalidCedarSystemQuery: MockedQuery<
-      GetSystemWorkspaceQuery,
-      GetSystemWorkspaceQueryVariables
+      GetCedarSystemQuery,
+      GetCedarSystemQueryVariables
     > = {
       request: {
-        query: GetSystemWorkspaceDocument,
+        query: GetCedarSystemDocument,
         variables: {
-          cedarSystemId: 'invalid'
+          id: 'invalid'
         }
       },
       error: new Error('System not found')

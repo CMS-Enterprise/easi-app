@@ -7,7 +7,10 @@ import {
   useParams
 } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
+import {
+  useGetCedarSystemQuery,
+  useGetSystemWorkspaceQuery
+} from 'gql/generated/graphql';
 
 import PageLoading from 'components/PageLoading';
 import SystemSectionLockContextProvider from 'contexts/SystemSectionLockContext';
@@ -36,37 +39,55 @@ const EditSystemProfile = () => {
   }>();
   const { pathname } = useLocation();
 
-  const { data, loading, error } = useGetSystemWorkspaceQuery({
-    variables: {
-      cedarSystemId: systemId
-    }
-  });
-
-  if (loading) return <PageLoading />;
-
-  const cedarSystemWorkspace = data?.cedarSystemWorkspace;
-
-  if (
-    error ||
-    !cedarSystemWorkspace?.cedarSystem ||
-    !cedarSystemWorkspace.isMySystem
-  ) {
-    return <NotFound />;
-  }
-
   const workspaceTeamPathMatch = matchPath(pathname, {
     path: '/systems/:systemId/edit/team/:action(team-member)?',
     exact: true
   });
+  const isWorkspaceTeamRoute = !!workspaceTeamPathMatch;
 
-  if (
-    !cedarSystemWorkspace.cedarSystem.viewerCanAccessProfile &&
-    !workspaceTeamPathMatch
-  ) {
+  const {
+    data: cedarSystemData,
+    loading: cedarSystemLoading,
+    error: cedarSystemError
+  } = useGetCedarSystemQuery({
+    variables: {
+      id: systemId
+    },
+    skip: isWorkspaceTeamRoute
+  });
+
+  const {
+    data: cedarSystemWorkspaceData,
+    loading: cedarSystemWorkspaceLoading,
+    error: cedarSystemWorkspaceError
+  } = useGetSystemWorkspaceQuery({
+    variables: {
+      cedarSystemId: systemId
+    },
+    skip: !isWorkspaceTeamRoute
+  });
+
+  if (cedarSystemLoading || cedarSystemWorkspaceLoading) {
+    return <PageLoading />;
+  }
+
+  const cedarSystemWorkspace = cedarSystemWorkspaceData?.cedarSystemWorkspace;
+
+  if (isWorkspaceTeamRoute) {
+    if (
+      cedarSystemWorkspaceError ||
+      !cedarSystemWorkspace?.cedarSystem ||
+      !cedarSystemWorkspace.isMySystem
+    ) {
+      return <NotFound />;
+    }
+  } else if (cedarSystemError || !cedarSystemData?.cedarSystem) {
     return <NotFound />;
   }
 
-  const { name: systemName = '' } = cedarSystemWorkspace.cedarSystem;
+  const systemName = isWorkspaceTeamRoute
+    ? cedarSystemWorkspace?.cedarSystem?.name || ''
+    : cedarSystemData?.cedarSystem?.name || '';
 
   return (
     <SystemSectionLockContextProvider>
@@ -106,7 +127,7 @@ const EditSystemProfile = () => {
                 <Route path="/systems/:systemId/edit/team/:action(team-member)?">
                   <Team
                     systemName={systemName}
-                    roles={cedarSystemWorkspace.roles || []}
+                    roles={cedarSystemWorkspace?.roles || []}
                   />
                 </Route>
 

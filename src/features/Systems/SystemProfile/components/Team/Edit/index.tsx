@@ -134,9 +134,14 @@ const EditTeam = ({
   const teamEditPath = pathname.startsWith(editHubTeamPath)
     ? editHubTeamPath
     : profileTeamEditPath;
+  const usesWorkspaceQuery =
+    isWorkspace || pathname.startsWith(editHubTeamPath);
 
   const [updateRoles, { loading }] = useSetRolesForUserOnSystemMutation({
-    refetchQueries: [isWorkspace ? 'GetSystemWorkspace' : 'GetSystemProfile']
+    refetchQueries: [
+      usesWorkspaceQuery ? 'GetSystemWorkspace' : 'GetSystemProfile'
+    ],
+    awaitRefetchQueries: true
   });
 
   /**
