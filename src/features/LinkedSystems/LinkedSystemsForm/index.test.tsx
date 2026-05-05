@@ -54,9 +54,7 @@ const getCedarSystemsQuery: MockedQuery<
           viewerCanAccessProfile: true,
           viewerCanAccessWorkspace: true,
           atoExpirationDate: null,
-          oaStatus: null,
-          linkedTrbRequests: [],
-          linkedSystemIntakes: []
+          oaStatus: null
         }
       ]
     }

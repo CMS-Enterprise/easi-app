@@ -35,9 +35,7 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
       viewerCanAccessProfile: true,
       viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      oaStatus: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     },
     {
       __typename: 'CedarSystem',
@@ -60,9 +58,7 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
       viewerCanAccessProfile: true,
       viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      oaStatus: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     },
     {
       __typename: 'CedarSystem',
@@ -85,9 +81,7 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
       viewerCanAccessProfile: true,
       viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      oaStatus: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     },
     {
       __typename: 'CedarSystem',
@@ -111,9 +105,7 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
       viewerCanAccessProfile: true,
       viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      oaStatus: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     }
   ];
 

@@ -52,9 +52,26 @@ import updateCedarSystemBookmarkInCache from 'utils/updateCedarSystemBookmarkInC
 
 import '../index.scss';
 
-type CedarSystem = NonNullable<
-  NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]
->;
+type CedarSystem = Pick<
+  NonNullable<NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]>,
+  | 'id'
+  | 'name'
+  | 'description'
+  | 'acronym'
+  | 'status'
+  | 'businessOwnerOrg'
+  | 'businessOwnerOrgComp'
+  | 'systemMaintainerOrg'
+  | 'systemMaintainerOrgComp'
+  | 'isBookmarked'
+  | 'viewerCanAccessProfile'
+  | 'viewerCanAccessWorkspace'
+  | 'atoExpirationDate'
+  | 'oaStatus'
+> & {
+  linkedTrbRequests?: Array<{ id: string }>;
+  linkedSystemIntakes?: Array<{ id: string }>;
+};
 
 export type SystemTableType =
   | 'all-systems'
@@ -242,7 +259,8 @@ export const Table = ({
         Header: t<string>('systemTable.header.openRequests'),
         accessor: (system: CedarSystem) => {
           return (
-            system.linkedTrbRequests.length + system.linkedSystemIntakes.length
+            (system.linkedTrbRequests?.length ?? 0) +
+            (system.linkedSystemIntakes?.length ?? 0)
           );
         },
         id: 'openRequests'

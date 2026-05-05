@@ -2,6 +2,7 @@ package dataloaders
 
 import (
 	"context"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/vikstrous/dataloadgen"
@@ -25,10 +26,11 @@ type (
 // dataReader's main responsibility is `db` access
 // it can also be used hold onto methods that can vary depending on environments (ex: test vs. prod)
 type dataReader struct {
-	db                *storage.Store
-	fetchUserInfos    fetchUserInfosFunc
-	getCedarSystems   getCedarSystemsFunc
-	getMyCedarSystems getMyCedarSystemsFunc
+	db                   *storage.Store
+	fetchUserInfos       fetchUserInfosFunc
+	getCedarSystems      getCedarSystemsFunc
+	getMyCedarSystems    getMyCedarSystemsFunc
+	myCedarSystemsByUser sync.Map
 }
 
 // Dataloaders houses all dataloader-capable functionality

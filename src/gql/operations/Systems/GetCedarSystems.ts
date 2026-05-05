@@ -17,12 +17,6 @@ export default gql(/* GraphQL */ `
       viewerCanAccessWorkspace
       atoExpirationDate
       oaStatus
-      linkedTrbRequests(state: OPEN) {
-        id
-      }
-      linkedSystemIntakes(state: OPEN) {
-        id
-      }
     }
   }
 `);
