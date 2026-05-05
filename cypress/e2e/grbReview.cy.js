@@ -538,8 +538,9 @@ describe('GRB review', () => {
       'cypress/fixtures/test.pdf'
     );
 
-    cy.get('#transcriptFields').contains('[role="tab"]', 'Add link').click();
-    cy.get('#transcriptLink').clear();
+    // Transcript uploads replace the link server-side, so keep the upload tab
+    // active through submit because inactive transcript tabs unmount and
+    // unregister their field values.
 
     // Clear presentation deck file
     clearPresentationDeckFile();
