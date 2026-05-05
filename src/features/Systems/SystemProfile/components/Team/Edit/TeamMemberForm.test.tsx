@@ -1,7 +1,11 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import {
   CedarAssigneeType,
   GetCedarRoleTypesDocument,
@@ -88,6 +92,7 @@ describe('Edit team page', () => {
             <Route path="/systems/:systemId/team/edit">
               <TeamMemberForm
                 cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
+                returnPath={`/systems/${cedarSystemId}/team/edit`}
                 updateRoles={mockUpdateRoles}
                 loading={false}
                 team={[]}
@@ -124,6 +129,7 @@ describe('Edit team page', () => {
             <Route path="/systems/:systemId/team/edit">
               <TeamMemberForm
                 cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
+                returnPath={`/systems/${cedarSystemId}/team/edit`}
                 updateRoles={mockUpdateRoles}
                 loading={false}
                 team={[]}
@@ -142,5 +148,35 @@ describe('Edit team page', () => {
         name: i18next.t('Edit team member roles')
       })
     ).toBeInTheDocument();
+  });
+
+  it('Keeps the edit hub route family in the return link', async () => {
+    const { getByTestId } = render(
+      <MemoryRouter
+        initialEntries={[`/systems/${cedarSystemId}/edit/team/team-member`]}
+      >
+        <VerboseMockedProvider mocks={[getCedarRoleTypesQuery]}>
+          <MessageProvider>
+            <Route path="/systems/:systemId/edit/team/:action?">
+              <TeamMemberForm
+                cedarSystemId="b7d0695d-4c24-4942-a815-77655f43783c"
+                returnPath={`/systems/${cedarSystemId}/edit/team`}
+                updateRoles={mockUpdateRoles}
+                loading={false}
+                team={[]}
+              />
+            </Route>
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForElementToBeRemoved(() => getByTestId('page-loading'));
+
+    expect(
+      screen.getByRole('link', {
+        name: /return to previous page/i
+      })
+    ).toHaveAttribute('href', `/systems/${cedarSystemId}/edit/team`);
   });
 });
