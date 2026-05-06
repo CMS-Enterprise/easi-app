@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import {
   CedarRole,
   GetCedarSystemDocument,
@@ -183,7 +183,12 @@ describe('EditSystemProfile', () => {
 
     await screen.findByText(`for ${cedarSystemName}`);
 
-    expect(screen.getByTestId('section-card-TEAM')).toBeInTheDocument();
+    const teamCard = screen.getByTestId('section-card-TEAM');
+
+    expect(teamCard).toBeInTheDocument();
+    expect(
+      within(teamCard).getByRole('link', { name: 'View section' })
+    ).toHaveAttribute('href', `/systems/${cedarSystemId}/team`);
   });
 
   it('blocks workspace-only viewers from the generic edit hub', async () => {

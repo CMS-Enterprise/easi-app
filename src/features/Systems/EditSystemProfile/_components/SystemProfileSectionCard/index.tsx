@@ -28,6 +28,7 @@ type SystemProfileSectionCardProps = {
   isManagedExternally?: boolean;
   hasExternalData?: boolean;
   readOnly?: boolean;
+  path?: string;
 };
 
 /**
@@ -39,7 +40,8 @@ const SystemProfileSectionCard = ({
   hasPendingChanges,
   isManagedExternally,
   hasExternalData,
-  readOnly
+  readOnly,
+  path
 }: SystemProfileSectionCardProps) => {
   const { t } = useTranslation('systemProfile');
 
@@ -50,6 +52,7 @@ const SystemProfileSectionCard = ({
   const flags = useFlags();
   const sectionMap = getSystemProfileSectionMap(flags);
   const { route } = sectionMap[section];
+  const resolvedPath = path || `/systems/${systemId}/${route}`;
 
   const { systemProfileSectionLocks } = useSystemSectionLockContext();
 
@@ -115,7 +118,7 @@ const SystemProfileSectionCard = ({
           <SectionLock sectionLock={sectionLock} />
         ) : (
           <Link
-            to={`/systems/${systemId}/${route}`}
+            to={resolvedPath}
             className={`usa-button ${
               hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
             }`}

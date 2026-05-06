@@ -71,12 +71,9 @@ const EditSystemProfile = () => {
   }
 
   const cedarSystemWorkspace = cedarSystemWorkspaceData?.cedarSystemWorkspace;
-  // The generic edit hub is EASi-only, and the team route does its own
-  // workspace authorization. Keep the TEAM card visible here even if the
-  // workspace capability hint falls back to false.
   const canManageTeam = usesWorkspaceTeamData
     ? cedarSystemWorkspace?.isMySystem === true
-    : true;
+    : cedarSystemData?.cedarSystem?.viewerCanAccessWorkspace === true;
 
   if (usesWorkspaceTeamData) {
     if (

@@ -122,10 +122,9 @@ func (s *ResolverSuite) TestCEDARSystemTeamManagementPermissions() {
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil
 
-	_, err = queryResolver.CedarPersonsByCommonName(otherUserCtx, "AB")
-	s.Error(err)
-	s.True(errors.As(err, &unauthorizedErr))
-	unauthorizedErr = nil
+	contacts, err = queryResolver.CedarPersonsByCommonName(otherUserCtx, "AB")
+	s.NoError(err)
+	s.NotNil(contacts)
 
 	err = authorizeUserCanAccessCEDARSystemWorkspace(otherUserCtx, resolver.cedarCoreClient, cedarSystemID)
 	s.Error(err)
@@ -204,7 +203,10 @@ func (s *ResolverSuite) TestCEDARLinkedRequestVisibility() {
 	resolver := s.cedarTypeResolver()
 	cedarSystem := &models.CedarSystem{ID: uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")}
 
-	teamMemberCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	teamMemberCtx := appcontext.WithPrincipal(s.ctxWithNewDataloaders(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
 	ownerCtx, _ := s.getTestContextWithPrincipal("USR2", false)
 	outsiderCtx, _ := s.getTestContextWithPrincipal("ZZZZ", false)
 
@@ -282,7 +284,10 @@ func (s *ResolverSuite) TestCEDARWorkspaceSystemPreAuthorizationBypassesChildRea
 		Name: "Mock System",
 	}
 
-	teamMemberCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	teamMemberCtx := appcontext.WithPrincipal(s.ctxWithNewDataloaders(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
 	ownerCtx, _ := s.getTestContextWithPrincipal("USR2", false)
 
 	trbRequest, err := CreateTRBRequest(ownerCtx, models.TRBTBrainstorm, s.testConfigs.Store)

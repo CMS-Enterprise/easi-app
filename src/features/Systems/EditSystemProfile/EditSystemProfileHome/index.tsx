@@ -32,6 +32,7 @@ const EditSystemProfileHome = ({
 
   const flags = useFlags();
   const sectionMap = getSystemProfileSectionMap(flags);
+  const teamPath = canManageTeam ? undefined : `/systems/${systemId}/team`;
 
   return (
     <MainContent>
@@ -102,11 +103,11 @@ const EditSystemProfileHome = ({
             readOnly={!sectionMap.SUB_SYSTEMS.isEnabled}
           />
 
-          {canManageTeam && (
-            <SystemProfileSectionCard
-              section={SystemProfileLockableSection.TEAM}
-            />
-          )}
+          <SystemProfileSectionCard
+            section={SystemProfileLockableSection.TEAM}
+            path={teamPath}
+            readOnly={!canManageTeam}
+          />
 
           <SystemProfileSectionCard
             section="CONTRACTS"
