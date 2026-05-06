@@ -270,6 +270,69 @@ func (s *ResolverSuite) TestCEDARLinkedRequestVisibility() {
 	s.Empty(outsiderIntakeResults)
 }
 
+func (s *ResolverSuite) TestCEDARWorkspaceSystemPreAuthorizationBypassesChildReauth() {
+	resolver := &cedarSystemWorkspaceSystemResolver{
+		&Resolver{
+			store: s.testConfigs.Store,
+		},
+	}
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+	workspaceSystem := &models.CedarSystemWorkspaceSystem{
+		ID:   cedarSystemID,
+		Name: "Mock System",
+	}
+
+	teamMemberCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	ownerCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+
+	trbRequest, err := CreateTRBRequest(ownerCtx, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	err = sqlutils.WithTransaction(s.testConfigs.Context, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+		return s.testConfigs.Store.SetTRBRequestSystems(s.testConfigs.Context, tx, trbRequest.ID, []uuid.UUID{cedarSystemID})
+	})
+	s.NoError(err)
+
+	intake, err := CreateSystemIntake(
+		ownerCtx,
+		s.testConfigs.Store,
+		models.CreateSystemIntakeInput{
+			Requester:   &models.SystemIntakeRequesterInput{Name: "User Two"},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo),
+	)
+	s.NoError(err)
+	s.NotNil(intake)
+
+	linkedSystems := []*models.SystemRelationshipInput{
+		{
+			CedarSystemID:          &cedarSystemID,
+			SystemRelationshipType: []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport},
+		},
+	}
+
+	err = sqlutils.WithTransaction(s.testConfigs.Context, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+		return s.testConfigs.Store.SetSystemIntakeSystems(s.testConfigs.Context, tx, intake.ID, linkedSystems)
+	})
+	s.NoError(err)
+
+	viewerCanAccessProfile, err := resolver.ViewerCanAccessProfile(teamMemberCtx, workspaceSystem)
+	s.NoError(err)
+	s.False(viewerCanAccessProfile)
+
+	trbResults, err := resolver.LinkedTrbRequests(teamMemberCtx, workspaceSystem, models.TRBRequestStateOpen)
+	s.NoError(err)
+	s.Len(trbResults, 1)
+	s.Equal(trbRequest.ID, trbResults[0].ID)
+
+	intakeResults, err := resolver.LinkedSystemIntakes(teamMemberCtx, workspaceSystem, models.SystemIntakeStateOpen)
+	s.NoError(err)
+	s.Len(intakeResults, 1)
+	s.Equal(intake.ID, intakeResults[0].ID)
+}
+
 func (s *ResolverSuite) TestCEDARReadQueryPermissions() {
 	resolver := s.cedarQueryResolver()
 	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")

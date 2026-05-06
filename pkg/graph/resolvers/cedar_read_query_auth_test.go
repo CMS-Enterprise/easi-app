@@ -627,3 +627,92 @@ func TestCedarSystemViewerCapabilitiesAccessMatrix(t *testing.T) {
 	require.NoError(t, err)
 	require.False(t, viewerCanAccessWorkspace)
 }
+
+func TestPreAuthorizedMyCedarSystemsBypassMembershipLookupForCapabilities(t *testing.T) {
+	t.Parallel()
+
+	cedarCoreClient := cedarcore.NewClient(
+		appcontext.WithLogger(context.Background(), zap.NewNop()),
+		"fake",
+		"fake",
+		"1.0.0",
+		false,
+		true,
+	)
+	queryResolver := &queryResolver{&Resolver{cedarCoreClient: cedarCoreClient}}
+	typeResolver := &cedarSystemResolver{&Resolver{cedarCoreClient: cedarCoreClient}}
+
+	teamMemberCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
+	teamSystems, err := queryResolver.MyCedarSystems(teamMemberCtx)
+	require.NoError(t, err)
+	require.NotEmpty(t, teamSystems)
+	require.True(t, teamSystems[0].WorkspaceAccessPreAuthorized)
+
+	failingLoaderCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
+	failingLoaderCtx = dataloaders.CTXWithLoaders(failingLoaderCtx, func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			nil,
+			nil,
+			nil,
+			func(context.Context, string) ([]*models.CedarSystem, error) {
+				return nil, errors.New("membership lookup failed")
+			},
+		)
+	})
+
+	viewerCanAccessProfile, err := typeResolver.ViewerCanAccessProfile(failingLoaderCtx, teamSystems[0])
+	require.NoError(t, err)
+	require.False(t, viewerCanAccessProfile)
+
+	viewerCanAccessWorkspace, err := typeResolver.ViewerCanAccessWorkspace(failingLoaderCtx, teamSystems[0])
+	require.NoError(t, err)
+	require.True(t, viewerCanAccessWorkspace)
+}
+
+func TestPreAuthorizedWorkspaceSystemBypassesMembershipLookupForProfile(t *testing.T) {
+	t.Parallel()
+
+	cedarCoreClient := cedarcore.NewClient(
+		appcontext.WithLogger(context.Background(), zap.NewNop()),
+		"fake",
+		"fake",
+		"1.0.0",
+		false,
+		true,
+	)
+	typeResolver := &cedarSystemWorkspaceSystemResolver{&Resolver{cedarCoreClient: cedarCoreClient}}
+
+	teamMemberCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
+	workspace, err := GetCedarSystemWorkspace(teamMemberCtx, cedarCoreClient, uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"))
+	require.NoError(t, err)
+	require.NotNil(t, workspace)
+	require.NotNil(t, workspace.CedarSystem)
+
+	failingLoaderCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
+	failingLoaderCtx = dataloaders.CTXWithLoaders(failingLoaderCtx, func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			nil,
+			nil,
+			nil,
+			func(context.Context, string) ([]*models.CedarSystem, error) {
+				return nil, errors.New("membership lookup failed")
+			},
+		)
+	})
+
+	viewerCanAccessProfile, err := typeResolver.ViewerCanAccessProfile(failingLoaderCtx, workspace.CedarSystem)
+	require.NoError(t, err)
+	require.False(t, viewerCanAccessProfile)
+}

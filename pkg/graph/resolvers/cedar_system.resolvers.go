@@ -33,6 +33,10 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 
 // ViewerCanAccessProfile is the resolver for the viewerCanAccessProfile field.
 func (r *cedarSystemResolver) ViewerCanAccessProfile(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	if obj.WorkspaceAccessPreAuthorized {
+		return appcontext.Principal(ctx).AllowEASi(), nil
+	}
+
 	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
 	if err != nil {
 		return false, err
@@ -184,12 +188,7 @@ func (r *cedarSystemWorkspaceSystemResolver) IsBookmarked(ctx context.Context, o
 
 // ViewerCanAccessProfile is the resolver for the viewerCanAccessProfile field.
 func (r *cedarSystemWorkspaceSystemResolver) ViewerCanAccessProfile(ctx context.Context, obj *models.CedarSystemWorkspaceSystem) (bool, error) {
-	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
-	if err != nil {
-		return false, err
-	}
-
-	return capabilities.ViewerCanAccessProfile, nil
+	return appcontext.Principal(ctx).AllowEASi(), nil
 }
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
@@ -199,17 +198,7 @@ func (r *cedarSystemWorkspaceSystemResolver) LinkedTrbRequests(ctx context.Conte
 		return nil, err
 	}
 
-	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
-	if err == nil {
-		return trbRequests, nil
-	}
-
-	var unauthorizedErr *apperrors.UnauthorizedError
-	if !errors.As(err, &unauthorizedErr) {
-		return nil, err
-	}
-
-	return filterVisibleTRBRequests(ctx, trbRequests)
+	return trbRequests, nil
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
@@ -219,17 +208,7 @@ func (r *cedarSystemWorkspaceSystemResolver) LinkedSystemIntakes(ctx context.Con
 		return nil, err
 	}
 
-	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
-	if err == nil {
-		return intakes, nil
-	}
-
-	var unauthorizedErr *apperrors.UnauthorizedError
-	if !errors.As(err, &unauthorizedErr) {
-		return nil, err
-	}
-
-	return filterVisibleSystemIntakes(ctx, r.store, intakes)
+	return intakes, nil
 }
 
 // CedarSystem is the resolver for the cedarSystem field.
