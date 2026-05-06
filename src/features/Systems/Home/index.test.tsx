@@ -4,7 +4,10 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mockSystemInfo } from 'features/Systems/SystemProfile/data/mockSystemData';
-import { GetCedarSystemsDocument } from 'gql/generated/graphql';
+import {
+  GetCedarSystemsDocument,
+  GetMyCedarSystemsDocument
+} from 'gql/generated/graphql';
 
 import SystemList from './index';
 import Table from './SystemsTable';
@@ -147,6 +150,50 @@ describe('System List View', () => {
       expect(
         screen.queryByRole('link', { name: 'Happiness Achievement Module' })
       ).not.toBeInTheDocument();
+    });
+
+    it('uses the rendered my-systems row bookmark state for the toggle UI', async () => {
+      const mySystemsRows = [
+        {
+          ...mockSystemInfo[0],
+          isBookmarked: true,
+          linkedSystemIntakes: [],
+          linkedTrbRequests: []
+        }
+      ];
+
+      const mySystemsMocks = [
+        {
+          request: {
+            query: GetMyCedarSystemsDocument
+          },
+          result: {
+            data: {
+              myCedarSystems: mySystemsRows
+            }
+          }
+        }
+      ];
+
+      render(
+        <MemoryRouter initialEntries={['/?table-type=my-systems']}>
+          <MockedProvider mocks={mySystemsMocks} addTypename={false}>
+            <Table
+              defaultPageSize={3}
+              systems={[
+                {
+                  ...mockSystemInfo[0],
+                  isBookmarked: false
+                }
+              ]}
+            />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByRole('button', { name: 'Bookmarked' })
+      ).toBeInTheDocument();
     });
 
     test.skip('matches snapshot', async () => {

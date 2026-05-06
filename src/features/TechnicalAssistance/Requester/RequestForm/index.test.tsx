@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  GetTRBRequestLcidOptionsDocument,
   GetTRBRequestQuery,
   GetTRBRequestQueryVariables,
   TRBFeedbackAction,
@@ -13,6 +14,7 @@ import {
 import i18next from 'i18next';
 import {
   attendees,
+  getTRBRequestAttendeesQuery,
   getTrbRequestQuery,
   trbRequest
 } from 'tests/mock/trbRequest';
@@ -70,9 +72,30 @@ const getTrbRequestQueryWithFeedback: MockedQuery<
 
 function renderFeedbackTest() {
   const store = easiMockStore();
+  const getTrbRequestLcidOptionsQuery = {
+    request: {
+      query: GetTRBRequestLcidOptionsDocument,
+      variables: {
+        trbRequestID: mockTrbRequestId
+      }
+    },
+    result: {
+      data: {
+        __typename: 'Query',
+        trbRequestLcidOptions: []
+      }
+    }
+  };
+
   return render(
     <MemoryRouter initialEntries={[`/trb/requests/${mockTrbRequestId}/basic`]}>
-      <MockedProvider mocks={[getTrbRequestQueryWithFeedback]}>
+      <MockedProvider
+        mocks={[
+          getTrbRequestQueryWithFeedback,
+          getTRBRequestAttendeesQuery,
+          getTrbRequestLcidOptionsQuery
+        ]}
+      >
         <Route exact path="/trb/requests/:id/:step?/:view?">
           <Provider store={store}>
             <RequestForm />

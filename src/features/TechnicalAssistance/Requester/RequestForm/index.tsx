@@ -297,7 +297,7 @@ function RequestForm() {
   const {
     data: { requester }
   } = useTRBAttendees(id, {
-    skip: loading || !request
+    skip: !request
   });
 
   // Determine the steps that are already completed by attempting to pre-validate them

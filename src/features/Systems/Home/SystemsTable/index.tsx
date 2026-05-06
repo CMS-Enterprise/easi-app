@@ -145,12 +145,12 @@ export const Table = ({
   }, [systemTableType, systems, mySystems]);
 
   const columns: Column<CedarSystem>[] = useMemo(() => {
-    const isBookmarked = (cedarSystemId: string): boolean =>
-      !!systems.find(system => system.id === cedarSystemId)?.isBookmarked;
-
     /** Create or delete bookmark */
-    const toggleBookmark = (cedarSystemId: string) => {
-      const mutate = isBookmarked(cedarSystemId) ? deleteMutate : createMutate;
+    const toggleBookmark = (
+      cedarSystemId: string,
+      currentIsBookmarked: boolean
+    ) => {
+      const mutate = currentIsBookmarked ? deleteMutate : createMutate;
 
       mutate({
         variables: {
@@ -162,7 +162,7 @@ export const Table = ({
           updateCedarSystemBookmarkInCache(
             cache,
             cedarSystemId,
-            !isBookmarked(cedarSystemId)
+            !currentIsBookmarked
           );
         }
       });
@@ -176,23 +176,28 @@ export const Table = ({
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
-        sortType: (rowOne, rowTwo, columnName) => {
-          const rowOneElem = rowOne.values[columnName];
-          return isBookmarked(rowOneElem) ? 1 : -1;
+        sortType: (rowOne, rowTwo) => {
+          if (rowOne.original.isBookmarked === rowTwo.original.isBookmarked) {
+            return 0;
+          }
+
+          return rowOne.original.isBookmarked ? 1 : -1;
         },
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
           <Button
-            onClick={() => toggleBookmark(row.original.id)}
+            onClick={() =>
+              toggleBookmark(row.original.id, row.original.isBookmarked)
+            }
             type="button"
             unstyled
             aria-label={t(
-              `bookmark.${isBookmarked(row.original.id) ? 'bookmarked' : 'bookmark'}`
+              `bookmark.${row.original.isBookmarked ? 'bookmarked' : 'bookmark'}`
             )}
           >
             <Icon.Bookmark
               aria-hidden
               className={classNames({
-                'text-base-lighter': !isBookmarked(row.original.id)
+                'text-base-lighter': !row.original.isBookmarked
               })}
             />
           </Button>
@@ -274,7 +279,6 @@ export const Table = ({
     return cols;
   }, [
     t,
-    systems,
     systemTableType,
     createMutate,
     deleteMutate,
