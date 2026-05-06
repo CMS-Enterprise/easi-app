@@ -213,9 +213,9 @@ function LinkedRequestsTable({
     usePagination
   );
 
-  rows.map(row => prepareRow(row));
+  rows.forEach(row => prepareRow(row));
 
-  if (loading) {
+  if (loading && tableData.length === 0) {
     return <PageLoading />;
   }
 

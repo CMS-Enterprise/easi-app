@@ -21,14 +21,14 @@ describe('isSystemIntakeRequester', () => {
     ).toBe(false);
   });
 
-  it('returns true when server fallback still authorizes the viewer', () => {
+  it('returns false when viewer requester access is missing', () => {
     expect(
       isSystemIntakeRequester({
         intake: {
-          viewerIsRequester: true
+          viewerIsRequester: undefined
         }
       })
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('returns false when intake data is missing', () => {
