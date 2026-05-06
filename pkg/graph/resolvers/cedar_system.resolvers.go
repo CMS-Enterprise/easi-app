@@ -250,13 +250,20 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 		return nil, err
 	}
 
+	authorizedSystems := make([]*models.CedarSystem, 0, len(systems))
 	for _, system := range systems {
-		if system != nil {
-			system.WorkspaceAccessPreAuthorized = true
+		if system == nil {
+			authorizedSystems = append(authorizedSystems, nil)
+			continue
 		}
+
+		// take a copy because mock data is shared data, so we can't edit the data directly
+		systemCopy := *system
+		systemCopy.WorkspaceAccessPreAuthorized = true
+		authorizedSystems = append(authorizedSystems, &systemCopy)
 	}
 
-	return systems, nil
+	return authorizedSystems, nil
 }
 
 // CedarSystemWorkspace is the resolver for the cedarSystemWorkspace field.
