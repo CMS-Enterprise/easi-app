@@ -9,7 +9,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
-	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 )
 
 func userIsOnAnyCEDARSystemTeam(
@@ -29,15 +29,13 @@ func userIsOnCEDARSystemTeam(
 	cedarCoreClient *cedarcore.Client,
 	cedarSystemID uuid.UUID,
 ) (bool, error) {
-	cedarRoles, err := cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
+	systems, err := cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(appcontext.Principal(ctx).ID()))
 	if err != nil {
 		return false, err
 	}
 
-	userEUA := appcontext.Principal(ctx).ID()
-
-	for _, role := range cedarRoles {
-		if role.AssigneeType != nil && *role.AssigneeType == models.PersonAssignee && role.AssigneeUsername.String == userEUA {
+	for _, system := range systems {
+		if system != nil && system.ID == cedarSystemID {
 			return true, nil
 		}
 	}
@@ -50,13 +48,24 @@ func authorizeUserCanAccessCEDARSystemWorkspace(
 	cedarCoreClient *cedarcore.Client,
 	cedarSystemID uuid.UUID,
 ) error {
-	isOnTeam, err := userIsOnCEDARSystemTeam(ctx, cedarCoreClient, cedarSystemID)
-	if err != nil {
-		return err
-	}
+	if dataloaders.HasLoaders(ctx) {
+		capabilities, err := GetCedarSystemViewerCapabilities(ctx, cedarSystemID)
+		if err != nil {
+			return err
+		}
 
-	if isOnTeam {
-		return nil
+		if capabilities.ViewerCanAccessWorkspace {
+			return nil
+		}
+	} else {
+		isOnTeam, err := userIsOnCEDARSystemTeam(ctx, cedarCoreClient, cedarSystemID)
+		if err != nil {
+			return err
+		}
+
+		if isOnTeam {
+			return nil
+		}
 	}
 
 	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar system workspace")}

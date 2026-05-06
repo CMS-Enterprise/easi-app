@@ -55,7 +55,7 @@ func GetCedarSystemWorkspace(
 		return nil, err
 	}
 
-	cedarRoles, err := cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
+	cedarRoles, err := cedarCoreClient.GetRolesForSystem(ctx, cedarSystem, nil)
 	if err != nil {
 		return nil, err
 	}

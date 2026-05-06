@@ -79,7 +79,11 @@ const renderSystemWorkspace = (viewerCanAccessProfile: boolean) => {
 
   render(
     <MockedProvider
-      mocks={[getSystemWorkspaceQuery, getSystemWorkspaceAtoQuery]}
+      mocks={
+        viewerCanAccessProfile
+          ? [getSystemWorkspaceQuery, getSystemWorkspaceAtoQuery]
+          : [getSystemWorkspaceQuery]
+      }
     >
       <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/workspace`]}>
         <Route path="/systems/:systemId/workspace">
@@ -107,6 +111,9 @@ describe('SystemWorkspace', () => {
     expect(
       screen.queryByRole('button', { name: 'View system profile' })
     ).not.toBeInTheDocument();
+    expect(
+      screen.getByText('ATO details are unavailable for your account.')
+    ).toBeInTheDocument();
   });
 
   it('shows the system profile link for viewers with profile access', async () => {

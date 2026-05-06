@@ -46,16 +46,20 @@ export const SystemWorkspace = () => {
     }
   });
 
+  const viewerCanAccessProfile =
+    data?.cedarSystemWorkspace?.cedarSystem?.viewerCanAccessProfile === true;
+
   const { data: atoData, error: atoError } = useGetSystemWorkspaceAtoQuery({
     variables: {
       cedarSystemId: systemId
     },
-    errorPolicy: 'all'
+    errorPolicy: 'all',
+    skip: !viewerCanAccessProfile
   });
 
   const cedarSystem = data?.cedarSystemWorkspace?.cedarSystem;
   const ato = atoData?.cedarAuthorityToOperate?.[0];
-  const atoUnavailable = !!atoError;
+  const atoUnavailable = !viewerCanAccessProfile || !!atoError;
   const atoStatus = atoUnavailable
     ? undefined
     : getAtoStatus(ato?.dateAuthorizationMemoExpires, ato?.oaStatus);
@@ -88,7 +92,7 @@ export const SystemWorkspace = () => {
     return <NotFound />;
   }
 
-  const { isBookmarked, viewerCanAccessProfile } = cedarSystem;
+  const { isBookmarked } = cedarSystem;
   const workspacePrimaryAction = viewerCanAccessProfile
     ? {
         label: t('systemProfile:editSystemProfile.heading'),
