@@ -284,6 +284,37 @@ func TestCedarContactLookupAllowsTeamMemberWithoutEASI(t *testing.T) {
 	require.NotNil(t, contacts)
 }
 
+func TestCedarSystemWorkspaceAuthorizationIgnoresCapabilityFallback(t *testing.T) {
+	t.Parallel()
+
+	cedarCoreClient := cedarcore.NewClient(
+		appcontext.WithLogger(context.Background(), zap.NewNop()),
+		"fake",
+		"fake",
+		"1.0.0",
+		false,
+		true,
+	)
+
+	ctx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "ABCD",
+		UserAccount: &authentication.UserAccount{Username: "ABCD"},
+	})
+	ctx = dataloaders.CTXWithLoaders(ctx, func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			nil,
+			nil,
+			nil,
+			func(context.Context, string) ([]*models.CedarSystem, error) {
+				return nil, errors.New("membership lookup failed")
+			},
+		)
+	})
+
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+	require.NoError(t, authorizeUserCanAccessCEDARSystemWorkspace(ctx, cedarCoreClient, cedarSystemID))
+}
+
 func TestSystemProfileSectionLocksAllowProfileOnlyEASIUsers(t *testing.T) {
 	t.Parallel()
 

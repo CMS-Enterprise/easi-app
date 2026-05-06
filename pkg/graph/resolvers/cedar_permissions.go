@@ -9,7 +9,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
-	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 )
 
 func userIsOnAnyCEDARSystemTeam(
@@ -48,24 +47,13 @@ func authorizeUserCanAccessCEDARSystemWorkspace(
 	cedarCoreClient *cedarcore.Client,
 	cedarSystemID uuid.UUID,
 ) error {
-	if dataloaders.HasLoaders(ctx) {
-		capabilities, err := GetCedarSystemViewerCapabilities(ctx, cedarSystemID)
-		if err != nil {
-			return err
-		}
+	isOnTeam, err := userIsOnCEDARSystemTeam(ctx, cedarCoreClient, cedarSystemID)
+	if err != nil {
+		return err
+	}
 
-		if capabilities.ViewerCanAccessWorkspace {
-			return nil
-		}
-	} else {
-		isOnTeam, err := userIsOnCEDARSystemTeam(ctx, cedarCoreClient, cedarSystemID)
-		if err != nil {
-			return err
-		}
-
-		if isOnTeam {
-			return nil
-		}
+	if isOnTeam {
+		return nil
 	}
 
 	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar system workspace")}
