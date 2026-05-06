@@ -210,9 +210,13 @@ export const Table = ({
       accessor: 'name',
       id: 'systemName',
       Cell: ({ row }: { row: Row<CedarSystem> }) => {
-        const url = getCedarSystemRoute(row.original, {
-          preferWorkspace: systemTableType === 'my-systems'
-        });
+        let url: string | undefined;
+
+        if (systemTableType === 'my-systems') {
+          url = getCedarSystemRoute(row.original, { preferWorkspace: true });
+        } else if (row.original.viewerCanAccessProfile) {
+          url = getCedarSystemRoute(row.original);
+        }
 
         return url ? (
           <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>

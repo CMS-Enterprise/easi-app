@@ -99,7 +99,7 @@ describe('System List View', () => {
       expect(screen.queryByText('ASD')).toBeNull();
     });
 
-    it('routes all-systems rows to the workspace when the profile is unavailable', async () => {
+    it('renders plain text for all-systems rows when only workspace access is available', async () => {
       const workspaceOnlySystems = [
         {
           ...mockSystemInfo[0],
@@ -117,10 +117,11 @@ describe('System List View', () => {
       );
 
       expect(
-        await screen.findByRole('link', {
-          name: 'Happiness Achievement Module'
-        })
-      ).toHaveAttribute('href', '/systems/1/workspace');
+        await screen.findByText('Happiness Achievement Module')
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'Happiness Achievement Module' })
+      ).not.toBeInTheDocument();
     });
 
     it('renders plain text for all-systems rows with no allowed destination', async () => {

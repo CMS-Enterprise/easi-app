@@ -47,6 +47,44 @@ Cypress.Commands.add('markMinioUploadAsCleanByUrl', url =>
   cy.exec(`scripts/tag_minio_file ${getMinioUploadPathFromUrl(url)} CLEAN`)
 );
 
+const getTrbRequestDocumentUrlsQuery = `
+  query GetTRBRequestDocumentUrls($id: UUID!) {
+    trbRequest(id: $id) {
+      id
+      documents {
+        id
+        fileName
+        url
+      }
+    }
+  }
+`;
+
+Cypress.Commands.add('markTrbRequestDocumentAsClean', (requestId, fileName) =>
+  cy
+    .request('POST', '/api/graph/query', {
+      operationName: 'GetTRBRequestDocumentUrls',
+      query: getTrbRequestDocumentUrlsQuery,
+      variables: {
+        id: requestId
+      }
+    })
+    .then(({ body }) => {
+      expect(body?.errors).to.eq(undefined);
+
+      const document = body?.data?.trbRequest?.documents?.find(
+        item => item.fileName === fileName
+      );
+
+      expect(document, `TRB document named "${fileName}"`).to.not.equal(
+        undefined
+      );
+      expect(document.url).to.include('/easi-app-file-uploads/');
+
+      return cy.markMinioUploadAsCleanByUrl(document.url);
+    })
+);
+
 /**
  * Returns a date string in MM/dd/yyyy format
  *
