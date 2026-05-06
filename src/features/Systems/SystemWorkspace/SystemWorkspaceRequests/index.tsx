@@ -16,8 +16,7 @@ import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeState,
   TRBRequestState,
-  useGetLinkedRequestsQuery,
-  useGetSystemWorkspaceQuery
+  useGetLinkedRequestsQuery
 } from 'gql/generated/graphql';
 
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -366,30 +365,8 @@ function SystemWorkspaceRequests() {
     systemId: string;
   }>();
 
-  const {
-    loading: workspaceLoading,
-    error: workspaceError,
-    data: workspaceData
-  } = useGetSystemWorkspaceQuery({
-    variables: {
-      cedarSystemId: systemId
-    }
-  });
-
   const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
   const workspacePath = `/systems/${systemId}/workspace`;
-
-  if (workspaceLoading) {
-    return <PageLoading />;
-  }
-
-  if (
-    workspaceError ||
-    !workspaceData?.cedarSystemWorkspace?.cedarSystem ||
-    !workspaceData.cedarSystemWorkspace.isMySystem
-  ) {
-    return <NotFoundPartial />;
-  }
 
   return (
     <MainContent className="grid-container margin-bottom-5 desktop:margin-bottom-10">

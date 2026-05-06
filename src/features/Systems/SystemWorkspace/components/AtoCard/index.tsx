@@ -16,6 +16,7 @@ import showVal from 'utils/showVal';
 import SpacesCard from '../SpacesCard';
 
 type Props = {
+  atoError?: boolean;
   atoLoading?: boolean;
   atoStatus?: AtoStatus;
   atoUnavailable?: boolean;
@@ -25,6 +26,7 @@ type Props = {
 };
 
 function AtoCard({
+  atoError = false,
   atoLoading = false,
   atoStatus,
   atoUnavailable = false,
@@ -46,6 +48,10 @@ function AtoCard({
       <p className="margin-top-0 margin-bottom-2">
         {t('spaces.ato.unavailable')}
       </p>
+    );
+  } else if (atoError) {
+    atoBody = (
+      <p className="margin-top-0 margin-bottom-2">{t('spaces.ato.error')}</p>
     );
   } else if (atoStatus) {
     atoBody = (

@@ -12,4 +12,12 @@ describe('AtoCard', () => {
     ).toBeInTheDocument();
     expect(screen.queryByText('No ATO')).not.toBeInTheDocument();
   });
+
+  it('renders temporary error messaging when ato data fails to load', () => {
+    render(<AtoCard atoError />);
+
+    expect(
+      screen.getByText('ATO details are temporarily unavailable.')
+    ).toBeInTheDocument();
+  });
 });

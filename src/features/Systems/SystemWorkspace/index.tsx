@@ -93,10 +93,11 @@ export const SystemWorkspace = () => {
   });
 
   const ato = atoData?.cedarAuthorityToOperate?.[0];
-  const atoUnavailable =
-    !viewerCanAccessProfile || hasUnauthorizedGraphQLError(atoError);
+  const atoUnauthorized = hasUnauthorizedGraphQLError(atoError);
+  const atoUnavailable = !viewerCanAccessProfile || atoUnauthorized;
+  const atoLoadError = viewerCanAccessProfile && !!atoError && !atoUnauthorized;
   const atoStatus =
-    atoLoading || atoUnavailable || atoError
+    atoLoading || atoUnavailable || atoLoadError
       ? undefined
       : getAtoStatus(ato?.dateAuthorizationMemoExpires, ato?.oaStatus);
 
@@ -216,6 +217,7 @@ export const SystemWorkspace = () => {
             />
 
             <AtoCard
+              atoError={atoLoadError}
               atoLoading={viewerCanAccessProfile && atoLoading}
               atoStatus={atoStatus}
               atoUnavailable={atoUnavailable}

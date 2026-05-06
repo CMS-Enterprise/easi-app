@@ -8,9 +8,6 @@ import {
   GetLinkedRequestsDocument,
   GetLinkedRequestsQuery,
   GetLinkedRequestsQueryVariables,
-  GetSystemWorkspaceDocument,
-  GetSystemWorkspaceQuery,
-  GetSystemWorkspaceQueryVariables,
   SystemIntakeState,
   TRBRequestState
 } from 'gql/generated/graphql';
@@ -26,38 +23,6 @@ import SystemWorkspaceRequests from '.';
 describe('System Workspace Requests Table', () => {
   it('renders open and closed requests', async () => {
     const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
-
-    const getSystemWorkspaceMockedQuery: MockedQuery<
-      GetSystemWorkspaceQuery,
-      GetSystemWorkspaceQueryVariables
-    > = {
-      request: {
-        query: GetSystemWorkspaceDocument,
-        variables: {
-          cedarSystemId
-        }
-      },
-      result: {
-        data: {
-          __typename: 'Query',
-          cedarSystemWorkspace: {
-            __typename: 'CedarSystemWorkspace',
-            id: cedarSystemId,
-            isMySystem: true,
-            cedarSystem: {
-              __typename: 'CedarSystemWorkspaceSystem',
-              id: cedarSystemId,
-              name: 'Office of Funny Walks',
-              isBookmarked: false,
-              viewerCanAccessProfile: true,
-              linkedSystemIntakes,
-              linkedTrbRequests
-            },
-            roles: []
-          }
-        }
-      }
-    };
 
     const result: FetchResult<GetLinkedRequestsQuery> = {
       data: {
@@ -111,10 +76,6 @@ describe('System Workspace Requests Table', () => {
     render(
       <MockedProvider
         mocks={[
-          getSystemWorkspaceMockedQuery,
-          getSystemWorkspaceMockedQuery,
-          getSystemWorkspaceMockedQuery,
-          getSystemWorkspaceMockedQuery,
           getLinkedRequestsMockedQuery,
           getLinkedRequestsMockedQueryClosed
         ]}
@@ -153,40 +114,23 @@ describe('System Workspace Requests Table', () => {
   it('renders not found for a non-team member', async () => {
     const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
 
-    const getSystemWorkspaceMockedQuery: MockedQuery<
-      GetSystemWorkspaceQuery,
-      GetSystemWorkspaceQueryVariables
+    const getLinkedRequestsMockedQuery: MockedQuery<
+      GetLinkedRequestsQuery,
+      GetLinkedRequestsQueryVariables
     > = {
       request: {
-        query: GetSystemWorkspaceDocument,
+        query: GetLinkedRequestsDocument,
         variables: {
-          cedarSystemId
+          cedarSystemId,
+          systemIntakeState: SystemIntakeState.OPEN,
+          trbRequestState: TRBRequestState.OPEN
         }
       },
-      result: {
-        data: {
-          __typename: 'Query',
-          cedarSystemWorkspace: {
-            __typename: 'CedarSystemWorkspace',
-            id: cedarSystemId,
-            isMySystem: false,
-            cedarSystem: {
-              __typename: 'CedarSystemWorkspaceSystem',
-              id: cedarSystemId,
-              name: 'Office of Funny Walks',
-              isBookmarked: false,
-              viewerCanAccessProfile: false,
-              linkedSystemIntakes: [],
-              linkedTrbRequests: []
-            },
-            roles: []
-          }
-        }
-      }
+      error: new Error('not authorized')
     };
 
     render(
-      <MockedProvider mocks={[getSystemWorkspaceMockedQuery]}>
+      <MockedProvider mocks={[getLinkedRequestsMockedQuery]}>
         <MemoryRouter
           initialEntries={[`/systems/${cedarSystemId}/workspace/requests`]}
         >

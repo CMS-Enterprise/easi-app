@@ -251,4 +251,67 @@ describe('SystemWorkspace', () => {
     ).toBeInTheDocument();
     expect(screen.queryByText('System profile route')).not.toBeInTheDocument();
   });
+
+  it('shows temporary unavailable messaging when the ato lookup fails', async () => {
+    const getSystemWorkspaceQuery: MockedQuery<
+      GetSystemWorkspaceQuery,
+      GetSystemWorkspaceQueryVariables
+    > = {
+      request: {
+        query: GetSystemWorkspaceDocument,
+        variables: {
+          cedarSystemId
+        }
+      },
+      result: {
+        data: {
+          __typename: 'Query',
+          cedarSystemWorkspace: {
+            __typename: 'CedarSystemWorkspace',
+            id: cedarSystemId,
+            isMySystem: true,
+            cedarSystem: {
+              __typename: 'CedarSystemWorkspaceSystem',
+              id: cedarSystemId,
+              name: cedarSystemName,
+              isBookmarked: false,
+              viewerCanAccessProfile: true,
+              linkedTrbRequests: [],
+              linkedSystemIntakes: []
+            },
+            roles: []
+          }
+        }
+      }
+    };
+
+    const getSystemWorkspaceAtoErrorQuery: MockedQuery<
+      GetSystemWorkspaceAtoQuery,
+      GetSystemWorkspaceAtoQueryVariables
+    > = {
+      request: {
+        query: GetSystemWorkspaceAtoDocument,
+        variables: {
+          cedarSystemId
+        }
+      },
+      error: new Error('network error')
+    };
+
+    render(
+      <MockedProvider
+        mocks={[getSystemWorkspaceQuery, getSystemWorkspaceAtoErrorQuery]}
+      >
+        <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/workspace`]}>
+          <Route path="/systems/:systemId/workspace">
+            <SystemWorkspace />
+          </Route>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    expect(
+      await screen.findByText('ATO details are temporarily unavailable.')
+    ).toBeInTheDocument();
+  });
 });
