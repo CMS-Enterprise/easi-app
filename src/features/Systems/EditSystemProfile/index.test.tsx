@@ -225,6 +225,8 @@ describe('EditSystemProfile', () => {
     ).toBeInTheDocument();
 
     expect(await screen.findByText('Vickie Denesik')).toBeInTheDocument();
+    expect(mockSystemSectionLockContextProvider).toHaveBeenCalled();
+    expect(mockSystemProfileLockWrapper).toHaveBeenCalled();
   });
 
   it('renders page not found for invalid system id', async () => {

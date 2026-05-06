@@ -37,12 +37,14 @@ const EditSystemProfile = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const teamManagementPathMatch = matchPath(pathname, {
     path: '/systems/:systemId/edit/team/:action(team-member)?',
     exact: true
   });
   const usesWorkspaceTeamData = !!teamManagementPathMatch;
+  const bypassSectionLocks =
+    usesWorkspaceTeamData && new URLSearchParams(search).has('workspace');
 
   const {
     data: cedarSystemData,
@@ -155,7 +157,7 @@ const EditSystemProfile = () => {
     />
   );
 
-  if (usesWorkspaceTeamData) {
+  if (bypassSectionLocks) {
     return editRoutes;
   }
 
