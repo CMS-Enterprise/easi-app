@@ -152,7 +152,7 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
             variant="unstyled"
             className="usa-button"
             to={{
-              pathname: `/systems/${systemId}/team/edit/team-member`,
+              pathname: `/systems/${systemId}/edit/team/team-member`,
               search: 'workspace'
             }}
           >
@@ -162,7 +162,7 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
             variant="unstyled"
             className="usa-button usa-button--outline"
             to={{
-              pathname: `/systems/${systemId}/team/edit`,
+              pathname: `/systems/${systemId}/edit/team`,
               search: 'workspace'
             }}
           >

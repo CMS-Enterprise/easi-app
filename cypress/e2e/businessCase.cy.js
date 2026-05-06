@@ -4,10 +4,30 @@ describe('The Business Case Form', () => {
   });
 
   it('fills out all Business Case fields', () => {
+    const requestName = 'Easy Access to System Information';
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetRequests') {
+        req.alias = 'getRequests';
+      }
+
+      if (req.body.operationName === 'GetGovernanceTaskList') {
+        req.alias = 'getGovernanceTaskList';
+      }
+    });
+
     cy.visit('/');
-    cy.get('.requests-table')
-      .contains('a', 'Easy Access to System Information')
-      .click();
+    cy.contains('h3', 'My open requests');
+    cy.wait('@getRequests').then(({ response }) => {
+      const requests = response?.body?.data?.mySystemIntakes || [];
+      const request = requests.find(item => item.requestName === requestName);
+
+      expect(request, `request named "${requestName}"`).to.not.equal(undefined);
+
+      cy.visit(`/governance-task-list/${request.id}`);
+    });
+
+    cy.wait('@getGovernanceTaskList');
     cy.contains('h1', 'Governance task list');
 
     cy.get('li[data-testid="prepare-a-draft-business-case"]')

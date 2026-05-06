@@ -64,9 +64,12 @@ func CtxWithNewDataloaders(ctx context.Context, store *storage.Store) context.Co
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
 		return cedarcoremock.GetActiveSystems(), nil
 	}
+	getMyCedarSystems := func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error) {
+		return cedarcoremock.GetSystemsForUser(euaUserID), nil
+	}
 
 	buildDataloaders := func() *dataloaders.Dataloaders {
-		return dataloaders.NewDataloaders(store, local.NewOktaAPIClient().FetchUserInfos, getCedarSystems)
+		return dataloaders.NewDataloaders(store, local.NewOktaAPIClient().FetchUserInfos, getCedarSystems, getMyCedarSystems)
 	}
 
 	// Set up mocked dataloaders for the test context

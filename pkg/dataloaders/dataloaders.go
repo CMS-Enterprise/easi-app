@@ -2,6 +2,7 @@ package dataloaders
 
 import (
 	"context"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/vikstrous/dataloadgen"
@@ -17,16 +18,19 @@ type (
 	BuildDataloaders func() *Dataloaders
 
 	// for convenience and cleaner function definitions
-	fetchUserInfosFunc  func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error)
-	getCedarSystemsFunc func(ctx context.Context) ([]*models.CedarSystem, error)
+	fetchUserInfosFunc    func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error)
+	getCedarSystemsFunc   func(ctx context.Context) ([]*models.CedarSystem, error)
+	getMyCedarSystemsFunc func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error)
 )
 
 // dataReader's main responsibility is `db` access
 // it can also be used hold onto methods that can vary depending on environments (ex: test vs. prod)
 type dataReader struct {
-	db              *storage.Store
-	fetchUserInfos  fetchUserInfosFunc
-	getCedarSystems getCedarSystemsFunc
+	db                   *storage.Store
+	fetchUserInfos       fetchUserInfosFunc
+	getCedarSystems      getCedarSystemsFunc
+	getMyCedarSystems    getMyCedarSystemsFunc
+	myCedarSystemsByUser sync.Map
 }
 
 // Dataloaders houses all dataloader-capable functionality
@@ -66,6 +70,7 @@ type dataReader struct {
 type Dataloaders struct {
 	BusinessCaseLifecycleCosts           *dataloadgen.Loader[uuid.UUID, []*models.EstimatedLifecycleCost]
 	CedarSystemBookmark                  *dataloadgen.Loader[models.BookmarkRequest, bool]
+	CedarSystemViewerCapabilities        *dataloadgen.Loader[uuid.UUID, *models.CedarSystemViewerCapabilities]
 	CedarSystemLinkedSystemIntakes       *dataloadgen.Loader[models.SystemIntakesByCedarSystemIDsRequest, []*models.SystemIntake]
 	CedarSystemLinkedTRBRequests         *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
 	FetchUserInfo                        *dataloadgen.Loader[string, *models.UserInfo]
@@ -79,6 +84,8 @@ type Dataloaders struct {
 	SystemIntakeDocuments                *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeDocument]
 	SystemIntakeFundingSources           *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeFundingSource]
 	SystemIntakeGovReqFeedback           *dataloadgen.Loader[uuid.UUID, []*models.GovernanceRequestFeedback]
+	SystemIntakeByID                     *dataloadgen.Loader[uuid.UUID, *models.SystemIntake]
+	SystemIntakesWithLCIDs               *dataloadgen.Loader[bool, []*models.SystemIntake]
 	SystemIntakeGRBReviewers             *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
 	SystemIntakeGRBDiscussionPosts       *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewDiscussionPost]
 	SystemIntakeGRBPresentationLinks     *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeGRBPresentationLinks]
@@ -103,15 +110,17 @@ type Dataloaders struct {
 }
 
 // NewDataloaders returns a new set of dataloaders
-func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, getCedarSystems getCedarSystemsFunc) *Dataloaders {
+func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, getCedarSystems getCedarSystemsFunc, getMyCedarSystems getMyCedarSystemsFunc) *Dataloaders {
 	dr := &dataReader{
-		db:              store,
-		fetchUserInfos:  fetchUserInfos,
-		getCedarSystems: getCedarSystems,
+		db:                store,
+		fetchUserInfos:    fetchUserInfos,
+		getCedarSystems:   getCedarSystems,
+		getMyCedarSystems: getMyCedarSystems,
 	}
 	return &Dataloaders{
 		BusinessCaseLifecycleCosts:           dataloadgen.NewLoader(dr.batchBusinessCaseLifecycleCostsByBizCaseIDs),
 		CedarSystemBookmark:                  dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
+		CedarSystemViewerCapabilities:        dataloadgen.NewLoader(dr.batchCedarSystemViewerCapabilities),
 		CedarSystemLinkedTRBRequests:         dataloadgen.NewLoader(dr.batchCedarSystemLinkedTRBRequests),
 		CedarSystemLinkedSystemIntakes:       dataloadgen.NewLoader(dr.batchCedarSystemLinkedSystemIntakes),
 		FetchUserInfo:                        dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
@@ -125,6 +134,8 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		SystemIntakeDocuments:                dataloadgen.NewLoader(dr.batchSystemIntakeDocumentsBySystemIntakeIDs),
 		SystemIntakeFundingSources:           dataloadgen.NewLoader(dr.batchSystemIntakeFundingSourcesBySystemIntakeIDs),
 		SystemIntakeGovReqFeedback:           dataloadgen.NewLoader(dr.batchSystemIntakeGovReqFeedbackByIntakeIDs),
+		SystemIntakeByID:                     dataloadgen.NewLoader(dr.batchSystemIntakesByID),
+		SystemIntakesWithLCIDs:               dataloadgen.NewLoader(dr.batchSystemIntakesWithLCIDs),
 		SystemIntakeGRBReviewers:             dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
 		SystemIntakeGRBDiscussionPosts:       dataloadgen.NewLoader(dr.batchSystemIntakeGRBDiscussionPostsBySystemIntakeIDs),
 		SystemIntakeGRBPresentationLinks:     dataloadgen.NewLoader(dr.batchSystemIntakeGRBPresentationLinksByIntakeIDs),

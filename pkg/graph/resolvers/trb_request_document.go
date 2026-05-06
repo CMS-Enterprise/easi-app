@@ -21,7 +21,16 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*mo
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
-func GetURLForTRBRequestDocument(ctx context.Context, s3Client *upload.S3Client, s3Key string) (string, error) {
+func GetURLForTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, trbRequestID uuid.UUID, s3Key string) (string, error) {
+	trbRequest, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return "", err
+	}
+
+	if err := authorizeUserCanViewTRBRequest(ctx, trbRequest); err != nil {
+		return "", err
+	}
+
 	presignedURL, err := s3Client.NewGetPresignedURL(ctx, s3Key)
 	if err != nil {
 		return "", err
@@ -50,6 +59,15 @@ func GetStatusForTRBRequestDocument(ctx context.Context, s3Client *upload.S3Clie
 
 // CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database.
 func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
+	trbRequest, err := store.GetTRBRequestByID(ctx, input.RequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
 	s3Key := uuid.New().String()
 
 	existingExtension := filepath.Ext(input.FileData.Filename)
@@ -90,5 +108,19 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 //
 // Does *not* delete the uploaded file from S3.
 func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestDocument, error) {
+	document, err := store.GetTRBRequestDocumentByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	trbRequest, err := store.GetTRBRequestByID(ctx, document.TRBRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
 	return store.DeleteTRBRequestDocument(ctx, id)
 }

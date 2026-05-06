@@ -2,11 +2,13 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
@@ -463,4 +465,74 @@ func (s *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})
+}
+
+func (s *ResolverSuite) TestTRBRequestRelationUnauthorized() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+	s.NoError(err)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+	var unauthorizedErr *apperrors.UnauthorizedError
+
+	for _, ctx := range []context.Context{otherCtx, leadCtx} {
+		_, err = SetTRBRequestRelationNewSystem(ctx, store, models.SetTRBRequestRelationNewSystemInput{
+			TrbRequestID:    trbRequest.ID,
+			ContractNumbers: []string{"12345"},
+		})
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+
+		_, err = SetTRBRequestRelationExistingSystem(
+			ctx,
+			store,
+			func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
+				return &models.CedarSystem{}, nil
+			},
+			models.SetTRBRequestRelationExistingSystemInput{
+				TrbRequestID:    trbRequest.ID,
+				CedarSystemIDs:  []uuid.UUID{uuid.New()},
+				ContractNumbers: []string{"12345"},
+			},
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+
+		_, err = SetTRBRequestRelationExistingService(ctx, store, models.SetTRBRequestRelationExistingServiceInput{
+			TrbRequestID:    trbRequest.ID,
+			ContractName:    "Contract Name",
+			ContractNumbers: []string{"12345"},
+		})
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+
+		_, err = UnlinkTRBRequestRelation(ctx, store, trbRequest.ID)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
+}
+
+func (s *ResolverSuite) TestTRBRequestRelationAdminAuthorized() {
+	store := s.testConfigs.Store
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTNeedHelp, store)
+	s.NoError(err)
+
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	_, err = SetTRBRequestRelationNewSystem(adminCtx, store, models.SetTRBRequestRelationNewSystemInput{
+		TrbRequestID:    trbRequest.ID,
+		ContractNumbers: []string{"12345"},
+	})
+	s.NoError(err)
 }

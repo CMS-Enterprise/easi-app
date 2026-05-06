@@ -79,7 +79,7 @@ export const systemProfileSections = [
   {
     key: SystemProfileLockableSection.TEAM,
     route: 'team',
-    legacyRoute: 'team/edit?workspace',
+    legacyRoute: 'edit/team?workspace',
     featureFlag: 'systemProfileTeam'
   },
   {

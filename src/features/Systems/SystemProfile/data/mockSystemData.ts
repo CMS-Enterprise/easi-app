@@ -32,9 +32,10 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
       isBookmarked: false,
+      viewerCanAccessProfile: true,
+      viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     },
     {
       __typename: 'CedarSystem',
@@ -54,9 +55,10 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
       isBookmarked: false,
+      viewerCanAccessProfile: true,
+      viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     },
     {
       __typename: 'CedarSystem',
@@ -76,9 +78,10 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
       isBookmarked: false,
+      viewerCanAccessProfile: true,
+      viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     },
     {
       __typename: 'CedarSystem',
@@ -99,9 +102,10 @@ export const mockSystemInfo: NonNullable<GetCedarSystemsQuery['cedarSystems']> =
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta.`,
       isBookmarked: false,
+      viewerCanAccessProfile: true,
+      viewerCanAccessWorkspace: true,
       atoExpirationDate: null,
-      linkedTrbRequests: [],
-      linkedSystemIntakes: []
+      oaStatus: null
     }
   ];
 

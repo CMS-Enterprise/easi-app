@@ -76,6 +76,8 @@ const systemWorkspace = {
       header: 'Authority to Operate (ATO)',
       description:
         'Information systems that intend to operate for 3 years or more are required to get and maintain an ATO.',
+      unavailable: 'ATO details are unavailable for your account.',
+      error: 'ATO details are temporarily unavailable.',
       isso: 'Information System Security Officer (ISSO)',
       noIsso: 'This system has no ISSO',
       contact: 'Contact ISSO',

@@ -47,6 +47,14 @@ func SystemIntakeSystemsByIntakeID(ctx context.Context, systemIntakeID uuid.UUID
 }
 
 func AddSystemLink(ctx context.Context, store *storage.Store, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
 
 	userID := appcontext.Principal(ctx).Account().ID
 
@@ -74,10 +82,38 @@ func AddSystemLink(ctx context.Context, store *storage.Store, input models.AddSy
 }
 
 func DeleteSystemIntakeSystemByID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (models.SystemIntakeSystem, error) {
+	linkedSystem, err := store.GetLinkedSystemByID(ctx, systemIntakeID)
+	if err != nil {
+		return models.SystemIntakeSystem{}, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	if err != nil {
+		return models.SystemIntakeSystem{}, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return models.SystemIntakeSystem{}, err
+	}
+
 	return store.DeleteSystemIntakeSystemByID(ctx, systemIntakeID)
 }
 
 func UpdateSystemLinkByID(ctx context.Context, store *storage.Store, input models.UpdateSystemLinkInput) (models.SystemIntakeSystem, error) {
+	linkedSystem, err := store.GetLinkedSystemByID(ctx, input.ID)
+	if err != nil {
+		return models.SystemIntakeSystem{}, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	if err != nil {
+		return models.SystemIntakeSystem{}, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return models.SystemIntakeSystem{}, err
+	}
+
 	updatedSystem, err := store.UpdateSystemIntakeSystemByID(ctx, input)
 
 	if err != nil {
@@ -89,4 +125,38 @@ func UpdateSystemLinkByID(ctx context.Context, store *storage.Store, input model
 
 func GetLinkedSystemByID(ctx context.Context, store *storage.Store, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
 	return store.GetLinkedSystemByID(ctx, systemIntakeSystemID)
+}
+
+func GetSystemIntakeSystem(ctx context.Context, store *storage.Store, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	linkedSystem, err := GetLinkedSystemByID(ctx, store, systemIntakeSystemID)
+	if err != nil {
+		return nil, err
+	}
+	if linkedSystem == nil {
+		return nil, nil
+	}
+
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	return linkedSystem, nil
+}
+
+func GetSystemIntakeSystems(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeRelations(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	return SystemIntakeSystemsByIntakeID(ctx, systemIntakeID)
 }

@@ -87,6 +87,7 @@ export default gql(/* GraphQL */ `
           username
         }
       }
+      viewerIsRequester
     }
   }
 `);

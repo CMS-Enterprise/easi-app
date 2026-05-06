@@ -22,6 +22,17 @@ type CedarSystem struct {
 	VersionID               zero.String `json:"versionId"`
 	UUID                    zero.String `json:"uuid"`
 	OaStatus                zero.String `json:"oaStatus"`
+
+	// WorkspaceAccessPreAuthorized is an internal marker used when a system row
+	// already came from a team-scoped query such as myCedarSystems.
+	WorkspaceAccessPreAuthorized bool `json:"-"`
+}
+
+// CedarSystemViewerCapabilities contains the current viewer's navigation
+// capabilities for a CEDAR system.
+type CedarSystemViewerCapabilities struct {
+	ViewerCanAccessProfile   bool
+	ViewerCanAccessWorkspace bool
 }
 
 type CedarSubSystem struct {

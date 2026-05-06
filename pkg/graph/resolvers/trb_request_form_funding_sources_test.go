@@ -1,8 +1,12 @@
 package resolvers
 
 import (
+	"context"
+	"errors"
+
 	"github.com/samber/lo"
 
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -109,4 +113,40 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 			s.Nil(deletedSource)
 		}
 	})
+}
+
+func (s *ResolverSuite) TestModifyTRBFundingSourcesUnauthorized() {
+	trbRequest := s.createNewTRBRequest()
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err := s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	for _, ctx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = UpdateTRBRequestFundingSources(
+			ctx,
+			s.testConfigs.Store,
+			trbRequest.ID,
+			"12345",
+			[]string{"banana", "apple"},
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+
+		_, err = DeleteTRBRequestFundingSources(
+			ctx,
+			s.testConfigs.Store,
+			trbRequest.ID,
+			"12345",
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
 }

@@ -138,12 +138,14 @@ func TestGraphQLTestSuite(t *testing.T) {
 			store,
 			oktaAPIClient.FetchUserInfos,
 			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+			func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error) { return nil, nil },
 		)
 	}
 
 	graphQLClient := client.New(
 		newTestGQLServer(schema),
 		addDataloadersToGraphQLClientTest(buildDataloaders),
+		addDefaultAuthToGraphQLClientTest(store, "TEST"),
 	)
 
 	ctx := context.Background()
@@ -188,6 +190,22 @@ func addDataloadersToGraphQLClientTest(buildDataloaders dataloaders.BuildDataloa
 	return func(request *client.Request) {
 		ctx := request.HTTP.Context()
 		ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
+}
+
+func addDefaultAuthToGraphQLClientTest(store *storage.Store, euaID string) func(*client.Request) {
+	return func(request *client.Request) {
+		if appcontext.Principal(request.HTTP.Context()).AllowEASi() {
+			return
+		}
+
+		princ, err := useraccountstoretestconfigs.GetTestPrincipal(store, euaID, false)
+		if err != nil {
+			panic(err)
+		}
+
+		ctx := appcontext.WithPrincipal(request.HTTP.Context(), princ)
 		request.HTTP = request.HTTP.WithContext(ctx)
 	}
 }

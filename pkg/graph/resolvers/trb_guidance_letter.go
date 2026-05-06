@@ -15,6 +15,18 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
+func canViewTRBGuidanceLetter(ctx context.Context, letter *models.TRBGuidanceLetter) bool {
+	if letter == nil {
+		return false
+	}
+
+	if appcontext.Principal(ctx).AllowTRBAdmin() {
+		return true
+	}
+
+	return letter.Status == models.TRBGuidanceLetterStatusCompleted
+}
+
 // GetTRBGuidanceLetterByTRBRequestID fetches a TRB guidance letter record by its associated request's ID.
 func GetTRBGuidanceLetterByTRBRequestID(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error) {
 	return dataloaders.GetTRBGuidanceLetterByTRBRequestID(ctx, id)

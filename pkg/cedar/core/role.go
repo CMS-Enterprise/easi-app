@@ -84,9 +84,28 @@ func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemI
 	return c.GetRolesBySystem(ctx, cedarSystemID, &businessOwnerRoleID)
 }
 
+// GetRolesForSystem makes a GET call to the /role endpoint using a pre-fetched CEDAR system.
+// This avoids an extra system lookup when the caller already has the system summary/detail.
+func (c *Client) GetRolesForSystem(ctx context.Context, cedarSystem *models.CedarSystem, roleTypeID *string) ([]*models.CedarRole, error) {
+	if cedarSystem == nil {
+		return nil, errors.New("nil cedar system")
+	}
+
+	return c.getRolesByObjectID(ctx, cedarSystem.ID, cedarSystem.VersionID.String, roleTypeID)
+}
+
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
 // we don't currently have a use case for querying /role by role ID, so that's not implemented
 func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID uuid.UUID, roleTypeID *string) ([]*models.CedarRole, error) {
+	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.getRolesByObjectID(ctx, cedarSystemID, cedarSystem.VersionID.String, roleTypeID)
+}
+
+func (c *Client) getRolesByObjectID(ctx context.Context, cedarSystemID uuid.UUID, objectID string, roleTypeID *string) ([]*models.CedarRole, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
@@ -95,15 +114,14 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID uuid.UUID, 
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
-	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
+	if objectID == "" {
+		return nil, errors.New("missing cedar system version id")
 	}
 
 	// Construct the parameters
 	params := apiroles.NewRoleFindByIDParams()
 	params.SetApplication(cedarRoleApplication)
-	params.SetObjectID(cedarSystem.VersionID.Ptr())
+	params.SetObjectID(&objectID)
 	params.HTTPClient = c.hc
 
 	if roleTypeID != nil {

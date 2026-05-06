@@ -129,9 +129,24 @@ const EditTeam = ({
   }>();
 
   const actionType = state?.user ? 'edit' : 'add';
+  const editHubRootPath = `/systems/${cedarSystemId}/edit`;
+  const profileTeamEditPath = `/systems/${cedarSystemId}/team/edit`;
+  const editHubTeamPath = `/systems/${cedarSystemId}/edit/team`;
+  const isEditHubRoute = pathname.startsWith(editHubTeamPath);
+  const teamEditPath = isEditHubRoute ? editHubTeamPath : profileTeamEditPath;
+  let teamParentPath = `/systems/${cedarSystemId}/team`;
+  if (isWorkspace) {
+    teamParentPath = `/systems/${cedarSystemId}/workspace`;
+  } else if (isEditHubRoute) {
+    teamParentPath = editHubRootPath;
+  }
+  const usesWorkspaceQuery = isWorkspace || isEditHubRoute;
 
   const [updateRoles, { loading }] = useSetRolesForUserOnSystemMutation({
-    refetchQueries: ['GetSystemProfile']
+    refetchQueries: [
+      usesWorkspaceQuery ? 'GetSystemWorkspace' : 'GetSystemProfile'
+    ],
+    awaitRefetchQueries: true
   });
 
   /**
@@ -211,20 +226,14 @@ const EditTeam = ({
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb>
-            <BreadcrumbLink
-              asCustom={Link}
-              to={`/systems/${cedarSystemId}/team`}
-            >
+            <BreadcrumbLink asCustom={Link} to={teamParentPath}>
               {name}
             </BreadcrumbLink>
           </Breadcrumb>
           {action === 'team-member' ? (
             <>
               <Breadcrumb>
-                <BreadcrumbLink
-                  asCustom={Link}
-                  to={`/systems/${cedarSystemId}/team/edit`}
-                >
+                <BreadcrumbLink asCustom={Link} to={teamEditPath}>
                   {t('singleSystem.editTeam.title')}
                 </BreadcrumbLink>
               </Breadcrumb>
@@ -257,6 +266,7 @@ const EditTeam = ({
         /* Add/edit team member form */
         <TeamMemberForm
           cedarSystemId={cedarSystemId}
+          returnPath={teamEditPath}
           updateRoles={updateRoles}
           loading={loading}
           team={team}
@@ -287,11 +297,7 @@ const EditTeam = ({
           </p>
 
           <IconLink
-            to={
-              isWorkspace
-                ? `/systems/${cedarSystemId}/workspace`
-                : `/systems/${cedarSystemId}/team`
-            }
+            to={teamParentPath}
             icon={<Icon.ArrowBack aria-hidden />}
             className="margin-top-2 margin-bottom-6 line-height-body-4 text-primary"
           >
@@ -417,7 +423,7 @@ const EditTeam = ({
                 ))}
               </CardGroup>
               <IconLink
-                to={`/systems/${cedarSystemId}/team`}
+                to={teamParentPath}
                 icon={<Icon.ArrowBack aria-hidden />}
                 className="margin-top-6"
               >

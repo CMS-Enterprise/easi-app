@@ -153,6 +153,27 @@ type CedarSystemMaintainerInformation struct {
 	YearToRetireReplace                   *string    `json:"yearToRetireReplace,omitempty"`
 }
 
+// This is the subset of the core CEDAR system record that a system team member
+// can use from workspace-scoped queries without broader EASi-only read
+// permissions.
+type CedarSystemWorkspace struct {
+	ID          uuid.UUID                   `json:"id"`
+	CedarSystem *CedarSystemWorkspaceSystem `json:"cedarSystem"`
+	Roles       []*CedarRole                `json:"roles"`
+	IsMySystem  bool                        `json:"isMySystem"`
+}
+
+// This is the subset of CEDAR system data that a system team member can use to
+// access workspace-scoped features without broader EASi-only read permissions.
+type CedarSystemWorkspaceSystem struct {
+	ID                     uuid.UUID       `json:"id"`
+	Name                   string          `json:"name"`
+	IsBookmarked           bool            `json:"isBookmarked"`
+	ViewerCanAccessProfile bool            `json:"viewerCanAccessProfile"`
+	LinkedTrbRequests      []*TRBRequest   `json:"linkedTrbRequests"`
+	LinkedSystemIntakes    []*SystemIntake `json:"linkedSystemIntakes"`
+}
+
 // The input needed to close a TRB request
 type CloseTRBRequestInput struct {
 	ID             uuid.UUID `json:"id"`
@@ -929,12 +950,6 @@ type UpdateSystemIntakeGRBReviewerInput struct {
 	ReviewerID uuid.UUID                         `json:"reviewerID"`
 	VotingRole SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
 	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
-}
-
-// Input data for updating a system intake's relationship to a CEDAR system
-type UpdateSystemIntakeLinkedCedarSystemInput struct {
-	ID            uuid.UUID  `json:"id"`
-	CedarSystemID *uuid.UUID `json:"cedarSystemId,omitempty"`
 }
 
 // Input data for updating an IT governance admin note

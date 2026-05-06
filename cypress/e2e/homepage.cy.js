@@ -14,7 +14,30 @@ describe('Homepage', () => {
   });
 
   it('shows the governance table to GRT folks', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (
+        req.body.operationName === 'GetSystemIntakesTable' &&
+        req.body.variables?.openRequests === true
+      ) {
+        req.alias = 'getOpenSystemIntakesTable';
+      }
+
+      if (
+        req.body.operationName === 'GetSystemIntakesTable' &&
+        req.body.variables?.openRequests === false
+      ) {
+        req.alias = 'getClosedSystemIntakesTable';
+      }
+    });
+
     cy.localLogin({ name: 'E2E1', role: GOVTEAM_DEV });
+    cy.wait('@getOpenSystemIntakesTable')
+      .its('response.statusCode')
+      .should('eq', 200);
+    cy.wait('@getClosedSystemIntakesTable')
+      .its('response.statusCode')
+      .should('eq', 200);
     cy.contains('button', 'Open requests');
+    cy.contains('button', 'Closed requests');
   });
 });

@@ -28,6 +28,11 @@ func SetTRBRequestRelationNewSystem(
 			return nil, err
 		}
 
+		// check access
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
+			return nil, err
+		}
+
 		// Delete CEDAR relationships
 		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []uuid.UUID{}); err != nil {
 			return nil, err
@@ -58,6 +63,9 @@ func SetTRBRequestRelationExistingSystem(
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, input.TrbRequestID)
 		if err != nil {
+			return nil, err
+		}
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
 			return nil, err
 		}
 
@@ -98,6 +106,9 @@ func SetTRBRequestRelationExistingService(
 		if err != nil {
 			return nil, err
 		}
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
+			return nil, err
+		}
 
 		// Delete CEDAR relationships
 		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []uuid.UUID{}); err != nil {
@@ -127,6 +138,9 @@ func UnlinkTRBRequestRelation(
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, trbRequestID)
 		if err != nil {
+			return nil, err
+		}
+		if err := authorizeUserCanManageTRBRequestRelations(ctx, trbRequest); err != nil {
 			return nil, err
 		}
 

@@ -26,6 +26,10 @@ func ProgressIntake(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeProgressToNewStepsInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
@@ -181,6 +185,10 @@ func CreateSystemIntakeActionRequestEdits(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeRequestEditsInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
 		return nil, err
@@ -282,6 +290,10 @@ func RejectIntakeAsNotApproved(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeRejectIntakeInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
@@ -404,6 +416,10 @@ func IssueLCID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeIssueLCIDInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
@@ -545,6 +561,10 @@ func CreateSystemIntakeActionReopenRequest(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeReopenRequestInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
 		return nil, err
@@ -623,6 +643,10 @@ func CreateSystemIntakeActionCloseRequest(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeCloseRequestInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
 		return nil, err
@@ -701,6 +725,10 @@ func CreateSystemIntakeActionNotITGovRequest(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeNotITGovReqInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminTakingAction, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
 		return nil, err
@@ -774,6 +802,10 @@ func UpdateLCID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeUpdateLCIDInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
@@ -927,6 +959,9 @@ func ConfirmLCID(ctx context.Context,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeConfirmLCIDInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
 
 	adminEUAID := appcontext.Principal(ctx).ID()
 
@@ -1056,6 +1091,10 @@ func ExpireLCID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeExpireLCIDInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
@@ -1187,6 +1226,10 @@ func RetireLCID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeRetireLCIDInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
@@ -1297,6 +1340,10 @@ func UnretireLCID(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeUnretireLCIDInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
@@ -1396,6 +1443,10 @@ func ChangeLCIDRetirementDate(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.SystemIntakeChangeLCIDRetirementDateInput,
 ) (*models.SystemIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	adminEUAID := appcontext.Principal(ctx).ID()
 
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)

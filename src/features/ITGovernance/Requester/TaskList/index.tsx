@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import {
   Link as ReactRouterLink,
   useHistory,
@@ -35,6 +34,7 @@ import toastSuccess from 'components/ToastSuccess';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
 } from 'utils/linkCedarSystemIdQueryString';
@@ -45,7 +45,6 @@ import {
   useArchiveSystemIntakeMutation,
   useGetGovernanceTaskListQuery
 } from '../../../../gql/generated/graphql';
-import { AppState } from '../../../../stores/reducers/rootReducer';
 
 import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
@@ -64,9 +63,6 @@ function GovernanceTaskList() {
   const history = useHistory();
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = !!state?.isNew;
-  const { euaId, isUserSet } = useSelector(
-    (appState: AppState) => appState.auth
-  );
 
   const { Message } = useMessage();
 
@@ -126,8 +122,7 @@ function GovernanceTaskList() {
     systemIntake?.statusAdmin !== SystemIntakeStatusAdmin.LCID_RETIRING_SOON;
 
   // isRequester checks to see if the acting user is the requester (admins are not permitted to see this view, unless that admin is the requester)
-  const isRequester =
-    isUserSet && euaId === systemIntake?.requester?.userAccount.username;
+  const isRequester = isSystemIntakeRequester({ intake: systemIntake });
 
   if (error || (systemIntake && !isRequester)) {
     return <NotFound />;

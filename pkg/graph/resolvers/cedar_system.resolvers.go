@@ -6,13 +6,12 @@ package resolvers
 
 import (
 	"context"
-	"slices"
-	"sync"
+	"errors"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -32,14 +31,76 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 	return GetCedarSystemIsBookmarked(ctx, obj.ID)
 }
 
+// ViewerCanAccessProfile is the resolver for the viewerCanAccessProfile field.
+func (r *cedarSystemResolver) ViewerCanAccessProfile(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
+	if err != nil {
+		return false, err
+	}
+
+	return capabilities.ViewerCanAccessProfile, nil
+}
+
+// ViewerCanAccessWorkspace is the resolver for the viewerCanAccessWorkspace field.
+func (r *cedarSystemResolver) ViewerCanAccessWorkspace(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	if obj.WorkspaceAccessPreAuthorized {
+		return true, nil
+	}
+
+	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
+	if err != nil {
+		return false, err
+	}
+
+	return capabilities.ViewerCanAccessWorkspace, nil
+}
+
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
+	trbRequests, err := CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
+	if err != nil {
+		return nil, err
+	}
+
+	if obj.WorkspaceAccessPreAuthorized {
+		return trbRequests, nil
+	}
+
+	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
+	if err == nil {
+		return trbRequests, nil
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	if !errors.As(err, &unauthorizedErr) {
+		return nil, err
+	}
+
+	return filterVisibleTRBRequests(ctx, trbRequests)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
+	intakes, err := CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
+	if err != nil {
+		return nil, err
+	}
+
+	if obj.WorkspaceAccessPreAuthorized {
+		return intakes, nil
+	}
+
+	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
+	if err == nil {
+		return intakes, nil
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	if !errors.As(err, &unauthorizedErr) {
+		return nil, err
+	}
+
+	return filterVisibleSystemIntakes(ctx, r.store, intakes)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
@@ -116,24 +177,69 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 	}, nil
 }
 
-// CedarSystem is the resolver for the cedarSystem field.
-func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error) {
-	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
+// IsBookmarked is the resolver for the isBookmarked field.
+func (r *cedarSystemWorkspaceSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystemWorkspaceSystem) (bool, error) {
+	return GetCedarSystemIsBookmarked(ctx, obj.ID)
+}
+
+// ViewerCanAccessProfile is the resolver for the viewerCanAccessProfile field.
+func (r *cedarSystemWorkspaceSystemResolver) ViewerCanAccessProfile(ctx context.Context, obj *models.CedarSystemWorkspaceSystem) (bool, error) {
+	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
+	if err != nil {
+		return false, err
+	}
+
+	return capabilities.ViewerCanAccessProfile, nil
+}
+
+// LinkedTrbRequests is the resolver for the linkedTrbRequests field.
+func (r *cedarSystemWorkspaceSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystemWorkspaceSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
+	trbRequests, err := CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
 	if err != nil {
 		return nil, err
 	}
 
-	return cedarSystem, nil
+	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
+	if err == nil {
+		return trbRequests, nil
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	if !errors.As(err, &unauthorizedErr) {
+		return nil, err
+	}
+
+	return filterVisibleTRBRequests(ctx, trbRequests)
+}
+
+// LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
+func (r *cedarSystemWorkspaceSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystemWorkspaceSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
+	intakes, err := CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
+	if err != nil {
+		return nil, err
+	}
+
+	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
+	if err == nil {
+		return intakes, nil
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	if !errors.As(err, &unauthorizedErr) {
+		return nil, err
+	}
+
+	return filterVisibleSystemIntakes(ctx, r.store, intakes)
+}
+
+// CedarSystem is the resolver for the cedarSystem field.
+func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error) {
+	return GetCedarSystem(ctx, r.cedarCoreClient, cedarSystemID)
 }
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return systems, nil
+	return GetCedarSystems(ctx, r.cedarCoreClient)
 }
 
 // MyCedarSystems is the resolver for the myCedarSystems field.
@@ -144,93 +250,30 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 		return nil, err
 	}
 
-	return systems, nil
+	authorizedSystems := make([]*models.CedarSystem, 0, len(systems))
+	for _, system := range systems {
+		if system == nil {
+			authorizedSystems = append(authorizedSystems, nil)
+			continue
+		}
+
+		// take a copy because mock data is shared data, so we can't edit the data directly
+		systemCopy := *system
+		systemCopy.WorkspaceAccessPreAuthorized = true
+		authorizedSystems = append(authorizedSystems, &systemCopy)
+	}
+
+	return authorizedSystems, nil
+}
+
+// CedarSystemWorkspace is the resolver for the cedarSystemWorkspace field.
+func (r *queryResolver) CedarSystemWorkspace(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemWorkspace, error) {
+	return GetCedarSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID)
 }
 
 // CedarSystemDetails is the resolver for the cedarSystemDetails field.
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error) {
-	// TODO: consider refactoring this to work with the main CEDAR system implementation instead of using go funcs
-	logger := appcontext.ZLogger(ctx)
-
-	var sysDetail *models.CedarSystemDetails
-	var errS error
-	var cedarRoles []*models.CedarRole
-	var cedarDeployments []*models.CedarDeployment
-	var cedarThreats []*models.CedarThreat
-	var cedarURLs []*models.CedarURL
-
-	// Fetch sysDetail first - this is required, so if it fails, the entire resolver should fail
-	sysDetail, errS = r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
-	if errS != nil {
-		return nil, errS
-	}
-
-	// Fetch other fields in parallel - these are now nullable, so errors should be logged but not fail the resolver
-	var wg sync.WaitGroup
-	wg.Add(4)
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarRoles, err = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
-		if err != nil {
-			logger.Error("problem fetching roles for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarRoles = nil
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarDeployments, err = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
-		if err != nil {
-			logger.Error("problem fetching deployments for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarDeployments = nil
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarThreats, err = r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
-		if err != nil {
-			logger.Error("problem fetching threats for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarThreats = nil
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-		var err error
-		cedarURLs, err = r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
-		if err != nil {
-			logger.Error("problem fetching urls for system", zap.Error(err), zap.String("system.id", cedarSystemID.String()))
-			cedarURLs = nil
-		}
-	}()
-
-	wg.Wait()
-
-	userEua := appcontext.Principal(ctx).ID()
-	isMySystem := false
-	if cedarRoles != nil {
-		isMySystem = slices.ContainsFunc(cedarRoles, func(role *models.CedarRole) bool {
-			return role.AssigneeUsername.String == userEua
-		})
-	}
-
-	dCedarSys := models.CedarSystemDetails{
-		CedarSystem:                 sysDetail.CedarSystem,
-		BusinessOwnerInformation:    sysDetail.BusinessOwnerInformation,
-		SystemMaintainerInformation: sysDetail.SystemMaintainerInformation,
-		Roles:                       cedarRoles,
-		Deployments:                 cedarDeployments,
-		Threats:                     cedarThreats,
-		URLs:                        cedarURLs,
-		IsMySystem:                  isMySystem,
-	}
-
-	return &dCedarSys, nil
+	return GetCedarSystemDetails(ctx, r.cedarCoreClient, cedarSystemID)
 }
 
 // CedarSystem returns generated.CedarSystemResolver implementation.
@@ -241,5 +284,11 @@ func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
 }
 
+// CedarSystemWorkspaceSystem returns generated.CedarSystemWorkspaceSystemResolver implementation.
+func (r *Resolver) CedarSystemWorkspaceSystem() generated.CedarSystemWorkspaceSystemResolver {
+	return &cedarSystemWorkspaceSystemResolver{r}
+}
+
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
+type cedarSystemWorkspaceSystemResolver struct{ *Resolver }

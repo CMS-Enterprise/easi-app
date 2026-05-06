@@ -12,6 +12,7 @@ import { useGetSystemIntakeQuery } from 'gql/generated/graphql';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
@@ -43,7 +44,13 @@ export const SystemIntake = () => {
   const isConfirmationPage =
     formPage === 'confirmation' || formPage === 'confirmation-error';
 
+  const isRequester = isSystemIntakeRequester({ intake: systemIntake });
+
   if (!loading && !systemIntake) {
+    return <NotFound />;
+  }
+
+  if (!loading && systemIntake && !isRequester) {
     return <NotFound />;
   }
 

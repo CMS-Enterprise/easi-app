@@ -24,6 +24,15 @@ func CreateSystemIntakeContact(
 	input models.CreateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
+	intake, err := storage.FetchSystemIntakeByIDNP(ctx, np, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	principalAccount := principal.Account()
 	if principalAccount == nil {
 		return nil, fmt.Errorf("principal doesn't have an account, username %s", principal.String())
@@ -51,6 +60,20 @@ func CreateSystemIntakeContact(
 
 // SystemIntakeContactDelete will, delete a System Intake contact
 func SystemIntakeContactDelete(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntakeContact, error) {
+	contact, err := dataloaders.SystemIntakeContactGetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := storage.FetchSystemIntakeByIDNP(ctx, np, contact.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
+		return nil, err
+	}
+
 	return storage.DeleteSystemIntakeContact(ctx, np, id)
 }
 
@@ -65,6 +88,15 @@ func UpdateSystemIntakeContact(
 ) (*models.CreateSystemIntakeContactPayload, error) {
 	contact, err := dataloaders.SystemIntakeContactGetByID(ctx, input.ID)
 	if err != nil {
+		return nil, err
+	}
+
+	intake, err := storage.FetchSystemIntakeByIDNP(ctx, np, contact.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
 		return nil, err
 	}
 
@@ -99,4 +131,17 @@ func SystemIntakeContactGetByID(ctx context.Context, id uuid.UUID) (*models.Syst
 // SystemIntakeContactGetRequester fetches the requester contact for a system intake
 func SystemIntakeContactGetRequester(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContact, error) {
 	return dataloaders.SystemIntakeContactGetRequester(ctx, systemIntakeID)
+}
+
+func GetSystemIntakeContacts(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeContacts(ctx, intake); err != nil {
+		return nil, err
+	}
+
+	return SystemIntakeContactsGetBySystemIntakeID(ctx, systemIntakeID)
 }

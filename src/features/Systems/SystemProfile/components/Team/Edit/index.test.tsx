@@ -14,6 +14,29 @@ import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import EditTeam, { requisiteLevelsOfTeamRoles } from '.';
 
 const cedarSystemId = '000-0000-1';
+const useSetRolesForUserOnSystemMutationMock = vi.fn(() => [
+  vi.fn(),
+  { loading: false }
+]);
+
+vi.mock('gql/generated/graphql', async () => {
+  const actual = await vi.importActual<typeof import('gql/generated/graphql')>(
+    'gql/generated/graphql'
+  );
+
+  return {
+    ...actual,
+    useSetRolesForUserOnSystemMutation: (
+      ...args: Parameters<typeof useSetRolesForUserOnSystemMutationMock>
+    ) => useSetRolesForUserOnSystemMutationMock(...args)
+  };
+});
+
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    systemWorkspaceTeam: true
+  })
+}));
 
 describe('Edit team page', () => {
   it('Renders the edit team page', async () => {
@@ -71,17 +94,50 @@ describe('Edit team page', () => {
       within(teamCards[0]).getByRole('button', { name: 'Remove team member' })
     ).toBeInTheDocument();
   });
+
+  it('keeps the edit hub route family in the breadcrumb and back links', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/edit/team`]}>
+        <MessageProvider>
+          <MockedProvider>
+            <Route path="/systems/:systemId/edit/team/:action?">
+              <EditTeam
+                name="Easy Access to System Information"
+                team={usernamesWithRoles}
+                numberOfFederalFte={6}
+                numberOfContractorFte={4}
+              />
+            </Route>
+          </MockedProvider>
+        </MessageProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByRole('link', {
+        name: 'Easy Access to System Information'
+      })
+    ).toHaveAttribute('href', `/systems/${cedarSystemId}/edit`);
+
+    screen
+      .getAllByRole('link', {
+        name: i18next.t('systemProfile:returnToSystemProfile')
+      })
+      .forEach(link => {
+        expect(link).toHaveAttribute('href', `/systems/${cedarSystemId}/edit`);
+      });
+  });
 });
 
 describe('Workspace team page', () => {
   function renderWorkspaceEditTeam(team: UsernameWithRoles[]) {
     return render(
       <MemoryRouter
-        initialEntries={[`/systems/${cedarSystemId}/team/edit?workspace`]}
+        initialEntries={[`/systems/${cedarSystemId}/edit/team?workspace`]}
       >
         <MessageProvider>
           <MockedProvider>
-            <Route path="/systems/:systemId/team/edit">
+            <Route path="/systems/:systemId/edit/team/:action?">
               <EditTeam
                 name=""
                 team={team}
@@ -98,19 +154,42 @@ describe('Workspace team page', () => {
   let user: ReturnType<typeof userEvent.setup>;
   beforeEach(() => {
     user = userEvent.setup();
+    useSetRolesForUserOnSystemMutationMock.mockClear();
   });
 
   it('renders', async () => {
     const team = getUsernamesWithRoles(teamRoles);
-    const { asFragment } = renderWorkspaceEditTeam(team);
+    renderWorkspaceEditTeam(team);
 
     // Mock data for this test should have all requisite roles present
     expect(
       screen.queryByTestId('requisite-roles-alert')
     ).not.toBeInTheDocument();
 
-    // Snapshot captures the assignment and ordering of team members and their multiple roles
-    expect(asFragment()).toMatchSnapshot();
+    expect(
+      screen.getByRole('heading', {
+        name: 'Manage system team'
+      })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getAllByRole('link', { name: 'Edit roles' })[0]
+    ).toHaveAttribute(
+      'href',
+      `/systems/${cedarSystemId}/edit/team/team-member?workspace`
+    );
+  });
+
+  it('refetches the workspace query for the edit hub team route', () => {
+    const team = getUsernamesWithRoles(teamRoles);
+    renderWorkspaceEditTeam(team);
+
+    expect(useSetRolesForUserOnSystemMutationMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        refetchQueries: ['GetSystemWorkspace'],
+        awaitRefetchQueries: true
+      })
+    );
   });
 
   it.each(requisiteLevelsOfTeamRoles)(

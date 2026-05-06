@@ -99,6 +99,56 @@ describe('System List View', () => {
       expect(screen.queryByText('ASD')).toBeNull();
     });
 
+    it('renders plain text for all-systems rows when only workspace access is available', async () => {
+      const workspaceOnlySystems = [
+        {
+          ...mockSystemInfo[0],
+          viewerCanAccessProfile: false,
+          viewerCanAccessWorkspace: true
+        }
+      ];
+
+      render(
+        <MemoryRouter initialEntries={['/?table-type=all-systems']}>
+          <MockedProvider addTypename={false}>
+            <Table defaultPageSize={3} systems={workspaceOnlySystems} />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByText('Happiness Achievement Module')
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'Happiness Achievement Module' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders plain text for all-systems rows with no allowed destination', async () => {
+      const inaccessibleSystems = [
+        {
+          ...mockSystemInfo[0],
+          viewerCanAccessProfile: false,
+          viewerCanAccessWorkspace: false
+        }
+      ];
+
+      render(
+        <MemoryRouter initialEntries={['/?table-type=all-systems']}>
+          <MockedProvider addTypename={false}>
+            <Table defaultPageSize={3} systems={inaccessibleSystems} />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByText('Happiness Achievement Module')
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'Happiness Achievement Module' })
+      ).not.toBeInTheDocument();
+    });
+
     test.skip('matches snapshot', async () => {
       const { asFragment } = render(
         <MemoryRouter>

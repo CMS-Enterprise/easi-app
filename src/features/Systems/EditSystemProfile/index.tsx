@@ -1,7 +1,16 @@
 import React from 'react';
-import { Route, Switch, useParams } from 'react-router-dom';
+import {
+  matchPath,
+  Route,
+  Switch,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useGetCedarSystemQuery } from 'gql/generated/graphql';
+import {
+  useGetCedarSystemQuery,
+  useGetSystemWorkspaceQuery
+} from 'gql/generated/graphql';
 
 import PageLoading from 'components/PageLoading';
 import SystemSectionLockContextProvider from 'contexts/SystemSectionLockContext';
@@ -28,80 +37,131 @@ const EditSystemProfile = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
+  const { pathname } = useLocation();
+  const teamManagementPathMatch = matchPath(pathname, {
+    path: '/systems/:systemId/edit/team/:action(team-member)?',
+    exact: true
+  });
+  const usesWorkspaceTeamData = !!teamManagementPathMatch;
 
-  const { data, loading } = useGetCedarSystemQuery({
+  const {
+    data: cedarSystemData,
+    loading: cedarSystemLoading,
+    error: cedarSystemError
+  } = useGetCedarSystemQuery({
     variables: {
       id: systemId
-    }
+    },
+    skip: usesWorkspaceTeamData
   });
 
-  if (!data) return <NotFound />;
+  const {
+    data: cedarSystemWorkspaceData,
+    loading: cedarSystemWorkspaceLoading,
+    error: cedarSystemWorkspaceError
+  } = useGetSystemWorkspaceQuery({
+    variables: {
+      cedarSystemId: systemId
+    },
+    skip: !usesWorkspaceTeamData
+  });
 
-  if (loading) return <PageLoading />;
+  if (cedarSystemLoading || cedarSystemWorkspaceLoading) {
+    return <PageLoading />;
+  }
 
-  const { name: systemName = '' } = data.cedarSystem || {};
+  const cedarSystemWorkspace = cedarSystemWorkspaceData?.cedarSystemWorkspace;
+  const canManageTeam = usesWorkspaceTeamData
+    ? cedarSystemWorkspace?.isMySystem === true
+    : cedarSystemData?.cedarSystem?.viewerCanAccessWorkspace === true;
+
+  if (usesWorkspaceTeamData) {
+    if (
+      cedarSystemWorkspaceError ||
+      !cedarSystemWorkspace?.cedarSystem ||
+      !cedarSystemWorkspace.isMySystem
+    ) {
+      return <NotFound />;
+    }
+  } else if (cedarSystemError || !cedarSystemData?.cedarSystem) {
+    return <NotFound />;
+  }
+
+  const systemName = usesWorkspaceTeamData
+    ? cedarSystemWorkspace?.cedarSystem?.name || ''
+    : cedarSystemData?.cedarSystem?.name || '';
+
+  const editRoutes = (
+    <Route
+      path="/systems/:systemId"
+      render={() => (
+        <SystemIDWrapper>
+          <Switch>
+            <Route exact path="/systems/:systemId/edit">
+              <EditSystemProfileHome
+                canManageTeam={canManageTeam}
+                systemId={systemId}
+                systemName={systemName}
+              />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/business-information">
+              <BusinessInformation />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/implementation-details">
+              <ImplementationDetails />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/data">
+              <Data />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/tools-and-software">
+              <ToolsAndSoftware />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/sub-systems">
+              <SubSystems />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/team/:action(team-member)?">
+              <Team
+                systemName={systemName}
+                roles={cedarSystemWorkspace?.roles || []}
+              />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/contracts">
+              <Contracts />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/funding-and-budget">
+              <FundingAndBudget />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/ato-and-security">
+              <AtoAndSecurity />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/locked">
+              <LockedSystemProfileSection />
+            </Route>
+
+            <Route path="*" component={NotFound} />
+          </Switch>
+        </SystemIDWrapper>
+      )}
+    />
+  );
+
+  if (usesWorkspaceTeamData) {
+    return editRoutes;
+  }
 
   return (
     <SystemSectionLockContextProvider>
-      <SystemProfileLockWrapper>
-        <Route
-          path="/systems/:systemId"
-          render={() => (
-            <SystemIDWrapper>
-              <Switch>
-                <Route exact path="/systems/:systemId/edit">
-                  <EditSystemProfileHome
-                    systemId={systemId}
-                    systemName={systemName}
-                  />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/business-information">
-                  <BusinessInformation />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/implementation-details">
-                  <ImplementationDetails />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/data">
-                  <Data />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/tools-and-software">
-                  <ToolsAndSoftware />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/sub-systems">
-                  <SubSystems />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/team">
-                  <Team />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/contracts">
-                  <Contracts />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/funding-and-budget">
-                  <FundingAndBudget />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/ato-and-security">
-                  <AtoAndSecurity />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/locked">
-                  <LockedSystemProfileSection />
-                </Route>
-
-                <Route path="*" component={NotFound} />
-              </Switch>
-            </SystemIDWrapper>
-          )}
-        />
-      </SystemProfileLockWrapper>
+      <SystemProfileLockWrapper>{editRoutes}</SystemProfileLockWrapper>
     </SystemSectionLockContextProvider>
   );
 };

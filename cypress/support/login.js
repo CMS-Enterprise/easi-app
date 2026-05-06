@@ -28,13 +28,42 @@ Cypress.Commands.add('login', () => {
   cy.url({ timeout: 20000 }).should('eq', 'http://localhost:3000/');
 });
 
-Cypress.Commands.add('localLogin', ({ name, role }) => {
+Cypress.Commands.add('localLogin', ({ name, role, allowEasi = true }) => {
+  let roles = [];
+
+  if (Array.isArray(role)) {
+    roles = role;
+  } else if (role) {
+    roles = [role];
+  }
+
+  if (!allowEasi) {
+    cy.visit('/', {
+      onBeforeLoad(win) {
+        win.localStorage.setItem(
+          'dev-user-config',
+          JSON.stringify({
+            euaId: name,
+            jobCodes: roles,
+            favorLocalAuth: true,
+            allowEasi: false
+          })
+        );
+      }
+    });
+
+    cy.url().should('eq', 'http://localhost:3000/');
+    return;
+  }
+
   cy.visit('/login');
 
   cy.get('[data-testid="LocalAuth-Visit"]').click();
   cy.get('[data-testid="LocalAuth-EUA"]').type(name);
-  if (role) {
-    cy.get(`input[value="${role}"]`).check();
+  if (roles.length) {
+    roles.forEach(jobCode => {
+      cy.get(`input[value="${jobCode}"]`).check();
+    });
   }
   cy.get('[data-testid="LocalAuth-Submit"]').click();
 

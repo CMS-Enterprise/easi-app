@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Button, Card, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import {
-  GetCedarSystemIsBookmarkedDocument,
   GetCedarSystemsQuery,
   useDeleteCedarSystemBookmarkMutation
 } from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { IconStatus } from 'types/iconStatus';
+import getCedarSystemRoute from 'utils/getCedarSystemRoute';
+import updateCedarSystemBookmarkInCache from 'utils/updateCedarSystemBookmarkInCache';
 
 import './index.scss';
 
@@ -28,12 +29,19 @@ const BookmarkCard = ({
   acronym,
   status,
   statusIcon,
-  businessOwnerOrg
+  businessOwnerOrg,
+  viewerCanAccessProfile,
+  viewerCanAccessWorkspace
 }: BookmarkCardProps &
   NonNullable<NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]>) => {
   const { t } = useTranslation();
 
   const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
+  const systemRoute = getCedarSystemRoute({
+    id,
+    viewerCanAccessProfile,
+    viewerCanAccessWorkspace
+  });
 
   const handleDeleteBookmark = (cedarSystemId: string) => {
     deleteMutate({
@@ -42,12 +50,9 @@ const BookmarkCard = ({
           cedarSystemId
         }
       },
-      refetchQueries: [
-        {
-          query: GetCedarSystemIsBookmarkedDocument,
-          variables: { id: cedarSystemId }
-        }
-      ]
+      update: cache => {
+        updateCedarSystemBookmarkInCache(cache, cedarSystemId, false);
+      }
     });
   };
 
@@ -59,14 +64,17 @@ const BookmarkCard = ({
       <div className="grid-col-12">
         <div className="bookmark__header easi-header__basic">
           <h3 className="bookmark__title margin-top-0 margin-bottom-1">
-            <UswdsReactLink to={`/systems/${id}/home/top`}>
-              {name}
-            </UswdsReactLink>
+            {systemRoute ? (
+              <UswdsReactLink to={systemRoute}>{name}</UswdsReactLink>
+            ) : (
+              name
+            )}
           </h3>
           <Button
             onClick={() => handleDeleteBookmark(id)}
             type="button"
             unstyled
+            aria-label={t('systemProfile:bookmark.bookmarked')}
           >
             <Icon.Bookmark aria-hidden size={5} />
           </Button>

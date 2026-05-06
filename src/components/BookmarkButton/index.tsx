@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import {
-  GetCedarSystemIsBookmarkedDocument,
   useCreateCedarSystemBookmarkMutation,
   useDeleteCedarSystemBookmarkMutation
 } from 'gql/generated/graphql';
+
+import updateCedarSystemBookmarkInCache from 'utils/updateCedarSystemBookmarkInCache';
 
 import './index.scss';
 
@@ -28,31 +29,27 @@ export default function BookmarkButton({
     setBookmarkedState(isBookmarked);
   }, [isBookmarked]);
 
-  const refetchCedarSystemIsBookmarkedQuery = {
-    query: GetCedarSystemIsBookmarkedDocument,
-    variables: { id }
-  };
-
   const [create, { loading: createLoading }] =
-    useCreateCedarSystemBookmarkMutation({
-      refetchQueries: [refetchCedarSystemIsBookmarkedQuery]
-    });
+    useCreateCedarSystemBookmarkMutation();
 
-  const [del, { loading: delLoading }] = useDeleteCedarSystemBookmarkMutation({
-    refetchQueries: [refetchCedarSystemIsBookmarkedQuery]
-  });
+  const [del, { loading: delLoading }] = useDeleteCedarSystemBookmarkMutation();
 
   const toggle = () => {
     if (createLoading || delLoading) return;
+
+    const nextIsBookmarked = !isBookmarkedState;
 
     (isBookmarkedState ? del : create)({
       variables: {
         input: {
           cedarSystemId: id
         }
+      },
+      update: cache => {
+        updateCedarSystemBookmarkInCache(cache, id, nextIsBookmarked);
       }
-    }).then(res => {
-      setBookmarkedState(!isBookmarkedState);
+    }).then(() => {
+      setBookmarkedState(nextIsBookmarked);
     });
   };
 

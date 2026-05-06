@@ -18,6 +18,8 @@ type CedarSystem {
   systemMaintainerOrgComp: String
   versionId: String
   isBookmarked: Boolean!
+  viewerCanAccessProfile: Boolean! @goField(forceResolver: true)
+  viewerCanAccessWorkspace: Boolean! @goField(forceResolver: true)
   linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
   linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
   uuid: String
@@ -39,14 +41,43 @@ type CedarSystemDetails {
   atoExpirationDate: Time
 }
 
+"""
+This is the subset of CEDAR system data that a system team member can use to
+access workspace-scoped features without broader EASi-only read permissions.
+"""
+type CedarSystemWorkspaceSystem {
+  id: UUID!
+  name: String!
+  isBookmarked: Boolean! @goField(forceResolver: true)
+  viewerCanAccessProfile: Boolean! @goField(forceResolver: true)
+  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
+    @goField(forceResolver: true)
+  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
+    @goField(forceResolver: true)
+}
+
+"""
+This is the subset of the core CEDAR system record that a system team member
+can use from workspace-scoped queries without broader EASi-only read
+permissions.
+"""
+type CedarSystemWorkspace {
+  id: UUID!
+  cedarSystem: CedarSystemWorkspaceSystem!
+  roles: [CedarRole!]!
+  isMySystem: Boolean!
+}
+
 extend type Query {
-  cedarSystem(cedarSystemId: UUID!): CedarSystem
+  cedarSystem(cedarSystemId: UUID!): CedarSystem @hasRole(role: EASI_USER)
   cedarSystems: [CedarSystem!]
   myCedarSystems: [CedarSystem!]
+  cedarSystemWorkspace(cedarSystemId: UUID!): CedarSystemWorkspace!
 
   """
   Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
   TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
   """
   cedarSystemDetails(cedarSystemId: UUID!): CedarSystemDetails
+    @hasRole(role: EASI_USER)
 }

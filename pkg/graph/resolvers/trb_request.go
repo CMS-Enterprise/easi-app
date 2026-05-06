@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -98,6 +99,10 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 		return nil, err
 	}
 
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, existing); err != nil {
+		return nil, err
+	}
+
 	princ := appcontext.Principal(ctx)
 
 	//apply changes here
@@ -117,6 +122,55 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 // GetTRBRequestByID returns a TRB request by it's ID
 func GetTRBRequestByID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequest, error) {
 	return store.GetTRBRequestByID(ctx, id)
+}
+
+func GetTRBRequest(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequest, error) {
+	trbRequest, err := GetTRBRequestByID(ctx, store, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanViewTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
+	return trbRequest, nil
+}
+
+func GetTRBRequestLCIDOptions(
+	ctx context.Context,
+	store *storage.Store,
+	trbRequestID uuid.UUID,
+) ([]*models.SystemIntakeLCIDOption, error) {
+	trbRequest, err := store.GetTRBRequestByID(ctx, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanEditOwnTRBRequest(ctx, trbRequest); err != nil {
+		return nil, err
+	}
+
+	intakes, err := dataloaders.GetSystemIntakesWithLCIDs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	visibleIntakes, err := filterVisibleSystemIntakes(ctx, store, intakes)
+	if err != nil {
+		return nil, err
+	}
+
+	options := make([]*models.SystemIntakeLCIDOption, 0, len(visibleIntakes))
+	for _, intake := range visibleIntakes {
+		options = append(options, &models.SystemIntakeLCIDOption{
+			ID:          intake.ID,
+			LCID:        intake.LifecycleID,
+			RequestName: intake.ProjectName,
+		})
+	}
+
+	return options, nil
 }
 
 // GetTRBRequests returns all TRB Requests
@@ -457,4 +511,103 @@ func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.User
 	}
 
 	return requesterInfo, nil
+}
+
+func authorizeUserCanViewTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
+	p := appcontext.Principal(ctx)
+
+	// admin
+	if p.AllowTRBAdmin() {
+		return nil
+	}
+
+	account := p.Account()
+	if account == nil {
+		return &apperrors.UnauthorizedError{
+			Err: errors.New("unauthorized to access TRB request"),
+		}
+	}
+
+	eua := account.Username
+
+	// creator
+	if trbRequest.CreatedBy == eua {
+		return nil
+	}
+
+	// lead
+	if trbRequest.TRBLead != nil && *trbRequest.TRBLead == eua {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{
+		Err: errors.New("unauthorized to access TRB request"),
+	}
+}
+
+func authorizeUserCanEditOwnTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) error {
+	account := appcontext.Principal(ctx).Account()
+	if account == nil {
+		return &apperrors.UnauthorizedError{
+			Err: errors.New("unauthorized to modify TRB request"),
+		}
+	}
+
+	eua := account.Username
+
+	if trbRequest.CreatedBy == eua {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{
+		Err: errors.New("unauthorized to modify TRB request"),
+	}
+}
+
+func authorizeUserCanManageTRBRequestRelations(ctx context.Context, trbRequest *models.TRBRequest) error {
+	p := appcontext.Principal(ctx)
+
+	if p.AllowTRBAdmin() {
+		return nil
+	}
+
+	account := p.Account()
+	if account == nil {
+		return &apperrors.UnauthorizedError{
+			Err: errors.New("unauthorized to manage TRB request relations"),
+		}
+	}
+
+	eua := account.Username
+	if trbRequest.CreatedBy == eua {
+		return nil
+	}
+
+	return &apperrors.UnauthorizedError{
+		Err: errors.New("unauthorized to manage TRB request relations"),
+	}
+}
+
+func filterVisibleTRBRequests(
+	ctx context.Context,
+	trbRequests []*models.TRBRequest,
+) ([]*models.TRBRequest, error) {
+	visible := make([]*models.TRBRequest, 0, len(trbRequests))
+
+	for _, trbRequest := range trbRequests {
+		err := authorizeUserCanViewTRBRequest(ctx, trbRequest)
+		if err == nil {
+			visible = append(visible, trbRequest)
+			continue
+		}
+
+		var unauthorizedErr *apperrors.UnauthorizedError
+		if errors.As(err, &unauthorizedErr) {
+			continue
+		}
+
+		return nil, err
+	}
+
+	return visible, nil
 }

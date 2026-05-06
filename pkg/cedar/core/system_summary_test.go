@@ -42,12 +42,12 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 
 	s.Run("Retrieves filtered list when EUA filter is present", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
-		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithEuaIDFilter("USR1"))
+		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithEuaIDFilter("ABCD"))
 		s.NoError(err)
 
-		// ensure filtered mock data is returned
-		s.Equal(len(cedarcoremock.GetFilteredSystems()), len(resp))
-		for _, v := range cedarcoremock.GetFilteredSystems() {
+		// ensure user-filtered mock data is returned
+		s.Equal(len(cedarcoremock.GetSystemsForUser("ABCD")), len(resp))
+		for _, v := range cedarcoremock.GetSystemsForUser("ABCD") {
 			s.Contains(resp, v)
 		}
 	})

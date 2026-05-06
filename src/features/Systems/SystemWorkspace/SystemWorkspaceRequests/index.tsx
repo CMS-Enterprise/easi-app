@@ -14,6 +14,7 @@ import { Button, Icon, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
+  GetLinkedRequestsQuery,
   SystemIntakeState,
   TRBRequestState,
   useGetLinkedRequestsQuery
@@ -43,25 +44,32 @@ const processName = {
   TRBRequest: 'TRB'
 } as const;
 
-function LinkedRequestsTable({ systemId }: { systemId: string }) {
+type ActiveTable = 'open' | 'closed';
+
+type LinkedRequestsTableProps = {
+  activeTable: ActiveTable;
+  setActiveTable: React.Dispatch<React.SetStateAction<ActiveTable>>;
+  linkedSystemIntakes: NonNullable<
+    NonNullable<
+      NonNullable<GetLinkedRequestsQuery['cedarSystemWorkspace']>['cedarSystem']
+    >['linkedSystemIntakes']
+  >;
+  linkedTrbRequests: NonNullable<
+    NonNullable<
+      NonNullable<GetLinkedRequestsQuery['cedarSystemWorkspace']>['cedarSystem']
+    >['linkedTrbRequests']
+  >;
+  loading: boolean;
+};
+
+function LinkedRequestsTable({
+  activeTable,
+  setActiveTable,
+  linkedSystemIntakes,
+  linkedTrbRequests,
+  loading
+}: LinkedRequestsTableProps) {
   const { t } = useTranslation('tableAndPagination');
-
-  const [activeTable, setActiveTable] = useState<'open' | 'closed'>('open');
-
-  const { loading, error, data } = useGetLinkedRequestsQuery({
-    variables: {
-      cedarSystemId: systemId,
-      systemIntakeState:
-        activeTable === 'open'
-          ? SystemIntakeState.OPEN
-          : SystemIntakeState.CLOSED,
-      trbRequestState:
-        activeTable === 'open' ? TRBRequestState.OPEN : TRBRequestState.CLOSED
-    }
-  });
-
-  const { linkedSystemIntakes, linkedTrbRequests } =
-    data?.cedarSystemDetails?.cedarSystem || {};
 
   const tableData: SystemLinkedRequest[] = useMemo(
     () =>
@@ -206,10 +214,6 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
   );
 
   rows.map(row => prepareRow(row));
-
-  if (error) {
-    return <NotFoundPartial />;
-  }
 
   if (loading) {
     return <PageLoading />;
@@ -364,9 +368,32 @@ function SystemWorkspaceRequests() {
   const { systemId } = useParams<{
     systemId: string;
   }>();
+  const [activeTable, setActiveTable] = useState<ActiveTable>('open');
+
+  const { loading, error, data } = useGetLinkedRequestsQuery({
+    variables: {
+      cedarSystemId: systemId,
+      systemIntakeState:
+        activeTable === 'open'
+          ? SystemIntakeState.OPEN
+          : SystemIntakeState.CLOSED,
+      trbRequestState:
+        activeTable === 'open' ? TRBRequestState.OPEN : TRBRequestState.CLOSED
+    }
+  });
+
+  if (loading && !data?.cedarSystemWorkspace?.cedarSystem) {
+    return <PageLoading />;
+  }
+
+  if (error || !data?.cedarSystemWorkspace?.cedarSystem) {
+    return <NotFoundPartial />;
+  }
 
   const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
   const workspacePath = `/systems/${systemId}/workspace`;
+  const { linkedSystemIntakes, linkedTrbRequests } =
+    data.cedarSystemWorkspace.cedarSystem;
 
   return (
     <MainContent className="grid-container margin-bottom-5 desktop:margin-bottom-10">
@@ -426,7 +453,13 @@ function SystemWorkspaceRequests() {
         </UswdsReactLink>
       </div>
 
-      <LinkedRequestsTable systemId={systemId} />
+      <LinkedRequestsTable
+        activeTable={activeTable}
+        setActiveTable={setActiveTable}
+        linkedSystemIntakes={linkedSystemIntakes}
+        linkedTrbRequests={linkedTrbRequests}
+        loading={loading}
+      />
     </MainContent>
   );
 }

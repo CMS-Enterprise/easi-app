@@ -38,8 +38,12 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 
+		if params.UserName != nil {
+			return cedarcoremock.GetSystemsForUser(*params.UserName), nil
+		}
+
 		// Simulate a filter by only returning a subset of the mock systems
-		if params.UserName != nil || params.BelongsTo != nil {
+		if params.BelongsTo != nil {
 			return cedarcoremock.GetFilteredSystems(), nil
 		}
 		// nil State should return all systems including inactive/deactivated

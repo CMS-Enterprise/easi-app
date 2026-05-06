@@ -13,6 +13,7 @@ export default gql(/* GraphQL */ `
       systemMaintainerOrg
       systemMaintainerOrgComp
       isBookmarked
+      viewerCanAccessWorkspace
     }
   }
 `);

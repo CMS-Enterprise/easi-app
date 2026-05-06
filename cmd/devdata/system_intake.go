@@ -53,6 +53,10 @@ func makeSystemIntake(
 		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
+	// Refresh loaders after creating the requester contact. The non-admin seed
+	// path authorizes contact creation by looking up existing requester contacts,
+	// which can cache an empty result before the requester row exists.
+	ctx = mock.CtxWithNewDataloaders(ctx, store)
 	createSystemIntakeDocument(ctx, store, intake, "first_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
 	createSystemIntakeDocument(ctx, store, intake, "second_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeMEETINGMINS)
 	createSystemIntakeDocument(ctx, store, intake, "third_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)

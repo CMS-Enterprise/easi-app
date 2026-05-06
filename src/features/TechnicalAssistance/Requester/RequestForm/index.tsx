@@ -296,7 +296,9 @@ function RequestForm() {
 
   const {
     data: { requester }
-  } = useTRBAttendees(id);
+  } = useTRBAttendees(id, {
+    skip: loading || !request
+  });
 
   // Determine the steps that are already completed by attempting to pre-validate them
   const [stepsCompleted, setStepsCompleted] = useState<
@@ -450,16 +452,20 @@ function RequestForm() {
     }
   }, [formAlert]);
 
-  if (!step || taskListUrl === null) {
+  if (!step) {
     return null;
   }
 
-  if (error) {
+  if (error || (!loading && !request)) {
     return (
       <GridContainer className="width-full">
         <NotFoundPartial />
       </GridContainer>
     );
+  }
+
+  if (taskListUrl === null) {
+    return <PageLoading />;
   }
 
   // Return early on certain slugs that are not form steps
@@ -530,7 +536,7 @@ function RequestForm() {
           />
         </GridContainer>
       ) : (
-        loading && <PageLoading />
+        <PageLoading />
       )}
     </>
   );

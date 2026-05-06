@@ -35,13 +35,7 @@ describe('Governance Task List', () => {
     it('open request - new intake form', async () => {
       render(
         <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
-          <VerboseMockedProvider
-            mocks={[
-              getGovernanceTaskListQuery({
-                ...taskListState.intakeFormNotStarted.systemIntake
-              })
-            ]}
-          >
+          <VerboseMockedProvider mocks={[getGovernanceTaskListQuery()]}>
             <Provider store={store}>
               <MessageProvider>
                 <Route path="/governance-task-list/:systemId">
@@ -95,7 +89,7 @@ describe('Governance Task List', () => {
           <VerboseMockedProvider
             mocks={[
               getGovernanceTaskListQuery({
-                ...taskListState.intakeFormNotStarted.systemIntake
+                viewerIsRequester: false
               })
             ]}
           >

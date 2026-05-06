@@ -11,9 +11,9 @@ import (
 )
 
 func (s *ResolverSuite) TestCedarSetRolesForUser() {
-	ctx := s.testConfigs.Context
 	okta := local.NewOktaAPIClient()
-	cedarClient := cedarcore.NewClient(ctx, "fake", "fake", "1.0.0", true, true)
+	actingCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	cedarClient := cedarcore.NewClient(actingCtx, "fake", "fake", "1.0.0", true, true)
 
 	currentUserEUA := "ABCD"
 	notCurrentUserEUA := "USR1"
@@ -24,7 +24,7 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 
 	s.Run("Should send email to CEDAR even if no roles modified", func() {
 		emailClient, sender := NewEmailClient()
-		resp, err := SetRolesForUserOnCEDARSystem(ctx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
+		resp, err := SetRolesForUserOnCEDARSystem(actingCtx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
 			CedarSystemID:      cedarSystemID,
 			EuaUserID:          currentUserEUA,
 			DesiredRoleTypeIDs: []string{currentUserCurrentRoleID},
@@ -38,7 +38,7 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 
 	s.Run("Should send email to CEDAR, but NOT to user or leads if roles added to existing user", func() {
 		emailClient, sender := NewEmailClient()
-		resp, err := SetRolesForUserOnCEDARSystem(ctx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
+		resp, err := SetRolesForUserOnCEDARSystem(actingCtx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
 			CedarSystemID:      cedarSystemID,
 			EuaUserID:          currentUserEUA,
 			DesiredRoleTypeIDs: []string{currentUserCurrentRoleID, otherRoleID1, otherRoleID2},
@@ -55,7 +55,7 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 
 	s.Run("Should send email to CEDAR, but NOT project leads or user if roles removed from existing user", func() {
 		emailClient, sender := NewEmailClient()
-		resp, err := SetRolesForUserOnCEDARSystem(ctx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
+		resp, err := SetRolesForUserOnCEDARSystem(actingCtx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
 			CedarSystemID:      cedarSystemID,
 			EuaUserID:          currentUserEUA,
 			DesiredRoleTypeIDs: []string{},
@@ -72,7 +72,7 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 
 	s.Run("Should send email to CEDAR, project leads, and user if user is new", func() {
 		emailClient, sender := NewEmailClient()
-		resp, err := SetRolesForUserOnCEDARSystem(ctx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
+		resp, err := SetRolesForUserOnCEDARSystem(actingCtx, okta.FetchUserInfos, cedarClient, emailClient, models.SetRolesForUserOnSystemInput{
 			CedarSystemID:      cedarSystemID,
 			EuaUserID:          notCurrentUserEUA,
 			DesiredRoleTypeIDs: []string{otherRoleID1, otherRoleID2},

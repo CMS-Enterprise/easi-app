@@ -1,4 +1,12 @@
 describe('Discussion Board', () => {
+  beforeEach(() => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'GetSystemIntakeGRBDiscussions') {
+        req.alias = 'getGrbDiscussions';
+      }
+    });
+  });
+
   // Request name: Async GRB review (with discussions)
   // System intake ID: 61efa6eb-1976-4431-a158-d89cc00ce31d
   it('can interact with discussions as an admin', () => {
@@ -63,7 +71,7 @@ describe('Discussion Board', () => {
     );
 
     // New posts are at the beginning
-    cy.get('#grbDiscussionsNew li:first-child').within(() => {
+    cy.contains('#grbDiscussionsNew li', discussionText).within(() => {
       // Check contents
       cy.contains('p', `${mentionName} ${discussionText}`);
 
@@ -183,7 +191,7 @@ describe('Discussion Board', () => {
 
     // Reply to the discussion
 
-    cy.get('#grbDiscussionsNew li:first-child').within(() => {
+    cy.contains('#grbDiscussionsNew li', discussionText).within(() => {
       // Check contents
       cy.contains('p', discussionText);
 
@@ -212,5 +220,25 @@ describe('Discussion Board', () => {
         initialCount
       );
     });
+  });
+
+  // Request name: Async GRB review (with discussions)
+  // System intake ID: 61efa6eb-1976-4431-a158-d89cc00ce31d
+  it('shows internal GRB discussions to an admin on the GRB review page', () => {
+    cy.localLogin({ name: 'ABCD', role: 'EASI_D_GOVTEAM' });
+
+    cy.visit('/it-governance/61efa6eb-1976-4431-a158-d89cc00ce31d/grb-review');
+    cy.wait('@getGrbDiscussions').its('response.statusCode').should('eq', 200);
+
+    cy.getByTestId('internal-discussion-board-card')
+      .contains('button', 'View discussion board')
+      .click();
+
+    cy.contains('h1', 'Internal GRB discussion board').should('be.visible');
+    cy.get(
+      '#grbDiscussionsNew li, #grbDiscussionsWithReplies li, #grbDiscussionsNew .usa-alert, #grbDiscussionsWithReplies .usa-alert'
+    )
+      .its('length')
+      .should('be.gte', 1);
   });
 });

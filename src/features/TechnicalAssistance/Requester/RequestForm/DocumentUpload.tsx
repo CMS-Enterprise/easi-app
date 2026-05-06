@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -59,6 +59,7 @@ const DocumentUpload = ({
   const prevRoute = isInitialRequest ? 'requests' : 'task-list';
 
   const { showMessageOnNextPage } = useMessage();
+  const [uploadError, setUploadError] = useState(false);
 
   // Documents can be created from the upload form
   const [createDocument] = useCreateTRBRequestDocumentMutation();
@@ -79,25 +80,31 @@ const DocumentUpload = ({
   });
 
   const submit = handleSubmit(async formData => {
-    const input: TrbRequestInputDocument = clone(formData);
+    setUploadError(false);
 
-    const newFile = await fileToBase64File(input.fileData);
+    const input: TrbRequestInputDocument = clone(formData);
 
     // Clear out otherTypeDescription if documentType isn't OTHER
     if (input.documentType !== 'OTHER') {
       delete input.otherTypeDescription;
     }
 
-    createDocument({
-      variables: {
-        input: {
-          requestID,
-          documentType: input.documentType,
-          otherTypeDescription: input.otherTypeDescription,
-          fileData: newFile
+    try {
+      const newFile = input.fileData
+        ? await fileToBase64File(input.fileData)
+        : input.fileData;
+
+      const response = await createDocument({
+        variables: {
+          input: {
+            requestID,
+            documentType: input.documentType,
+            otherTypeDescription: input.otherTypeDescription,
+            fileData: newFile
+          }
         }
-      }
-    }).then(response => {
+      });
+
       if (!response.errors) {
         if (isInitialRequest && setFormAlert) {
           if (refetchDocuments) refetchDocuments(); // Reload documents
@@ -115,7 +122,9 @@ const DocumentUpload = ({
         // Go back to the prev page
         history.push(`/trb/${prevRoute}/${requestID}/documents`);
       }
-    });
+    } catch (_error) {
+      setUploadError(true);
+    }
   });
 
   useEffect(() => {
@@ -157,6 +166,11 @@ const DocumentUpload = ({
         <PageHeading className="margin-bottom-1">
           {t('documents.upload.title')}
         </PageHeading>
+        {uploadError && (
+          <Alert type="error" slim className="margin-top-4">
+            {t('documents.upload.error')}
+          </Alert>
+        )}
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <div>{t('documents.upload.subtitle')}</div>

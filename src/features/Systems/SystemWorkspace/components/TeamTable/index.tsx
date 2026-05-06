@@ -100,7 +100,7 @@ function TeamTable({
             <div className="text-no-wrap">
               <UswdsReactLink
                 to={{
-                  pathname: `/systems/${systemId}/team/edit/team-member`,
+                  pathname: `/systems/${systemId}/edit/team/team-member`,
                   search: 'workspace',
                   state: {
                     user

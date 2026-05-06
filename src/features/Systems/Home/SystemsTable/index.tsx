@@ -25,7 +25,6 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
-  GetCedarSystemIsBookmarkedDocument,
   GetCedarSystemsQuery,
   useCreateCedarSystemBookmarkMutation,
   useDeleteCedarSystemBookmarkMutation,
@@ -42,18 +41,37 @@ import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { getComponentByName } from 'constants/cmsComponentsMap';
+import getCedarSystemRoute from 'utils/getCedarSystemRoute';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
   sortColumnValues
 } from 'utils/tableSort';
+import updateCedarSystemBookmarkInCache from 'utils/updateCedarSystemBookmarkInCache';
 
 import '../index.scss';
 
-type CedarSystem = NonNullable<
-  NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]
->;
+type CedarSystem = Pick<
+  NonNullable<NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]>,
+  | 'id'
+  | 'name'
+  | 'description'
+  | 'acronym'
+  | 'status'
+  | 'businessOwnerOrg'
+  | 'businessOwnerOrgComp'
+  | 'systemMaintainerOrg'
+  | 'systemMaintainerOrgComp'
+  | 'isBookmarked'
+  | 'viewerCanAccessProfile'
+  | 'viewerCanAccessWorkspace'
+  | 'atoExpirationDate'
+  | 'oaStatus'
+> & {
+  linkedTrbRequests?: Array<{ id: string }>;
+  linkedSystemIntakes?: Array<{ id: string }>;
+};
 
 export type SystemTableType =
   | 'all-systems'
@@ -86,7 +104,9 @@ export const Table = ({
     tableType || 'all-systems'
   );
 
-  const { loading, data: mySystems } = useGetMyCedarSystemsQuery();
+  const { loading, data: mySystems } = useGetMyCedarSystemsQuery({
+    skip: !isHomePage && systemTableType !== 'my-systems'
+  });
 
   const [createMutate] = useCreateCedarSystemBookmarkMutation();
   const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
@@ -138,12 +158,13 @@ export const Table = ({
             cedarSystemId
           }
         },
-        refetchQueries: [
-          {
-            query: GetCedarSystemIsBookmarkedDocument,
-            variables: { id: cedarSystemId }
-          }
-        ]
+        update: cache => {
+          updateCedarSystemBookmarkInCache(
+            cache,
+            cedarSystemId,
+            !isBookmarked(cedarSystemId)
+          );
+        }
       });
     };
 
@@ -164,6 +185,9 @@ export const Table = ({
             onClick={() => toggleBookmark(row.original.id)}
             type="button"
             unstyled
+            aria-label={t(
+              `bookmark.${isBookmarked(row.original.id) ? 'bookmarked' : 'bookmark'}`
+            )}
           >
             <Icon.Bookmark
               aria-hidden
@@ -186,10 +210,19 @@ export const Table = ({
       accessor: 'name',
       id: 'systemName',
       Cell: ({ row }: { row: Row<CedarSystem> }) => {
-        const url = `/systems/${row.original.id}/${
-          systemTableType === 'my-systems' ? 'workspace' : 'home/top'
-        }`;
-        return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
+        let url: string | undefined;
+
+        if (systemTableType === 'my-systems') {
+          url = getCedarSystemRoute(row.original, { preferWorkspace: true });
+        } else if (row.original.viewerCanAccessProfile) {
+          url = getCedarSystemRoute(row.original);
+        }
+
+        return url ? (
+          <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>
+        ) : (
+          <span>{row.original.name}</span>
+        );
       }
     });
 
@@ -230,7 +263,8 @@ export const Table = ({
         Header: t<string>('systemTable.header.openRequests'),
         accessor: (system: CedarSystem) => {
           return (
-            system.linkedTrbRequests.length + system.linkedSystemIntakes.length
+            (system.linkedTrbRequests?.length ?? 0) +
+            (system.linkedSystemIntakes?.length ?? 0)
           );
         },
         id: 'openRequests'
