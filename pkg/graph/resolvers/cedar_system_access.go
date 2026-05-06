@@ -225,10 +225,11 @@ func GetCedarBudgetSystemCost(
 
 func GetCedarPersonsByCommonName(
 	ctx context.Context,
+	cedarCoreClient *cedarcore.Client,
 	searchCommonNameContains func(context.Context, string) ([]*models.UserInfo, error),
 	commonName string,
 ) ([]*models.UserInfo, error) {
-	if err := authorizeUserCanAccessCEDARContactLookup(ctx); err != nil {
+	if err := authorizeUserCanAccessCEDARContactLookup(ctx, cedarCoreClient); err != nil {
 		return nil, err
 	}
 

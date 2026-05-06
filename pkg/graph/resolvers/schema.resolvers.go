@@ -1268,7 +1268,7 @@ func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID
 
 // CedarPersonsByCommonName is the resolver for the cedarPersonsByCommonName field.
 func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
-	return GetCedarPersonsByCommonName(ctx, r.service.SearchCommonNameContains, commonName)
+	return GetCedarPersonsByCommonName(ctx, r.cedarCoreClient, r.service.SearchCommonNameContains, commonName)
 }
 
 // CedarSoftwareProducts is the resolver for the cedarSoftwareProducts field.

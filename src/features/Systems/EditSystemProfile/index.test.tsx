@@ -3,11 +3,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import {
+  CedarRole,
   GetCedarSystemDocument,
   GetCedarSystemQuery,
   GetCedarSystemQueryVariables,
   GetSystemWorkspaceDocument
 } from 'gql/generated/graphql';
+import teamRoles from 'tests/mock/workspaceTeamRoles';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
@@ -55,13 +57,15 @@ const renderEditSystemProfile = ({
   allowGenericEdit = true,
   viewerCanAccessProfile = true,
   viewerCanAccessWorkspace = true,
-  isMySystem = true
+  isMySystem = true,
+  roles = []
 }: {
   initialEntry: string;
   allowGenericEdit?: boolean;
   viewerCanAccessProfile?: boolean;
   viewerCanAccessWorkspace?: boolean;
   isMySystem?: boolean;
+  roles?: CedarRole[];
 }) => {
   const isWorkspaceTeamRoute = initialEntry.startsWith(
     `/systems/${cedarSystemId}/edit/team`
@@ -135,7 +139,7 @@ const renderEditSystemProfile = ({
               linkedTrbRequests: [],
               linkedSystemIntakes: []
             },
-            roles: []
+            roles
           }
         }
       }
@@ -203,6 +207,19 @@ describe('EditSystemProfile', () => {
 
     expect(mockSystemSectionLockContextProvider).not.toHaveBeenCalled();
     expect(mockSystemProfileLockWrapper).not.toHaveBeenCalled();
+  });
+
+  it('renders existing team members on the edit hub team route', async () => {
+    renderEditSystemProfile({
+      initialEntry: `/systems/${cedarSystemId}/edit/team`,
+      roles: teamRoles
+    });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Edit System Profile: Team' })
+    ).toBeInTheDocument();
+
+    expect(await screen.findByText('Vickie Denesik')).toBeInTheDocument();
   });
 
   it('renders page not found for invalid system id', async () => {

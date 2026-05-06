@@ -96,13 +96,16 @@ func authorizeUserCanAccessCEDARSystemDirectory(ctx context.Context) error {
 	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar system directory")}
 }
 
-func authorizeUserCanAccessCEDARContactLookup(ctx context.Context) error {
+func authorizeUserCanAccessCEDARContactLookup(
+	ctx context.Context,
+	cedarCoreClient *cedarcore.Client,
+) error {
 	principal := appcontext.Principal(ctx)
 	if principal.AllowEASi() || principal.AllowTRBAdmin() {
 		return nil
 	}
 
-	return &apperrors.UnauthorizedError{Err: errors.New("unauthorized to access cedar contact lookup")}
+	return authorizeUserCanAccessCEDARTeamMetadata(ctx, cedarCoreClient)
 }
 
 func authorizeUserCanAccessCEDARReadQueries(ctx context.Context) error {

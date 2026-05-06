@@ -108,12 +108,21 @@ func (s *ResolverSuite) TestCEDARSystemTeamManagementPermissions() {
 	s.NoError(err)
 	s.NotNil(roles)
 
+	contacts, err := queryResolver.CedarPersonsByCommonName(teamMemberCtx, "AB")
+	s.NoError(err)
+	s.NotNil(contacts)
+
 	_, err = queryResolver.RoleTypes(otherUserCtx)
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil
 
 	_, err = queryResolver.Roles(otherUserCtx, cedarSystemID, nil)
+	s.Error(err)
+	s.True(errors.As(err, &unauthorizedErr))
+	unauthorizedErr = nil
+
+	_, err = queryResolver.CedarPersonsByCommonName(otherUserCtx, "AB")
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil

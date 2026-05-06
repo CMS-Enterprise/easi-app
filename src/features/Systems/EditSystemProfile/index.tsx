@@ -38,11 +38,11 @@ const EditSystemProfile = () => {
     systemId: string;
   }>();
   const { pathname } = useLocation();
-  const workspaceTeamPathMatch = matchPath(pathname, {
+  const teamManagementPathMatch = matchPath(pathname, {
     path: '/systems/:systemId/edit/team/:action(team-member)?',
     exact: true
   });
-  const isWorkspaceTeamRoute = !!workspaceTeamPathMatch;
+  const usesWorkspaceTeamData = !!teamManagementPathMatch;
 
   const {
     data: cedarSystemData,
@@ -52,7 +52,7 @@ const EditSystemProfile = () => {
     variables: {
       id: systemId
     },
-    skip: isWorkspaceTeamRoute
+    skip: usesWorkspaceTeamData
   });
 
   const {
@@ -63,7 +63,7 @@ const EditSystemProfile = () => {
     variables: {
       cedarSystemId: systemId
     },
-    skip: !isWorkspaceTeamRoute
+    skip: !usesWorkspaceTeamData
   });
 
   if (cedarSystemLoading || cedarSystemWorkspaceLoading) {
@@ -71,11 +71,11 @@ const EditSystemProfile = () => {
   }
 
   const cedarSystemWorkspace = cedarSystemWorkspaceData?.cedarSystemWorkspace;
-  const canManageTeam = isWorkspaceTeamRoute
+  const canManageTeam = usesWorkspaceTeamData
     ? cedarSystemWorkspace?.isMySystem === true
     : cedarSystemData?.cedarSystem?.viewerCanAccessWorkspace === true;
 
-  if (isWorkspaceTeamRoute) {
+  if (usesWorkspaceTeamData) {
     if (
       cedarSystemWorkspaceError ||
       !cedarSystemWorkspace?.cedarSystem ||
@@ -87,7 +87,7 @@ const EditSystemProfile = () => {
     return <NotFound />;
   }
 
-  const systemName = isWorkspaceTeamRoute
+  const systemName = usesWorkspaceTeamData
     ? cedarSystemWorkspace?.cedarSystem?.name || ''
     : cedarSystemData?.cedarSystem?.name || '';
 
@@ -155,7 +155,7 @@ const EditSystemProfile = () => {
     />
   );
 
-  if (isWorkspaceTeamRoute) {
+  if (usesWorkspaceTeamData) {
     return editRoutes;
   }
 
