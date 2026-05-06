@@ -16,6 +16,14 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import EditSystemProfile from '.';
 
+const mockSystemSectionLockContextProvider = vi.hoisted(() =>
+  vi.fn(({ children }) => children)
+);
+
+const mockSystemProfileLockWrapper = vi.hoisted(() =>
+  vi.fn(({ children }) => children)
+);
+
 vi.mock('launchdarkly-react-client-sdk', () => ({
   useFlags: () => ({
     editableSystemProfile: true,
@@ -25,11 +33,16 @@ vi.mock('launchdarkly-react-client-sdk', () => ({
 
 vi.mock('contexts/SystemSectionLockContext', () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  default: mockSystemSectionLockContextProvider,
   useSystemSectionLockContext: () => ({
     systemProfileSectionLocks: [],
     loading: false
   })
+}));
+
+vi.mock('./_components/SystemProfileLockWrapper', () => ({
+  __esModule: true,
+  default: mockSystemProfileLockWrapper
 }));
 
 const cedarSystemId = '11AB1A00-1234-5678-ABC1-1A001B00CC1B';
@@ -41,14 +54,15 @@ const renderEditSystemProfile = ({
   initialEntry,
   allowGenericEdit = true,
   viewerCanAccessProfile = true,
+  viewerCanAccessWorkspace = true,
   isMySystem = true
 }: {
   initialEntry: string;
   allowGenericEdit?: boolean;
   viewerCanAccessProfile?: boolean;
+  viewerCanAccessWorkspace?: boolean;
   isMySystem?: boolean;
 }) => {
-  const isEditHomeRoute = initialEntry === `/systems/${cedarSystemId}/edit`;
   const isWorkspaceTeamRoute = initialEntry.startsWith(
     `/systems/${cedarSystemId}/edit/team`
   );
@@ -79,7 +93,8 @@ const renderEditSystemProfile = ({
                   businessOwnerOrgComp: null,
                   systemMaintainerOrg: null,
                   systemMaintainerOrgComp: null,
-                  isBookmarked: false
+                  isBookmarked: false,
+                  viewerCanAccessWorkspace
                 }
               }
             }
@@ -96,7 +111,7 @@ const renderEditSystemProfile = ({
     );
   }
 
-  if (isWorkspaceTeamRoute || (isEditHomeRoute && allowGenericEdit)) {
+  if (isWorkspaceTeamRoute) {
     mocks.push({
       request: {
         query: GetSystemWorkspaceDocument,
@@ -143,6 +158,11 @@ const renderEditSystemProfile = ({
 };
 
 describe('EditSystemProfile', () => {
+  beforeEach(() => {
+    mockSystemSectionLockContextProvider.mockClear();
+    mockSystemProfileLockWrapper.mockClear();
+  });
+
   it('renders the system name for the generic edit hub', async () => {
     renderEditSystemProfile({
       initialEntry: `/systems/${cedarSystemId}/edit`
@@ -154,7 +174,7 @@ describe('EditSystemProfile', () => {
   it('hides the team card for profile-only viewers on the generic edit hub', async () => {
     renderEditSystemProfile({
       initialEntry: `/systems/${cedarSystemId}/edit`,
-      isMySystem: false
+      viewerCanAccessWorkspace: false
     });
 
     await screen.findByText(`for ${cedarSystemName}`);
@@ -180,6 +200,9 @@ describe('EditSystemProfile', () => {
     expect(
       await screen.findByRole('heading', { name: 'Manage system team' })
     ).toBeInTheDocument();
+
+    expect(mockSystemSectionLockContextProvider).not.toHaveBeenCalled();
+    expect(mockSystemProfileLockWrapper).not.toHaveBeenCalled();
   });
 
   it('renders page not found for invalid system id', async () => {

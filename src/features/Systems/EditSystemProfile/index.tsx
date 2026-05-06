@@ -38,17 +38,11 @@ const EditSystemProfile = () => {
     systemId: string;
   }>();
   const { pathname } = useLocation();
-  const editHomePathMatch = matchPath(pathname, {
-    path: '/systems/:systemId/edit',
-    exact: true
-  });
-
   const workspaceTeamPathMatch = matchPath(pathname, {
     path: '/systems/:systemId/edit/team/:action(team-member)?',
     exact: true
   });
   const isWorkspaceTeamRoute = !!workspaceTeamPathMatch;
-  const isEditHomeRoute = !!editHomePathMatch;
 
   const {
     data: cedarSystemData,
@@ -69,9 +63,7 @@ const EditSystemProfile = () => {
     variables: {
       cedarSystemId: systemId
     },
-    skip:
-      !isWorkspaceTeamRoute &&
-      !(isEditHomeRoute && !!cedarSystemData?.cedarSystem)
+    skip: !isWorkspaceTeamRoute
   });
 
   if (cedarSystemLoading || cedarSystemWorkspaceLoading) {
@@ -79,7 +71,9 @@ const EditSystemProfile = () => {
   }
 
   const cedarSystemWorkspace = cedarSystemWorkspaceData?.cedarSystemWorkspace;
-  const canManageTeam = cedarSystemWorkspace?.isMySystem === true;
+  const canManageTeam = isWorkspaceTeamRoute
+    ? cedarSystemWorkspace?.isMySystem === true
+    : cedarSystemData?.cedarSystem?.viewerCanAccessWorkspace === true;
 
   if (isWorkspaceTeamRoute) {
     if (
@@ -97,71 +91,77 @@ const EditSystemProfile = () => {
     ? cedarSystemWorkspace?.cedarSystem?.name || ''
     : cedarSystemData?.cedarSystem?.name || '';
 
+  const editRoutes = (
+    <Route
+      path="/systems/:systemId"
+      render={() => (
+        <SystemIDWrapper>
+          <Switch>
+            <Route exact path="/systems/:systemId/edit">
+              <EditSystemProfileHome
+                canManageTeam={canManageTeam}
+                systemId={systemId}
+                systemName={systemName}
+              />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/business-information">
+              <BusinessInformation />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/implementation-details">
+              <ImplementationDetails />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/data">
+              <Data />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/tools-and-software">
+              <ToolsAndSoftware />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/sub-systems">
+              <SubSystems />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/team/:action(team-member)?">
+              <Team
+                systemName={systemName}
+                roles={cedarSystemWorkspace?.roles || []}
+              />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/contracts">
+              <Contracts />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/funding-and-budget">
+              <FundingAndBudget />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/ato-and-security">
+              <AtoAndSecurity />
+            </Route>
+
+            <Route path="/systems/:systemId/edit/locked">
+              <LockedSystemProfileSection />
+            </Route>
+
+            <Route path="*" component={NotFound} />
+          </Switch>
+        </SystemIDWrapper>
+      )}
+    />
+  );
+
+  if (isWorkspaceTeamRoute) {
+    return editRoutes;
+  }
+
   return (
     <SystemSectionLockContextProvider>
-      <SystemProfileLockWrapper>
-        <Route
-          path="/systems/:systemId"
-          render={() => (
-            <SystemIDWrapper>
-              <Switch>
-                <Route exact path="/systems/:systemId/edit">
-                  <EditSystemProfileHome
-                    canManageTeam={canManageTeam}
-                    systemId={systemId}
-                    systemName={systemName}
-                  />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/business-information">
-                  <BusinessInformation />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/implementation-details">
-                  <ImplementationDetails />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/data">
-                  <Data />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/tools-and-software">
-                  <ToolsAndSoftware />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/sub-systems">
-                  <SubSystems />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/team/:action(team-member)?">
-                  <Team
-                    systemName={systemName}
-                    roles={cedarSystemWorkspace?.roles || []}
-                  />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/contracts">
-                  <Contracts />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/funding-and-budget">
-                  <FundingAndBudget />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/ato-and-security">
-                  <AtoAndSecurity />
-                </Route>
-
-                <Route path="/systems/:systemId/edit/locked">
-                  <LockedSystemProfileSection />
-                </Route>
-
-                <Route path="*" component={NotFound} />
-              </Switch>
-            </SystemIDWrapper>
-          )}
-        />
-      </SystemProfileLockWrapper>
+      <SystemProfileLockWrapper>{editRoutes}</SystemProfileLockWrapper>
     </SystemSectionLockContextProvider>
   );
 };

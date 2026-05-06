@@ -165,7 +165,8 @@ describe('SystemWorkspace', () => {
             businessOwnerOrgComp: null,
             systemMaintainerOrg: null,
             systemMaintainerOrgComp: null,
-            isBookmarked: false
+            isBookmarked: false,
+            viewerCanAccessWorkspace: false
           }
         }
       }
@@ -177,7 +178,7 @@ describe('SystemWorkspace', () => {
           <Route exact path="/systems/:systemId/workspace">
             <SystemWorkspace />
           </Route>
-          <Route path="/systems/:systemId">
+          <Route exact path="/systems/:systemId">
             <div>System profile route</div>
           </Route>
         </MemoryRouter>
@@ -185,5 +186,69 @@ describe('SystemWorkspace', () => {
     );
 
     expect(await screen.findByText('System profile route')).toBeInTheDocument();
+  });
+
+  it('does not redirect profile viewers on non-auth workspace failures', async () => {
+    const getSystemWorkspaceQuery: MockedQuery<
+      GetSystemWorkspaceQuery,
+      GetSystemWorkspaceQueryVariables
+    > = {
+      request: {
+        query: GetSystemWorkspaceDocument,
+        variables: {
+          cedarSystemId
+        }
+      },
+      error: new Error('network error')
+    };
+
+    const getCedarSystemQuery: MockedQuery<
+      GetCedarSystemQuery,
+      GetCedarSystemQueryVariables
+    > = {
+      request: {
+        query: GetCedarSystemDocument,
+        variables: {
+          id: cedarSystemId
+        }
+      },
+      result: {
+        data: {
+          __typename: 'Query',
+          cedarSystem: {
+            __typename: 'CedarSystem',
+            id: cedarSystemId,
+            name: cedarSystemName,
+            description: null,
+            acronym: null,
+            status: null,
+            businessOwnerOrg: null,
+            businessOwnerOrgComp: null,
+            systemMaintainerOrg: null,
+            systemMaintainerOrgComp: null,
+            isBookmarked: false,
+            viewerCanAccessWorkspace: false
+          }
+        }
+      }
+    };
+
+    render(
+      <MockedProvider mocks={[getSystemWorkspaceQuery, getCedarSystemQuery]}>
+        <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/workspace`]}>
+          <Route exact path="/systems/:systemId/workspace">
+            <SystemWorkspace />
+          </Route>
+          <Route exact path="/systems/:systemId">
+            <div>System profile route</div>
+          </Route>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: 'This page cannot be found.' })
+    ).toBeInTheDocument();
+    expect(screen.queryByText('System profile route')).not.toBeInTheDocument();
   });
 });

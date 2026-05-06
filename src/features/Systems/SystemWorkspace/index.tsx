@@ -33,9 +33,14 @@ import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 import TeamCard from './components/TeamCard';
 
-const hasUnauthorizedAtoError = (error?: ApolloError) => {
+const hasUnauthorizedGraphQLError = (error?: ApolloError) => {
+  const errorMessages = [
+    error?.message,
+    ...(error?.graphQLErrors.map(({ message }) => message) || [])
+  ].filter(Boolean) as string[];
+
   return (
-    error?.graphQLErrors.some(({ message }) => {
+    errorMessages.some(message => {
       const lowerCaseMessage = message.toLowerCase();
       return (
         lowerCaseMessage.includes('unauthorized') ||
@@ -63,13 +68,14 @@ export const SystemWorkspace = () => {
   const cedarSystem = data?.cedarSystemWorkspace?.cedarSystem;
   const workspaceUnavailable =
     !loading && (error || !data?.cedarSystemWorkspace || !cedarSystem);
+  const workspaceAuthError = hasUnauthorizedGraphQLError(error);
 
   const { data: fallbackProfileData, loading: fallbackProfileLoading } =
     useGetCedarSystemQuery({
       variables: {
         id: systemId
       },
-      skip: !workspaceUnavailable
+      skip: !workspaceUnavailable || !workspaceAuthError
     });
 
   const viewerCanAccessProfile = cedarSystem?.viewerCanAccessProfile === true;
@@ -88,7 +94,7 @@ export const SystemWorkspace = () => {
 
   const ato = atoData?.cedarAuthorityToOperate?.[0];
   const atoUnavailable =
-    !viewerCanAccessProfile || hasUnauthorizedAtoError(atoError);
+    !viewerCanAccessProfile || hasUnauthorizedGraphQLError(atoError);
   const atoStatus =
     atoLoading || atoUnavailable || atoError
       ? undefined
@@ -119,7 +125,7 @@ export const SystemWorkspace = () => {
   }
 
   if (workspaceUnavailable) {
-    if (fallbackProfileData?.cedarSystem) {
+    if (workspaceAuthError && fallbackProfileData?.cedarSystem) {
       return <Redirect to={`/systems/${systemId}`} />;
     }
 
