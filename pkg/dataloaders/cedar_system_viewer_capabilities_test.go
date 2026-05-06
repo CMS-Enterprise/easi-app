@@ -2,6 +2,7 @@ package dataloaders
 
 import (
 	"context"
+	"errors"
 	"sync/atomic"
 	"testing"
 
@@ -50,4 +51,28 @@ func TestGetCedarSystemViewerCapabilitiesMemoizesMySystemsLookup(t *testing.T) {
 	require.False(t, otherSystemCapabilities.ViewerCanAccessWorkspace)
 
 	require.Equal(t, int32(1), mySystemsCalls.Load())
+}
+
+func TestGetCedarSystemViewerCapabilitiesFallsBackWhenMembershipLookupFails(t *testing.T) {
+	t.Parallel()
+
+	ctx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "TEST",
+		JobCodeEASi: true,
+	})
+	ctx = CTXWithLoaders(ctx, func() *Dataloaders {
+		return NewDataloaders(
+			nil,
+			nil,
+			nil,
+			func(context.Context, string) ([]*models.CedarSystem, error) {
+				return nil, errors.New("cedar unavailable")
+			},
+		)
+	})
+
+	capabilities, err := GetCedarSystemViewerCapabilities(ctx, uuid.New())
+	require.NoError(t, err)
+	require.True(t, capabilities.ViewerCanAccessProfile)
+	require.False(t, capabilities.ViewerCanAccessWorkspace)
 }

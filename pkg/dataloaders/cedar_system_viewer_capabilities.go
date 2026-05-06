@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -23,7 +24,12 @@ func (d *dataReader) batchCedarSystemViewerCapabilities(ctx context.Context, ced
 
 	teamSystemIDs, err := d.getMyCedarSystemIDSet(ctx, principal.ID())
 	if err != nil {
-		return nil, []error{err}
+		appcontext.ZLogger(ctx).Warn(
+			"problem fetching cedar system membership for viewer capabilities",
+			zap.Error(err),
+			zap.String("principal.eua_id", principal.ID()),
+		)
+		teamSystemIDs = map[uuid.UUID]struct{}{}
 	}
 
 	out := make([]*models.CedarSystemViewerCapabilities, len(cedarSystemIDs))
