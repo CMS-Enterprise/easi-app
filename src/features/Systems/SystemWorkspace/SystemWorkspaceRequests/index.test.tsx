@@ -29,15 +29,12 @@ describe('System Workspace Requests Table', () => {
         __typename: 'Query',
         cedarSystemWorkspace: {
           __typename: 'CedarSystemWorkspace',
-          id: cedarSystemId,
           cedarSystem: {
             __typename: 'CedarSystemWorkspaceSystem',
             id: cedarSystemId,
             linkedSystemIntakes,
             linkedTrbRequests
-          },
-          isMySystem: true,
-          roles: []
+          }
         }
       }
     };
@@ -144,5 +141,8 @@ describe('System Workspace Requests Table', () => {
     expect(
       await screen.findByRole('heading', { name: 'This page cannot be found.' })
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'Requests' })
+    ).not.toBeInTheDocument();
   });
 });

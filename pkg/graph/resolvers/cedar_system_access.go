@@ -5,6 +5,7 @@ import (
 	"slices"
 	"sync"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -55,6 +56,18 @@ func GetCedarSystemWorkspace(
 		return nil, err
 	}
 
+	workspace := &models.CedarSystemWorkspace{
+		ID: cedarSystem.ID,
+		CedarSystem: &models.CedarSystemWorkspaceSystem{
+			ID:   cedarSystem.ID,
+			Name: cedarSystem.Name.String,
+		},
+	}
+
+	if !cedarSystemWorkspaceNeedsTeamMetadata(ctx) {
+		return workspace, nil
+	}
+
 	cedarRoles, err := cedarCoreClient.GetRolesForSystem(ctx, cedarSystem, nil)
 	if err != nil {
 		return nil, err
@@ -65,15 +78,25 @@ func GetCedarSystemWorkspace(
 		return role.AssigneeUsername.String == userEua
 	})
 
-	return &models.CedarSystemWorkspace{
-		ID: cedarSystem.ID,
-		CedarSystem: &models.CedarSystemWorkspaceSystem{
-			ID:   cedarSystem.ID,
-			Name: cedarSystem.Name.String,
-		},
-		Roles:      cedarRoles,
-		IsMySystem: isMySystem,
-	}, nil
+	workspace.Roles = cedarRoles
+	workspace.IsMySystem = isMySystem
+
+	return workspace, nil
+}
+
+func cedarSystemWorkspaceNeedsTeamMetadata(ctx context.Context) bool {
+	if !graphql.HasOperationContext(ctx) || graphql.GetFieldContext(ctx) == nil {
+		return true
+	}
+
+	fields := graphql.CollectFieldsCtx(ctx, nil)
+	for _, field := range fields {
+		if field.Name == "roles" || field.Name == "isMySystem" {
+			return true
+		}
+	}
+
+	return false
 }
 
 func GetCedarSystemDetails(
