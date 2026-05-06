@@ -175,7 +175,7 @@ describe('EditSystemProfile', () => {
     await screen.findByText(`for ${cedarSystemName}`);
   });
 
-  it('hides the team card for profile-only viewers on the generic edit hub', async () => {
+  it('keeps the team card on the generic edit hub when workspace capability is false', async () => {
     renderEditSystemProfile({
       initialEntry: `/systems/${cedarSystemId}/edit`,
       viewerCanAccessWorkspace: false
@@ -183,7 +183,7 @@ describe('EditSystemProfile', () => {
 
     await screen.findByText(`for ${cedarSystemName}`);
 
-    expect(screen.queryByTestId('section-card-TEAM')).not.toBeInTheDocument();
+    expect(screen.getByTestId('section-card-TEAM')).toBeInTheDocument();
   });
 
   it('blocks workspace-only viewers from the generic edit hub', async () => {
