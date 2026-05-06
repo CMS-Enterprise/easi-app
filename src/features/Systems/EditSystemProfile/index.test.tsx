@@ -70,6 +70,7 @@ const renderEditSystemProfile = ({
   const isWorkspaceTeamRoute = initialEntry.startsWith(
     `/systems/${cedarSystemId}/edit/team`
   );
+  const isEditHubRoute = initialEntry === `/systems/${cedarSystemId}/edit`;
 
   const mocks: MockedQuery[] = [];
 
@@ -115,7 +116,7 @@ const renderEditSystemProfile = ({
     );
   }
 
-  if (isWorkspaceTeamRoute) {
+  if (isWorkspaceTeamRoute || isEditHubRoute) {
     mocks.push({
       request: {
         query: GetSystemWorkspaceDocument,
@@ -187,6 +188,22 @@ describe('EditSystemProfile', () => {
 
     expect(teamCard).toBeInTheDocument();
     expect(
+      within(teamCard).getByRole('link', { name: 'Edit section' })
+    ).toHaveAttribute('href', `/systems/${cedarSystemId}/edit/team`);
+  });
+
+  it('keeps the team card read-only on the generic edit hub for off-team viewers', async () => {
+    renderEditSystemProfile({
+      initialEntry: `/systems/${cedarSystemId}/edit`,
+      isMySystem: false
+    });
+
+    await screen.findByText(`for ${cedarSystemName}`);
+
+    const teamCard = screen.getByTestId('section-card-TEAM');
+
+    expect(teamCard).toBeInTheDocument();
+    expect(
       within(teamCard).getByRole('link', { name: 'View section' })
     ).toHaveAttribute('href', `/systems/${cedarSystemId}/team`);
   });
@@ -243,9 +260,21 @@ describe('EditSystemProfile', () => {
       error: new Error('System not found')
     };
 
+    const invalidCedarSystemWorkspaceQuery: MockedQuery = {
+      request: {
+        query: GetSystemWorkspaceDocument,
+        variables: {
+          cedarSystemId: 'invalid'
+        }
+      },
+      error: new Error('System not found')
+    };
+
     render(
       <Provider store={store}>
-        <VerboseMockedProvider mocks={[invalidCedarSystemQuery]}>
+        <VerboseMockedProvider
+          mocks={[invalidCedarSystemQuery, invalidCedarSystemWorkspaceQuery]}
+        >
           <MemoryRouter initialEntries={['/systems/invalid/edit']}>
             <Route path="/systems/:systemId/edit">
               <EditSystemProfile />

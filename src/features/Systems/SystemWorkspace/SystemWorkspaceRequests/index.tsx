@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import {
@@ -369,6 +369,7 @@ function SystemWorkspaceRequests() {
     systemId: string;
   }>();
   const [activeTable, setActiveTable] = useState<ActiveTable>('open');
+  const [lastLoadedTable, setLastLoadedTable] = useState<ActiveTable>('open');
 
   const { loading, error, data } = useGetLinkedRequestsQuery({
     variables: {
@@ -382,6 +383,12 @@ function SystemWorkspaceRequests() {
     }
   });
 
+  useEffect(() => {
+    if (!loading && data?.cedarSystemWorkspace?.cedarSystem) {
+      setLastLoadedTable(activeTable);
+    }
+  }, [activeTable, data, loading]);
+
   if (loading && !data?.cedarSystemWorkspace?.cedarSystem) {
     return <PageLoading />;
   }
@@ -392,8 +399,12 @@ function SystemWorkspaceRequests() {
 
   const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
   const workspacePath = `/systems/${systemId}/workspace`;
+  const showingStaleRowsForPreviousTab =
+    loading && lastLoadedTable !== activeTable;
   const { linkedSystemIntakes, linkedTrbRequests } =
-    data.cedarSystemWorkspace.cedarSystem;
+    showingStaleRowsForPreviousTab
+      ? { linkedSystemIntakes: [], linkedTrbRequests: [] }
+      : data.cedarSystemWorkspace.cedarSystem;
 
   return (
     <MainContent className="grid-container margin-bottom-5 desktop:margin-bottom-10">

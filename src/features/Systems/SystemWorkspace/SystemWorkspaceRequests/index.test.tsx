@@ -108,6 +108,110 @@ describe('System Workspace Requests Table', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows a loading state instead of stale rows when switching tabs', async () => {
+    const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
+
+    const openResult: FetchResult<GetLinkedRequestsQuery> = {
+      data: {
+        __typename: 'Query',
+        cedarSystemWorkspace: {
+          __typename: 'CedarSystemWorkspace',
+          cedarSystem: {
+            __typename: 'CedarSystemWorkspaceSystem',
+            id: cedarSystemId,
+            linkedSystemIntakes,
+            linkedTrbRequests
+          }
+        }
+      }
+    };
+
+    const closedResult: FetchResult<GetLinkedRequestsQuery> = {
+      data: {
+        __typename: 'Query',
+        cedarSystemWorkspace: {
+          __typename: 'CedarSystemWorkspace',
+          cedarSystem: {
+            __typename: 'CedarSystemWorkspaceSystem',
+            id: cedarSystemId,
+            linkedSystemIntakes: [],
+            linkedTrbRequests: []
+          }
+        }
+      }
+    };
+
+    const getLinkedRequestsMockedQuery: MockedQuery<
+      GetLinkedRequestsQuery,
+      GetLinkedRequestsQueryVariables
+    > = {
+      request: {
+        query: GetLinkedRequestsDocument,
+        variables: {
+          cedarSystemId,
+          systemIntakeState: SystemIntakeState.OPEN,
+          trbRequestState: TRBRequestState.OPEN
+        }
+      },
+      result: openResult
+    };
+
+    const getLinkedRequestsMockedQueryClosed: MockedQuery<
+      GetLinkedRequestsQuery,
+      GetLinkedRequestsQueryVariables
+    > = {
+      request: {
+        query: GetLinkedRequestsDocument,
+        variables: {
+          cedarSystemId,
+          systemIntakeState: SystemIntakeState.CLOSED,
+          trbRequestState: TRBRequestState.CLOSED
+        }
+      },
+      result: closedResult,
+      delay: 50
+    };
+
+    const user = userEvent.setup();
+    render(
+      <MockedProvider
+        mocks={[
+          getLinkedRequestsMockedQuery,
+          getLinkedRequestsMockedQueryClosed
+        ]}
+      >
+        <MemoryRouter
+          initialEntries={[`/systems/${cedarSystemId}/workspace/requests`]}
+        >
+          <Route exact path="/systems/:systemId/workspace/requests">
+            <SystemWorkspaceRequests />
+          </Route>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    expect(
+      await screen.findByText(
+        'Case 14 - Completed request form with Existing System Relation'
+      )
+    ).toBeInTheDocument();
+
+    await user.click(
+      await screen.findByRole('button', { name: 'Closed requests' })
+    );
+
+    expect(
+      screen.queryByText(
+        'Case 14 - Completed request form with Existing System Relation'
+      )
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId('page-loading')).toBeInTheDocument();
+
+    expect(
+      await screen.findByText('Most recent meeting date')
+    ).toBeInTheDocument();
+  });
+
   it('renders not found for a non-team member', async () => {
     const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
 

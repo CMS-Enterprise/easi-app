@@ -38,11 +38,16 @@ const EditSystemProfile = () => {
     systemId: string;
   }>();
   const { pathname, search } = useLocation();
+  const editHubPathMatch = matchPath(pathname, {
+    path: '/systems/:systemId/edit',
+    exact: true
+  });
   const teamManagementPathMatch = matchPath(pathname, {
     path: '/systems/:systemId/edit/team/:action(team-member)?',
     exact: true
   });
   const usesWorkspaceTeamData = !!teamManagementPathMatch;
+  const needsWorkspaceTeamAccess = usesWorkspaceTeamData || !!editHubPathMatch;
   const bypassSectionLocks =
     usesWorkspaceTeamData && new URLSearchParams(search).has('workspace');
 
@@ -65,7 +70,7 @@ const EditSystemProfile = () => {
     variables: {
       cedarSystemId: systemId
     },
-    skip: !usesWorkspaceTeamData
+    skip: !needsWorkspaceTeamAccess
   });
 
   if (cedarSystemLoading || cedarSystemWorkspaceLoading) {
@@ -73,9 +78,7 @@ const EditSystemProfile = () => {
   }
 
   const cedarSystemWorkspace = cedarSystemWorkspaceData?.cedarSystemWorkspace;
-  const canManageTeam = usesWorkspaceTeamData
-    ? cedarSystemWorkspace?.isMySystem === true
-    : cedarSystemData?.cedarSystem?.viewerCanAccessWorkspace === true;
+  const canManageTeam = cedarSystemWorkspace?.isMySystem === true;
 
   if (usesWorkspaceTeamData) {
     if (
