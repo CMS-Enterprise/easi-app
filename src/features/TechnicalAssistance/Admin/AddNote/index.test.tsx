@@ -105,7 +105,6 @@ const documents: GetTRBRequestDocumentsQuery['trbRequest']['documents'] = [
     __typename: 'TRBRequestDocument',
     fileName: 'documentOne.pdf',
     id: '9339ab0b-ef94-4d22-be9b-d40aa7f42e7e',
-    url: '',
     documentType: {
       __typename: 'TRBRequestDocumentType',
       commonType: TRBDocumentCommonType.BUSINESS_CASE,
@@ -118,7 +117,6 @@ const documents: GetTRBRequestDocumentsQuery['trbRequest']['documents'] = [
     __typename: 'TRBRequestDocument',
     fileName: 'documentTwo.pdf',
     id: 'a2229d41-7f80-4fa6-a08c-cf69e5275580',
-    url: '',
     documentType: {
       __typename: 'TRBRequestDocumentType',
       commonType: TRBDocumentCommonType.ARCHITECTURE_DIAGRAM,

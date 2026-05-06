@@ -15,6 +15,7 @@ import (
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 )
 
 func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
@@ -172,6 +173,133 @@ func TestCedarSystemsAllowsGRTWithoutEASI(t *testing.T) {
 	require.NotNil(t, systems)
 
 	_, err = resolver.CedarAuthorityToOperate(ctx, cedarSystemID)
+	require.Error(t, err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	require.True(t, errors.As(err, &unauthorizedErr))
+}
+
+func TestCedarSystemsAllowsTRBAdminWithoutEASI(t *testing.T) {
+	t.Parallel()
+
+	resolver := &queryResolver{&Resolver{
+		service: ResolverService{
+			SearchCommonNameContains: func(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
+				return []*models.UserInfo{}, nil
+			},
+		},
+		cedarCoreClient: cedarcore.NewClient(
+			appcontext.WithLogger(context.Background(), zap.NewNop()),
+			"fake",
+			"fake",
+			"1.0.0",
+			false,
+			true,
+		),
+	}}
+
+	ctx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:           "TRBA",
+		JobCodeTRBAdmin: true,
+		UserAccount:     &authentication.UserAccount{Username: "TRBA"},
+	})
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+
+	require.NoError(t, authorizeUserCanAccessCEDARSystemDirectory(ctx))
+
+	systems, err := resolver.CedarSystems(ctx)
+	require.NoError(t, err)
+	require.NotNil(t, systems)
+
+	_, err = resolver.CedarAuthorityToOperate(ctx, cedarSystemID)
+	require.Error(t, err)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	require.True(t, errors.As(err, &unauthorizedErr))
+}
+
+func TestCedarContactLookupAllowsTRBAdminWithoutEASI(t *testing.T) {
+	t.Parallel()
+
+	resolver := &queryResolver{&Resolver{
+		service: ResolverService{
+			SearchCommonNameContains: func(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
+				return []*models.UserInfo{}, nil
+			},
+		},
+		cedarCoreClient: cedarcore.NewClient(
+			appcontext.WithLogger(context.Background(), zap.NewNop()),
+			"fake",
+			"fake",
+			"1.0.0",
+			false,
+			true,
+		),
+	}}
+
+	ctx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:           "TRBA",
+		JobCodeTRBAdmin: true,
+		UserAccount:     &authentication.UserAccount{Username: "TRBA"},
+	})
+
+	require.NoError(t, authorizeUserCanAccessCEDARContactLookup(ctx))
+
+	contacts, err := resolver.CedarPersonsByCommonName(ctx, "AB")
+	require.NoError(t, err)
+	require.NotNil(t, contacts)
+}
+
+func TestSystemProfileSectionLocksAllowProfileOnlyEASIUsers(t *testing.T) {
+	t.Parallel()
+
+	mutationResolver := &mutationResolver{&Resolver{
+		pubsub: pubsub.NewServicePubSub(),
+		cedarCoreClient: cedarcore.NewClient(
+			appcontext.WithLogger(context.Background(), zap.NewNop()),
+			"fake",
+			"fake",
+			"1.0.0",
+			false,
+			true,
+		),
+	}}
+	queryResolver := &queryResolver{&Resolver{
+		cedarCoreClient: cedarcore.NewClient(
+			appcontext.WithLogger(context.Background(), zap.NewNop()),
+			"fake",
+			"fake",
+			"1.0.0",
+			false,
+			true,
+		),
+	}}
+
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+	section := models.SystemProfileLockableSectionTeam
+
+	profileOnlyCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "USR1",
+		JobCodeEASi: true,
+		UserAccount: &authentication.UserAccount{
+			ID:       uuid.MustParse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+			Username: "USR1",
+		},
+	})
+	nonEasiCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+		EUAID:       "WXYZ",
+		UserAccount: &authentication.UserAccount{Username: "WXYZ"},
+	})
+
+	locked, err := mutationResolver.LockSystemProfileSection(profileOnlyCtx, cedarSystemID, section)
+	require.NoError(t, err)
+	require.True(t, locked)
+
+	locks, err := queryResolver.SystemProfileSectionLocks(profileOnlyCtx, cedarSystemID)
+	require.NoError(t, err)
+	require.Len(t, locks, 1)
+
+	_, err = mutationResolver.LockSystemProfileSection(nonEasiCtx, cedarSystemID, section)
 	require.Error(t, err)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
@@ -379,10 +507,11 @@ func TestCedarSystemViewerCapabilitiesAccessMatrix(t *testing.T) {
 		return dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 	}
 
-	teamMemberCtx := withLoaders(appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
+	teamMemberBaseCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
 		EUAID:       "ABCD",
 		UserAccount: &authentication.UserAccount{Username: "ABCD"},
-	}))
+	})
+	teamMemberCtx := withLoaders(teamMemberBaseCtx)
 	grtCtx := withLoaders(appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
 		EUAID:       "GRT1",
 		JobCodeGRT:  true,
@@ -397,6 +526,7 @@ func TestCedarSystemViewerCapabilitiesAccessMatrix(t *testing.T) {
 	teamSystems, err := queryResolver.MyCedarSystems(teamMemberCtx)
 	require.NoError(t, err)
 	require.NotEmpty(t, teamSystems)
+	require.True(t, teamSystems[0].WorkspaceAccessPreAuthorized)
 
 	grtSystems, err := queryResolver.MyCedarSystems(grtCtx)
 	require.NoError(t, err)
@@ -408,7 +538,11 @@ func TestCedarSystemViewerCapabilitiesAccessMatrix(t *testing.T) {
 	require.NoError(t, err)
 	require.False(t, viewerCanAccessProfile)
 
-	viewerCanAccessWorkspace, err := typeResolver.ViewerCanAccessWorkspace(teamMemberCtx, teamSystems[0])
+	viewerCanAccessWorkspace, err := typeResolver.ViewerCanAccessWorkspace(teamMemberBaseCtx, teamSystems[0])
+	require.NoError(t, err)
+	require.True(t, viewerCanAccessWorkspace)
+
+	viewerCanAccessWorkspace, err = typeResolver.ViewerCanAccessWorkspace(teamMemberCtx, teamSystems[0])
 	require.NoError(t, err)
 	require.True(t, viewerCanAccessWorkspace)
 

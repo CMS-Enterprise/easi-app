@@ -3080,7 +3080,6 @@ type Query {
   cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
     @hasRole(role: EASI_USER)
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
-    @hasRole(role: EASI_USER)
   cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
     @hasRole(role: EASI_USER)
   cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]

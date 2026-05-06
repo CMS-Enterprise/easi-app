@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -425,6 +426,42 @@ func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id 
 	intake.FundingSources = sources
 
 	return &intake, nil
+}
+
+// FetchSystemIntakesByIDNP queries the DB for system intakes matching the given IDs.
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses Store methods to use a transactional wrapper.
+func FetchSystemIntakesByIDNP(
+	ctx context.Context,
+	np sqlutils.NamedPreparer,
+	ids []uuid.UUID,
+) (models.SystemIntakes, error) {
+	if len(ids) == 0 {
+		return models.SystemIntakes{}, nil
+	}
+
+	const whereClause = `
+		WHERE system_intakes.id = ANY(:ids)
+	`
+
+	var intakes models.SystemIntakes
+	err := namedSelect(ctx, np, &intakes, fetchSystemIntakeSQL+whereClause, args{
+		"ids": pq.Array(ids),
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch system intakes by ID",
+			zap.Error(err),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     ids,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return intakes, nil
 }
 
 // FetchSystemIntakes queries the DB for all system intakes

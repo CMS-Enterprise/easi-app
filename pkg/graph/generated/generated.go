@@ -11329,7 +11329,6 @@ type Query {
   cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
     @hasRole(role: EASI_USER)
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
-    @hasRole(role: EASI_USER)
   cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
     @hasRole(role: EASI_USER)
   cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]
@@ -34611,25 +34610,7 @@ func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context,
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CedarPersonsByCommonName(ctx, fc.Args["commonName"].(string))
 		},
-		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
-			directive0 := next
-
-			directive1 := func(ctx context.Context) (any, error) {
-				role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
-				if err != nil {
-					var zeroVal []*models.UserInfo
-					return zeroVal, err
-				}
-				if ec.directives.HasRole == nil {
-					var zeroVal []*models.UserInfo
-					return zeroVal, errors.New("directive hasRole is not implemented")
-				}
-				return ec.directives.HasRole(ctx, nil, directive0, role)
-			}
-
-			next = directive1
-			return next
-		},
+		nil,
 		ec.marshalNUserInfo2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfoᚄ,
 		true,
 		true,

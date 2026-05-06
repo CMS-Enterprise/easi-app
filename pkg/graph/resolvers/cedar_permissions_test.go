@@ -151,34 +151,42 @@ func (s *ResolverSuite) TestCEDARSystemProfileLockPermissions() {
 	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
 	section := models.SystemProfileLockableSectionTeam
 
-	teamMemberCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
-	otherUserCtx, _ := s.getTestContextWithPrincipal("ZZZZ", false)
+	easiCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	otherEasiCtx, _ := s.getTestContextWithPrincipal("ZZZZ", false)
+	nonEasiCtx := appcontext.WithPrincipal(s.ctxWithNewDataloaders(), &authentication.EUAPrincipal{
+		EUAID:       "WXYZ",
+		UserAccount: &authentication.UserAccount{Username: "WXYZ"},
+	})
 
-	locked, err := mutationResolver.LockSystemProfileSection(teamMemberCtx, cedarSystemID, section)
+	locked, err := mutationResolver.LockSystemProfileSection(easiCtx, cedarSystemID, section)
 	s.NoError(err)
 	s.True(locked)
 
-	locks, err := queryResolver.SystemProfileSectionLocks(teamMemberCtx, cedarSystemID)
+	locks, err := queryResolver.SystemProfileSectionLocks(easiCtx, cedarSystemID)
+	s.NoError(err)
+	s.Len(locks, 1)
+
+	locks, err = queryResolver.SystemProfileSectionLocks(otherEasiCtx, cedarSystemID)
 	s.NoError(err)
 	s.Len(locks, 1)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
-	_, err = queryResolver.SystemProfileSectionLocks(otherUserCtx, cedarSystemID)
+	_, err = queryResolver.SystemProfileSectionLocks(nonEasiCtx, cedarSystemID)
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil
 
-	_, err = mutationResolver.LockSystemProfileSection(otherUserCtx, cedarSystemID, section)
+	_, err = mutationResolver.LockSystemProfileSection(nonEasiCtx, cedarSystemID, section)
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil
 
-	_, err = mutationResolver.UnlockSystemProfileSection(otherUserCtx, cedarSystemID, section)
+	_, err = mutationResolver.UnlockSystemProfileSection(nonEasiCtx, cedarSystemID, section)
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
 	unauthorizedErr = nil
 
-	_, err = mutationResolver.UnlockAllSystemProfileSections(otherUserCtx, cedarSystemID)
+	_, err = mutationResolver.UnlockAllSystemProfileSections(nonEasiCtx, cedarSystemID)
 	s.Error(err)
 	s.True(errors.As(err, &unauthorizedErr))
 }

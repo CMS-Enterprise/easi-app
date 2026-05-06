@@ -21,7 +21,7 @@ func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSy
 		return false, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
-	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
 		return false, err
 	}
 
@@ -36,7 +36,7 @@ func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedar
 		return false, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
-	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
 		return false, err
 	}
 
@@ -55,7 +55,7 @@ func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, c
 		return nil, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
-	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
 		return nil, err
 	}
 
@@ -68,7 +68,7 @@ func (r *queryResolver) SystemProfileSectionLocks(ctx context.Context, cedarSyst
 		return nil, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
-	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
 		return nil, err
 	}
 
@@ -81,7 +81,7 @@ func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx conte
 		return nil, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
-	if err := authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, cedarSystemID); err != nil {
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
 		return nil, err
 	}
 

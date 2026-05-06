@@ -205,7 +205,7 @@ func GetCedarPersonsByCommonName(
 	searchCommonNameContains func(context.Context, string) ([]*models.UserInfo, error),
 	commonName string,
 ) ([]*models.UserInfo, error) {
-	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+	if err := authorizeUserCanAccessCEDARContactLookup(ctx); err != nil {
 		return nil, err
 	}
 

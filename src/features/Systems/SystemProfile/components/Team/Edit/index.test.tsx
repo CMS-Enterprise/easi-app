@@ -32,6 +32,12 @@ vi.mock('gql/generated/graphql', async () => {
   };
 });
 
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    systemWorkspaceTeam: true
+  })
+}));
+
 describe('Edit team page', () => {
   it('Renders the edit team page', async () => {
     const { findByRole, getByRole, getByTestId } = render(
@@ -87,6 +93,39 @@ describe('Edit team page', () => {
     expect(
       within(teamCards[0]).getByRole('button', { name: 'Remove team member' })
     ).toBeInTheDocument();
+  });
+
+  it('keeps the edit hub route family in the breadcrumb and back links', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/edit/team`]}>
+        <MessageProvider>
+          <MockedProvider>
+            <Route path="/systems/:systemId/edit/team/:action?">
+              <EditTeam
+                name="Easy Access to System Information"
+                team={usernamesWithRoles}
+                numberOfFederalFte={6}
+                numberOfContractorFte={4}
+              />
+            </Route>
+          </MockedProvider>
+        </MessageProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByRole('link', {
+        name: 'Easy Access to System Information'
+      })
+    ).toHaveAttribute('href', `/systems/${cedarSystemId}/edit`);
+
+    screen
+      .getAllByRole('link', {
+        name: i18next.t('systemProfile:returnToSystemProfile')
+      })
+      .forEach(link => {
+        expect(link).toHaveAttribute('href', `/systems/${cedarSystemId}/edit`);
+      });
   });
 });
 

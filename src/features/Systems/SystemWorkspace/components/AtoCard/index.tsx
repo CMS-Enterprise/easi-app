@@ -7,6 +7,7 @@ import { CedarRole } from 'gql/generated/graphql';
 
 import { AtoStatusTag } from 'components/AtoStatus';
 import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
+import Spinner from 'components/Spinner';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
 import { AtoStatus, GetSystemProfileATO } from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
@@ -15,6 +16,7 @@ import showVal from 'utils/showVal';
 import SpacesCard from '../SpacesCard';
 
 type Props = {
+  atoLoading?: boolean;
   atoStatus?: AtoStatus;
   atoUnavailable?: boolean;
   oaStatus?: string | null;
@@ -23,6 +25,7 @@ type Props = {
 };
 
 function AtoCard({
+  atoLoading = false,
   atoStatus,
   atoUnavailable = false,
   oaStatus,
@@ -30,6 +33,41 @@ function AtoCard({
   isso
 }: Props) {
   const { t } = useTranslation('systemWorkspace');
+  let atoBody = null;
+
+  if (atoLoading) {
+    atoBody = (
+      <div className="margin-top-0 margin-bottom-2">
+        <Spinner size="small" />
+      </div>
+    );
+  } else if (atoUnavailable) {
+    atoBody = (
+      <p className="margin-top-0 margin-bottom-2">
+        {t('spaces.ato.unavailable')}
+      </p>
+    );
+  } else if (atoStatus) {
+    atoBody = (
+      <div className="display-flex">
+        <AtoStatusTag
+          status={atoStatus}
+          className="display-flex flex-align-center margin-right-1"
+        />
+        {oaStatus === 'OA Member' && (
+          <span className="display-flex flex-align-center text-base">
+            {t('spaces.ato.atoOngoing')}
+          </span>
+        )}
+        {oaStatus !== 'OA Member' && dateAuthorizationMemoExpires && (
+          <span className="display-flex flex-align-center text-base">
+            {atoStatus === 'Expired' ? 'Expired' : 'Expires'}{' '}
+            {formatDateUtc(dateAuthorizationMemoExpires, 'MM/dd/yyyy')}
+          </span>
+        )}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -38,34 +76,7 @@ function AtoCard({
         description={t('spaces.ato.description')}
         body={
           <>
-            {atoUnavailable ? (
-              <p className="margin-top-0 margin-bottom-2">
-                {t('spaces.ato.unavailable')}
-              </p>
-            ) : (
-              atoStatus && (
-                <div className="display-flex">
-                  <AtoStatusTag
-                    status={atoStatus}
-                    className="display-flex flex-align-center margin-right-1"
-                  />
-                  {oaStatus === 'OA Member' && (
-                    <span className="display-flex flex-align-center text-base">
-                      {t('spaces.ato.atoOngoing')}
-                    </span>
-                  )}
-                  {oaStatus !== 'OA Member' && dateAuthorizationMemoExpires && (
-                    <span className="display-flex flex-align-center text-base">
-                      {atoStatus === 'Expired' ? 'Expired' : 'Expires'}{' '}
-                      {formatDateUtc(
-                        dateAuthorizationMemoExpires,
-                        'MM/dd/yyyy'
-                      )}
-                    </span>
-                  )}
-                </div>
-              )
-            )}
+            {atoBody}
             <p>
               <strong>{t('spaces.ato.isso')}</strong>
               <br />

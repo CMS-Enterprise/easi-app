@@ -3,6 +3,9 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import {
+  GetCedarSystemDocument,
+  GetCedarSystemQuery,
+  GetCedarSystemQueryVariables,
   GetSystemWorkspaceAtoDocument,
   GetSystemWorkspaceAtoQuery,
   GetSystemWorkspaceAtoQueryVariables,
@@ -122,5 +125,65 @@ describe('SystemWorkspace', () => {
     expect(
       await screen.findByRole('button', { name: 'View system profile' })
     ).toBeInTheDocument();
+  });
+
+  it('redirects non-team profile viewers back to the system profile route', async () => {
+    const getSystemWorkspaceQuery: MockedQuery<
+      GetSystemWorkspaceQuery,
+      GetSystemWorkspaceQueryVariables
+    > = {
+      request: {
+        query: GetSystemWorkspaceDocument,
+        variables: {
+          cedarSystemId
+        }
+      },
+      error: new Error('not authorized')
+    };
+
+    const getCedarSystemQuery: MockedQuery<
+      GetCedarSystemQuery,
+      GetCedarSystemQueryVariables
+    > = {
+      request: {
+        query: GetCedarSystemDocument,
+        variables: {
+          id: cedarSystemId
+        }
+      },
+      result: {
+        data: {
+          __typename: 'Query',
+          cedarSystem: {
+            __typename: 'CedarSystem',
+            id: cedarSystemId,
+            name: cedarSystemName,
+            description: null,
+            acronym: null,
+            status: null,
+            businessOwnerOrg: null,
+            businessOwnerOrgComp: null,
+            systemMaintainerOrg: null,
+            systemMaintainerOrgComp: null,
+            isBookmarked: false
+          }
+        }
+      }
+    };
+
+    render(
+      <MockedProvider mocks={[getSystemWorkspaceQuery, getCedarSystemQuery]}>
+        <MemoryRouter initialEntries={[`/systems/${cedarSystemId}/workspace`]}>
+          <Route exact path="/systems/:systemId/workspace">
+            <SystemWorkspace />
+          </Route>
+          <Route path="/systems/:systemId">
+            <div>System profile route</div>
+          </Route>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    expect(await screen.findByText('System profile route')).toBeInTheDocument();
   });
 });

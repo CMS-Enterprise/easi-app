@@ -43,6 +43,10 @@ func (r *cedarSystemResolver) ViewerCanAccessProfile(ctx context.Context, obj *m
 
 // ViewerCanAccessWorkspace is the resolver for the viewerCanAccessWorkspace field.
 func (r *cedarSystemResolver) ViewerCanAccessWorkspace(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	if obj.WorkspaceAccessPreAuthorized {
+		return true, nil
+	}
+
 	capabilities, err := GetCedarSystemViewerCapabilities(ctx, obj.ID)
 	if err != nil {
 		return false, err
@@ -56,6 +60,10 @@ func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models
 	trbRequests, err := CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
 	if err != nil {
 		return nil, err
+	}
+
+	if obj.WorkspaceAccessPreAuthorized {
+		return trbRequests, nil
 	}
 
 	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
@@ -76,6 +84,10 @@ func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *mode
 	intakes, err := CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
 	if err != nil {
 		return nil, err
+	}
+
+	if obj.WorkspaceAccessPreAuthorized {
+		return intakes, nil
 	}
 
 	err = authorizeUserCanAccessCEDARSystemWorkspace(ctx, r.cedarCoreClient, obj.ID)
@@ -236,6 +248,12 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(requesterEUAID))
 	if err != nil {
 		return nil, err
+	}
+
+	for _, system := range systems {
+		if system != nil {
+			system.WorkspaceAccessPreAuthorized = true
+		}
 	}
 
 	return systems, nil

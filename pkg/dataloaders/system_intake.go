@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -17,10 +18,24 @@ func (d *dataReader) batchSystemIntakesByID(ctx context.Context, systemIntakeIDs
 	errs := make([]error, len(systemIntakeIDs))
 
 	err := sqlutils.WithTransaction(ctx, d.db, func(tx *sqlx.Tx) error {
+		fetchedIntakes, fetchErr := storage.FetchSystemIntakesByIDNP(ctx, tx, systemIntakeIDs)
+		if fetchErr != nil {
+			return fetchErr
+		}
+
+		intakesByID := make(map[uuid.UUID]*models.SystemIntake, len(fetchedIntakes))
+		for index := range fetchedIntakes {
+			intake := fetchedIntakes[index]
+			intakesByID[intake.ID] = &fetchedIntakes[index]
+		}
+
 		for index, systemIntakeID := range systemIntakeIDs {
-			intake, fetchErr := storage.FetchSystemIntakeByIDNP(ctx, tx, systemIntakeID)
-			if fetchErr != nil {
-				errs[index] = fetchErr
+			intake, ok := intakesByID[systemIntakeID]
+			if !ok {
+				errs[index] = &apperrors.ResourceNotFoundError{
+					Err:      errors.New("system intake not found"),
+					Resource: models.SystemIntake{},
+				}
 				continue
 			}
 			intakes[index] = intake
