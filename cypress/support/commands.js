@@ -47,6 +47,35 @@ Cypress.Commands.add('markMinioUploadAsCleanByUrl', url =>
   cy.exec(`scripts/tag_minio_file ${getMinioUploadPathFromUrl(url)} CLEAN`)
 );
 
+const getGraphQLAuthHeader = () =>
+  cy.window({ log: false }).then(win => {
+    const localAuth = win.localStorage.getItem('dev-user-config');
+    if (localAuth) {
+      try {
+        if (JSON.parse(localAuth).favorLocalAuth) {
+          return `Local ${localAuth}`;
+        }
+      } catch (_error) {
+        // Fall through and try other auth sources if local storage is malformed.
+      }
+    }
+
+    const oktaTokenStorage = win.localStorage.getItem('okta-token-storage');
+    if (oktaTokenStorage) {
+      try {
+        const parsed = JSON.parse(oktaTokenStorage);
+        const accessToken = parsed?.accessToken?.accessToken;
+        if (accessToken) {
+          return `Bearer ${accessToken}`;
+        }
+      } catch (_error) {
+        // Fall through so the caller can fail with a clearer auth error.
+      }
+    }
+
+    return null;
+  });
+
 const getTrbRequestDocumentUrlsQuery = `
   query GetTRBRequestDocumentUrls($id: UUID!) {
     trbRequest(id: $id) {
@@ -61,28 +90,42 @@ const getTrbRequestDocumentUrlsQuery = `
 `;
 
 Cypress.Commands.add('markTrbRequestDocumentAsClean', (requestId, fileName) =>
-  cy
-    .request('POST', '/api/graph/query', {
-      operationName: 'GetTRBRequestDocumentUrls',
-      query: getTrbRequestDocumentUrlsQuery,
-      variables: {
-        id: requestId
-      }
-    })
-    .then(({ body }) => {
-      expect(body?.errors).to.eq(undefined);
+  getGraphQLAuthHeader().then(authHeader => {
+    expect(
+      authHeader,
+      'GraphQL auth header for marking TRB request documents as clean'
+    ).to.not.equal(null);
 
-      const document = body?.data?.trbRequest?.documents?.find(
-        item => item.fileName === fileName
-      );
+    return cy
+      .request({
+        method: 'POST',
+        url: '/api/graph/query',
+        headers: {
+          Authorization: authHeader
+        },
+        body: {
+          operationName: 'GetTRBRequestDocumentUrls',
+          query: getTrbRequestDocumentUrlsQuery,
+          variables: {
+            id: requestId
+          }
+        }
+      })
+      .then(({ body }) => {
+        expect(body?.errors).to.eq(undefined);
 
-      expect(document, `TRB document named "${fileName}"`).to.not.equal(
-        undefined
-      );
-      expect(document.url).to.include('/easi-app-file-uploads/');
+        const document = body?.data?.trbRequest?.documents?.find(
+          item => item.fileName === fileName
+        );
 
-      return cy.markMinioUploadAsCleanByUrl(document.url);
-    })
+        expect(document, `TRB document named "${fileName}"`).to.not.equal(
+          undefined
+        );
+        expect(document.url).to.include('/easi-app-file-uploads/');
+
+        return cy.markMinioUploadAsCleanByUrl(document.url);
+      });
+  })
 );
 
 /**
