@@ -332,6 +332,7 @@ describe('Trb Request form: Supporting documents', () => {
                       createTRBRequestDocument: {
                         document: {
                           id: '940e062a-1f2c-4470-9bc5-d54ea9bd032e',
+                          url: '',
                           documentType: {
                             commonType: 'ARCHITECTURE_DIAGRAM',
                             otherTypeDescription: ''

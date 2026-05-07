@@ -221,6 +221,7 @@ describe('TRB request permissions', () => {
 
   it('lets the request owner upload documents from the standalone upload route', () => {
     loginAs(owner);
+    let uploadedDocumentUrl;
 
     const waitForTrbDocument = (predicate, attemptsRemaining = 5) => {
       return cy
@@ -287,9 +288,13 @@ describe('TRB request permissions', () => {
     cy.contains('button', 'Upload document').should('not.be.disabled');
     cy.contains('button', 'Upload document').click();
 
-    cy.wait('@createTrbRequestDocument', { timeout: 20000 })
-      .its('response.body.errors')
-      .should('not.exist');
+    cy.wait('@createTrbRequestDocument', { timeout: 20000 }).then(
+      ({ response }) => {
+        expect(response?.body?.errors).to.eq(undefined);
+        uploadedDocumentUrl =
+          response?.body?.data?.createTRBRequestDocument?.document?.url;
+      }
+    );
     cy.url().should('include', requestUrls.completed.requesterDocumentsHref);
     cy.contains(
       '.usa-alert__text',
@@ -299,9 +304,9 @@ describe('TRB request permissions', () => {
     waitForTrbDocument(
       document =>
         document.fileName === 'test.pdf' && document.status === 'PENDING'
-    ).then(document => {
-      expect(document.url).to.include('/easi-app-file-uploads/');
-      cy.markMinioUploadAsCleanByUrl(document.url);
+    ).then(() => {
+      expect(uploadedDocumentUrl).to.include('/easi-app-file-uploads/');
+      return cy.markMinioUploadAsCleanByUrl(uploadedDocumentUrl);
     });
 
     cy.getByTestId('page-loading', { timeout: 20000 }).should('not.exist');
