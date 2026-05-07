@@ -62,6 +62,8 @@ func GetCedarSystemWorkspace(
 			ID:   cedarSystem.ID,
 			Name: cedarSystem.Name.String,
 		},
+		// Workspace access has already been authorized for this user.
+		IsMySystem: true,
 	}
 
 	if !cedarSystemWorkspaceNeedsTeamMetadata(ctx) {
@@ -70,7 +72,12 @@ func GetCedarSystemWorkspace(
 
 	cedarRoles, err := cedarCoreClient.GetRolesForSystem(ctx, cedarSystem, nil)
 	if err != nil {
-		return nil, err
+		appcontext.ZLogger(ctx).Error(
+			"problem fetching roles for workspace system",
+			zap.Error(err),
+			zap.String("system.id", cedarSystemID.String()),
+		)
+		return workspace, nil
 	}
 
 	userEua := appcontext.Principal(ctx).ID()
