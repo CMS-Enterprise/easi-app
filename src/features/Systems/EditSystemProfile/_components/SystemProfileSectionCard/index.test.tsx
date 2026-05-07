@@ -9,14 +9,33 @@ import easiMockStore from 'utils/testing/easiMockStore';
 
 import SystemProfileSectionCard from '.';
 
+const mockUseSystemSectionLockContext = vi.fn();
+
 vi.mock('launchdarkly-react-client-sdk', () => ({
   useFlags: () => ({
     editableSystemProfile: true
   })
 }));
 
+vi.mock('contexts/SystemSectionLockContext', async importOriginal => {
+  const actual =
+    await importOriginal<typeof import('contexts/SystemSectionLockContext')>();
+
+  return {
+    ...actual,
+    useSystemSectionLockContext: () => mockUseSystemSectionLockContext()
+  };
+});
+
 describe('SystemProfileSectionCard', () => {
   const store = easiMockStore();
+
+  beforeEach(() => {
+    mockUseSystemSectionLockContext.mockReturnValue({
+      systemProfileSectionLocks: [],
+      loading: false
+    });
+  });
 
   it('matches the snapshot', () => {
     const { asFragment } = render(
@@ -147,6 +166,42 @@ describe('SystemProfileSectionCard', () => {
     expect(screen.getByRole('link', { name: 'View section' })).toHaveClass(
       'usa-button--unstyled'
     );
+  });
+
+  it('keeps read-only links clickable when locks are ignored', () => {
+    mockUseSystemSectionLockContext.mockReturnValue({
+      systemProfileSectionLocks: [
+        {
+          section: SystemProfileLockableSection.TEAM,
+          lockedByUserAccount: {
+            username: 'OTHER_USER',
+            commonName: 'Other User'
+          }
+        }
+      ],
+      loading: false
+    });
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.TEAM}
+              readOnly
+              path="/systems/000-100-0/team"
+              ignoreSectionLock
+            />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    expect(screen.getByRole('link', { name: 'View section' })).toHaveAttribute(
+      'href',
+      '/systems/000-100-0/team'
+    );
+    expect(screen.queryByText('Locked')).not.toBeInTheDocument();
   });
 
   // TODO EASI-4984: test section locks once context is implemented

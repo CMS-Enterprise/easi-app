@@ -124,7 +124,7 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
     });
   });
 
-  it('hides the TEAM card when the viewer cannot manage team members', () => {
+  it('shows the TEAM card as read only when the viewer cannot manage team members', () => {
     render(
       <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
         <Route path="/systems/:systemId/edit">
@@ -137,7 +137,12 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
       </MemoryRouter>
     );
 
-    expect(screen.queryByTestId('section-card-TEAM')).not.toBeInTheDocument();
+    const teamCard = screen.getByTestId('section-card-TEAM');
+    const cardLink = within(teamCard).getByRole('link', {
+      name: 'View section'
+    });
+
+    expect(cardLink).toHaveAttribute('href', '/systems/000-100-0/team');
   });
 });
 

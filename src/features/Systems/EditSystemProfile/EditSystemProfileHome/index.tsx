@@ -107,6 +107,7 @@ const EditSystemProfileHome = ({
             section={SystemProfileLockableSection.TEAM}
             path={teamPath}
             readOnly={!canManageTeam}
+            ignoreSectionLock={!canManageTeam}
           />
 
           <SystemProfileSectionCard

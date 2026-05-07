@@ -29,6 +29,7 @@ type SystemProfileSectionCardProps = {
   hasExternalData?: boolean;
   readOnly?: boolean;
   path?: string;
+  ignoreSectionLock?: boolean;
 };
 
 /**
@@ -41,7 +42,8 @@ const SystemProfileSectionCard = ({
   isManagedExternally,
   hasExternalData,
   readOnly,
-  path
+  path,
+  ignoreSectionLock
 }: SystemProfileSectionCardProps) => {
   const { t } = useTranslation('systemProfile');
 
@@ -114,7 +116,7 @@ const SystemProfileSectionCard = ({
           </p>
         )}
 
-        {sectionLock ? (
+        {sectionLock && !ignoreSectionLock ? (
           <SectionLock sectionLock={sectionLock} />
         ) : (
           <Link
