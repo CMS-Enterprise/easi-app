@@ -299,7 +299,10 @@ describe('TRB request permissions', () => {
     waitForTrbDocument(
       document =>
         document.fileName === 'test.pdf' && document.status === 'PENDING'
-    );
+    ).then(document => {
+      expect(document.url).to.include('/easi-app-file-uploads/');
+      cy.markMinioUploadAsCleanByUrl(document.url);
+    });
 
     cy.getByTestId('page-loading', { timeout: 20000 }).should('not.exist');
     cy.contains('tbody tr', 'test.pdf', {
@@ -309,8 +312,6 @@ describe('TRB request permissions', () => {
       .within(() => {
         cy.contains('Virus scan in progress...').should('be.visible');
       });
-
-    cy.markTrbRequestDocumentAsClean(requestUrls.completed.id, 'test.pdf');
 
     cy.reload();
 
