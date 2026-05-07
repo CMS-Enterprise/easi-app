@@ -18,14 +18,8 @@ describe('The Business Case Form', () => {
 
     cy.visit('/');
     cy.contains('h3', 'My open requests');
-    cy.wait('@getRequests').then(({ response }) => {
-      const requests = response?.body?.data?.mySystemIntakes || [];
-      const request = requests.find(item => item.requestName === requestName);
-
-      expect(request, `request named "${requestName}"`).to.not.equal(undefined);
-
-      cy.visit(`/governance-task-list/${request.id}`);
-    });
+    cy.wait('@getRequests');
+    cy.get('.requests-table').contains('a', requestName).click();
 
     cy.wait('@getGovernanceTaskList');
     cy.contains('h1', 'Governance task list');
