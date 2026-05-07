@@ -18,6 +18,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 )
 
+var testCedarSystemID = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+
 func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
 	t.Parallel()
 
@@ -41,8 +43,6 @@ func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
 		EUAID:       "USR1",
 		UserAccount: &authentication.UserAccount{Username: "USR1"},
 	})
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
-
 	testCases := []struct {
 		name string
 		call func() error
@@ -57,14 +57,14 @@ func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
 		{
 			name: "cedarSystem",
 			call: func() error {
-				_, err := resolver.CedarSystem(ctx, cedarSystemID)
+				_, err := resolver.CedarSystem(ctx, testCedarSystemID)
 				return err
 			},
 		},
 		{
 			name: "cedarSystemDetails",
 			call: func() error {
-				_, err := resolver.CedarSystemDetails(ctx, cedarSystemID)
+				_, err := resolver.CedarSystemDetails(ctx, testCedarSystemID)
 				return err
 			},
 		},
@@ -78,49 +78,49 @@ func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
 		{
 			name: "cedarBudgetSystemCost",
 			call: func() error {
-				_, err := resolver.CedarBudgetSystemCost(ctx, cedarSystemID)
+				_, err := resolver.CedarBudgetSystemCost(ctx, testCedarSystemID)
 				return err
 			},
 		},
 		{
 			name: "cedarSubSystems",
 			call: func() error {
-				_, err := resolver.CedarSubSystems(ctx, cedarSystemID)
+				_, err := resolver.CedarSubSystems(ctx, testCedarSystemID)
 				return err
 			},
 		},
 		{
 			name: "cedarContractsBySystem",
 			call: func() error {
-				_, err := resolver.CedarContractsBySystem(ctx, cedarSystemID)
+				_, err := resolver.CedarContractsBySystem(ctx, testCedarSystemID)
 				return err
 			},
 		},
 		{
 			name: "cedarThreat",
 			call: func() error {
-				_, err := resolver.CedarThreat(ctx, cedarSystemID)
+				_, err := resolver.CedarThreat(ctx, testCedarSystemID)
 				return err
 			},
 		},
 		{
 			name: "exchanges",
 			call: func() error {
-				_, err := resolver.Exchanges(ctx, cedarSystemID)
+				_, err := resolver.Exchanges(ctx, testCedarSystemID)
 				return err
 			},
 		},
 		{
 			name: "deployments",
 			call: func() error {
-				_, err := resolver.Deployments(ctx, cedarSystemID, nil, nil, nil)
+				_, err := resolver.Deployments(ctx, testCedarSystemID, nil, nil, nil)
 				return err
 			},
 		},
 		{
 			name: "urls",
 			call: func() error {
-				_, err := resolver.Urls(ctx, cedarSystemID)
+				_, err := resolver.Urls(ctx, testCedarSystemID)
 				return err
 			},
 		},
@@ -164,15 +164,13 @@ func TestCedarSystemsAllowsGRTWithoutEASI(t *testing.T) {
 		JobCodeGRT:  true,
 		UserAccount: &authentication.UserAccount{Username: "GRT1"},
 	})
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
-
 	require.NoError(t, authorizeUserCanAccessCEDARSystemDirectory(ctx))
 
 	systems, err := resolver.CedarSystems(ctx)
 	require.NoError(t, err)
 	require.NotNil(t, systems)
 
-	_, err = resolver.CedarAuthorityToOperate(ctx, cedarSystemID)
+	_, err = resolver.CedarAuthorityToOperate(ctx, testCedarSystemID)
 	require.Error(t, err)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
@@ -203,15 +201,13 @@ func TestCedarSystemsAllowsTRBAdminWithoutEASI(t *testing.T) {
 		JobCodeTRBAdmin: true,
 		UserAccount:     &authentication.UserAccount{Username: "TRBA"},
 	})
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
-
 	require.NoError(t, authorizeUserCanAccessCEDARSystemDirectory(ctx))
 
 	systems, err := resolver.CedarSystems(ctx)
 	require.NoError(t, err)
 	require.NotNil(t, systems)
 
-	_, err = resolver.CedarAuthorityToOperate(ctx, cedarSystemID)
+	_, err = resolver.CedarAuthorityToOperate(ctx, testCedarSystemID)
 	require.Error(t, err)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
@@ -273,10 +269,8 @@ func TestCedarContactLookupAllowsTeamMemberWithoutEASI(t *testing.T) {
 		EUAID:       "ABCD",
 		UserAccount: &authentication.UserAccount{Username: "ABCD"},
 	})
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
-
 	require.NoError(t, authorizeUserCanAccessCEDARTeamMetadata(ctx, resolver.cedarCoreClient))
-	require.NoError(t, authorizeUserCanAccessCEDARSystemWorkspace(ctx, resolver.cedarCoreClient, cedarSystemID))
+	require.NoError(t, authorizeUserCanAccessCEDARSystemWorkspace(ctx, resolver.cedarCoreClient, testCedarSystemID))
 	require.NoError(t, authorizeUserCanAccessCEDARContactLookup(ctx, resolver.cedarCoreClient))
 
 	contacts, err := resolver.CedarPersonsByCommonName(ctx, "AB")
@@ -311,8 +305,7 @@ func TestCedarSystemWorkspaceAuthorizationIgnoresCapabilityFallback(t *testing.T
 		)
 	})
 
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
-	require.NoError(t, authorizeUserCanAccessCEDARSystemWorkspace(ctx, cedarCoreClient, cedarSystemID))
+	require.NoError(t, authorizeUserCanAccessCEDARSystemWorkspace(ctx, cedarCoreClient, testCedarSystemID))
 }
 
 func TestSystemProfileSectionLocksAllowProfileOnlyEASIUsers(t *testing.T) {
@@ -340,7 +333,6 @@ func TestSystemProfileSectionLocksAllowProfileOnlyEASIUsers(t *testing.T) {
 		),
 	}}
 
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
 	section := models.SystemProfileLockableSectionTeam
 
 	profileOnlyCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
@@ -356,15 +348,15 @@ func TestSystemProfileSectionLocksAllowProfileOnlyEASIUsers(t *testing.T) {
 		UserAccount: &authentication.UserAccount{Username: "WXYZ"},
 	})
 
-	locked, err := mutationResolver.LockSystemProfileSection(profileOnlyCtx, cedarSystemID, section)
+	locked, err := mutationResolver.LockSystemProfileSection(profileOnlyCtx, testCedarSystemID, section)
 	require.NoError(t, err)
 	require.True(t, locked)
 
-	locks, err := queryResolver.SystemProfileSectionLocks(profileOnlyCtx, cedarSystemID)
+	locks, err := queryResolver.SystemProfileSectionLocks(profileOnlyCtx, testCedarSystemID)
 	require.NoError(t, err)
 	require.Len(t, locks, 1)
 
-	_, err = mutationResolver.LockSystemProfileSection(nonEasiCtx, cedarSystemID, section)
+	_, err = mutationResolver.LockSystemProfileSection(nonEasiCtx, testCedarSystemID, section)
 	require.Error(t, err)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
@@ -390,7 +382,6 @@ func TestCedarSystemProfileQueriesRequireEASI(t *testing.T) {
 		),
 	}}
 
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
 	easiCtx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
 		EUAID:       "USR1",
 		JobCodeEASi: true,
@@ -413,43 +404,43 @@ func TestCedarSystemProfileQueriesRequireEASI(t *testing.T) {
 		{
 			name: "cedarBudgetSystemCost",
 			call: func(ctx context.Context) (any, error) {
-				return resolver.CedarBudgetSystemCost(ctx, cedarSystemID)
+				return resolver.CedarBudgetSystemCost(ctx, testCedarSystemID)
 			},
 		},
 		{
 			name: "cedarSubSystems",
 			call: func(ctx context.Context) (any, error) {
-				return resolver.CedarSubSystems(ctx, cedarSystemID)
+				return resolver.CedarSubSystems(ctx, testCedarSystemID)
 			},
 		},
 		{
 			name: "cedarContractsBySystem",
 			call: func(ctx context.Context) (any, error) {
-				return resolver.CedarContractsBySystem(ctx, cedarSystemID)
+				return resolver.CedarContractsBySystem(ctx, testCedarSystemID)
 			},
 		},
 		{
 			name: "cedarThreat",
 			call: func(ctx context.Context) (any, error) {
-				return resolver.CedarThreat(ctx, cedarSystemID)
+				return resolver.CedarThreat(ctx, testCedarSystemID)
 			},
 		},
 		{
 			name: "exchanges",
 			call: func(ctx context.Context) (any, error) {
-				return resolver.Exchanges(ctx, cedarSystemID)
+				return resolver.Exchanges(ctx, testCedarSystemID)
 			},
 		},
 		{
 			name: "deployments",
 			call: func(ctx context.Context) (any, error) {
-				return resolver.Deployments(ctx, cedarSystemID, nil, nil, nil)
+				return resolver.Deployments(ctx, testCedarSystemID, nil, nil, nil)
 			},
 		},
 		{
 			name: "urls",
 			call: func(ctx context.Context) (any, error) {
-				return resolver.Urls(ctx, cedarSystemID)
+				return resolver.Urls(ctx, testCedarSystemID)
 			},
 		},
 	}
@@ -497,15 +488,13 @@ func TestCedarSystemWorkspaceAllowsTeamMemberWithoutEASI(t *testing.T) {
 		EUAID:       "ABCD",
 		UserAccount: &authentication.UserAccount{Username: "ABCD"},
 	})
-	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
-
-	workspace, err := resolver.CedarSystemWorkspace(ctx, cedarSystemID)
+	workspace, err := resolver.CedarSystemWorkspace(ctx, testCedarSystemID)
 	require.NoError(t, err)
 	require.NotNil(t, workspace)
 	require.NotNil(t, workspace.CedarSystem)
 	require.True(t, workspace.IsMySystem)
 
-	_, err = resolver.CedarAuthorityToOperate(ctx, cedarSystemID)
+	_, err = resolver.CedarAuthorityToOperate(ctx, testCedarSystemID)
 	require.Error(t, err)
 
 	var unauthorizedErr *apperrors.UnauthorizedError
@@ -692,7 +681,7 @@ func TestPreAuthorizedWorkspaceSystemBypassesMembershipLookupForProfile(t *testi
 		EUAID:       "ABCD",
 		UserAccount: &authentication.UserAccount{Username: "ABCD"},
 	})
-	workspace, err := GetCedarSystemWorkspace(teamMemberCtx, cedarCoreClient, uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"))
+	workspace, err := GetCedarSystemWorkspace(teamMemberCtx, cedarCoreClient, testCedarSystemID)
 	require.NoError(t, err)
 	require.NotNil(t, workspace)
 	require.NotNil(t, workspace.CedarSystem)
