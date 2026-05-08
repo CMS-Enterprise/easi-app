@@ -24,7 +24,7 @@ func CreateSystemIntakeContact(
 	input models.CreateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
+	intake, err := storage.FetchSystemIntakeByIDNP(ctx, np, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
