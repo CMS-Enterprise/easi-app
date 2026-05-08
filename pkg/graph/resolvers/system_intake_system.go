@@ -47,7 +47,7 @@ func SystemIntakeSystemsByIntakeID(ctx context.Context, systemIntakeID uuid.UUID
 }
 
 func AddSystemLink(ctx context.Context, store *storage.Store, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func DeleteSystemIntakeSystemByID(ctx context.Context, store *storage.Store, sys
 		return models.SystemIntakeSystem{}, err
 	}
 
-	intake, err := store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
 	if err != nil {
 		return models.SystemIntakeSystem{}, err
 	}
@@ -105,7 +105,7 @@ func UpdateSystemLinkByID(ctx context.Context, store *storage.Store, input model
 		return models.SystemIntakeSystem{}, err
 	}
 
-	intake, err := store.FetchSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, linkedSystem.SystemIntakeID)
 	if err != nil {
 		return models.SystemIntakeSystem{}, err
 	}
@@ -148,7 +148,7 @@ func GetSystemIntakeSystem(ctx context.Context, store *storage.Store, systemInta
 	return linkedSystem, nil
 }
 
-func GetSystemIntakeSystems(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+func GetSystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
 	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err

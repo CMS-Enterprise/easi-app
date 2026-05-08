@@ -697,7 +697,7 @@ func ArchiveSystemIntake(
 	emailClient *email.Client,
 	id uuid.UUID,
 ) (*models.SystemIntake, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, id)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

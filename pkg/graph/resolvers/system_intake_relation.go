@@ -8,6 +8,7 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -21,7 +22,7 @@ func SetSystemIntakeRelationExistingService(
 	store *storage.Store,
 	input *models.SetSystemIntakeRelationExistingServiceInput,
 ) (*models.SystemIntake, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +66,7 @@ func SetSystemIntakeRelationNewSystem(
 	store *storage.Store,
 	input *models.SetSystemIntakeRelationNewSystemInput,
 ) (*models.SystemIntake, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +110,7 @@ func SetSystemIntakeRelationExistingSystem(
 	getCedarSystem func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error),
 	input *models.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +160,7 @@ func SetSystemSupportAndUnlinkSystemIntakeRelation(
 	intakeID uuid.UUID,
 	doesNotSupportSystems bool,
 ) (*models.SystemIntake, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, intakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, intakeID)
 	if err != nil {
 		return nil, err
 	}

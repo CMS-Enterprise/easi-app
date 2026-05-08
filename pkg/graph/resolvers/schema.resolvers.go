@@ -1318,7 +1318,7 @@ func (r *queryResolver) Urls(ctx context.Context, cedarSystemID uuid.UUID) ([]*m
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
 func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error) {
-	return GetSystemIntakeContacts(ctx, r.store, id)
+	return GetSystemIntakeContacts(ctx, id)
 }
 
 // TrbRequest is the resolver for the trbRequest field.
@@ -1358,7 +1358,7 @@ func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSyst
 
 // SystemIntakeSystems is the resolver for the systemIntakeSystems field.
 func (r *queryResolver) SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
-	return GetSystemIntakeSystems(ctx, r.store, systemIntakeID)
+	return GetSystemIntakeSystems(ctx, systemIntakeID)
 }
 
 // Actions is the resolver for the actions field.

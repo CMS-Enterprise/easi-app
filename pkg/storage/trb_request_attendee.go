@@ -102,11 +102,7 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 // GetTRBRequestAttendeeByID queries the DB for a TRB request attendee by ID
 func (s *Store) GetTRBRequestAttendeeByID(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error) {
 	attendee := models.TRBRequestAttendee{}
-	err := namedGet(ctx, s.db, &attendee, `
-		SELECT *
-		FROM trb_request_attendees
-		WHERE id = :id
-	`, args{
+	err := namedGet(ctx, s.db, &attendee, sqlqueries.TRBRequestAttendees.GetByID, args{
 		"id": id,
 	})
 

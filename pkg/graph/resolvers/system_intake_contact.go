@@ -24,7 +24,7 @@ func CreateSystemIntakeContact(
 	input models.CreateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	intake, err := storage.FetchSystemIntakeByIDNP(ctx, np, input.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func SystemIntakeContactDelete(ctx context.Context, np sqlutils.NamedPreparer, i
 		return nil, err
 	}
 
-	intake, err := storage.FetchSystemIntakeByIDNP(ctx, np, contact.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, contact.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func UpdateSystemIntakeContact(
 		return nil, err
 	}
 
-	intake, err := storage.FetchSystemIntakeByIDNP(ctx, np, contact.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, contact.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ func SystemIntakeContactGetRequester(ctx context.Context, systemIntakeID uuid.UU
 	return dataloaders.SystemIntakeContactGetRequester(ctx, systemIntakeID)
 }
 
-func GetSystemIntakeContacts(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
+func GetSystemIntakeContacts(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
 	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err

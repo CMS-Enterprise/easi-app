@@ -322,7 +322,7 @@ func DeleteSystemIntakeGRBPresentationLinks(
 	store *storage.Store,
 	input models.DeleteSystemIntakeGRBPresentationLinksInput,
 ) (uuid.UUID, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return uuid.Nil, err
 	}
