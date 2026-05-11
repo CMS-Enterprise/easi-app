@@ -5,6 +5,7 @@ export default gql(/* GraphQL */ `
     createTRBRequestDocument(input: $input) {
       document {
         id
+        url
         documentType {
           commonType
           otherTypeDescription

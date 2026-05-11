@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
   Button,
@@ -11,6 +12,7 @@ import {
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
+import NotFound from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeSystem,
   useDeleteSystemLinkMutation,
@@ -18,6 +20,8 @@ import {
   useGetSystemIntakeSystemsQuery,
   useUnlinkSystemIntakeRelationMutation
 } from 'gql/generated/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import CheckboxField from 'components/CheckboxField';
@@ -30,12 +34,16 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import toastSuccess from 'components/ToastSuccess';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
+import user from 'utils/user';
 
 import LinkedSystemsTable from './LinkedSystemsTable';
 
 const LinkedSystems = () => {
   // Id refers to system intake
   const { id } = useParams<{ id: string }>();
+  const { groups } = useSelector((state: AppState) => state.auth);
+  const flags = useFlags();
 
   const history = useHistory();
   const { Message } = useMessage();
@@ -78,12 +86,20 @@ const LinkedSystems = () => {
     variables: { systemIntakeId: id }
   });
 
-  const { data: systemData, refetch: refetchIntake } = useGetSystemIntakeQuery({
+  const {
+    data: systemData,
+    loading: intakeLoading,
+    refetch: refetchIntake
+  } = useGetSystemIntakeQuery({
     variables: { id }
   });
 
   // Derived source of truth
   const noSystemsUsed = !!systemData?.systemIntake?.doesNotSupportSystems;
+  const isITGovAdmin = user.isITGovAdmin(groups, flags);
+  const isRequester = isSystemIntakeRequester({
+    intake: systemData?.systemIntake
+  });
 
   // Local UI state
   const [systemToBeRemoved, setSystemToBeRemoved] = useState<string>();
@@ -151,8 +167,16 @@ const LinkedSystems = () => {
     setRemoveAllLinkedSystemsModalOpen(false);
   };
 
-  if (relationLoading) {
+  if (relationLoading || intakeLoading) {
     return <PageLoading />;
+  }
+
+  if (!systemData?.systemIntake) {
+    return <NotFound />;
+  }
+
+  if (!isRequester && !isITGovAdmin) {
+    return <NotFound />;
   }
 
   type BreadcrumbType = {

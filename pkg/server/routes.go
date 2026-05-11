@@ -231,9 +231,12 @@ func (s *Server) routes() {
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
 		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithDeactivatedSystems())
 	}
+	getMyCedarSystems := func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(euaUserID))
+	}
 
 	buildDataloaders := func() *dataloaders.Dataloaders {
-		return dataloaders.NewDataloaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
+		return dataloaders.NewDataloaders(store, userSearchClient.FetchUserInfos, getCedarSystems, getMyCedarSystems)
 	}
 
 	// we need to construct a NEW set of dataloaders for each incoming HTTP request to avoid the forced caching of

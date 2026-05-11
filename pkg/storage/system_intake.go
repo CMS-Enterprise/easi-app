@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -427,6 +428,42 @@ func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id 
 	return &intake, nil
 }
 
+// FetchSystemIntakesByIDNP queries the DB for system intakes matching the given IDs.
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses Store methods to use a transactional wrapper.
+func FetchSystemIntakesByIDNP(
+	ctx context.Context,
+	np sqlutils.NamedPreparer,
+	ids []uuid.UUID,
+) (models.SystemIntakes, error) {
+	if len(ids) == 0 {
+		return models.SystemIntakes{}, nil
+	}
+
+	const whereClause = `
+		WHERE system_intakes.id = ANY(:ids)
+	`
+
+	var intakes models.SystemIntakes
+	err := namedSelect(ctx, np, &intakes, fetchSystemIntakeSQL+whereClause, args{
+		"ids": pq.Array(ids),
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch system intakes by ID",
+			zap.Error(err),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     ids,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return intakes, nil
+}
+
 // FetchSystemIntakes queries the DB for all system intakes
 func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
@@ -608,6 +645,13 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 		return nil, err
 	}
 	return intakes, nil
+}
+
+// GetSystemIntakeLCIDOptions retrieves requester-safe LCID lookup options.
+func (s *Store) GetSystemIntakeLCIDOptions(ctx context.Context) ([]*models.SystemIntakeLCIDOption, error) {
+	var intakes []*models.SystemIntakeLCIDOption
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetLCIDOptions, args{})
+	return intakes, err
 }
 
 func (s *Store) GetMySystemIntakes(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {

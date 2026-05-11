@@ -18,6 +18,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import NotFound from 'features/Miscellaneous/NotFound';
 import {
   RequestRelationType,
   useGetSystemIntakeRelationQuery,
@@ -42,6 +43,7 @@ import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
 import { useLinkCedarSystemIdQueryParam } from 'utils/linkCedarSystemIdQueryString';
 
 type RequestLinkFormFields = {
@@ -192,6 +194,11 @@ const RequestLinkForm = ({
   // Ref fields for some form behavior
   const fields = watch();
   const relation = fields.relationType;
+  const requesterIntake =
+    requestType === 'itgov' && data && 'systemIntake' in data
+      ? data.systemIntake
+      : undefined;
+  const isRequester = isSystemIntakeRequester({ intake: requesterIntake });
 
   // This form doesn't use field validation feedback
   // Instead the submission button is disabled according to field requirements
@@ -320,6 +327,16 @@ const RequestLinkForm = ({
       );
     }
   };
+
+  if (
+    !relationLoading &&
+    requestType === 'itgov' &&
+    !fromAdmin &&
+    data &&
+    !isRequester
+  ) {
+    return <NotFound />;
+  }
 
   return (
     <MainContent className="grid-container margin-bottom-15">

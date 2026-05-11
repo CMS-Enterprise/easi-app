@@ -109,6 +109,10 @@ export const trbRequest: GetTRBRequestQuery['trbRequest'] = {
   __typename: 'TRBRequest',
   id: trbRequestId,
   name: 'Mock TRB Request',
+  requesterInfo: {
+    __typename: 'UserInfo',
+    euaUserId: requester.userInfo.euaUserId
+  },
   type: TRBRequestType.NEED_HELP,
   state: TRBRequestState.OPEN,
   taskStatuses,

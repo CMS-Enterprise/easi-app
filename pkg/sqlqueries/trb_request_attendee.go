@@ -2,6 +2,11 @@ package sqlqueries
 
 import _ "embed"
 
+// getAttendeeByIDSQL holds the SQL query to get an attendee by ID
+//
+//go:embed SQL/trb_request_attendees/get_by_id.sql
+var getAttendeeByIDSQL string
+
 // GetAttendeesByTRBReqIDSQL holds the SQL query to get the attendees by TRB Req ID
 //
 //go:embed SQL/trb_request_attendees/get_by_trb_ID.sql
@@ -23,6 +28,7 @@ var GetAttendeeByEUAIDAndTRBIDSQL string
 var GetAttendeesByEUAIDsAndTRBIDsSQL string
 
 var TRBRequestAttendees = trbAttendeesScripts{
+	GetByID:                     getAttendeeByIDSQL,
 	GetByTRBID:                  getAttendeesByTRBReqIDSQL,
 	GetByTRBIDs:                 getAttendeesByTRBReqIDsSQL,
 	GetAttendeeByEUAAndTRBID:    GetAttendeeByEUAIDAndTRBIDSQL,
@@ -30,6 +36,7 @@ var TRBRequestAttendees = trbAttendeesScripts{
 }
 
 type trbAttendeesScripts struct {
+	GetByID                     string
 	GetByTRBID                  string
 	GetByTRBIDs                 string
 	GetAttendeeByEUAAndTRBID    string

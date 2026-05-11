@@ -2,14 +2,19 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
+	"github.com/jmoiron/sqlx"
 
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // TestCreateTRBRequest makes a new TRB request
@@ -52,6 +57,34 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	s.NotNil(updated.ModifiedAt)
 }
 
+func (s *ResolverSuite) TestUpdateTRBRequestUnauthorized() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trb.TRBLead = &leadEUA
+	trb, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trb)
+	s.NoError(err)
+
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	changes := map[string]interface{}{
+		"Name": "Testing",
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	for _, ctx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = UpdateTRBRequest(ctx, trb.ID, changes, s.testConfigs.Store)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
+}
+
 // TestGetTRBRequestByID returns a TRB request by it's ID
 func (s *ResolverSuite) TestGetTRBRequestByID() {
 	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
@@ -63,17 +96,265 @@ func (s *ResolverSuite) TestGetTRBRequestByID() {
 	s.NotNil(ret)
 }
 
+func (s *ResolverSuite) TestTRBRequestGuidanceLetterVisibility() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	letter, err := CreateTRBGuidanceLetter(s.testConfigs.Context, s.testConfigs.Store, trb.ID)
+	s.NoError(err)
+	s.NotNil(letter)
+
+	resolver := &tRBRequestResolver{&Resolver{store: s.testConfigs.Store}}
+
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+	ownerLetter, err := resolver.GuidanceLetter(ownerCtx, trb)
+	s.NoError(err)
+	s.Nil(ownerLetter)
+
+	adminCtx, _ := s.getTestContextWithPrincipal("ABCD", true)
+	adminLetter, err := resolver.GuidanceLetter(adminCtx, trb)
+	s.NoError(err)
+	s.NotNil(adminLetter)
+	s.Equal(letter.ID, adminLetter.ID)
+
+	_, err = s.testConfigs.Store.UpdateTRBGuidanceLetterStatus(
+		s.testConfigs.Context,
+		letter.ID,
+		models.TRBGuidanceLetterStatusCompleted,
+	)
+	s.NoError(err)
+
+	ownerCtx, _ = s.getTestContextWithPrincipal("TEST", false)
+	completedOwnerLetter, err := resolver.GuidanceLetter(ownerCtx, trb)
+	s.NoError(err)
+	s.NotNil(completedOwnerLetter)
+	s.Equal(letter.ID, completedOwnerLetter.ID)
+}
+
+func (s *ResolverSuite) TestTRBRequestAuthorizationHelpers() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
+
+	leadEUA := "LEAD"
+	trb.TRBLead = &leadEUA
+	trb, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trb)
+	s.NoError(err)
+
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+
+	s.NoError(authorizeUserCanViewTRBRequest(ownerCtx, trb))
+	s.NoError(authorizeUserCanViewTRBRequest(adminCtx, trb))
+	s.NoError(authorizeUserCanViewTRBRequest(leadCtx, trb))
+
+	viewErr := authorizeUserCanViewTRBRequest(otherCtx, trb)
+	s.Error(viewErr)
+
+	s.NoError(authorizeUserCanEditOwnTRBRequest(ownerCtx, trb))
+	for _, ctx := range []context.Context{adminCtx, leadCtx, otherCtx} {
+		editErr := authorizeUserCanEditOwnTRBRequest(ctx, trb)
+		s.Error(editErr)
+	}
+
+	s.NoError(authorizeUserCanManageTRBRequestRelations(ownerCtx, trb))
+	s.NoError(authorizeUserCanManageTRBRequestRelations(adminCtx, trb))
+	for _, ctx := range []context.Context{leadCtx, otherCtx} {
+		relationErr := authorizeUserCanManageTRBRequestRelations(ctx, trb)
+		s.Error(relationErr)
+	}
+}
+
+func (s *ResolverSuite) TestTRBRequestLCIDOptionsPermissions() {
+	queryResolver := s.systemIntakeQueryResolver()
+
+	lcidIntake := s.createNewIntakeWithResolver(func(intake *models.SystemIntake) {
+		intake.ProjectName = null.StringFrom("LCID source intake")
+		intake.LifecycleID = null.StringFrom("000001")
+	})
+
+	otherCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+	hiddenLCIDIntake, err := CreateSystemIntake(
+		otherCtx,
+		s.testConfigs.Store,
+		models.CreateSystemIntakeInput{
+			Requester: &models.SystemIntakeRequesterInput{
+				Name: "Other User",
+			},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo),
+	)
+	s.NoError(err)
+	s.NotNil(hiddenLCIDIntake)
+
+	hiddenLCIDIntake.ProjectName = null.StringFrom("Hidden LCID source intake")
+	hiddenLCIDIntake.LifecycleID = null.StringFrom("999999")
+	hiddenLCIDIntake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, hiddenLCIDIntake)
+	s.NoError(err)
+
+	hiddenRequester, err := SystemIntakeContactGetRequester(s.ctxWithNewDataloaders(), hiddenLCIDIntake.ID)
+	s.NoError(err)
+	s.NotNil(hiddenRequester)
+
+	usr2Account := s.getOrCreateUserAcct("USR2")
+	_, err = s.testConfigs.Store.NamedExecContext(
+		s.testConfigs.Context,
+		`UPDATE system_intake_contacts SET user_id = :user_id, is_requester = :is_requester WHERE id = :id`,
+		map[string]any{
+			"id":           hiddenRequester.ID,
+			"user_id":      usr2Account.ID,
+			"is_requester": true,
+		},
+	)
+	s.NoError(err)
+
+	_, err = s.testConfigs.Store.NamedExecContext(
+		s.testConfigs.Context,
+		`UPDATE system_intakes SET eua_user_id = :eua_user_id WHERE id = :id`,
+		map[string]any{
+			"id":          hiddenLCIDIntake.ID,
+			"eua_user_id": "USR2",
+		},
+	)
+	s.NoError(err)
+
+	trbRequest := s.createNewTRBRequest()
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	_, err = GetSystemIntake(ownerCtx, s.testConfigs.Store, hiddenLCIDIntake.ID)
+	s.Error(err)
+
+	options, err := queryResolver.TrbRequestLcidOptions(ownerCtx, trbRequest.ID)
+	s.NoError(err)
+	s.NotEmpty(options)
+
+	optionByID := map[uuid.UUID]*models.SystemIntakeLCIDOption{}
+	for _, option := range options {
+		optionByID[option.ID] = option
+	}
+
+	s.Contains(optionByID, lcidIntake.ID)
+	s.Equal("000001", optionByID[lcidIntake.ID].LCID.ValueOrZero())
+	s.Equal("LCID source intake", optionByID[lcidIntake.ID].RequestName.ValueOrZero())
+	s.NotContains(optionByID, hiddenLCIDIntake.ID)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	for _, ctx := range []context.Context{adminCtx, leadCtx, otherCtx} {
+		_, err = queryResolver.TrbRequestLcidOptions(ctx, trbRequest.ID)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
+}
+
+func (s *ResolverSuite) TestTRBRequestNestedRelationVisibility() {
+	const sharedContractNumber = "CN-12345"
+
+	ownerTRB := s.createNewTRBRequest()
+
+	otherCtx, _ := s.getTestContextWithPrincipal("USR2", false)
+
+	hiddenTRB, err := CreateTRBRequest(otherCtx, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(hiddenTRB)
+
+	hiddenIntake, err := CreateSystemIntake(
+		otherCtx,
+		s.testConfigs.Store,
+		models.CreateSystemIntakeInput{
+			Requester: &models.SystemIntakeRequesterInput{
+				Name: "Other User",
+			},
+			RequestType: models.SystemIntakeRequestTypeNEW,
+		},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo),
+	)
+	s.NoError(err)
+	s.NotNil(hiddenIntake)
+
+	err = sqlutils.WithTransaction(s.testConfigs.Context, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+		if err := s.testConfigs.Store.SetTRBRequestContractNumbers(s.testConfigs.Context, tx, ownerTRB.ID, []string{sharedContractNumber}); err != nil {
+			return err
+		}
+		if err := s.testConfigs.Store.SetTRBRequestContractNumbers(s.testConfigs.Context, tx, hiddenTRB.ID, []string{sharedContractNumber}); err != nil {
+			return err
+		}
+		if err := s.testConfigs.Store.SetSystemIntakeContractNumbers(s.testConfigs.Context, tx, hiddenIntake.ID, []string{sharedContractNumber}); err != nil {
+			return err
+		}
+		return nil
+	})
+	s.NoError(err)
+
+	_, err = s.testConfigs.Store.CreateTRBRequestSystemIntakes(s.testConfigs.Context, ownerTRB.ID, []uuid.UUID{hiddenIntake.ID})
+	s.NoError(err)
+
+	rawRelatedTRBRequests, err := TRBRequestRelatedTRBRequests(s.ctxWithNewDataloaders(), ownerTRB.ID)
+	s.NoError(err)
+	s.Len(rawRelatedTRBRequests, 1)
+	s.Equal(hiddenTRB.ID, rawRelatedTRBRequests[0].ID)
+
+	rawRelatedIntakes, err := TRBRequestRelatedSystemIntakes(s.ctxWithNewDataloaders(), ownerTRB.ID)
+	s.NoError(err)
+	s.Len(rawRelatedIntakes, 1)
+	s.Equal(hiddenIntake.ID, rawRelatedIntakes[0].ID)
+
+	rawFormIntakes, err := GetTRBRequestFormSystemIntakesByTRBRequestID(s.ctxWithNewDataloaders(), ownerTRB.ID)
+	s.NoError(err)
+	s.Len(rawFormIntakes, 1)
+	s.Equal(hiddenIntake.ID, rawFormIntakes[0].ID)
+
+	resolver := &Resolver{store: s.testConfigs.Store}
+	trbResolver := &tRBRequestResolver{resolver}
+	formResolver := &tRBRequestFormResolver{resolver}
+
+	ownerCtx, _ := s.getTestContextWithPrincipal("TEST", false)
+
+	visibleRelatedTRBRequests, err := trbResolver.RelatedTRBRequests(ownerCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(visibleRelatedTRBRequests, 0)
+
+	visibleRelatedIntakes, err := trbResolver.RelatedIntakes(ownerCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(visibleRelatedIntakes, 0)
+
+	visibleFormIntakes, err := formResolver.SystemIntakes(ownerCtx, &models.TRBRequestForm{TRBRequestID: ownerTRB.ID})
+	s.NoError(err)
+	s.Len(visibleFormIntakes, 0)
+
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	adminRelatedTRBRequests, err := trbResolver.RelatedTRBRequests(adminCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(adminRelatedTRBRequests, 1)
+	s.Equal(hiddenTRB.ID, adminRelatedTRBRequests[0].ID)
+
+	adminRelatedIntakes, err := trbResolver.RelatedIntakes(adminCtx, ownerTRB)
+	s.NoError(err)
+	s.Len(adminRelatedIntakes, 1)
+	s.Equal(hiddenIntake.ID, adminRelatedIntakes[0].ID)
+
+	adminFormIntakes, err := formResolver.SystemIntakes(adminCtx, &models.TRBRequestForm{TRBRequestID: ownerTRB.ID})
+	s.NoError(err)
+	s.Len(adminFormIntakes, 1)
+	s.Equal(hiddenIntake.ID, adminFormIntakes[0].ID)
+}
+
 // TestGetTRBRequests returns all TRB Requests
 func (s *ResolverSuite) TestGetTRBRequests() {
-	// Create a context to use for requests from another user
-	principalABCD := &authentication.EUAPrincipal{
-		EUAID:           "ABCD",
-		JobCodeEASi:     true,
-		JobCodeGRT:      true,
-		JobCodeTRBAdmin: true,
-	}
-	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
-	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
+	ctxABCD, _ := s.getTestContextWithPrincipal("ABCD", true)
 
 	// Create a TRB request with TEST
 	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
@@ -113,15 +394,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 
 // TestGetMyTRBRequests returns a users TRB Requests
 func (s *ResolverSuite) TestGetMyTRBRequests() {
-	// Create a context to use for requests from another user
-	principalABCD := &authentication.EUAPrincipal{
-		EUAID:           "ABCD",
-		JobCodeEASi:     true,
-		JobCodeGRT:      true,
-		JobCodeTRBAdmin: true,
-	}
-	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
-	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
+	ctxABCD, _ := s.getTestContextWithPrincipal("ABCD", true)
 
 	// Create a TRB request with TEST
 	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)

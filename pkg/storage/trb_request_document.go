@@ -63,6 +63,23 @@ func (s *Store) GetTRBRequestDocumentsByRequestIDs(ctx context.Context, trbReque
 	return documents, nil
 }
 
+// GetTRBRequestDocumentByID queries the DB for a TRB request document by its ID
+func (s *Store) GetTRBRequestDocumentByID(ctx context.Context, id uuid.UUID) (*models.TRBRequestDocument, error) {
+	retDoc := models.TRBRequestDocument{}
+	err := namedGet(ctx, s.db, &retDoc, sqlqueries.TRBRequestDocuments.GetByID, args{
+		"id": id,
+	})
+	if err != nil {
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestDocument{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return &retDoc, nil
+}
+
 // CreateTRBRequestDocument creates a record for a TRBRequestDocument in our database, *after* it's been uploaded to S3
 func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.TRBRequestDocument) (*models.TRBRequestDocument, error) {
 	const trbRequestDocumentCreateSQL = `

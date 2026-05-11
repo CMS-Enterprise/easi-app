@@ -370,7 +370,7 @@ exports[`EditSystemProfileHome (editableSystemProfile flag disabled) > matches t
             >
               <a
                 class="usa-button usa-button--outline"
-                href="/systems/undefined/team/edit?workspace"
+                href="/systems/undefined/edit/team?workspace"
               >
                 Edit section
               </a>
