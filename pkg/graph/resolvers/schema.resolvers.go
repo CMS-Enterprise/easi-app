@@ -827,8 +827,7 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input models.S
 		return nil, err
 	}
 
-	msg := "Feedback sent successfully"
-	return &msg, nil
+	return new("Feedback sent successfully"), nil
 }
 
 // SendCantFindSomethingEmail is the resolver for the sendCantFindSomethingEmail field.
@@ -849,8 +848,7 @@ func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input
 		return nil, err
 	}
 
-	msg := "Feedback sent successfully"
-	return &msg, nil
+	return new("Feedback sent successfully"), nil
 }
 
 // SendReportAProblemEmail is the resolver for the sendReportAProblemEmail field.
@@ -882,8 +880,7 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 		return nil, err
 	}
 
-	msg := "Feedback sent successfully"
-	return &msg, nil
+	return new("Feedback sent successfully"), nil
 }
 
 // CreateTRBRequest is the resolver for the createTRBRequest field.
@@ -1986,8 +1983,7 @@ func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBR
 
 // RequesterComponent is the resolver for the requesterComponent field.
 func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
-	requester := obj.CreatedBy
-	return GetTRBAttendeeComponent(ctx, &requester, obj.ID)
+	return GetTRBAttendeeComponent(ctx, new(obj.CreatedBy), obj.ID)
 }
 
 // AdminNotes is the resolver for the adminNotes field.

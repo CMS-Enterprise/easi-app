@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -221,7 +219,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 
 		// explicitly set to something other than GRB Meeting
 		intake.Step = models.SystemIntakeStepFINALBIZCASE
-		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+		intake.GrbReviewAsyncManualEndDate = new(time.Now().Add(time.Hour * -24))
 
 		var err error
 		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
@@ -673,7 +671,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 
 		// set step back to something else
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
-		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+		intake.GrbReviewAsyncManualEndDate = new(time.Now().Add(time.Hour * -24))
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 		s.NoError(err)
 

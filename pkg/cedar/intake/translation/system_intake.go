@@ -10,7 +10,6 @@ import (
 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -38,7 +37,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		})
 	}
 
-	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, helpers.PointerTo(models.SystemIntake(*si)))
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, new(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +75,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		CostIncreaseAmount:              si.CostIncreaseAmount.Ptr(),
 		Contractor:                      si.Contractor.Ptr(),
 		ContractVehicle:                 si.ContractVehicle.Ptr(),
-		ContractNumber:                  helpers.PointerTo(strings.Join(numbers, ", ")),
+		ContractNumber:                  new(strings.Join(numbers, ", ")),
 		RequesterEmailAddress:           si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                     si.LifecycleID.Ptr(),
 		LifecycleScope:                  si.LifecycleScope.StringPointer(),

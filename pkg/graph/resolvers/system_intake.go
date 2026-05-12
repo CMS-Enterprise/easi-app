@@ -259,7 +259,7 @@ func UpdateSystemIntakeRequestType(ctx context.Context, store *storage.Store, sy
 
 	// Update request type and set UpdatedAt
 	intake.RequestType = newType
-	intake.UpdatedAt = helpers.PointerTo(time.Now())
+	intake.UpdatedAt = new(time.Now())
 
 	// Save intake to DB
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
@@ -715,7 +715,7 @@ func ArchiveSystemIntake(
 		return nil, errors.New("user is unauthorized to archive system intake")
 	}
 
-	now := helpers.PointerTo(time.Now())
+	now := new(time.Now())
 
 	if intake.BusinessCaseID != nil {
 		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID)

@@ -8,7 +8,6 @@ import (
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -179,7 +178,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				DecisionState:         models.SIDSNoDecision,
 				State:                 models.SystemIntakeStateOpen,
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
-				GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+				GRBReviewStartedAt:    new(yesterday.AddDate(0, 0, -1)),
 				GrbReviewAsyncEndDate: &yesterday,
 			},
 			expectedStatus: models.SISAGrbReviewInProgress,
@@ -193,9 +192,9 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				DecisionState:               models.SIDSNoDecision,
 				State:                       models.SystemIntakeStateOpen,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
-				GRBReviewStartedAt:          helpers.PointerTo(yesterday.AddDate(0, 0, -2)),
+				GRBReviewStartedAt:          new(yesterday.AddDate(0, 0, -2)),
 				GrbReviewAsyncEndDate:       &tomorrow,
-				GrbReviewAsyncManualEndDate: helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+				GrbReviewAsyncManualEndDate: new(yesterday.AddDate(0, 0, -1)),
 			},
 			expectedStatus: models.SISAGrbReviewComplete,
 			expectError:    false,

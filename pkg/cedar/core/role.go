@@ -56,8 +56,7 @@ func getCedarBusinessOwnerRoleTypeID(ctx context.Context, c *Client) (string, er
 }
 
 func cedarRoleApplicationPtr() *string {
-	str := cedarRoleApplication
-	return &str
+	return new(cedarRoleApplication)
 }
 
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {

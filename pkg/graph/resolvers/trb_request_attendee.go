@@ -104,8 +104,7 @@ func UpdateTRBRequestAttendee(ctx context.Context, store *storage.Store, attende
 		return nil, err
 	}
 
-	modifiedBy := appcontext.Principal(ctx).ID()
-	attendee.ModifiedBy = &modifiedBy
+	attendee.ModifiedBy = new(appcontext.Principal(ctx).ID())
 
 	updatedAttendee, err := store.UpdateTRBRequestAttendee(ctx, attendee)
 	if err != nil {

@@ -61,6 +61,5 @@ func SetRolesForUserOnCEDARSystem(
 			}
 		}
 	}
-	resp := "Roles changed successfully"
-	return &resp, nil
+	return new("Roles changed successfully"), nil
 }

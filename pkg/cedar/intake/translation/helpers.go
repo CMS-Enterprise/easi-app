@@ -38,7 +38,7 @@ func strDateTime(t *time.Time) string {
 // inline, without having to clutter your mainline code with the
 // indirection, e.g. when building a type and assigning properties
 func pStr(s string) *string {
-	return &s
+	return new(s)
 }
 
 func versionStr(version SchemaVersion) *string {
@@ -60,6 +60,5 @@ func pStrfmtDateTime(t *time.Time) *strfmt.DateTime {
 		return nil
 	}
 
-	strfmtDatetime := strfmt.DateTime(*t)
-	return &strfmtDatetime
+	return new(strfmt.DateTime(*t))
 }

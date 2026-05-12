@@ -16,7 +16,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
@@ -260,7 +259,7 @@ func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, stor
 		return nil, err
 	}
 
-	return helpers.PointerTo(data.URL), nil
+	return new(data.URL), nil
 }
 
 func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, logger *zap.Logger, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {
@@ -283,7 +282,7 @@ func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, l
 		return nil, nil
 	}
 
-	return helpers.PointerTo(fileStatus), nil
+	return new(fileStatus), nil
 }
 
 func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
@@ -314,7 +313,7 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context
 		return nil, err
 	}
 
-	return helpers.PointerTo(data.URL), nil
+	return new(data.URL), nil
 }
 
 func DeleteSystemIntakeGRBPresentationLinks(
@@ -354,7 +353,7 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Cont
 		return nil, nil
 	}
 
-	return helpers.PointerTo(fileStatus), nil
+	return new(fileStatus), nil
 }
 
 // handleS3Upload uploads a file to S3

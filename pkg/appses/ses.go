@@ -13,7 +13,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -78,12 +77,12 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		},
 		Message: &types.Message{
 			Subject: &types.Content{
-				Charset: helpers.PointerTo("UTF-8"),
-				Data:    helpers.PointerTo(email.AddNonProdEnvToSubject(emailData.Subject, s.environment)),
+				Charset: new("UTF-8"),
+				Data:    new(email.AddNonProdEnvToSubject(emailData.Subject, s.environment)),
 			},
 			Body: &types.Body{
 				Html: &types.Content{
-					Charset: helpers.PointerTo("UTF-8"),
+					Charset: new("UTF-8"),
 					Data:    &emailData.Body,
 				},
 			},

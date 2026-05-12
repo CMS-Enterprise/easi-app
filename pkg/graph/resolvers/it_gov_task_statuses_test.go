@@ -3,8 +3,6 @@ package resolvers
 import (
 	"time"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
-
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -427,7 +425,7 @@ func (s *ResolverSuite) TestDecisionAndNextStepsStatus() {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepGRBMEETING,
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
-				GRBDate:       helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+				GRBDate:       new(time.Now().Add(time.Hour * 24)),
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,
@@ -447,7 +445,7 @@ func (s *ResolverSuite) TestDecisionAndNextStepsStatus() {
 			intake: models.SystemIntake{
 				Step:                  models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
-				GrbReviewAsyncEndDate: helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+				GrbReviewAsyncEndDate: new(time.Now().Add(time.Hour * 24)),
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,

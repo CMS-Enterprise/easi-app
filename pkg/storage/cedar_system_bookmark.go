@@ -22,7 +22,7 @@ func (s *Store) CreateCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 		cedarSystemBookmark.EUAUserID = appcontext.Principal(ctx).ID()
 	}
 
-	cedarSystemBookmark.CreatedAt = helpers.PointerTo(s.clock.Now().UTC())
+	cedarSystemBookmark.CreatedAt = new(s.clock.Now().UTC())
 	const createCedarSystemBookmarkSQL = `
 		INSERT INTO cedar_system_bookmarks (
 			eua_user_id,

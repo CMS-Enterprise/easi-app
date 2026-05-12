@@ -3,16 +3,15 @@ package resolvers
 import (
 	"time"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestSystemIntakeNextMeetingDate() {
 	// Fake "now" for the whole test
 	now := time.Date(2024, time.May, 8, 0, 0, 0, 0, time.UTC)
-	past := helpers.PointerTo(now.Add(-time.Hour))
-	future := helpers.PointerTo(now.Add(time.Hour))
-	farFuture := helpers.PointerTo(now.Add(time.Hour * 2))
+	past := new(now.Add(-time.Hour))
+	future := new(now.Add(time.Hour))
+	farFuture := new(now.Add(time.Hour * 2))
 
 	// Test that the function returns nil when there are only nil dates
 	fakeIntake := &models.SystemIntake{
@@ -105,9 +104,9 @@ func (s *ResolverSuite) TestSystemIntakeNextMeetingDate() {
 func (s *ResolverSuite) TestSystemIntakeLastMeetingDate() {
 	// Fake "now" for the whole test
 	now := time.Date(2024, time.May, 8, 0, 0, 0, 0, time.UTC)
-	past := helpers.PointerTo(now.Add(-time.Hour))
-	farPast := helpers.PointerTo(now.Add(-time.Hour * 2))
-	future := helpers.PointerTo(now.Add(time.Hour))
+	past := new(now.Add(-time.Hour))
+	farPast := new(now.Add(-time.Hour * 2))
+	future := new(now.Add(time.Hour))
 
 	// Test that the function returns nil when there are only nil dates
 	fakeIntake := &models.SystemIntake{

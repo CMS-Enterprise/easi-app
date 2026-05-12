@@ -16,7 +16,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -433,7 +432,7 @@ func StartGRBReview(
 			return nil, errors.New("review already started")
 		}
 
-		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+		intake.GRBReviewStartedAt = new(time.Now())
 		intake.GrbReviewAsyncManualEndDate = nil
 		if _, err := store.UpdateSystemIntakeNP(ctx, tx, intake); err != nil {
 			return nil, err
@@ -469,7 +468,7 @@ func StartGRBReview(
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
 			}
 		}
-		return helpers.PointerTo("started GRB review"), nil
+		return new("started GRB review"), nil
 	})
 }
 

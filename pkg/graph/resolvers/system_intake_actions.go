@@ -219,8 +219,7 @@ func CreateSystemIntakeActionRequestEdits(
 		}
 	}
 
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
+	intake.UpdatedAt = new(time.Now())
 
 	// save intake, action, feedback, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -581,8 +580,7 @@ func CreateSystemIntakeActionReopenRequest(
 	}
 	intake.State = models.SystemIntakeStateOpen
 
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
+	intake.UpdatedAt = new(time.Now())
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]

@@ -12,7 +12,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	apisystems "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/system"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -25,8 +24,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	params := apisystems.NewSystemSummaryFindListParams()
 
 	// default filters
-	params.SetState(helpers.PointerTo("active"))
-	params.SetIncludeInSurvey(helpers.PointerTo(true))
+	params.SetState(new("active"))
+	params.SetIncludeInSurvey(new(true))
 
 	// set additional param filters
 	for _, opt := range opts {
@@ -172,7 +171,7 @@ func (systemSummaryOpts) WithEuaIDFilter(euaUserID string) systemSummaryParamFil
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
 func (systemSummaryOpts) WithSubSystems(cedarSystemID uuid.UUID) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
-		params.SetBelongsTo(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
+		params.SetBelongsTo(new(formatIDForCEDAR(cedarSystemID)))
 
 		// we want all sub systems, not just ones included in the survey
 		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?

@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -142,7 +141,7 @@ func GetSystemRoles(cedarSystemID uuid.UUID, roleTypeID *string) []*models.Cedar
 		return &models.CedarRole{
 			Application:       zero.StringFrom("alfabet"), // should always be "alfabet"
 			ObjectID:          zero.StringFrom(cedarSystemID.String()),
-			AssigneeType:      helpers.PointerTo(models.PersonAssignee),
+			AssigneeType:      new(models.PersonAssignee),
 			AssigneeUsername:  zero.StringFrom(user.Username),
 			AssigneeEmail:     zero.StringFrom(string(user.Email)),
 			AssigneeFirstName: zero.StringFrom(user.FirstName),

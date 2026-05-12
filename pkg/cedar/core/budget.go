@@ -9,7 +9,6 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/budget"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -27,7 +26,7 @@ func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID uuid.UUID)
 	params := budget.NewBudgetFindParams()
 
 	// Construct the parameters
-	params.SetSystemID(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
+	params.SetSystemID(new(formatIDForCEDAR(cedarSystemID)))
 	params.HTTPClient = c.hc
 
 	// Make the API call

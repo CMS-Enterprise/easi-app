@@ -17,7 +17,6 @@ import (
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -842,7 +841,7 @@ func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBReques
 	if err != nil {
 		return nil, err
 	}
-	attendee.Component = helpers.PointerTo("Center for Medicare (CM)")
+	attendee.Component = new("Center for Medicare (CM)")
 	_, err = resolvers.UpdateTRBRequestAttendee(ctx, s.store, attendee)
 	if err != nil {
 		return nil, err

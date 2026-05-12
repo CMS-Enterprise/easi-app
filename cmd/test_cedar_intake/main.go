@@ -52,8 +52,7 @@ type usefulTimes struct {
 
 // borrowed from cmd/devdata/main.go
 func date(year, month, day int) *time.Time {
-	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-	return &date
+	return new(time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC))
 }
 
 // sample data adapted from Impl environment - 08/17/2022
@@ -392,8 +391,7 @@ func dumpPayload(ctx context.Context) {
 	testData := makeTestData()
 
 	fmt.Println("Dumping Business Case data")
-	businessCaseIntakeObject := translation.TranslatableBusinessCase(*testData.businessCase)
-	dumpIntakeObject(ctx, &businessCaseIntakeObject, execDir)
+	dumpIntakeObject(ctx, new(translation.TranslatableBusinessCase(*testData.businessCase)), execDir)
 	fmt.Println("Business case data dumped inside " + execDir + string(filepath.Separator))
 
 	// fmt.Println("Dumping GRT feedback data")
@@ -402,8 +400,7 @@ func dumpPayload(ctx context.Context) {
 	// fmt.Println("GRT feedback data dumped inside " + execDir + string(filepath.Separator))
 
 	fmt.Println("Dumping system intake data")
-	systemIntakeIntakeObject := translation.TranslatableSystemIntake(*testData.systemIntake)
-	dumpIntakeObject(ctx, &systemIntakeIntakeObject, execDir)
+	dumpIntakeObject(ctx, new(translation.TranslatableSystemIntake(*testData.systemIntake)), execDir)
 	fmt.Println("System intake data dumped inside " + execDir + string(filepath.Separator))
 }
 

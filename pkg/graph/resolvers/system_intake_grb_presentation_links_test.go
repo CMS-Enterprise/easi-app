@@ -9,7 +9,6 @@ import (
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
@@ -139,9 +138,9 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBR
 	}
 
 	// set a start time in the past
-	intake.GRBReviewStartedAt = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+	intake.GRBReviewStartedAt = new(time.Now().AddDate(0, 0, -1))
 	// set (temp) future time for this request
-	intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, 10))
+	intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, 10))
 	intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
 	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 	s.NoError(err)
@@ -164,7 +163,7 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBR
 	}
 
 	// set back to time in the past
-	intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+	intake.GrbReviewAsyncEndDate = new(time.Now().AddDate(0, 0, -1))
 	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 	s.NoError(err)
 
@@ -235,9 +234,9 @@ func createSystemIntakeGRBPresentationLinkUploadSet(suite *ResolverSuite, system
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
 	gqlInput := models.SystemIntakeGRBPresentationLinksInput{
 		SystemIntakeID:    systemIntakeID,
-		RecordingLink:     graphql.OmittableOf[*string](helpers.PointerTo("https://recordinglink.com")),
-		RecordingPasscode: graphql.OmittableOf[*string](helpers.PointerTo("recording pass")),
-		TranscriptLink:    graphql.OmittableOf[*string](helpers.PointerTo("https://transcriptlink.com")),
+		RecordingLink:     graphql.OmittableOf[*string](new("https://recordinglink.com")),
+		RecordingPasscode: graphql.OmittableOf[*string](new("recording pass")),
+		TranscriptLink:    graphql.OmittableOf[*string](new("https://transcriptlink.com")),
 		TranscriptFileData: graphql.OmittableOf[*graphql.Upload](&graphql.Upload{
 			File:        fileToUpload,
 			Filename:    "test transcript link upload.txt",

@@ -39,15 +39,12 @@ func (b BaseStructUser) GetID() uuid.UUID {
 
 // GetModifiedBy returns the ModifiedBy property for a PlanBasics struct
 func (b BaseStructUser) GetModifiedBy() *string {
-	modifiedBy := b.ModifiedBy.String()
-	return &modifiedBy
+	return new(b.ModifiedBy.String())
 }
 
 // SetModifiedBy sets the modifiedBy information based off a Principal object
 func (b *BaseStructUser) SetModifiedBy(principal authentication.Principal) error {
-	userID := principal.Account().ID
-
-	b.ModifiedBy = &userID
+	b.ModifiedBy = new(principal.Account().ID)
 	return nil
 }
 

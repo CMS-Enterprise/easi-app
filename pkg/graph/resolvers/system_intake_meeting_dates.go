@@ -32,9 +32,7 @@ func SystemIntakeNextMeetingDate(ctx context.Context, obj *models.SystemIntake, 
 	}
 
 	// Find the earliest date from the remaining dates
-	earliest := lo.Earliest(actualDates...)
-
-	return &earliest
+	return new(lo.Earliest(actualDates...))
 }
 
 func SystemIntakeLastMeetingDate(ctx context.Context, obj *models.SystemIntake, now time.Time) *time.Time {
@@ -60,7 +58,5 @@ func SystemIntakeLastMeetingDate(ctx context.Context, obj *models.SystemIntake, 
 	}
 
 	// Find the latest date from the remaining dates
-	latest := lo.Latest(actualDates...)
-
-	return &latest
+	return new(lo.Latest(actualDates...))
 }
