@@ -85,6 +85,7 @@ export default gql(/* GraphQL */ `
 
       lcid
       lcidScope
+      lcidIssuedAt
       lcidExpiresAt
 
       adminLead

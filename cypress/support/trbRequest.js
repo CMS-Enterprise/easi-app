@@ -32,12 +32,13 @@ cy.trbRequest = {
         const nameAndId = `${commonName}, ${euaUserId}`;
         cy.get('#react-select-euaUserId-input').type(nameAndId);
 
-        // Wait to see if the first option is what we expect it to be
-        cy.contains('#react-select-euaUserId-option-0', nameAndId);
+        // The option label can include extra context such as email.
+        cy.get('#react-select-euaUserId-option-0').should(
+          'contain.text',
+          nameAndId
+        );
 
-        cy.get('#react-select-euaUserId-input')
-          .type('{downarrow}{enter}')
-          .should('have.value', `${commonName}, ${euaUserId}`);
+        cy.get('#react-select-euaUserId-input').type('{downarrow}{enter}');
       }
 
       if (attendee.component) {

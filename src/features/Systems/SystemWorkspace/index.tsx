@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { ApolloError } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -9,7 +10,11 @@ import {
   GridContainer
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
+import {
+  useGetCedarSystemQuery,
+  useGetSystemWorkspaceAtoQuery,
+  useGetSystemWorkspaceQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import getAtoStatus from 'components/AtoStatus/getAtoStatus';
@@ -28,6 +33,23 @@ import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 import TeamCard from './components/TeamCard';
 
+const hasUnauthorizedGraphQLError = (error?: ApolloError) => {
+  const errorMessages = [
+    error?.message,
+    ...(error?.graphQLErrors.map(({ message }) => message) || [])
+  ].filter(Boolean) as string[];
+
+  return (
+    errorMessages.some(message => {
+      const lowerCaseMessage = message.toLowerCase();
+      return (
+        lowerCaseMessage.includes('unauthorized') ||
+        lowerCaseMessage.includes('not authorized')
+      );
+    }) === true
+  );
+};
+
 export const SystemWorkspace = () => {
   const flags = useFlags();
   const { t } = useTranslation('systemWorkspace');
@@ -43,17 +65,46 @@ export const SystemWorkspace = () => {
     }
   });
 
-  const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
-  const ato = data?.cedarAuthorityToOperate?.[0];
-  const atoStatus = getAtoStatus(
-    ato?.dateAuthorizationMemoExpires,
-    ato?.oaStatus
-  );
+  const cedarSystem = data?.cedarSystemWorkspace?.cedarSystem;
+  const workspaceUnavailable =
+    !loading && (error || !data?.cedarSystemWorkspace || !cedarSystem);
+  const workspaceAuthError = hasUnauthorizedGraphQLError(error);
+
+  const { data: fallbackProfileData, loading: fallbackProfileLoading } =
+    useGetCedarSystemQuery({
+      variables: {
+        id: systemId
+      },
+      skip: !workspaceUnavailable || !workspaceAuthError
+    });
+
+  const viewerCanAccessProfile = cedarSystem?.viewerCanAccessProfile === true;
+
+  const {
+    data: atoData,
+    error: atoError,
+    loading: atoLoading
+  } = useGetSystemWorkspaceAtoQuery({
+    variables: {
+      cedarSystemId: systemId
+    },
+    errorPolicy: 'all',
+    skip: !viewerCanAccessProfile
+  });
+
+  const ato = atoData?.cedarAuthorityToOperate?.[0];
+  const atoUnauthorized = hasUnauthorizedGraphQLError(atoError);
+  const atoUnavailable = !viewerCanAccessProfile || atoUnauthorized;
+  const atoLoadError = viewerCanAccessProfile && !!atoError && !atoUnauthorized;
+  const atoStatus =
+    atoLoading || atoUnavailable || atoLoadError
+      ? undefined
+      : getAtoStatus(ato?.dateAuthorizationMemoExpires, ato?.oaStatus);
 
   const { isso } = useMemo(
     () => ({
-      isso: data?.cedarSystemDetails?.roles?.length
-        ? data.cedarSystemDetails.roles?.find(
+      isso: data?.cedarSystemWorkspace?.roles?.length
+        ? data.cedarSystemWorkspace.roles?.find(
             role => role.roleTypeName === RoleTypeName.ISSO
           )
         : undefined
@@ -70,18 +121,33 @@ export const SystemWorkspace = () => {
     );
   }
 
-  if (loading) {
+  if (loading || fallbackProfileLoading) {
     return <PageLoading />;
   }
 
-  if (error || !data || !data.cedarSystemDetails || !cedarSystem) {
+  if (workspaceUnavailable) {
+    if (workspaceAuthError && fallbackProfileData?.cedarSystem) {
+      return <Redirect to={`/systems/${systemId}`} />;
+    }
+
     return <NotFound />;
   }
 
-  const { isBookmarked } = cedarSystem;
+  const workspaceData = data!.cedarSystemWorkspace!;
+  const workspaceSystem = workspaceData.cedarSystem!;
+  const { isBookmarked } = workspaceSystem;
+  const workspacePrimaryAction = viewerCanAccessProfile
+    ? {
+        label: t('systemProfile:editSystemProfile.heading'),
+        path: `/systems/${systemId}/edit`
+      }
+    : {
+        label: t('spaces.team.manage'),
+        path: `/systems/${systemId}/edit/team?workspace`
+      };
 
   // Redirect to system profile if not a team member for the system
-  if (flags.systemWorkspace && !data.cedarSystemDetails.isMySystem) {
+  if (flags.systemWorkspace && !workspaceData.isMySystem) {
     return <Redirect to={`/systems/${systemId}`} />;
   }
 
@@ -133,23 +199,28 @@ export const SystemWorkspace = () => {
                 <ButtonGroup>
                   <Button
                     type="button"
-                    onClick={() => history.push(`/systems/${systemId}/edit`)}
+                    onClick={() => history.push(workspacePrimaryAction.path)}
                   >
-                    {t('systemProfile:editSystemProfile.heading')}
+                    {workspacePrimaryAction.label}
                   </Button>
-                  <Button
-                    type="button"
-                    outline
-                    onClick={() => history.push(`/systems/${systemId}/home`)}
-                  >
-                    {t('spaces.systemProfile.linktext')}
-                  </Button>
+                  {viewerCanAccessProfile && (
+                    <Button
+                      type="button"
+                      outline
+                      onClick={() => history.push(`/systems/${systemId}/home`)}
+                    >
+                      {t('spaces.systemProfile.linktext')}
+                    </Button>
+                  )}
                 </ButtonGroup>
               }
             />
 
             <AtoCard
+              atoError={atoLoadError}
+              atoLoading={viewerCanAccessProfile && atoLoading}
               atoStatus={atoStatus}
+              atoUnavailable={atoUnavailable}
               oaStatus={ato?.oaStatus}
               dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
               isso={isso}
@@ -158,8 +229,8 @@ export const SystemWorkspace = () => {
             {flags.systemWorkspaceRequestsCard && (
               <RequestsCard
                 systemId={systemId}
-                trbCount={cedarSystem.linkedTrbRequests.length}
-                itgovCount={cedarSystem.linkedSystemIntakes.length}
+                trbCount={workspaceSystem.linkedTrbRequests.length}
+                itgovCount={workspaceSystem.linkedSystemIntakes.length}
                 linkSearchQuery={linkSearchQuery}
               />
             )}
@@ -171,7 +242,7 @@ export const SystemWorkspace = () => {
         <div className="bg-base-lightest padding-top-6 padding-bottom-10">
           <GridContainer>
             <CardGroup>
-              <TeamCard roles={data.cedarSystemDetails.roles || []} />
+              <TeamCard roles={workspaceData.roles || []} />
             </CardGroup>
           </GridContainer>
         </div>

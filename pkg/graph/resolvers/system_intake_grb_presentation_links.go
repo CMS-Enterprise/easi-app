@@ -4,7 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
+	"net/url"
 	"path/filepath"
+	"strings"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
@@ -19,11 +22,38 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
+func normalizePresentationLink(value *string, fieldName string) (*string, error) {
+	if value == nil {
+		return nil, nil
+	}
+
+	trimmedValue := strings.TrimSpace(*value)
+	if trimmedValue == "" {
+		return nil, nil
+	}
+
+	parsedURL, err := url.Parse(trimmedValue)
+	if err != nil || parsedURL == nil || parsedURL.Host == "" {
+		return nil, fmt.Errorf("%s must be a valid http:// or https:// URL", fieldName)
+	}
+
+	switch strings.ToLower(parsedURL.Scheme) {
+	case "http", "https":
+		return &trimmedValue, nil
+	default:
+		return nil, fmt.Errorf("%s must be a valid http:// or https:// URL", fieldName)
+	}
+}
+
 func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
 	userID := appcontext.Principal(ctx).Account().ID
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
 		return nil, err
 	}
 
@@ -50,7 +80,12 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	}
 
 	if value, ok := input.RecordingLink.ValueOK(); ok {
-		links.RecordingLink = value
+		normalizedValue, normalizeErr := normalizePresentationLink(value, "recording link")
+		if normalizeErr != nil {
+			return nil, normalizeErr
+		}
+
+		links.RecordingLink = normalizedValue
 	}
 
 	if value, ok := input.RecordingPasscode.ValueOK(); ok {
@@ -58,11 +93,16 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	}
 
 	if value, ok := input.TranscriptLink.ValueOK(); ok {
-		links.TranscriptLink = value
+		normalizedValue, normalizeErr := normalizePresentationLink(value, "transcript link")
+		if normalizeErr != nil {
+			return nil, normalizeErr
+		}
+
+		links.TranscriptLink = normalizedValue
 
 		// if setting a transcript link, we need to also un-set all the other transcript-related fields
 		// for the transcript_link_or_doc_null_check SQL check
-		if value != nil {
+		if normalizedValue != nil {
 			links.TranscriptFileName = nil
 			links.TranscriptS3Key = nil
 		}
@@ -140,6 +180,10 @@ func UploadSystemIntakeGRBPresentationDeck(
 		return nil, errors.New("system intake not found")
 	}
 
+	if err := authorizeUserCanEditOwnSystemIntake(ctx, systemIntake); err != nil {
+		return nil, err
+	}
+
 	isReviewCompleted, err := isGRBReviewCompleted(ctx, systemIntake)
 	if err != nil {
 		return nil, err
@@ -147,10 +191,6 @@ func UploadSystemIntakeGRBPresentationDeck(
 
 	if isReviewCompleted {
 		return nil, errors.New("cannot upload presentation deck for completed GRB review")
-	}
-
-	if systemIntake.EUAUserID.ValueOrZero() != principal.ID() {
-		return nil, errors.New("unauthorized: only the system intake requester can upload a presentation deck")
 	}
 
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
@@ -192,7 +232,16 @@ func UploadSystemIntakeGRBPresentationDeck(
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 }
 
-func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanViewSystemIntake(ctx, store, intake); err != nil {
+		return nil, err
+	}
+
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
@@ -237,7 +286,16 @@ func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, l
 	return helpers.PointerTo(fileStatus), nil
 }
 
-func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := authorizeUserCanViewSystemIntake(ctx, store, intake); err != nil {
+		return nil, err
+	}
+
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
@@ -257,6 +315,23 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context
 	}
 
 	return helpers.PointerTo(data.URL), nil
+}
+
+func DeleteSystemIntakeGRBPresentationLinks(
+	ctx context.Context,
+	store *storage.Store,
+	input models.DeleteSystemIntakeGRBPresentationLinksInput,
+) (uuid.UUID, error) {
+	intake, err := dataloaders.GetSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if err := authorizeUserCanDeleteSystemIntakeGRBPresentationLinks(ctx, intake); err != nil {
+		return uuid.Nil, err
+	}
+
+	return input.SystemIntakeID, store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
 }
 
 func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Context, logger *zap.Logger, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*models.SystemIntakeDocumentStatus, error) {

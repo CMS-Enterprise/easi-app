@@ -20,6 +20,10 @@ func SendGRBReviewPresentationDeckReminderEmail(
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 ) (bool, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return false, err
+	}
+
 	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return false, err

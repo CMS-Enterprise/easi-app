@@ -304,6 +304,7 @@ const intake = {
     status: 'Status',
     lcid: 'LCID',
     lcidScope: 'LCID Scope',
+    lcidIssuedAt: 'LCID Issued Date',
     lcidExpiresAt: 'LCID Expiration Date',
     lastAdminNote: 'Last Admin Team Note',
     updatedAt: 'Updated At',

@@ -81,25 +81,27 @@ describe('GRB review form step wrapper', () => {
   it('disables steps for new form', async () => {
     renderComponent();
 
-    expect(await screen.findByTestId('stepIndicator-0')).toHaveAttribute(
-      'aria-disabled',
-      'false'
-    );
+    await waitFor(() => {
+      expect(screen.getByTestId('stepIndicator-0')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      );
 
-    expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
-      'aria-disabled',
-      'false'
-    );
+      expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      );
 
-    expect(await screen.findByTestId('stepIndicator-2')).toHaveAttribute(
-      'aria-disabled',
-      'true'
-    );
+      expect(screen.getByTestId('stepIndicator-2')).toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
 
-    expect(await screen.findByTestId('stepIndicator-3')).toHaveAttribute(
-      'aria-disabled',
-      'true'
-    );
+      expect(screen.getByTestId('stepIndicator-3')).toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+    });
   });
 
   it('enables all steps after step 2 is completed', async () => {

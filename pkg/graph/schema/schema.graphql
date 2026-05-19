@@ -747,6 +747,10 @@ type SystemIntake {
   The contact who made the IT governance request. Note that this shouldn't be null, but for some legacy contacts a requester is not set.
   """
   requester: SystemIntakeContact
+  """
+  True when the current viewer is authorized to act as the requester for this intake.
+  """
+  viewerIsRequester: Boolean!
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
@@ -831,6 +835,12 @@ type SystemIntake {
   systemIntakeSystems: [SystemIntakeSystem!]!
 
   contacts: SystemIntakeContacts!
+}
+
+type SystemIntakeLCIDOption {
+  id: UUID!
+  lcid: String
+  requestName: String
 }
 
 """
@@ -1118,13 +1128,6 @@ type SystemIntakeSystem {
   cedarSystem: CedarSystem
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
-}
-"""
-Input data for updating a system intake's relationship to a CEDAR system
-"""
-input UpdateSystemIntakeLinkedCedarSystemInput {
-  id: UUID!
-  cedarSystemId: UUID
 }
 
 # RequestRelationType.NEW_SYSTEM
@@ -2945,10 +2948,6 @@ type Mutation {
     input: RestartGRBReviewInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
-  updateSystemIntakeLinkedCedarSystem(
-    input: UpdateSystemIntakeLinkedCedarSystemInput!
-  ): UpdateSystemIntakePayload
-
   setSystemIntakeGRBPresentationLinks(
     input: SystemIntakeGRBPresentationLinksInput!
   ): SystemIntakeGRBPresentationLinks
@@ -3073,26 +3072,31 @@ type Query {
   mySystemIntakes: [SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
+  trbRequestLcidOptions(trbRequestID: UUID!): [SystemIntakeLCIDOption!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
   cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]
-  cedarBudget(cedarSystemID: UUID!): [CedarBudget!]
+    @hasRole(role: EASI_USER)
+  cedarBudget(cedarSystemID: UUID!): [CedarBudget!] @hasRole(role: EASI_USER)
   cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
+    @hasRole(role: EASI_USER)
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
+    @hasRole(role: EASI_USER)
   cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]
+    @hasRole(role: EASI_USER)
   cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]
-  cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]
+    @hasRole(role: EASI_USER)
+  cedarThreat(cedarSystemId: UUID!): [CedarThreat!] @hasRole(role: EASI_USER)
   deployments(
     cedarSystemId: UUID!
     deploymentType: String
     state: String
     status: String
-  ): [CedarDeployment!]
+  ): [CedarDeployment!] @hasRole(role: EASI_USER)
   roleTypes: [CedarRoleType!]!
   roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]
-  exchanges(cedarSystemId: UUID!): [CedarExchange!]
-  urls(cedarSystemId: UUID!): [CedarURL!]
+  exchanges(cedarSystemId: UUID!): [CedarExchange!] @hasRole(role: EASI_USER)
+  urls(cedarSystemId: UUID!): [CedarURL!] @hasRole(role: EASI_USER)
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """
@@ -3104,6 +3108,7 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
+    @hasRole(role: EASI_GOVTEAM)
   systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
   systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
 }

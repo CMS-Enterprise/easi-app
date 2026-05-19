@@ -13,6 +13,7 @@ import SystemProfileSectionCard from '../_components/SystemProfileSectionCard';
 import { getSystemProfileSectionMap } from '../util';
 
 type EditSystemProfileHomeProps = {
+  canManageTeam: boolean;
   systemId: string;
   systemName: string;
 };
@@ -23,6 +24,7 @@ type EditSystemProfileHomeProps = {
  * Displays cards with section information and links to view/edit.
  */
 const EditSystemProfileHome = ({
+  canManageTeam,
   systemId,
   systemName
 }: EditSystemProfileHomeProps) => {
@@ -30,6 +32,7 @@ const EditSystemProfileHome = ({
 
   const flags = useFlags();
   const sectionMap = getSystemProfileSectionMap(flags);
+  const teamPath = canManageTeam ? undefined : `/systems/${systemId}/team`;
 
   return (
     <MainContent>
@@ -102,6 +105,9 @@ const EditSystemProfileHome = ({
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.TEAM}
+            path={teamPath}
+            readOnly={!canManageTeam}
+            ignoreSectionLock={!canManageTeam}
           />
 
           <SystemProfileSectionCard

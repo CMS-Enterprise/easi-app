@@ -6,7 +6,6 @@ import {
 import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
 import extractTextContent from 'utils/extractTextContent';
 import formatContractNumbers from 'utils/formatContractNumbers';
@@ -66,6 +65,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   createdAt: null,
   archivedAt: null,
   lcid: '',
+  lcidIssuedAt: null,
   lcidExpiresAt: null,
   lcidScope: '',
   decisionNextSteps: '',
@@ -81,7 +81,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   hasUiChanges: null
 };
 
-export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
+export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
   const lastAdminNote = intake.lastAdminNote
     ? { ...intake.lastAdminNote }
     : null;
@@ -103,6 +103,8 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     intake?.updatedAt && formatDateLocal(intake.updatedAt, 'MM/dd/yyyy');
   const archivedAt =
     intake?.archivedAt && formatDateLocal(intake.archivedAt, 'MM/dd/yyyy');
+  const lcidIssuedAt =
+    intake?.lcidIssuedAt && formatDateLocal(intake.lcidIssuedAt, 'MM/dd/yyyy');
   const lcidExpiresAt =
     intake?.lcidExpiresAt &&
     formatDateLocal(intake.lcidExpiresAt, 'MM/dd/yyyy');
@@ -118,8 +120,7 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   const contractNumber = formatContractNumbers(intake.contractNumbers);
   const cmsSystem = intake.systems.map(v => v.name).join(', ');
 
-  // Override all applicable fields with CSV formatting
-  return cleanCSVData({
+  return {
     ...intake,
     contractName: intake.contractName || '',
     contractNumber,
@@ -137,6 +138,7 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     submittedAt,
     updatedAt,
     archivedAt,
+    lcidIssuedAt,
     lcidExpiresAt
-  });
+  };
 };

@@ -1,22 +1,34 @@
-import React from 'react';
-import { SystemProfileLockableSection } from 'gql/generated/graphql';
+import React, { useMemo } from 'react';
+import EditTeam from 'features/Systems/SystemProfile/components/Team/Edit';
+import { CedarAssigneeType, CedarRole } from 'gql/generated/graphql';
 
-import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
+import { CedarRoleAssigneePerson } from 'types/systemProfile';
+import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 
-import SystemProfileFormWrapper from '../_components/SystemProfileFormWrapper';
+type TeamProps = {
+  systemName: string;
+  roles: CedarRole[];
+};
 
-const Team = () => {
-  const form = useEasiForm();
+const Team = ({ systemName, roles }: TeamProps) => {
+  const team = useMemo(
+    () =>
+      getUsernamesWithRoles(
+        roles.filter(
+          (role): role is CedarRoleAssigneePerson =>
+            role.assigneeType === CedarAssigneeType.PERSON
+        )
+      ),
+    [roles]
+  );
 
   return (
-    <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper
-        section={SystemProfileLockableSection.TEAM}
-        percentComplete={0}
-      >
-        section content
-      </SystemProfileFormWrapper>
-    </EasiFormProvider>
+    <EditTeam
+      name={systemName}
+      team={team}
+      numberOfFederalFte={undefined}
+      numberOfContractorFte={undefined}
+    />
   );
 };
 

@@ -142,6 +142,18 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.status')
   },
   {
+    key: 'lcid',
+    label: t('intake:csvHeadings.lcid')
+  },
+  {
+    key: 'lcidIssuedAt',
+    label: t('intake:csvHeadings.lcidIssuedAt')
+  },
+  {
+    key: 'lcidExpiresAt',
+    label: t('intake:csvHeadings.lcidExpiresAt')
+  },
+  {
     key: 'lcidScope',
     label: t('intake:csvHeadings.lcidScope')
   },

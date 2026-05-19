@@ -62,6 +62,7 @@ export type SystemIntakeForm = {
   createdAt: string | null;
   archivedAt: string | null;
   lcid: string;
+  lcidIssuedAt: string | null;
   lcidExpiresAt: string | null;
   lcidScope: string;
   lcidCostBaseline: string | null;

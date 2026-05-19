@@ -183,6 +183,11 @@ func (c *Client) PublishEveryWeekdayOnSchedule(ctx context.Context, store *stora
 	}
 
 	for {
+		if err := ctx.Err(); err != nil {
+			logger.Info("stopping CEDAR intake publish schedule", zap.Error(err))
+			return
+		}
+
 		decoratedLogger := logger.With(logfields.TraceField(uuid.New().String()), logfields.CedarPublisherAppSection)
 		nextPublish := getDurationUntilNextWeekdayAndTime(time.Now().UTC(), hourInUTC)
 		decoratedLogger.Info(fmt.Sprintf(
@@ -190,7 +195,21 @@ func (c *Client) PublishEveryWeekdayOnSchedule(ctx context.Context, store *stora
 			nextPublish,
 			time.Now().UTC().Add(nextPublish).Format(time.RFC3339),
 		))
-		time.Sleep(nextPublish)
+
+		timer := time.NewTimer(nextPublish)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			decoratedLogger.Info("stopping CEDAR intake publish schedule", zap.Error(ctx.Err()))
+			return
+		case <-timer.C:
+		}
+
+		if err := ctx.Err(); err != nil {
+			decoratedLogger.Info("stopping CEDAR intake publish schedule", zap.Error(err))
+			return
+		}
+
 		// We need to build the data loaders each time that we publish the details to CEDAR
 		contextWithLoader := dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 

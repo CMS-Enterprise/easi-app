@@ -219,6 +219,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   requestName: null,
   projectAcronym: null,
   id: systemIntakeId,
+  viewerIsRequester: true,
   euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
@@ -362,6 +363,7 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   requestName: 'Mock System Intake Request',
   projectAcronym: 'MSIR',
   id: systemIntakeId,
+  viewerIsRequester: true,
   euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
@@ -572,6 +574,7 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     grbDate: systemIntake.grbDate,
     lcid: null,
     lcidScope: null,
+    lcidIssuedAt: null,
     lcidExpiresAt: null,
     adminLead: null,
     notes: [],
@@ -680,6 +683,7 @@ export const taskListSystemIntake: NonNullable<
 > = {
   __typename: 'SystemIntake',
   id: systemIntakeId,
+  viewerIsRequester: true,
   requestName: 'Mock system intake',
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
@@ -734,6 +738,7 @@ export const getGovernanceTaskListQuery = (
       __typename: 'Query',
       systemIntake: {
         ...taskListSystemIntake,
+        viewerIsRequester: true,
         ...taskListData,
         __typename: 'SystemIntake',
         requester: {

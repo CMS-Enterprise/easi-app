@@ -64,7 +64,8 @@ func (s *ResolverSuite) SetupTest() {
 
 func (s *ResolverSuite) getTestContextWithPrincipal(euaID string, isAdmin bool) (context.Context, *authentication.EUAPrincipal) {
 	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, euaID, isAdmin)
-	return appcontext.WithPrincipal(s.testConfigs.Context, princ), princ
+	ctx := s.ctxWithNewDataloaders()
+	return appcontext.WithPrincipal(ctx, princ), princ
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -227,6 +228,8 @@ func newS3Config() upload.Config {
 func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *models.SystemIntake {
 	// Future Enhancement:  this should refactored to use a resolver and not a store method look at createNewIntakeWithResolver
 	newIntake, err := storage.CreateSystemIntake(s.testConfigs.Context, s.testConfigs.Store, &models.SystemIntake{
+		EUAUserID:   null.StringFrom(s.testConfigs.Principal.ID()),
+		Requester:   s.testConfigs.Principal.ID(),
 		ProjectName: null.StringFrom("TEST"),
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
@@ -329,9 +332,12 @@ func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
 		return coreClient.GetSystemSummary(ctx)
 	}
+	getMyCedarSystems := func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(euaUserID))
+	}
 
 	buildDataloaders := func() *dataloaders.Dataloaders {
-		return dataloaders.NewDataloaders(s.testConfigs.Store, s.testConfigs.UserSearchClient.FetchUserInfos, getCedarSystems)
+		return dataloaders.NewDataloaders(s.testConfigs.Store, s.testConfigs.UserSearchClient.FetchUserInfos, getCedarSystems, getMyCedarSystems)
 	}
 
 	// Set up mocked dataloaders for the test context

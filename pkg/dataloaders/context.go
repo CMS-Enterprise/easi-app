@@ -19,6 +19,12 @@ func loadersFromCTX(ctx context.Context) (*Dataloaders, bool) {
 	return dl, ok
 }
 
+// HasLoaders reports whether dataloaders have been attached to the context.
+func HasLoaders(ctx context.Context) bool {
+	_, ok := loadersFromCTX(ctx)
+	return ok
+}
+
 // CTXWithLoaders sets the given dataloaders onto given context
 func CTXWithLoaders(ctx context.Context, buildDataloaders BuildDataloaders) context.Context {
 	return context.WithValue(ctx, loadersKey, buildDataloaders())

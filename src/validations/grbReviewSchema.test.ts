@@ -5,6 +5,7 @@ import { SetGRBPresentationLinksSchema } from './grbReviewSchema';
 const mockPresentationDeckFileData = new File(['1'], 'test.pdf', {
   type: 'application/pdf'
 });
+const javascriptPayload = ['java', 'script:confirm', '``'].join('');
 
 describe('GRB presentation links form schema validation', () => {
   it('Validates adding links', async () => {
@@ -12,7 +13,7 @@ describe('GRB presentation links form schema validation', () => {
     await expect(
       SetGRBPresentationLinksSchema.isValid(
         {
-          recordingLink: '123456',
+          recordingLink: 'https://example.com/recording',
           presentationDeckFileData: null
         },
         { context: { formType: 'add' } }
@@ -50,6 +51,17 @@ describe('GRB presentation links form schema validation', () => {
         { context: { formType: 'add' } }
       )
     ).rejects.toThrow(i18next.t('grbReview:presentationLinks.requiredField'));
+
+    // Errors on unsupported recording link scheme
+    await expect(
+      SetGRBPresentationLinksSchema.validate(
+        {
+          recordingLink: 'mailto:test@example.com',
+          presentationDeckFileData: null
+        },
+        { context: { formType: 'add' } }
+      )
+    ).rejects.toThrow(i18next.t('grbReview:presentationLinks.urlValidation'));
   });
 
   it('Validates editing links', async () => {
@@ -57,7 +69,7 @@ describe('GRB presentation links form schema validation', () => {
     await expect(
       SetGRBPresentationLinksSchema.isValid(
         {
-          recordingLink: '123456',
+          recordingLink: 'https://example.com/recording',
           presentationDeckFileData: null
         },
         { context: { formType: 'edit' } }
@@ -99,5 +111,17 @@ describe('GRB presentation links form schema validation', () => {
         { context: { formType: 'edit' } }
       )
     ).rejects.toThrow(i18next.t('grbReview:presentationLinks.requiredField'));
+
+    // Errors on unsupported transcript link scheme
+    await expect(
+      SetGRBPresentationLinksSchema.validate(
+        {
+          recordingLink: 'https://example.com/recording',
+          presentationDeckFileData: null,
+          transcriptLink: javascriptPayload
+        },
+        { context: { formType: 'edit' } }
+      )
+    ).rejects.toThrow(i18next.t('grbReview:presentationLinks.urlValidation'));
   });
 });

@@ -19,8 +19,9 @@ import (
 
 // DevUserConfig is the set of values that can be passed in a request header
 type DevUserConfig struct {
-	EUA      string   `json:"euaId"`
-	JobCodes []string `json:"jobCodes"`
+	EUA       string   `json:"euaId"`
+	JobCodes  []string `json:"jobCodes"`
+	AllowEASi *bool    `json:"allowEasi,omitempty"`
 }
 
 func authenticateMiddleware(next http.Handler, store *storage.Store) http.Handler {
@@ -74,9 +75,14 @@ func devUserContext(ctx context.Context, authHeader string, store *storage.Store
 		return nil, errors.New("could not parse local auth JSON")
 	}
 
+	allowEASi := true
+	if config.AllowEASi != nil {
+		allowEASi = *config.AllowEASi
+	}
+
 	princ := &authentication.EUAPrincipal{
 		EUAID:           strings.ToUpper(config.EUA),
-		JobCodeEASi:     true,
+		JobCodeEASi:     allowEASi,
 		JobCodeGRT:      swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
 		JobCodeTRBAdmin: swag.ContainsStrings(config.JobCodes, "EASI_TRB_ADMIN_D"),
 	}
