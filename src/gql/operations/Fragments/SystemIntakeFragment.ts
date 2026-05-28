@@ -96,6 +96,8 @@ export default gql(/* GraphQL */ `
     createdAt
     archivedAt
     euaUserId
+    digitalServiceInteraction
+    digitalServiceInteractionDescription
     hasUiChanges
     usesAiTech
     usingSoftware

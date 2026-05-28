@@ -515,6 +515,11 @@ const intake = {
     itDev:
       'If IT development will be a part of this contract, when is the project scheduled to go live in production?',
     itDevHelp: 'If you are unsure, you may input your best guess.',
+    digitalServiceInteraction:
+      'Does this project directly enable or facilitate interaction between the public and the Federal Government through Digital Services?',
+    digitalServiceInteractionHelpText:
+      'A "digital service" is a transactional service (e.g., online form, account management tool) or an informational service delivered over the internet across a variety of platforms, devices, and delivery mechanisms (e.g., websites, mobile applications, text/SMS).',
+    digitalServiceInteractionDescription: 'If yes, please describe.',
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
@@ -523,7 +528,6 @@ const intake = {
         'Do you plan to use any software products to fulfill your business needs?',
       usingSoftwareHelp:
         'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
-      notSure: "I'm not sure",
       selectedLabel: 'Selected software',
       whichSoftwareLabel: 'Which software?',
       whichSoftwareHelp:

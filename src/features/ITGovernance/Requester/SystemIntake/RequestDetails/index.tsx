@@ -57,6 +57,8 @@ type RequestDetailsForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  digitalServiceInteraction: string | null;
+  digitalServiceInteractionDescription: string | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
   usingSoftware: string | null;
@@ -78,6 +80,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     businessSolution,
     currentStage,
     needsEaSupport,
+    digitalServiceInteraction,
+    digitalServiceInteractionDescription,
     hasUiChanges,
     usesAiTech,
     usingSoftware,
@@ -104,6 +108,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       businessSolution: businessSolution || '',
       currentStage: currentStage || '',
       needsEaSupport,
+      digitalServiceInteraction: digitalServiceInteraction || '',
+      digitalServiceInteractionDescription:
+        digitalServiceInteractionDescription || '',
       hasUiChanges,
       usesAiTech,
       usingSoftware,
@@ -540,6 +547,106 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           {t('requestDetails.subsectionHeadings.projectDetails')}
         </h4>
 
+        <FieldGroup
+          scrollElement="digitalServiceInteraction"
+          error={!!errors.digitalServiceInteraction}
+        >
+          <Fieldset>
+            <Label htmlFor="digitalServiceInteraction" required>
+              {t('requestDetails.digitalServiceInteraction')}
+            </Label>
+            <HelpText
+              id="digitalServiceInteractionHelpText"
+              className="margin-top-1"
+            >
+              {t('requestDetails.digitalServiceInteractionHelpText')}
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="digitalServiceInteraction"
+              as={FieldErrorMsg}
+            />
+
+            <Controller
+              control={control}
+              name="digitalServiceInteraction"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="digitalServiceInteractionYes"
+                  label={t('Yes')}
+                  checked={field.value === 'YES'}
+                  onChange={() => field.onChange('YES')}
+                  value="YES"
+                  aria-describedby="digitalServiceInteractionHelpText"
+                />
+              )}
+            />
+            {watch('digitalServiceInteraction') === 'YES' && (
+              <FieldGroup
+                scrollElement="digitalServiceInteractionDescription"
+                error={!!errors.digitalServiceInteractionDescription}
+              >
+                <Label htmlFor="digitalServiceInteractionDescription" required>
+                  {t('requestDetails.digitalServiceInteractionDescription')}
+                </Label>
+                <ErrorMessage
+                  errors={errors}
+                  name="digitalServiceInteractionDescription"
+                  as={FieldErrorMsg}
+                />
+                <Textarea
+                  {...register('digitalServiceInteractionDescription')}
+                  ref={null}
+                  id="digitalServiceInteractionDescription"
+                  maxLength={10000}
+                />
+              </FieldGroup>
+            )}
+
+            <Controller
+              control={control}
+              name="digitalServiceInteraction"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="digitalServiceInteractionNo"
+                  label={t('No')}
+                  checked={field.value === 'NO'}
+                  onChange={() => {
+                    field.onChange('NO');
+                    setValue('digitalServiceInteractionDescription', '');
+                  }}
+                  value="NO"
+                  aria-describedby="digitalServiceInteractionHelpText"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="digitalServiceInteraction"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="digitalServiceInteractionNotSure"
+                  label={t('general:notSure')}
+                  checked={field.value === 'NOT_SURE'}
+                  onChange={() => {
+                    field.onChange('NOT_SURE');
+                    setValue('digitalServiceInteractionDescription', '');
+                  }}
+                  value="NOT_SURE"
+                  aria-describedby="digitalServiceInteractionHelpText"
+                />
+              )}
+            />
+          </Fieldset>
+        </FieldGroup>
+
         <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
           <Fieldset>
             <Label htmlFor="usesAiTech" required>
@@ -779,7 +886,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 {...field}
                 inputRef={ref}
                 id="usingSoftwareNotSure"
-                label={t('requestDetails.softwareAcquisition.notSure')}
+                label={t('general:notSure')}
                 checked={value === 'NOT_SURE'}
                 onChange={() => {
                   field.onChange('NOT_SURE');

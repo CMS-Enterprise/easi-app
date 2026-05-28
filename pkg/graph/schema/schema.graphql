@@ -760,6 +760,8 @@ type SystemIntake {
   businessCaseId: UUID
   cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
+  digitalServiceInteraction: String
+  digitalServiceInteractionDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   itGovTaskStatuses: ITGovTaskStatuses!
@@ -1025,6 +1027,8 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessSolution: String
   currentStage: String
   needsEaSupport: Boolean
+  digitalServiceInteraction: String
+  digitalServiceInteractionDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   usingSoftware: String

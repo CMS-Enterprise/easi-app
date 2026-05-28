@@ -288,6 +288,8 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
+	intake.DigitalServiceInteraction = null.StringFromPtr(input.DigitalServiceInteraction)
+	intake.DigitalServiceInteractionDescription = null.StringFromPtr(input.DigitalServiceInteractionDescription)
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 	intake.UsingSoftware = zero.StringFromPtr(input.UsingSoftware)

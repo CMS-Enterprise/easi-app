@@ -771,6 +771,8 @@ type ComplexityRoot struct {
 		DecidedAt                                         func(childComplexity int) int
 		DecisionNextSteps                                 func(childComplexity int) int
 		DecisionState                                     func(childComplexity int) int
+		DigitalServiceInteraction                         func(childComplexity int) int
+		DigitalServiceInteractionDescription              func(childComplexity int) int
 		Documents                                         func(childComplexity int) int
 		DoesNotSupportSystems                             func(childComplexity int) int
 		DraftBusinessCaseState                            func(childComplexity int) int
@@ -5648,6 +5650,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.DecisionState(childComplexity), true
+	case "SystemIntake.digitalServiceInteraction":
+		if e.complexity.SystemIntake.DigitalServiceInteraction == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.DigitalServiceInteraction(childComplexity), true
+	case "SystemIntake.digitalServiceInteractionDescription":
+		if e.complexity.SystemIntake.DigitalServiceInteractionDescription == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.DigitalServiceInteractionDescription(childComplexity), true
 	case "SystemIntake.documents":
 		if e.complexity.SystemIntake.Documents == nil {
 			break
@@ -9009,6 +9023,8 @@ type SystemIntake {
   businessCaseId: UUID
   cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
+  digitalServiceInteraction: String
+  digitalServiceInteractionDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   itGovTaskStatuses: ITGovTaskStatuses!
@@ -9274,6 +9290,8 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessSolution: String
   currentStage: String
   needsEaSupport: Boolean
+  digitalServiceInteraction: String
+  digitalServiceInteractionDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   usingSoftware: String
@@ -14523,6 +14541,10 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -21129,6 +21151,10 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -23598,6 +23624,10 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -27107,6 +27137,10 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -27354,6 +27388,10 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -29527,6 +29565,10 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33275,6 +33317,10 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33504,6 +33550,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33732,6 +33782,10 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33949,6 +34003,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -34166,6 +34224,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -38982,6 +39044,64 @@ func (ec *executionContext) fieldContext_SystemIntake_documents(_ context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_digitalServiceInteraction(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_digitalServiceInteraction,
+		func(ctx context.Context) (any, error) {
+			return obj.DigitalServiceInteraction, nil
+		},
+		nil,
+		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_digitalServiceInteraction(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_digitalServiceInteractionDescription(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_digitalServiceInteractionDescription,
+		func(ctx context.Context) (any, error) {
+			return obj.DigitalServiceInteractionDescription, nil
+		},
+		nil,
+		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_digitalServiceInteractionDescription(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_hasUiChanges(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -39722,6 +39842,10 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -40506,6 +40630,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -48030,6 +48158,10 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -50099,6 +50231,10 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -50693,6 +50829,10 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -56044,7 +56184,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
+	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "digitalServiceInteraction", "digitalServiceInteractionDescription", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56100,6 +56240,20 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.NeedsEaSupport = data
+		case "digitalServiceInteraction":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("digitalServiceInteraction"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DigitalServiceInteraction = data
+		case "digitalServiceInteractionDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("digitalServiceInteractionDescription"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DigitalServiceInteractionDescription = data
 		case "hasUiChanges":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasUiChanges"))
 			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
@@ -62932,6 +63086,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "digitalServiceInteraction":
+			out.Values[i] = ec._SystemIntake_digitalServiceInteraction(ctx, field, obj)
+		case "digitalServiceInteractionDescription":
+			out.Values[i] = ec._SystemIntake_digitalServiceInteractionDescription(ctx, field, obj)
 		case "hasUiChanges":
 			out.Values[i] = ec._SystemIntake_hasUiChanges(ctx, field, obj)
 		case "usesAiTech":

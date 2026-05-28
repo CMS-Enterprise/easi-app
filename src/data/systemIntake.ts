@@ -57,6 +57,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
+  digitalServiceInteraction: '',
+  digitalServiceInteractionDescription: '',
   grtReviewEmailBody: '',
   decidedAt: null,
   businessCaseId: null,
@@ -113,6 +115,9 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
   const existingFunding = convertBoolToYesNo(intake?.existingFunding);
   const usesAiTech = convertBoolToYesNo(intake?.usesAiTech);
   const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
+  const digitalServiceInteraction = intake?.digitalServiceInteraction;
+  const digitalServiceInteractionDescription =
+    intake?.digitalServiceInteractionDescription;
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
   const usingSoftware = intake?.usingSoftware;
   const acquisitionMethods = intake?.acquisitionMethods;
@@ -130,6 +135,8 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
     existingFunding,
     usesAiTech,
     needsEaSupport,
+    digitalServiceInteraction,
+    digitalServiceInteractionDescription,
     hasUiChanges,
     usingSoftware,
     acquisitionMethods,

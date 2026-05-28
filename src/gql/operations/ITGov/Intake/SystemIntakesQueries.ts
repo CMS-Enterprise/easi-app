@@ -71,6 +71,8 @@ export const UpdateSystemIntakeRequestDetails = gql(/* GraphQL */ `
         businessNeed
         businessSolution
         needsEaSupport
+        digitalServiceInteraction
+        digitalServiceInteractionDescription
         hasUiChanges
         usesAiTech
         usingSoftware

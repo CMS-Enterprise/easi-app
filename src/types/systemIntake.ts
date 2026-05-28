@@ -50,6 +50,8 @@ export type SystemIntakeForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  digitalServiceInteraction: string | null;
+  digitalServiceInteractionDescription: string | null;
   usesAiTech: boolean | null;
   hasUiChanges: boolean | null;
   usingSoftware: string | null;

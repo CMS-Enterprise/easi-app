@@ -283,6 +283,8 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   businessSolution: null,
   currentStage: null,
   needsEaSupport: null,
+  digitalServiceInteraction: null,
+  digitalServiceInteractionDescription: null,
   usesAiTech: null,
   usingSoftware: null,
   acquisitionMethods: [],
@@ -427,6 +429,9 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   businessSolution: 'The quick brown fox jumps over the lazy dog.',
   currentStage: 'The quick brown fox jumps over the lazy dog.',
   needsEaSupport: false,
+  digitalServiceInteraction: 'YES',
+  digitalServiceInteractionDescription:
+    'The quick brown fox jumps over the lazy dog.',
   usesAiTech: true,
   usingSoftware: 'NO',
   acquisitionMethods: [],
@@ -567,6 +572,9 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     businessSolution: systemIntake.businessSolution,
     currentStage: systemIntake.currentStage,
     needsEaSupport: systemIntake.needsEaSupport,
+    digitalServiceInteraction: systemIntake.digitalServiceInteraction,
+    digitalServiceInteractionDescription:
+      systemIntake.digitalServiceInteractionDescription,
     usesAiTech: systemIntake.usesAiTech,
     usingSoftware: systemIntake.usingSoftware,
     acquisitionMethods: systemIntake.acquisitionMethods,

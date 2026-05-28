@@ -102,6 +102,8 @@ export default gql(/* GraphQL */ `
       }
 
       hasUiChanges
+      digitalServiceInteraction
+      digitalServiceInteractionDescription
       usesAiTech
       usingSoftware
       acquisitionMethods
