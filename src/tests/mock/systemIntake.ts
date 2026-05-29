@@ -285,6 +285,8 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   needsEaSupport: null,
   digitalServiceInteraction: null,
   digitalServiceInteractionDescription: null,
+  protectedCmsDataAccessedOutside: null,
+  protectedCmsDataAccessedOutsideDescription: null,
   usesAiTech: null,
   usingSoftware: null,
   acquisitionMethods: [],
@@ -432,6 +434,8 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   digitalServiceInteraction: 'YES',
   digitalServiceInteractionDescription:
     'The quick brown fox jumps over the lazy dog.',
+  protectedCmsDataAccessedOutside: 'NO',
+  protectedCmsDataAccessedOutsideDescription: '',
   usesAiTech: true,
   usingSoftware: 'NO',
   acquisitionMethods: [],
@@ -575,6 +579,10 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     digitalServiceInteraction: systemIntake.digitalServiceInteraction,
     digitalServiceInteractionDescription:
       systemIntake.digitalServiceInteractionDescription,
+    protectedCmsDataAccessedOutside:
+      systemIntake.protectedCmsDataAccessedOutside,
+    protectedCmsDataAccessedOutsideDescription:
+      systemIntake.protectedCmsDataAccessedOutsideDescription,
     usesAiTech: systemIntake.usesAiTech,
     usingSoftware: systemIntake.usingSoftware,
     acquisitionMethods: systemIntake.acquisitionMethods,

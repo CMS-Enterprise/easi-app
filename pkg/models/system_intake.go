@@ -160,6 +160,8 @@ type SystemIntake struct {
 	UsesAITech                                        null.Bool                    `json:"usesAiTech" db:"uses_ai_tech"`
 	DigitalServiceInteraction                         null.String                  `json:"digitalServiceInteraction" db:"digital_service_interaction"`
 	DigitalServiceInteractionDescription              null.String                  `json:"digitalServiceInteractionDescription" db:"digital_service_interaction_description"`
+	ProtectedCmsDataAccessedOutside                   null.String                  `json:"protectedCmsDataAccessedOutside" db:"protected_cms_data_accessed_outside"`
+	ProtectedCmsDataAccessedOutsideDescription        null.String                  `json:"protectedCmsDataAccessedOutsideDescription" db:"protected_cms_data_accessed_outside_description"`
 	UsingSoftware                                     zero.String                  `json:"usingSoftware" db:"using_software"`
 	AcquisitionMethods                                pq.StringArray               `json:"acquisitionMethods" db:"acquisition_methods"`
 	RequestFormState                                  SystemIntakeFormState        `json:"requestFormState" db:"request_form_state"`

@@ -98,6 +98,8 @@ export default gql(/* GraphQL */ `
     euaUserId
     digitalServiceInteraction
     digitalServiceInteractionDescription
+    protectedCmsDataAccessedOutside
+    protectedCmsDataAccessedOutsideDescription
     hasUiChanges
     usesAiTech
     usingSoftware

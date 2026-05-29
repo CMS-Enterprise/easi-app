@@ -52,6 +52,8 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   digitalServiceInteraction: string | null;
   digitalServiceInteractionDescription: string | null;
+  protectedCmsDataAccessedOutside: string | null;
+  protectedCmsDataAccessedOutsideDescription: string | null;
   usesAiTech: boolean | null;
   hasUiChanges: boolean | null;
   usingSoftware: string | null;

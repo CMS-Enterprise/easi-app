@@ -821,6 +821,8 @@ type ComplexityRoot struct {
 		OITSecurityCollaboratorName                       func(childComplexity int) int
 		ProductManager                                    func(childComplexity int) int
 		ProjectAcronym                                    func(childComplexity int) int
+		ProtectedCmsDataAccessedOutside                   func(childComplexity int) int
+		ProtectedCmsDataAccessedOutsideDescription        func(childComplexity int) int
 		RejectionReason                                   func(childComplexity int) int
 		RelatedIntakes                                    func(childComplexity int) int
 		RelatedTRBRequests                                func(childComplexity int) int
@@ -5950,6 +5952,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.ProjectAcronym(childComplexity), true
+	case "SystemIntake.protectedCmsDataAccessedOutside":
+		if e.complexity.SystemIntake.ProtectedCmsDataAccessedOutside == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.ProtectedCmsDataAccessedOutside(childComplexity), true
+	case "SystemIntake.protectedCmsDataAccessedOutsideDescription":
+		if e.complexity.SystemIntake.ProtectedCmsDataAccessedOutsideDescription == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.ProtectedCmsDataAccessedOutsideDescription(childComplexity), true
 	case "SystemIntake.rejectionReason":
 		if e.complexity.SystemIntake.RejectionReason == nil {
 			break
@@ -9025,6 +9039,8 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   digitalServiceInteraction: String
   digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   itGovTaskStatuses: ITGovTaskStatuses!
@@ -9292,6 +9308,8 @@ input UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport: Boolean
   digitalServiceInteraction: String
   digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   usingSoftware: String
@@ -14545,6 +14563,10 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -21155,6 +21177,10 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -23628,6 +23654,10 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -27141,6 +27171,10 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -27392,6 +27426,10 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -29569,6 +29607,10 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33321,6 +33363,10 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33554,6 +33600,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33786,6 +33836,10 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -34007,6 +34061,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -34228,6 +34286,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -39102,6 +39164,64 @@ func (ec *executionContext) fieldContext_SystemIntake_digitalServiceInteractionD
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_protectedCmsDataAccessedOutside(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside,
+		func(ctx context.Context) (any, error) {
+			return obj.ProtectedCmsDataAccessedOutside, nil
+		},
+		nil,
+		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_protectedCmsDataAccessedOutside(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription,
+		func(ctx context.Context) (any, error) {
+			return obj.ProtectedCmsDataAccessedOutsideDescription, nil
+		},
+		nil,
+		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_hasUiChanges(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -39846,6 +39966,10 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -40634,6 +40758,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -48162,6 +48290,10 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -50235,6 +50367,10 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -50833,6 +50969,10 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
 			case "digitalServiceInteractionDescription":
 				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -56184,7 +56324,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "digitalServiceInteraction", "digitalServiceInteractionDescription", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
+	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "digitalServiceInteraction", "digitalServiceInteractionDescription", "protectedCmsDataAccessedOutside", "protectedCmsDataAccessedOutsideDescription", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56254,6 +56394,20 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.DigitalServiceInteractionDescription = data
+		case "protectedCmsDataAccessedOutside":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("protectedCmsDataAccessedOutside"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProtectedCmsDataAccessedOutside = data
+		case "protectedCmsDataAccessedOutsideDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("protectedCmsDataAccessedOutsideDescription"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProtectedCmsDataAccessedOutsideDescription = data
 		case "hasUiChanges":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasUiChanges"))
 			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
@@ -63090,6 +63244,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_digitalServiceInteraction(ctx, field, obj)
 		case "digitalServiceInteractionDescription":
 			out.Values[i] = ec._SystemIntake_digitalServiceInteractionDescription(ctx, field, obj)
+		case "protectedCmsDataAccessedOutside":
+			out.Values[i] = ec._SystemIntake_protectedCmsDataAccessedOutside(ctx, field, obj)
+		case "protectedCmsDataAccessedOutsideDescription":
+			out.Values[i] = ec._SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field, obj)
 		case "hasUiChanges":
 			out.Values[i] = ec._SystemIntake_hasUiChanges(ctx, field, obj)
 		case "usesAiTech":

@@ -762,6 +762,8 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   digitalServiceInteraction: String
   digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   itGovTaskStatuses: ITGovTaskStatuses!
@@ -1029,6 +1031,8 @@ input UpdateSystemIntakeRequestDetailsInput {
   needsEaSupport: Boolean
   digitalServiceInteraction: String
   digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   usingSoftware: String

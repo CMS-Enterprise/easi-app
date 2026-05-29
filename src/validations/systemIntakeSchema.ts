@@ -152,6 +152,23 @@ const SystemIntakeValidationSchema = {
           .required('Describe the digital service interaction')
       }
     ),
+    protectedCmsDataAccessedOutside: Yup.string()
+      .nullable()
+      .trim()
+      .required(
+        'Tell us if protected CMS data will be accessed outside CMS-controlled systems'
+      ),
+    protectedCmsDataAccessedOutsideDescription: Yup.string().when(
+      'protectedCmsDataAccessedOutside',
+      {
+        is: 'YES',
+        then: Yup.string()
+          .trim()
+          .required(
+            'Describe how protected CMS data will be accessed outside CMS-controlled systems'
+          )
+      }
+    ),
     usesAiTech: Yup.boolean()
       .nullable()
       .required('Tell us if your request involves AI technologies'),

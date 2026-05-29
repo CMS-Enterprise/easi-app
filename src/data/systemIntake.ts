@@ -59,6 +59,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   needsEaSupport: null,
   digitalServiceInteraction: '',
   digitalServiceInteractionDescription: '',
+  protectedCmsDataAccessedOutside: null,
+  protectedCmsDataAccessedOutsideDescription: '',
   grtReviewEmailBody: '',
   decidedAt: null,
   businessCaseId: null,
@@ -118,6 +120,10 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
   const digitalServiceInteraction = intake?.digitalServiceInteraction;
   const digitalServiceInteractionDescription =
     intake?.digitalServiceInteractionDescription;
+  const protectedCmsDataAccessedOutside =
+    intake?.protectedCmsDataAccessedOutside;
+  const protectedCmsDataAccessedOutsideDescription =
+    intake?.protectedCmsDataAccessedOutsideDescription;
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
   const usingSoftware = intake?.usingSoftware;
   const acquisitionMethods = intake?.acquisitionMethods;
@@ -137,6 +143,8 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
     needsEaSupport,
     digitalServiceInteraction,
     digitalServiceInteractionDescription,
+    protectedCmsDataAccessedOutside,
+    protectedCmsDataAccessedOutsideDescription,
     hasUiChanges,
     usingSoftware,
     acquisitionMethods,
