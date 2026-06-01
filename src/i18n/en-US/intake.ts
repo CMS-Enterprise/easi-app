@@ -519,12 +519,12 @@ const intake = {
       'Does this project directly enable or facilitate interaction between the public and the Federal Government through Digital Services?',
     digitalServiceInteractionHelpText:
       'A "digital service" is a transactional service (e.g., online form, account management tool) or an informational service delivered over the internet across a variety of platforms, devices, and delivery mechanisms (e.g., websites, mobile applications, text/SMS).',
-    digitalServiceInteractionDescription: 'If yes, please describe.',
+    digitalServiceInteractionDescription: 'Please describe',
     protectedCmsDataAccessedOutside:
       'Will protected CMS data be accessed, processed, stored, or transmitted outside of CMS-controlled information systems or environments?',
     protectedCmsDataAccessedOutsideHelpText:
       '"Protected CMS data" includes Personally Identifiable Information (PII), Protected Health Information (PHI), or other forms of Controlled Unclassified Information (CUI) such as commercially sensitive or proprietary data. "CMS-controlled information systems or environments" are systems, platforms, or infrastructure owned, operated, or formally authorized by CMS where CMS maintains full responsibility and oversight for security, access controls, continuous monitoring, and compliance with federal and agency policies (e.g., Integrated Data Repository, Chronic Conditions Data Warehouse).',
-    protectedCmsDataAccessedOutsideDescription: 'If yes, please describe.',
+    protectedCmsDataAccessedOutsideDescription: 'Please describe',
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
@@ -645,9 +645,16 @@ const intake = {
     usesAiTech: 'Does this project plan to use AI technologies?',
     hasUiChanges:
       'Does your project involve any user interface component or changes to an interface component?',
+    digitalServiceInteraction:
+      'Does this project directly enable or facilitate interaction between the public and the Federal Government through Digital Services?',
+    digitalServiceInteractionDescription: 'Please describe the interaction',
     usingSoftware:
       'Do you plan to use software products to fulfill your business needs?',
     softwareAcquisitionMethods: 'How will the software be acquired?',
+    protectedCmsDataAccessedOutside:
+      'Will protected CMS data be accessed, processed, stored, or transmitted outside of CMS-controlled information systems or environments?',
+    protectedCmsDataAccessedOutsideDescription:
+      'Please describe how protected CMS data will be accessed outside of CMS.',
     contractDetails: 'Contract details',
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
