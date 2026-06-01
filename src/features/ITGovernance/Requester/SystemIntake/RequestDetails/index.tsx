@@ -666,7 +666,11 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           error={!!errors.digitalServiceInteraction}
         >
           <Fieldset>
-            <Label htmlFor="digitalServiceInteraction" required>
+            <Label
+              htmlFor="digitalServiceInteraction"
+              className="maxw-none"
+              required
+            >
               {t('requestDetails.digitalServiceInteraction')}
             </Label>
             <HelpText
@@ -909,7 +913,11 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           error={!!errors.protectedCmsDataAccessedOutside}
         >
           <Fieldset>
-            <Label htmlFor="protectedCmsDataAccessedOutside" required>
+            <Label
+              htmlFor="protectedCmsDataAccessedOutside"
+              className="maxw-none"
+              required
+            >
               {t('requestDetails.protectedCmsDataAccessedOutside')}
             </Label>
             <HelpText
