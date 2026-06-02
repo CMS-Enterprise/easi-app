@@ -760,9 +760,9 @@ type SystemIntake {
   businessCaseId: UUID
   cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
-  digitalServiceInteraction: String
+  digitalServiceInteraction: YesNoNotSure
   digitalServiceInteractionDescription: String
-  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
   protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
@@ -965,6 +965,15 @@ enum SystemIntakeSoftwareAcquisitionMethods {
 }
 
 """
+YesNoNotSure is a common enum used for questions that have yes, no, or not sure options
+"""
+enum YesNoNotSure {
+  YES
+  NO
+  NOT_SURE
+}
+
+"""
 The statuses of the different steps in the IT Gov v2 workflow
 """
 type ITGovTaskStatuses {
@@ -1029,9 +1038,9 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessSolution: String
   currentStage: String
   needsEaSupport: Boolean
-  digitalServiceInteraction: String
+  digitalServiceInteraction: YesNoNotSure
   digitalServiceInteractionDescription: String
-  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
   protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean

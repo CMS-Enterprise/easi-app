@@ -123,6 +123,8 @@ func main() {
 	futureMeetingDate := time.Now().AddDate(0, 2, 0)
 	pastMeetingDate := time.Now().AddDate(0, -2, 0)
 
+	var noType = models.YesNoNotSureNo
+
 	// generate closed requests
 	for i := range closedRequestCount {
 		caseNum := i + 1
@@ -1228,10 +1230,10 @@ func main() {
 		i.Solution = null.StringFrom("The quick brown fox jumps over the lazy dog.")
 		i.ProcessStatus = null.StringFrom("Initial development underway")
 		i.EASupportRequest = null.BoolFrom(false)
-		i.DigitalServiceInteraction = null.StringFrom("")
+		i.DigitalServiceInteraction = &noType
 		i.DigitalServiceInteractionDescription = null.StringFrom("")
 		i.HasUIChanges = null.BoolFrom(false)
-		i.ProtectedCmsDataAccessedOutside = null.StringFrom("")
+		i.ProtectedCmsDataAccessedOutside = &noType
 		i.ProtectedCmsDataAccessedOutsideDescription = null.StringFrom("")
 		i.ExistingContract = null.StringFrom("No")
 		i.GrtReviewEmailBody = null.StringFrom("")

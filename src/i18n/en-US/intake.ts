@@ -647,7 +647,7 @@ const intake = {
       'Does your project involve any user interface component or changes to an interface component?',
     digitalServiceInteraction:
       'Does this project directly enable or facilitate interaction between the public and the Federal Government through Digital Services?',
-    digitalServiceInteractionDescription: 'Please describe the interaction',
+    digitalServiceInteractionDescription: 'Please describe the interaction.',
     usingSoftware:
       'Do you plan to use software products to fulfill your business needs?',
     softwareAcquisitionMethods: 'How will the software be acquired?',

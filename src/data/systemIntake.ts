@@ -57,7 +57,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
-  digitalServiceInteraction: '',
+  digitalServiceInteraction: null,
   digitalServiceInteractionDescription: '',
   protectedCmsDataAccessedOutside: null,
   protectedCmsDataAccessedOutsideDescription: '',

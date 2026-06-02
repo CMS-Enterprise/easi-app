@@ -42,7 +42,8 @@ import {
   SystemIntakeStep,
   SystemIntakeTRBFollowUp,
   SystemIntakeWithReviewRequestedFragment,
-  TRBRequestStatus
+  TRBRequestStatus,
+  YesNoNotSure
 } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
@@ -431,10 +432,10 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   businessSolution: 'The quick brown fox jumps over the lazy dog.',
   currentStage: 'The quick brown fox jumps over the lazy dog.',
   needsEaSupport: false,
-  digitalServiceInteraction: 'YES',
+  digitalServiceInteraction: YesNoNotSure.NO,
   digitalServiceInteractionDescription:
     'The quick brown fox jumps over the lazy dog.',
-  protectedCmsDataAccessedOutside: 'NO',
+  protectedCmsDataAccessedOutside: YesNoNotSure.NO,
   protectedCmsDataAccessedOutsideDescription: '',
   usesAiTech: true,
   usingSoftware: 'NO',

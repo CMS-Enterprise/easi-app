@@ -258,12 +258,12 @@ func updateSystemIntakeRequestDetails(
 	usesAiTech bool,
 	currentStage string,
 	cedarSystemID uuid.UUID,
-	digitalServiceInteraction string,
+	digitalServiceInteraction models.YesNoNotSure,
 	digitalServiceInteractionDescription string,
 	hasUIChanges bool,
 	usingSoftware string,
 	acquisitionMethods []models.SystemIntakeSoftwareAcquisitionMethods,
-	protectedCmsDataAccessedOutside string,
+	protectedCmsDataAccessedOutside models.YesNoNotSure,
 	protectedCmsDataAccessedOutsideDescription string,
 ) *models.SystemIntake {
 	input := models.UpdateSystemIntakeRequestDetailsInput{
@@ -278,6 +278,7 @@ func updateSystemIntakeRequestDetails(
 		DigitalServiceInteraction:            &digitalServiceInteraction,
 		DigitalServiceInteractionDescription: &digitalServiceInteractionDescription,
 		HasUIChanges:                         &hasUIChanges,
+		UsingSoftware:                        &usingSoftware,
 		AcquisitionMethods:                   acquisitionMethods,
 		ProtectedCmsDataAccessedOutside:      &protectedCmsDataAccessedOutside,
 		ProtectedCmsDataAccessedOutsideDescription: &protectedCmsDataAccessedOutsideDescription,

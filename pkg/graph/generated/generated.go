@@ -9037,9 +9037,9 @@ type SystemIntake {
   businessCaseId: UUID
   cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
-  digitalServiceInteraction: String
+  digitalServiceInteraction: YesNoNotSure
   digitalServiceInteractionDescription: String
-  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
   protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
@@ -9242,6 +9242,15 @@ enum SystemIntakeSoftwareAcquisitionMethods {
 }
 
 """
+YesNoNotSure is a common enum used for questions that have yes, no, or not sure options
+"""
+enum YesNoNotSure {
+  YES
+  NO
+  NOT_SURE
+}
+
+"""
 The statuses of the different steps in the IT Gov v2 workflow
 """
 type ITGovTaskStatuses {
@@ -9306,9 +9315,9 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessSolution: String
   currentStage: String
   needsEaSupport: Boolean
-  digitalServiceInteraction: String
+  digitalServiceInteraction: YesNoNotSure
   digitalServiceInteractionDescription: String
-  protectedCmsDataAccessedOutside: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
   protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
@@ -39116,7 +39125,7 @@ func (ec *executionContext) _SystemIntake_digitalServiceInteraction(ctx context.
 			return obj.DigitalServiceInteraction, nil
 		},
 		nil,
-		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		ec.marshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure,
 		true,
 		false,
 	)
@@ -39129,7 +39138,7 @@ func (ec *executionContext) fieldContext_SystemIntake_digitalServiceInteraction(
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type YesNoNotSure does not have child fields")
 		},
 	}
 	return fc, nil
@@ -39174,7 +39183,7 @@ func (ec *executionContext) _SystemIntake_protectedCmsDataAccessedOutside(ctx co
 			return obj.ProtectedCmsDataAccessedOutside, nil
 		},
 		nil,
-		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		ec.marshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure,
 		true,
 		false,
 	)
@@ -39187,7 +39196,7 @@ func (ec *executionContext) fieldContext_SystemIntake_protectedCmsDataAccessedOu
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type YesNoNotSure does not have child fields")
 		},
 	}
 	return fc, nil
@@ -56382,7 +56391,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 			it.NeedsEaSupport = data
 		case "digitalServiceInteraction":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("digitalServiceInteraction"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -56396,7 +56405,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 			it.DigitalServiceInteractionDescription = data
 		case "protectedCmsDataAccessedOutside":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("protectedCmsDataAccessedOutside"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -75166,6 +75175,22 @@ func (ec *executionContext) marshalOUserInfo2ᚖgithubᚗcomᚋcmsᚑenterprise�
 		return graphql.Null
 	}
 	return ec._UserInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx context.Context, v any) (*models.YesNoNotSure, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.YesNoNotSure)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx context.Context, sel ast.SelectionSet, v *models.YesNoNotSure) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

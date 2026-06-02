@@ -23,7 +23,8 @@ import {
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeSoftwareAcquisitionMethods,
-  useUpdateSystemIntakeRequestDetailsMutation
+  useUpdateSystemIntakeRequestDetailsMutation,
+  YesNoNotSure
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -57,9 +58,9 @@ type RequestDetailsForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
-  digitalServiceInteraction: string | null;
+  digitalServiceInteraction: YesNoNotSure | null;
   digitalServiceInteractionDescription: string | null;
-  protectedCmsDataAccessedOutside: string | null;
+  protectedCmsDataAccessedOutside: YesNoNotSure | null;
   protectedCmsDataAccessedOutsideDescription: string | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
@@ -112,10 +113,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       businessSolution: businessSolution || '',
       currentStage: currentStage || '',
       needsEaSupport,
-      digitalServiceInteraction: digitalServiceInteraction || '',
+      digitalServiceInteraction: digitalServiceInteraction || null,
       digitalServiceInteractionDescription:
         digitalServiceInteractionDescription || '',
-      protectedCmsDataAccessedOutside: protectedCmsDataAccessedOutside || '',
+      protectedCmsDataAccessedOutside: protectedCmsDataAccessedOutside || null,
       protectedCmsDataAccessedOutsideDescription:
         protectedCmsDataAccessedOutsideDescription || '',
       hasUiChanges,
