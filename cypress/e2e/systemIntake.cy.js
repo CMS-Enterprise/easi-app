@@ -173,6 +173,26 @@ describe('The System Intake Form', () => {
     // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
+    cy.get('#digitalServiceInteractionYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#digitalServiceInteractionDescription').should('be.visible');
+
+    cy.get('#digitalServiceInteractionDescription')
+      .type('Digital service interaction description')
+      .should('have.value', 'Digital service interaction description');
+
+    cy.get('#protectedCmsDataAccessedOutsideYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#protectedCmsDataAccessedOutsideDescription').should('be.visible');
+
+    cy.get('#protectedCmsDataAccessedOutsideDescription')
+      .type('Protected CMS data accessed outside description')
+      .should('have.value', 'Protected CMS data accessed outside description');
+
     cy.get('#currentStage').select('Other').should('have.value', 'Other');
 
     cy.get('#usingSoftwareYes').check({ force: true }).should('be.checked');
