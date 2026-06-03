@@ -883,6 +883,8 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				BusinessNeed                               string
 				CurrentStage                               string
 				NeedsEaSupport                             bool
+				DigitalServiceInteraction                  *string
+				DigitalServiceInteractionDescription       *string
 				HasUIChanges                               bool
 				UsesAiTech                                 bool
 				UsingSoftware                              string

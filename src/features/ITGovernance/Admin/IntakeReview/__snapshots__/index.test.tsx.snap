@@ -550,23 +550,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                 <dd
                   class="description-definition margin-0"
                 >
-                  Yes
-                </dd>
-              </div>
-            </div>
-            <div
-              class="easi-review-row"
-            >
-              <div>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Please describe the interaction
-                </dt>
-                <dd
-                  class="description-definition margin-0 text-pre-wrap"
-                >
-                  The quick brown fox jumps over the lazy dog.
+                  No
                 </dd>
               </div>
             </div>
