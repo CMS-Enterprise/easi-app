@@ -4,7 +4,10 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mockSystemInfo } from 'features/Systems/SystemProfile/data/mockSystemData';
-import { GetCedarSystemsDocument } from 'gql/generated/graphql';
+import {
+  GetCedarSystemsDocument,
+  GetMyCedarSystemsDocument
+} from 'gql/generated/graphql';
 
 import SystemList from './index';
 import Table from './SystemsTable';
@@ -97,6 +100,100 @@ describe('System List View', () => {
 
       // ZXC is a mocked table row text item that should not be included in filtered results
       expect(screen.queryByText('ASD')).toBeNull();
+    });
+
+    it('renders plain text for all-systems rows when only workspace access is available', async () => {
+      const workspaceOnlySystems = [
+        {
+          ...mockSystemInfo[0],
+          viewerCanAccessProfile: false,
+          viewerCanAccessWorkspace: true
+        }
+      ];
+
+      render(
+        <MemoryRouter initialEntries={['/?table-type=all-systems']}>
+          <MockedProvider addTypename={false}>
+            <Table defaultPageSize={3} systems={workspaceOnlySystems} />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByText('Happiness Achievement Module')
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'Happiness Achievement Module' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders plain text for all-systems rows with no allowed destination', async () => {
+      const inaccessibleSystems = [
+        {
+          ...mockSystemInfo[0],
+          viewerCanAccessProfile: false,
+          viewerCanAccessWorkspace: false
+        }
+      ];
+
+      render(
+        <MemoryRouter initialEntries={['/?table-type=all-systems']}>
+          <MockedProvider addTypename={false}>
+            <Table defaultPageSize={3} systems={inaccessibleSystems} />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByText('Happiness Achievement Module')
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'Happiness Achievement Module' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('uses the rendered my-systems row bookmark state for the toggle UI', async () => {
+      const mySystemsRows = [
+        {
+          ...mockSystemInfo[0],
+          isBookmarked: true,
+          linkedSystemIntakes: [],
+          linkedTrbRequests: []
+        }
+      ];
+
+      const mySystemsMocks = [
+        {
+          request: {
+            query: GetMyCedarSystemsDocument
+          },
+          result: {
+            data: {
+              myCedarSystems: mySystemsRows
+            }
+          }
+        }
+      ];
+
+      render(
+        <MemoryRouter initialEntries={['/?table-type=my-systems']}>
+          <MockedProvider mocks={mySystemsMocks} addTypename={false}>
+            <Table
+              defaultPageSize={3}
+              systems={[
+                {
+                  ...mockSystemInfo[0],
+                  isBookmarked: false
+                }
+              ]}
+            />
+          </MockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByRole('button', { name: 'Bookmarked' })
+      ).toBeInTheDocument();
     });
 
     test.skip('matches snapshot', async () => {

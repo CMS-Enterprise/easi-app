@@ -37,6 +37,11 @@ var getRequesterUpdateEmailData string
 //go:embed SQL/system_intake/get_by_grb_reviewer_id.sql
 var getSystemIntakeByGRBReviewerID string
 
+// getLCIDOptions holds the SQL query to get requester-safe LCID lookup options
+//
+//go:embed SQL/system_intake/get_lcid_options.sql
+var getLCIDOptions string
+
 var SystemIntake = systemIntakeScripts{
 	GetByUser:                         getByUser,
 	GetWhereGRBReviewIsHalfwayThrough: getWhereGRBReviewIsHalfwayThrough,
@@ -45,6 +50,7 @@ var SystemIntake = systemIntakeScripts{
 	GetWhereGRBReviewEnded:            getWhereGRBReviewEnded,
 	GetRequesterUpdateEmailData:       getRequesterUpdateEmailData,
 	GetSystemIntakeByGRBReviewerID:    getSystemIntakeByGRBReviewerID,
+	GetLCIDOptions:                    getLCIDOptions,
 }
 
 type systemIntakeScripts struct {
@@ -55,4 +61,5 @@ type systemIntakeScripts struct {
 	GetWhereGRBReviewEnded            string
 	GetRequesterUpdateEmailData       string
 	GetSystemIntakeByGRBReviewerID    string
+	GetLCIDOptions                    string
 }

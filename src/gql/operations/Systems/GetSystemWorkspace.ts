@@ -2,20 +2,14 @@ import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
   query GetSystemWorkspace($cedarSystemId: UUID!) {
-    cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
-      uuid
-      tlcPhase
-      dateAuthorizationMemoExpires
-      countOfOpenPoams
-      lastAssessmentDate
-      oaStatus
-    }
-    cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+    cedarSystemWorkspace(cedarSystemId: $cedarSystemId) {
+      id
       isMySystem
       cedarSystem {
         id
         name
         isBookmarked
+        viewerCanAccessProfile
         linkedTrbRequests(state: OPEN) {
           id
         }

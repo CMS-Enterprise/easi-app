@@ -160,6 +160,26 @@ func GetFilteredSystems() []*models.CedarSystem {
 	return systems
 }
 
+// GetSystemsForUser returns active mocked Cedar Systems where the given user is on the team
+func GetSystemsForUser(userName string) []*models.CedarSystem {
+	systems := GetActiveSystems()
+	sort.Slice(systems, func(i, j int) bool {
+		return systems[i].ID.String() < systems[j].ID.String()
+	})
+
+	filteredSystems := make([]*models.CedarSystem, 0, len(systems))
+	for _, system := range systems {
+		roles := GetSystemRoles(system.ID, nil)
+		if lo.ContainsBy(roles, func(role *models.CedarRole) bool {
+			return role.AssigneeUsername.String == userName
+		}) {
+			filteredSystems = append(filteredSystems, system)
+		}
+	}
+
+	return filteredSystems
+}
+
 // GetSystem returns a single mocked Cedar System by ID
 func GetSystem(systemID uuid.UUID) *models.CedarSystem {
 	system, ok := mockSystems[systemID]

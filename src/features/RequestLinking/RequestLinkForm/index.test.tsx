@@ -17,15 +17,26 @@ describe('IT Gov Request relation link form', () => {
   const mockStore = configureMockStore();
   const store = mockStore({
     auth: {
-      euaId: 'AAAA'
+      euaId: 'AAAA',
+      isUserSet: true
     }
   });
 
-  it('renders', async () => {
+  const renderRequestLinkForm = ({
+    viewerIsRequester = true,
+    fromAdmin = false
+  } = {}) => {
     const id = 'fa93173c-2e8c-4371-b464-4b3dd649f940';
-    const { asFragment } = render(
+
+    return render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/system/link/${id}`]}>
+        <MemoryRouter
+          initialEntries={[
+            fromAdmin
+              ? `/it-governance/${id}/system-information/link`
+              : `/system/link/${id}`
+          ]}
+        >
           <VerboseMockedProvider
             mocks={[
               {
@@ -39,8 +50,16 @@ describe('IT Gov Request relation link form', () => {
                   data: {
                     systemIntake: {
                       id,
+                      viewerIsRequester,
                       relationType: null,
                       contractName: null,
+                      requester: {
+                        __typename: 'SystemIntakeContact',
+                        userAccount: {
+                          __typename: 'UserAccount',
+                          username: 'AAAA'
+                        }
+                      },
                       contractNumbers: [],
                       systems: [],
                       __typename: 'SystemIntake'
@@ -59,16 +78,45 @@ describe('IT Gov Request relation link form', () => {
             ]}
             addTypename={false}
           >
-            <Route path="/system/link/:id?">
-              <RequestLinkForm requestType="itgov" />
+            <Route
+              path={
+                fromAdmin
+                  ? '/it-governance/:id/system-information/link'
+                  : '/system/link/:id?'
+              }
+            >
+              <RequestLinkForm requestType="itgov" fromAdmin={fromAdmin} />
             </Route>
           </VerboseMockedProvider>
         </MemoryRouter>
       </Provider>
     );
+  };
+
+  it('renders', async () => {
+    const { asFragment } = renderRequestLinkForm();
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('renders page not found for a non-requester outside the admin route', async () => {
+    renderRequestLinkForm({ viewerIsRequester: false });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    screen.getByRole('heading', {
+      level: 1,
+      name: 'This page cannot be found.'
+    });
+  });
+
+  it('renders for a non-requester when the admin wrapper passes fromAdmin', async () => {
+    renderRequestLinkForm({ viewerIsRequester: false, fromAdmin: true });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    screen.getByRole('button', { name: 'Save changes' });
   });
 });

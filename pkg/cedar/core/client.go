@@ -41,17 +41,12 @@ func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-var (
-	cedarPath string
-	client    *Client
-)
-
 // PurgeCacheByPath purges the Proxy Cache by URL using a given path
 func (c *Client) PurgeCacheByPath(ctx context.Context, path string) error {
-	if c.skipPurge {
+	if c.mockEnabled || c.skipPurge {
 		return nil
 	}
-	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
+	req, err := http.NewRequest("PURGE", c.cedarPath+path, nil)
 	logger := appcontext.ZLogger(ctx)
 	if err != nil {
 		return err
@@ -84,8 +79,8 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 	}
 
 	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
-	cedarPath = "http://" + cedarHost + basePath
-	client = &Client{
+	client := &Client{
+		cedarPath:   "http://" + cedarHost + basePath,
 		mockEnabled: mockEnabled,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
@@ -111,6 +106,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 
 // Client represents a connection to the CEDAR Core API
 type Client struct {
+	cedarPath   string
 	mockEnabled bool
 	auth        runtime.ClientAuthInfoWriter
 	sdk         *apiclient.CEDARCoreAPI

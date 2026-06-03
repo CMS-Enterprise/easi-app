@@ -13,14 +13,10 @@ export default gql(/* GraphQL */ `
       systemMaintainerOrg
       systemMaintainerOrgComp
       isBookmarked
+      viewerCanAccessProfile
+      viewerCanAccessWorkspace
       atoExpirationDate
       oaStatus
-      linkedTrbRequests(state: OPEN) {
-        id
-      }
-      linkedSystemIntakes(state: OPEN) {
-        id
-      }
     }
   }
 `);

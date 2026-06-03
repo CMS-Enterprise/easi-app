@@ -364,7 +364,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
             >
               <li
                 class="usa-card maxw-none margin-bottom-0"
-                data-testid="Card"
+                data-testid="presentation-deck-upload-card"
               >
                 <div
                   class="usa-card__container margin-0 shadow-2 radius-md"

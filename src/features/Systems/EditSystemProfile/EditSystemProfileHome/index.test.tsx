@@ -25,7 +25,11 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
-        <EditSystemProfileHome systemId="000-100-0" systemName="Test System" />
+        <EditSystemProfileHome
+          canManageTeam
+          systemId="000-100-0"
+          systemName="Test System"
+        />
       </MemoryRouter>
     );
 
@@ -38,6 +42,7 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
         <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
           <Route path="/systems/:systemId/edit">
             <EditSystemProfileHome
+              canManageTeam
               systemId="000-100-0"
               systemName="Test System"
             />
@@ -82,6 +87,7 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
         <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
           <Route path="/systems/:systemId/edit">
             <EditSystemProfileHome
+              canManageTeam
               systemId="000-100-0"
               systemName="Test System"
             />
@@ -117,6 +123,27 @@ describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
       }
     });
   });
+
+  it('shows the TEAM card as read only when the viewer cannot manage team members', () => {
+    render(
+      <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+        <Route path="/systems/:systemId/edit">
+          <EditSystemProfileHome
+            canManageTeam={false}
+            systemId="000-100-0"
+            systemName="Test System"
+          />
+        </Route>
+      </MemoryRouter>
+    );
+
+    const teamCard = screen.getByTestId('section-card-TEAM');
+    const cardLink = within(teamCard).getByRole('link', {
+      name: 'View section'
+    });
+
+    expect(cardLink).toHaveAttribute('href', '/systems/000-100-0/team');
+  });
 });
 
 // Snapshot for global feature flag override
@@ -130,7 +157,11 @@ describe('EditSystemProfileHome (editableSystemProfile flag enabled)', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
-        <EditSystemProfileHome systemId="000-100-0" systemName="Test System" />
+        <EditSystemProfileHome
+          canManageTeam
+          systemId="000-100-0"
+          systemName="Test System"
+        />
       </MemoryRouter>
     );
 

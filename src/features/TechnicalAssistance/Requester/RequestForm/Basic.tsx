@@ -22,7 +22,7 @@ import {
   TRBCollabGroupOption,
   TrbRequestFormFieldsFragmentFragment,
   useDeleteTRBRequestFundingSourceMutation,
-  useGetSystemIntakesWithLCIDSQuery,
+  useGetTRBRequestLcidOptionsQuery,
   useUpdateTRBRequestAndFormMutation,
   useUpdateTRBRequestFundingSourcesMutation
 } from 'gql/generated/graphql';
@@ -87,11 +87,15 @@ function Basic({
   const [fundingSourcesFormActive, setFundingSourcesFormActive] =
     useState(false);
 
-  const { data, loading: intakesLoading } = useGetSystemIntakesWithLCIDSQuery();
+  const { data, loading: intakesLoading } = useGetTRBRequestLcidOptionsQuery({
+    variables: {
+      trbRequestID: request.id
+    }
+  });
 
   const systemIntakesWithLCIDs = useMemo(() => {
-    const systemIntakes = data?.systemIntakesWithLcids
-      ? [...data?.systemIntakesWithLcids]
+    const systemIntakes = data?.trbRequestLcidOptions
+      ? [...data?.trbRequestLcidOptions]
       : [];
     return systemIntakes
       .sort((a, b) => Number(a.lcid) - Number(b.lcid))
@@ -99,7 +103,7 @@ function Basic({
         value: intake.id,
         label: `${intake.lcid} - ${intake.requestName}` || ''
       }));
-  }, [data?.systemIntakesWithLcids]);
+  }, [data?.trbRequestLcidOptions]);
 
   const [updateForm] = useUpdateTRBRequestAndFormMutation();
 

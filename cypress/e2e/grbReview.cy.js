@@ -9,6 +9,10 @@ describe('GRB review', () => {
   // System intake ID: d9c931c6-0858-494d-b991-e02a94a42f38
   it('completes required fields for Asynchronous Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
+        req.alias = 'updateReviewType';
+      }
+
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
@@ -18,6 +22,18 @@ describe('GRB review', () => {
         'UpdateSystemIntakeGRBReviewAsyncPresentation'
       ) {
         req.alias = 'updatePresentation';
+      }
+
+      if (req.body.operationName === 'CreateSystemIntakeGRBReviewers') {
+        req.alias = 'createGrbReviewers';
+      }
+
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewer') {
+        req.alias = 'updateGrbReviewer';
+      }
+
+      if (req.body.operationName === 'DeleteSystemIntakeGRBReviewer') {
+        req.alias = 'deleteGrbReviewer';
       }
 
       if (
@@ -36,6 +52,7 @@ describe('GRB review', () => {
     cy.get('input#grbReviewTypeAsync').check({ force: true });
 
     cy.getByTestId('pager-next-button').click();
+    cy.url().should('include', '/presentation');
 
     // Presentation page
 
@@ -100,6 +117,7 @@ describe('GRB review', () => {
       .should('have.value', 'CO_CHAIR_CIO');
 
     cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
+    cy.wait('@createGrbReviewers').its('response.statusCode').should('eq', 200);
 
     cy.url().should('include', '/participants');
 
@@ -132,6 +150,7 @@ describe('GRB review', () => {
     cy.get('#votingRole').should('have.value', 'ALTERNATE').select('Voting');
 
     cy.contains('button', 'Save changes').should('not.be.disabled').click();
+    cy.wait('@updateGrbReviewer').its('response.statusCode').should('eq', 200);
 
     cy.getByTestId('table').within(() => {
       // Check to see that Adeline Aarons is now a voting memeber
@@ -142,6 +161,15 @@ describe('GRB review', () => {
           cy.contains('td', 'Voting').should('exist');
         });
     });
+
+    cy.getByTestId('grbReviewer-ADMN').within(() => {
+      cy.contains('button', 'Remove').click();
+    });
+
+    cy.contains('button', 'Remove reviewer').click();
+    cy.wait('@deleteGrbReviewer').its('response.statusCode').should('eq', 200);
+
+    cy.getByTestId('grbReviewer-ADMN').should('not.exist');
 
     // Async review end date
     cy.getByTestId('date-picker-external-input').clear();
@@ -174,9 +202,21 @@ describe('GRB review', () => {
   // System intake ID: 8ef9d0fb-e673-441c-9876-f874b179f89c
   it('completes required fields for Standard Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
+        req.alias = 'updateReviewType';
+      }
+
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
+
+      if (
+        req.body.operationName ===
+        'UpdateSystemIntakeGRBReviewStandardPresentation'
+      ) {
+        req.alias = 'updatePresentation';
+      }
+
       if (req.body.operationName === 'StartGRBReview') {
         req.alias = 'startGRBReview';
       }
@@ -191,6 +231,7 @@ describe('GRB review', () => {
     cy.get('input#grbReviewTypeStandard').check({ force: true });
 
     cy.contains('button', 'Next').click();
+    cy.url().should('include', '/presentation');
 
     cy.getByTestId('date-picker-external-input').clear();
 
@@ -205,6 +246,7 @@ describe('GRB review', () => {
     cy.contains('button', 'Reminder sent').should('be.disabled');
 
     cy.getByTestId('pager-next-button').click();
+    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
 
     // Additional documents page
     cy.url().should('include', '/documents');
@@ -297,7 +339,127 @@ describe('GRB review', () => {
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('can upload a presentation deck', () => {
-    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+    const asyncReviewIntakeId = '5af245bc-fc54-4677-bab1-1b3e798bb43c';
+
+    const markPendingPresentationUploadAsClean = (
+      response,
+      expectedUploadType
+    ) => {
+      const presentationLinks =
+        response?.body?.data?.updateSystemIntakeGRBReviewFormPresentationAsync
+          ?.systemIntake?.grbPresentationLinks;
+
+      const pendingUploadUrl =
+        expectedUploadType === 'presentationDeck'
+          ? presentationLinks?.presentationDeckFileURL
+          : presentationLinks?.transcriptFileURL;
+
+      if (!pendingUploadUrl) {
+        return undefined;
+      }
+
+      expect(pendingUploadUrl).to.be.a('string');
+      expect(pendingUploadUrl).to.include('/easi-app-file-uploads/');
+
+      return cy.markMinioUploadAsCleanByUrl(pendingUploadUrl);
+    };
+
+    const waitForPresentationLinks = (
+      predicate,
+      description,
+      attemptsRemaining = 12
+    ) => {
+      return cy
+        .reload()
+        .wait('@getGrbReview', { timeout: 20000 })
+        .then(({ response }) => {
+          expect(response?.body?.errors).to.eq(undefined);
+
+          const presentationLinks =
+            response?.body?.data?.systemIntake?.grbPresentationLinks;
+
+          if (predicate(presentationLinks)) {
+            return presentationLinks;
+          }
+
+          if (attemptsRemaining <= 1) {
+            throw new Error(
+              `Timed out waiting for GRB presentation links to ${description}`
+            );
+          }
+
+          return cy
+            .wait(1000)
+            .then(() =>
+              waitForPresentationLinks(
+                predicate,
+                description,
+                attemptsRemaining - 1
+              )
+            );
+        });
+    };
+
+    const markVisiblePresentationUploadAsClean = () => {
+      return cy.getByTestId('presentation-links-card').then($card => {
+        const pendingUploadUrl = $card
+          .find('[data-testid="presentation-deck-virus-scanning"]')
+          .attr('data-testdeckurl');
+
+        if (!pendingUploadUrl) {
+          return undefined;
+        }
+
+        expect(pendingUploadUrl).to.include('/easi-app-file-uploads/');
+
+        return cy.markMinioUploadAsCleanByUrl(pendingUploadUrl);
+      });
+    };
+
+    const clearPresentationDeckFile = () => {
+      return cy
+        .getByTestId('presentation-deck-upload-card')
+        .contains('button', 'Clear file')
+        .click();
+    };
+
+    cy.intercept('POST', '/api/graph/query', req => {
+      const requestBodyText =
+        typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      const operationName =
+        req.body && typeof req.body === 'object' ? req.body.operationName : '';
+
+      if (
+        operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation' ||
+        operationName === 'updateSystemIntakeGRBReviewAsyncPresentation' ||
+        requestBodyText.includes(
+          'UpdateSystemIntakeGRBReviewAsyncPresentation'
+        ) ||
+        requestBodyText.includes('setSystemIntakeGRBPresentationLinks') ||
+        requestBodyText.includes(
+          'updateSystemIntakeGRBReviewFormPresentationAsync'
+        )
+      ) {
+        req.alias = 'updatePresentation';
+      }
+
+      if (
+        operationName === 'DeleteSystemIntakeGRBPresentationLinks' ||
+        requestBodyText.includes('DeleteSystemIntakeGRBPresentationLinks') ||
+        requestBodyText.includes('deleteSystemIntakeGRBPresentationLinks')
+      ) {
+        req.alias = 'deletePresentationLinks';
+      }
+
+      if (
+        operationName === 'GetSystemIntakeGRBReview' ||
+        requestBodyText.includes('GetSystemIntakeGRBReview')
+      ) {
+        req.alias = 'getGrbReview';
+      }
+    });
+
+    cy.visit(`/it-governance/${asyncReviewIntakeId}/grb-review`);
 
     cy.contains('a', 'Add asynchronous presentation links').click();
 
@@ -327,29 +489,39 @@ describe('GRB review', () => {
     );
 
     // Submit form
-    cy.contains('button', 'Save presentation details').click();
-
-    cy.getByTestId('presentation-deck-virus-scanning').contains(
-      'Virus scanning in progress'
-    );
-
-    // Mark file as passing virus scan
-    cy.get('[data-testdeckurl]').within(el => {
-      const url = el.attr('data-testdeckurl');
-
-      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
-      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+    cy.contains('button', 'Save presentation details')
+      .should('not.be.disabled')
+      .click();
+    cy.wait('@updatePresentation').then(({ response }) => {
+      expect(response?.body?.errors).to.eq(undefined);
+      return markPendingPresentationUploadAsClean(response, 'presentationDeck');
     });
+    cy.location('pathname', { timeout: 20000 }).should(
+      'eq',
+      `/it-governance/${asyncReviewIntakeId}/grb-review`
+    );
+    markVisiblePresentationUploadAsClean();
 
-    cy.reload();
+    waitForPresentationLinks(
+      presentationLinks =>
+        presentationLinks?.recordingLink?.trim() ===
+          'https://example.com/recording' &&
+        presentationLinks?.recordingPasscode === '3465376' &&
+        presentationLinks?.transcriptLink?.trim() ===
+          'https://example.com/transcript' &&
+        presentationLinks?.presentationDeckFileStatus === 'AVAILABLE' &&
+        !!presentationLinks?.presentationDeckFileURL,
+      'show the saved presentation links and uploaded slide deck'
+    );
 
     // Verify presentation deck is uploaded as well as other details
 
     cy.getByTestId('presentation-links-card').within(() => {
-      cy.contains('button', 'View recording').should('be.visible');
+      cy.getByTestId('presentation-deck-virus-scanning').should('not.exist');
+      cy.contains('View recording', { timeout: 20000 }).should('be.visible');
       cy.contains('span', '(Passcode: 3465376)').should('be.visible');
-      cy.contains('button', 'View transcript').should('be.visible');
-      cy.contains('button', 'View slide deck').should('be.visible');
+      cy.contains('View transcript').should('be.visible');
+      cy.contains('View slide deck').should('be.visible');
     });
 
     // Edit presentation links
@@ -357,37 +529,61 @@ describe('GRB review', () => {
 
     cy.contains('button', 'Save presentation details').should('be.disabled');
 
-    cy.contains('button', 'Upload document').click();
+    cy.get('#transcriptFields')
+      .contains('[role="tab"]', 'Upload document')
+      .click();
 
     // Upload transcript file
     cy.get('input[name=transcriptFileData]').selectFile(
       'cypress/fixtures/test.pdf'
     );
 
+    // Transcript uploads replace the link server-side, so keep the upload tab
+    // active through submit because inactive transcript tabs unmount and
+    // unregister their field values.
+
     // Clear presentation deck file
-    cy.get('button').contains('Clear file').click();
+    clearPresentationDeckFile();
 
     // Submit form
-    cy.contains('button', 'Save presentation details').click();
-
-    // Mark file as passing virus scan
-    cy.get('[data-testdeckurl]').within(el => {
-      const url = el.attr('data-testdeckurl');
-
-      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
-      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+    cy.contains('button', 'Save presentation details')
+      .should('not.be.disabled')
+      .click();
+    cy.wait('@updatePresentation').then(({ response }) => {
+      expect(response?.body?.errors).to.eq(undefined);
+      return markPendingPresentationUploadAsClean(response, 'transcript');
     });
+    cy.location('pathname', { timeout: 20000 }).should(
+      'eq',
+      `/it-governance/${asyncReviewIntakeId}/grb-review`
+    );
+    markVisiblePresentationUploadAsClean();
 
-    cy.reload();
+    waitForPresentationLinks(
+      presentationLinks =>
+        presentationLinks?.transcriptFileStatus === 'AVAILABLE' &&
+        !!presentationLinks?.transcriptFileURL &&
+        !presentationLinks?.transcriptLink?.trim() &&
+        !presentationLinks?.presentationDeckFileURL,
+      'show the uploaded transcript file after removing the slide deck'
+    );
 
     // Check that the presentation deck file was deleted
-    cy.contains('button', 'View slide deck').should('not.exist');
+    cy.getByTestId('presentation-links-card').within(() => {
+      cy.getByTestId('presentation-deck-virus-scanning').should('not.exist');
+      cy.contains('View slide deck').should('not.exist');
+      cy.contains('View transcript').should('be.visible');
+    });
 
     // Remove all presentation links
     cy.contains('button', 'Remove all presentation links').click();
 
     // Modal remove button
     cy.contains('button', 'Remove presentation links').click();
+    cy.wait('@deletePresentationLinks').then(({ response }) => {
+      expect(response?.statusCode).to.eq(200);
+      expect(response?.body.errors).to.equal(undefined);
+    });
 
     // Returns to empty state with no links
     cy.contains('a', 'Add asynchronous presentation links').should(
@@ -398,6 +594,12 @@ describe('GRB review', () => {
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('Adds time to voting and Ends time to voting', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'ExtendGRBReviewDeadlineAsync') {
+        req.alias = 'extendGrbReviewDeadline';
+      }
+    });
+
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
     // Open Add Time modal
@@ -420,6 +622,9 @@ describe('GRB review', () => {
 
       // Click button to add time and close modal
       cy.getByTestId('addTimeModalButton').should('not.be.disabled').click();
+      cy.wait('@extendGrbReviewDeadline')
+        .its('response.statusCode')
+        .should('eq', 200);
 
       // Success alert text
       cy.getByTestId('alert').contains(
@@ -446,6 +651,12 @@ describe('GRB review', () => {
   // Request name: Async GRB review (voting complete)
   // System intake ID: b569ae1e-bf04-4c1b-96a5-b9604d74d979
   it('Restart GRB review', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'RestartGRBReviewAsync') {
+        req.alias = 'restartGrbReview';
+      }
+    });
+
     cy.visit('/it-governance/b569ae1e-bf04-4c1b-96a5-b9604d74d979/grb-review');
 
     cy.contains('button', 'Restart review').click();
@@ -467,6 +678,8 @@ describe('GRB review', () => {
 
           cy.contains('button', 'Restart').should('be.not.disabled').click();
         });
+
+      cy.wait('@restartGrbReview').its('response.statusCode').should('eq', 200);
 
       cy.get('[role="dialog"]').should('not.exist');
 

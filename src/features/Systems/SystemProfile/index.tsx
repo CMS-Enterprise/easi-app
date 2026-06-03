@@ -191,6 +191,10 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const subComponent = subComponents[subpageKey];
 
   if (subinfo === 'team' && edit) {
+    if (!data?.cedarSystemDetails?.isMySystem) {
+      return <NotFound />;
+    }
+
     return (
       <EditTeam
         name={cedarSystem.name}
