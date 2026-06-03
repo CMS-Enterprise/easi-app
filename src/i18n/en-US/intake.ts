@@ -285,6 +285,12 @@ const intake = {
     businessSolution: 'Business Solution',
     currentStage: 'Process Status',
     usesAiTech: 'AI Tech Involved',
+    digitalServiceInteraction: 'Enables Digital Service Interaction',
+    digitalServiceInteractionDescription:
+      'Digital Service Interaction Description',
+    protectedCmsDataAccessedOutside: 'Protected CMS Data Accessed Outside',
+    protectedCmsDataAccessedOutsideDescription:
+      'Protected CMS Data Accessed Outside Description',
     eaSupport: 'EA Support Requested',
     hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
