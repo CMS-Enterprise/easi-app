@@ -877,16 +877,20 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	var resp struct {
 		UpdateSystemIntakeRequestDetails struct {
 			SystemIntake struct {
-				ID                 string
-				RequestName        string
-				BusinessSolution   string
-				BusinessNeed       string
-				CurrentStage       string
-				NeedsEaSupport     bool
-				HasUIChanges       bool
-				UsesAiTech         bool
-				UsingSoftware      string
-				AcquisitionMethods []string
+				ID                                         string
+				RequestName                                string
+				BusinessSolution                           string
+				BusinessNeed                               string
+				CurrentStage                               string
+				NeedsEaSupport                             bool
+				DigitalServiceInteraction                  *string
+				DigitalServiceInteractionDescription       *string
+				HasUIChanges                               bool
+				UsesAiTech                                 bool
+				UsingSoftware                              string
+				AcquisitionMethods                         []string
+				ProtectedCmsDataAccessedOutside            *string
+				ProtectedCmsDataAccessedOutsideDescription *string
 			}
 		}
 	}
@@ -902,10 +906,14 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				businessNeed: "My need",
 				currentStage:  "Just an idea",
 				needsEaSupport: false,
+				digitalServiceInteraction: null,
+				digitalServiceInteractionDescription: null,
 				hasUiChanges: false,
 				usesAiTech: true,
 				usingSoftware: "NO",
 				acquisitionMethods: [],
+				protectedCmsDataAccessedOutside: null,
+				protectedCmsDataAccessedOutsideDescription: null,
 			}) {
 				systemIntake {
 					id
@@ -914,10 +922,14 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 					businessNeed
 					currentStage
 					needsEaSupport
+					digitalServiceInteraction
+					digitalServiceInteractionDescription
 					hasUiChanges
 					usesAiTech
 					usingSoftware
 					acquisitionMethods
+					protectedCmsDataAccessedOutside
+					protectedCmsDataAccessedOutsideDescription
 				}
 			}
 		}`, intake.ID), &resp)
@@ -933,6 +945,8 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	s.False(respIntake.HasUIChanges)
 	s.True(respIntake.UsesAiTech)
 	s.Equal(respIntake.UsingSoftware, "NO")
+	s.Nil(respIntake.ProtectedCmsDataAccessedOutside)
+	s.Nil(respIntake.ProtectedCmsDataAccessedOutsideDescription)
 }
 
 func (s *GraphQLTestSuite) TestUpdateRequestDetailsNullFields() {
@@ -947,11 +961,15 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsNullFields() {
 	var resp struct {
 		UpdateSystemIntakeRequestDetails struct {
 			SystemIntake struct {
-				ID                 string
-				UsesAiTech         *bool
-				HasUIChanges       *bool
-				UsingSoftware      *string
-				AcquisitionMethods []string
+				ID                                         string
+				DigitalServiceInteraction                  *string
+				DigitalServiceInteractionDescription       *string
+				ProtectedCmsDataAccessedOutside            *string
+				ProtectedCmsDataAccessedOutsideDescription *string
+				UsesAiTech                                 *bool
+				HasUIChanges                               *bool
+				UsingSoftware                              *string
+				AcquisitionMethods                         []string
 			}
 		}
 	}
@@ -960,13 +978,21 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsNullFields() {
 		`mutation {
 			updateSystemIntakeRequestDetails(input: {
 				id: "%s",
+				digitalServiceInteraction: null,
+				digitalServiceInteractionDescription: null,
 				usesAiTech: null,
 				hasUiChanges: null,
 				usingSoftware: null,
 				acquisitionMethods: [],
+				protectedCmsDataAccessedOutside: null,
+				protectedCmsDataAccessedOutsideDescription: null,
 			}) {
 				systemIntake {
 					id
+					digitalServiceInteraction
+					digitalServiceInteractionDescription
+					protectedCmsDataAccessedOutside
+					protectedCmsDataAccessedOutsideDescription
 					usesAiTech
 					hasUiChanges
 					usingSoftware
@@ -978,6 +1004,10 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsNullFields() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeRequestDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeRequestDetails.SystemIntake
+	s.Nil(respIntake.DigitalServiceInteraction)
+	s.Nil(respIntake.DigitalServiceInteractionDescription)
+	s.Nil(respIntake.ProtectedCmsDataAccessedOutside)
+	s.Nil(respIntake.ProtectedCmsDataAccessedOutsideDescription)
 	s.Nil(respIntake.UsesAiTech)
 	s.Nil(respIntake.HasUIChanges)
 	s.Nil(respIntake.UsingSoftware)
@@ -996,11 +1026,13 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 	var resp struct {
 		UpdateSystemIntakeRequestDetails struct {
 			SystemIntake struct {
-				ID                 string
-				UsesAiTech         *bool
-				HasUIChanges       *bool
-				UsingSoftware      *string
-				AcquisitionMethods []string
+				ID                                   string
+				DigitalServiceInteraction            *string
+				DigitalServiceInteractionDescription *string
+				UsesAiTech                           *bool
+				HasUIChanges                         *bool
+				UsingSoftware                        *string
+				AcquisitionMethods                   []string
 			}
 		}
 	}
@@ -1009,6 +1041,8 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 		`mutation {
 			updateSystemIntakeRequestDetails(input: {
 				id: "%s",
+				digitalServiceInteraction: null,
+				digitalServiceInteractionDescription: null,
 				usesAiTech: true,
 				hasUiChanges: true,
 				usingSoftware: null,
@@ -1016,6 +1050,8 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 			}) {
 				systemIntake {
 					id
+					digitalServiceInteraction
+					digitalServiceInteractionDescription
 					usesAiTech
 					hasUiChanges
 					usingSoftware

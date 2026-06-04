@@ -96,6 +96,10 @@ export default gql(/* GraphQL */ `
     createdAt
     archivedAt
     euaUserId
+    digitalServiceInteraction
+    digitalServiceInteractionDescription
+    protectedCmsDataAccessedOutside
+    protectedCmsDataAccessedOutsideDescription
     hasUiChanges
     usesAiTech
     usingSoftware
