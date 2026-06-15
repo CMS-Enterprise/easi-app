@@ -2,7 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
+import {
+  SystemIntakeLCIDStatus,
+  SystemIntakeLCIDType
+} from 'gql/generated/graphql';
 
 import LcidStatusTag from 'components/LcidStatusTag';
 import { RichTextViewer } from 'components/RichTextEditor';
@@ -16,6 +19,8 @@ export type LcidSummaryProps = {
   lcidScope?: string | null | undefined;
   decisionNextSteps?: string | null | undefined;
   lcidCostBaseline?: string | null | undefined;
+  lcidType?: SystemIntakeLCIDType | null | undefined;
+  lcidIsLowIt?: boolean | null | undefined;
   lcidStatus?: SystemIntakeLCIDStatus | null | undefined;
 };
 
@@ -28,9 +33,18 @@ const LcidSummary = ({
   lcidScope,
   decisionNextSteps,
   lcidCostBaseline,
+  lcidType,
+  lcidIsLowIt,
   className
 }: LcidSummaryProps & { className?: string }) => {
   const { t } = useTranslation('action');
+
+  let lcidIsLowItLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
+  if (lcidIsLowIt === true) {
+    lcidIsLowItLabel = t('issueLCID.lcidIsLowIt.yes');
+  } else if (lcidIsLowIt === false) {
+    lcidIsLowItLabel = t('issueLCID.lcidIsLowIt.no');
+  }
 
   return (
     <div
@@ -113,6 +127,22 @@ const LcidSummary = ({
               t('governanceReviewTeam:notes.extendLcid.noCostBaseline')
             }
           />
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidType')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidType
+            ? t(`issueLCID.lcidType.${lcidType}`)
+            : t('governanceReviewTeam:notes.extendLcid.noScope')}
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidIsLowIt')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidIsLowItLabel}
         </dd>
       </dl>
     </div>

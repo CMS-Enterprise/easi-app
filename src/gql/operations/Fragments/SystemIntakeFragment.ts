@@ -68,6 +68,8 @@ export default gql(/* GraphQL */ `
     lcidRetiresAt
     lcidScope
     lcidCostBaseline
+    lcidType
+    lcidIsLowIt
     lcidStatus
     needsEaSupport
     productManager {

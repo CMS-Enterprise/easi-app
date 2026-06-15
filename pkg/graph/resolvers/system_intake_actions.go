@@ -460,6 +460,8 @@ func IssueLCID(
 	intake.DecisionNextSteps = &input.NextSteps
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	intake.LCIDType = &input.LcidType
+	intake.LCIDIsLowIT = &input.LcidIsLowIt
 
 	// update other fields
 	intake.UpdatedAt = &currTime
@@ -869,6 +871,12 @@ func UpdateLCID(
 		newCostBaseline = *input.CostBaseline
 		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 	}
+	if input.LcidType != nil {
+		intake.LCIDType = input.LcidType
+	}
+	if input.LcidIsLowIt != nil {
+		intake.LCIDIsLowIT = input.LcidIsLowIt
+	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 
@@ -1000,6 +1008,8 @@ func ConfirmLCID(ctx context.Context,
 	if input.CostBaseline != nil {
 		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 	}
+	intake.LCIDType = &input.LcidType
+	intake.LCIDIsLowIT = &input.LcidIsLowIt
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 

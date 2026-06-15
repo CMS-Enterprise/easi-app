@@ -20,6 +20,7 @@ import { NonNullableProps } from 'types/util';
 import { updateLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import LcidMetadataFields from '../components/LcidMetadataFields';
 
 import LcidSummary, { LcidSummaryProps } from './LcidSummary';
 import LcidTitleBox from './LcidTitleBox';
@@ -54,11 +55,18 @@ const UpdateLcid = ({
   } = form;
 
   /** Array of LCID field values */
-  const lcidFields = watch(['expiresAt', 'scope', 'nextSteps', 'costBaseline']);
+  const lcidFields = watch([
+    'expiresAt',
+    'scope',
+    'nextSteps',
+    'costBaseline',
+    'lcidType',
+    'lcidIsLowIt'
+  ]);
 
   /** Whether or not at least one LCID field is filled out */
   const formIsValid: boolean = useMemo(() => {
-    return lcidFields.filter(value => !!value).length > 0;
+    return lcidFields.some(value => value != null && value !== '');
   }, [lcidFields]);
 
   /** Update LCID mutation on form submit */
@@ -99,6 +107,8 @@ const UpdateLcid = ({
               lcidScope={defaultValues?.lcidScope}
               decisionNextSteps={defaultValues?.decisionNextSteps}
               lcidCostBaseline={defaultValues?.lcidCostBaseline}
+              lcidType={defaultValues?.lcidType}
+              lcidIsLowIt={defaultValues?.lcidIsLowIt}
               className="margin-top-3 margin-bottom-6"
             />
           </LcidTitleBox>
@@ -232,6 +242,8 @@ const UpdateLcid = ({
             </FormGroup>
           )}
         />
+
+        <LcidMetadataFields control={control} />
 
         <Divider className="margin-top-3" />
 

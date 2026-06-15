@@ -260,6 +260,19 @@ const action = {
     costBaselineLabel: 'Project cost baseline',
     costBaselineHelpText:
       'Include the cost baseline for the first two planned fiscal years of the project.',
+    lcidType: {
+      label: 'LCID type',
+      NEW_SYSTEM: 'New system',
+      RECOMPETE: 'Recompete',
+      PILOT_SHORTENED_LCID: 'Pilot (shortened LCID)'
+    },
+    lcidIsLowIt: {
+      label: 'Is this LCID low IT?',
+      helpText:
+        'Choose "Yes" if the IT involvement for the scope of this LCID is minimal, for instance if it is supporting existing systems with no major technical changes.',
+      yes: 'Yes',
+      no: 'No'
+    },
     lcid: {
       new: 'Generate a new Life Cycle ID',
       helpText:
@@ -354,6 +367,8 @@ const action = {
     currentScope: 'Current scope',
     currentCostBaseline: 'Current project cost baseline',
     currentNextSteps: 'Current next steps',
+    currentLcidType: 'Current LCID type',
+    currentLcidIsLowIt: 'Is this LCID low IT?',
     emptyForm: 'Please fill out at least one field below'
   },
   extendLcid: {

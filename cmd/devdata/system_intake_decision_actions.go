@@ -87,6 +87,8 @@ func issueLCID(
 		ExpiresAt:      expiresAt,
 		TrbFollowUp:    trbFollowUp,
 		CostBaseline:   &costBaseline,
+		LcidType:       models.LCIDTypeNewSystem,
+		LcidIsLowIt:    false,
 		AdditionalInfo: &additionalInfo,
 		AdminNote:      &adminNote,
 	}
@@ -147,6 +149,8 @@ func confirmLCID(
 		ExpiresAt:      expiresAt,
 		TrbFollowUp:    trbFollowUp,
 		CostBaseline:   &costBaseline,
+		LcidType:       models.LCIDTypeNewSystem,
+		LcidIsLowIt:    false,
 		AdditionalInfo: &additionalInfo,
 		AdminNote:      &adminNote,
 	}

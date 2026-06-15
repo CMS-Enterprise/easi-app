@@ -534,6 +534,8 @@ func (s *ResolverSuite) TestSystemIntakeAdminWorkflowPermissions() {
 					Scope:          "scope",
 					NextSteps:      nextSteps,
 					TrbFollowUp:    models.TRBFRStronglyRecommended,
+					LcidType:       models.LCIDTypeNewSystem,
+					LcidIsLowIt:    true,
 				})
 				return err
 			},
@@ -711,6 +713,8 @@ func (s *ResolverSuite) TestSystemIntakeAdminLCIDActionPermissions() {
 					Scope:          models.HTML("Confirmed LCID scope"),
 					NextSteps:      models.HTML("Confirmed LCID next steps"),
 					TrbFollowUp:    models.TRBFRStronglyRecommended,
+					LcidType:       models.LCIDTypeNewSystem,
+					LcidIsLowIt:    true,
 				})
 			},
 			assert: func(payload *models.UpdateSystemIntakePayload) {

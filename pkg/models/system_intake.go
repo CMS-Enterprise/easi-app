@@ -145,6 +145,8 @@ type SystemIntake struct {
 	LifecycleExpiresAt                                *time.Time                   `json:"lcidExpiresAt" db:"lcid_expires_at" gqlgen:"lcidExpiresAt"`
 	LifecycleScope                                    *HTML                        `json:"lcidScope" db:"lcid_scope"`
 	LifecycleCostBaseline                             null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
+	LCIDType                                          *SystemIntakeLCIDType        `json:"lcidType" db:"lcid_type"`
+	LCIDIsLowIT                                       *bool                        `json:"lcidIsLowIt" db:"lcid_is_low_it"`
 	LifecycleExpirationAlertTS                        *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
 	LifecycleRetiresAt                                *time.Time                   `json:"lcidRetiresAt" db:"lcid_retires_at" gqlgen:"lcidRetiresAt"`
 	LifecycleIssuedAt                                 *time.Time                   `json:"lcidIssuedAt" db:"lcid_issued_at" gqlgen:"lcidIssuedAt"`
@@ -229,6 +231,16 @@ func isMeetingScheduled(date *time.Time) SystemIntakeMeetingState {
 	}
 	return SIMSScheduled
 }
+
+// SystemIntakeLCIDType represents the type of LCID being issued
+type SystemIntakeLCIDType string
+
+// These are the options for SystemIntakeLCIDType
+const (
+	LCIDTypeNewSystem          SystemIntakeLCIDType = "NEW_SYSTEM"
+	LCIDTypeRecompete          SystemIntakeLCIDType = "RECOMPETE"
+	LCIDTypePilotShortenedLCID SystemIntakeLCIDType = "PILOT_SHORTENED_LCID"
+)
 
 // SystemIntakeTRBFollowUp represents whether a requester is recommended to follow up by consulting the TRB
 type SystemIntakeTRBFollowUp string

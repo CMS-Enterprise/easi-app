@@ -278,6 +278,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			lcid_scope = :lcid_scope,
 			decision_next_steps = :decision_next_steps,
 			lcid_cost_baseline = :lcid_cost_baseline,
+			lcid_type = :lcid_type,
+			lcid_is_low_it = :lcid_is_low_it,
 			lcid_expiration_alert_ts = :lcid_expiration_alert_ts,
 			lcid_retires_at = :lcid_retires_at,
 			lcid_issued_at = :lcid_issued_at,

@@ -9,6 +9,7 @@ import {
   GetSystemIntakesWithLCIDSQuery,
   SystemIntakeDecisionState,
   SystemIntakeIssueLCIDInput,
+  SystemIntakeLCIDType,
   SystemIntakeTRBFollowUp,
   useCreateSystemIntakeActionConfirmLCIDMutation,
   useCreateSystemIntakeActionIssueLCIDMutation,
@@ -28,6 +29,7 @@ import { NonNullableProps } from 'types/util';
 import { lcidActionSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import LcidMetadataFields from '../components/LcidMetadataFields';
 import { actionDateInPast } from '../ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '..';
 
@@ -48,6 +50,8 @@ interface IssueLcidProps extends ResolutionProps {
   decisionNextSteps?: string | null;
   trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
   lcidCostBaseline?: string | null;
+  lcidType?: SystemIntakeLCIDType | null;
+  lcidIsLowIt?: boolean | null;
 }
 
 /**
@@ -103,7 +107,9 @@ const IssueLcid = ({
         nextSteps: systemIntake.decisionNextSteps || '',
         scope: systemIntake.lcidScope || '',
         trbFollowUp: systemIntake.trbFollowUpRecommendation || undefined,
-        costBaseline: systemIntake.lcidCostBaseline || ''
+        costBaseline: systemIntake.lcidCostBaseline || '',
+        lcidType: systemIntake.lcidType || undefined,
+        lcidIsLowIt: systemIntake.lcidIsLowIt ?? undefined
       }
     : {
         lcid: systemIntake.lcid || '',
@@ -191,13 +197,23 @@ const IssueLcid = ({
         if (selectedLcidData.trbFollowUpRecommendation) {
           setValue('trbFollowUp', selectedLcidData.trbFollowUpRecommendation);
         } else {
-          // If selected LCID has no trbFollowUp value, reset field
           resetField('trbFollowUp');
+        }
+
+        if (selectedLcidData.lcidType) {
+          setValue('lcidType', selectedLcidData.lcidType);
+        } else {
+          resetField('lcidType');
+        }
+
+        if (selectedLcidData.lcidIsLowIt != null) {
+          setValue('lcidIsLowIt', selectedLcidData.lcidIsLowIt);
+        } else {
+          resetField('lcidIsLowIt');
         }
       }
     }
 
-    // If user selects "Generate new life cycle ID", reset LCID fields
     if (lcid && useExistingLcid === false) {
       resetField('lcid');
       resetField('expiresAt');
@@ -205,6 +221,8 @@ const IssueLcid = ({
       resetField('nextSteps');
       resetField('costBaseline');
       resetField('trbFollowUp');
+      resetField('lcidType');
+      resetField('lcidIsLowIt');
     }
   }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue, resetField]);
 
@@ -333,6 +351,8 @@ const IssueLcid = ({
             }}
           />
         )}
+
+        <LcidMetadataFields control={control} required />
 
         <Controller
           name="expiresAt"

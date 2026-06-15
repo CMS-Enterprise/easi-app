@@ -361,6 +361,8 @@ func (s *ResolverSuite) TestIssueLCID() {
 			Scope:          "test scope",
 			NextSteps:      "test next steps",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			LcidType:       models.LCIDTypeNewSystem,
+			LcidIsLowIt:    true,
 		}
 
 		updatedIntake, err := IssueLCID(
@@ -387,6 +389,8 @@ func (s *ResolverSuite) TestIssueLCID() {
 			Scope:          "test scope",
 			NextSteps:      "test next steps",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			LcidType:       models.LCIDTypeNewSystem,
+			LcidIsLowIt:    true,
 		}
 
 		updatedIntake, err := IssueLCID(
@@ -414,6 +418,8 @@ func (s *ResolverSuite) TestIssueLCID() {
 			Scope:          "test scope",
 			NextSteps:      "test next steps after issuing LCID",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			LcidType:       models.LCIDTypeNewSystem,
+			LcidIsLowIt:    true,
 
 			// optional fields
 			CostBaseline:   &costBaseline,
@@ -1181,6 +1187,8 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 				Scope:          scope,
 				NextSteps:      nextSteps,
 				TrbFollowUp:    trbFollowUp,
+				LcidType:       models.LCIDTypeNewSystem,
+				LcidIsLowIt:    true,
 				AdditionalInfo: additionalInfo,
 				CostBaseline:   &costBaseline,
 			})
@@ -1228,6 +1236,8 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 					Scope:          confirmedScope,
 					NextSteps:      nextSteps,
 					TrbFollowUp:    trbFollowUp,
+					LcidType:       models.LCIDTypeNewSystem,
+					LcidIsLowIt:    true,
 					AdditionalInfo: additionalInfoconfirm,
 					AdminNote:      &adminNote,
 				})
@@ -1267,6 +1277,8 @@ func (s *ResolverSuite) TestExpireLCID() {
 			Scope:          "test scope",
 			NextSteps:      "test next steps after issuing LCID, before expiring",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			LcidType:       models.LCIDTypeNewSystem,
+			LcidIsLowIt:    true,
 		}
 		updatedIntake, err := IssueLCID(
 			s.testConfigs.Context,
@@ -1344,6 +1356,8 @@ func (s *ResolverSuite) TestRetireLCID() {
 			Scope:          "test scope",
 			NextSteps:      "test next steps after issuing LCID, before expiring",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			LcidType:       models.LCIDTypeNewSystem,
+			LcidIsLowIt:    true,
 		}
 		updatedIntake, err := IssueLCID(
 			s.testConfigs.Context,
@@ -1417,6 +1431,8 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 			Scope:          "test scope",
 			NextSteps:      "test next steps after issuing LCID, before retiring",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			LcidType:       models.LCIDTypeNewSystem,
+			LcidIsLowIt:    true,
 		}
 		intakeWithLCID, err := IssueLCID(
 			s.testConfigs.Context,

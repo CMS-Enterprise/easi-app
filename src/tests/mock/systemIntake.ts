@@ -35,6 +35,7 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBPresentationLinksFragmentFragment,
   SystemIntakeGRBReviewType,
+  SystemIntakeLCIDType,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -619,7 +620,9 @@ export const systemIntakeWithLcid: GetSystemIntakesWithLCIDSQuery['systemIntakes
     lcidScope: 'Test scope',
     decisionNextSteps: 'Test next steps',
     trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
-    lcidCostBaseline: 'Text cost baseline'
+    lcidCostBaseline: 'Text cost baseline',
+    lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
+    lcidIsLowIt: false
   };
 
 export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSQuery> =
@@ -642,7 +645,9 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
             lcidScope: null,
             decisionNextSteps: null,
             trbFollowUpRecommendation: null,
-            lcidCostBaseline: null
+            lcidCostBaseline: null,
+            lcidType: null,
+            lcidIsLowIt: null
           }
         ]
       }

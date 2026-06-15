@@ -623,6 +623,8 @@ type SystemIntakeConfirmLCIDInput struct {
 	NextSteps              HTML                         `json:"nextSteps"`
 	TrbFollowUp            SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
+	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
+	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -726,6 +728,8 @@ type SystemIntakeIssueLCIDInput struct {
 	NextSteps              HTML                         `json:"nextSteps"`
 	TrbFollowUp            SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
+	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
+	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -837,6 +841,8 @@ type SystemIntakeUpdateLCIDInput struct {
 	Scope                  *HTML                        `json:"scope,omitempty"`
 	NextSteps              *HTML                        `json:"nextSteps,omitempty"`
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
+	LcidType               *SystemIntakeLCIDType        `json:"lcidType,omitempty"`
+	LcidIsLowIt            *bool                        `json:"lcidIsLowIt,omitempty"`
 	Reason                 *HTML                        `json:"reason,omitempty"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`

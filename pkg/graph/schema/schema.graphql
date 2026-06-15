@@ -734,6 +734,8 @@ type SystemIntake {
   lcidScope: HTML
   lcidCostBaseline: String
   lcidRetiresAt: Time
+  lcidType: SystemIntakeLCIDType
+  lcidIsLowIt: Boolean
   needsEaSupport: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
@@ -1561,6 +1563,8 @@ input SystemIntakeUpdateLCIDInput {
   scope: HTML
   nextSteps: HTML
   costBaseline: String
+  lcidType: SystemIntakeLCIDType
+  lcidIsLowIt: Boolean
   reason: HTML
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
@@ -1577,6 +1581,8 @@ input SystemIntakeConfirmLCIDInput {
   nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
+  lcidType: SystemIntakeLCIDType!
+  lcidIsLowIt: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -1592,6 +1598,15 @@ input SystemIntakeRequestEditsInput {
   emailFeedback: HTML!
   additionalInfo: HTML
   adminNote: HTML
+}
+
+"""
+Different options for the type of LCID being issued
+"""
+enum SystemIntakeLCIDType {
+  NEW_SYSTEM
+  RECOMPETE
+  PILOT_SHORTENED_LCID
 }
 
 """
@@ -1614,6 +1629,8 @@ input SystemIntakeIssueLCIDInput {
   nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
+  lcidType: SystemIntakeLCIDType!
+  lcidIsLowIt: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML

@@ -1,4 +1,5 @@
 import {
+  SystemIntakeLCIDType,
   SystemIntakeStepToProgressTo,
   SystemIntakeTRBFollowUp
 } from 'gql/generated/graphql';
@@ -13,7 +14,11 @@ export const confirmLcidSchema = Yup.object().shape({
   nextSteps: Yup.string().required('Please fill in the blank'),
   trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
     .oneOf(Object.values(SystemIntakeTRBFollowUp))
-    .required('Please make a selection')
+    .required('Please make a selection'),
+  lcidType: Yup.mixed<SystemIntakeLCIDType>()
+    .oneOf(Object.values(SystemIntakeLCIDType))
+    .required('Please make a selection'),
+  lcidIsLowIt: Yup.boolean().required('Please make a selection')
 });
 
 export const issueLcidSchema = confirmLcidSchema.shape({
@@ -29,7 +34,11 @@ export const lcidActionSchema = (lcidExists: boolean) => {
 };
 
 export const updateLcidSchema = Yup.object().shape({
-  expiresAt: Yup.date().typeError('Please enter a valid date')
+  expiresAt: Yup.date().typeError('Please enter a valid date'),
+  lcidType: Yup.mixed<SystemIntakeLCIDType>().oneOf(
+    Object.values(SystemIntakeLCIDType)
+  ),
+  lcidIsLowIt: Yup.boolean()
 });
 
 export const retireLcidSchema = Yup.object().shape({

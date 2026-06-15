@@ -7,7 +7,10 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SystemIntakeDecisionState } from 'gql/generated/graphql';
+import {
+  SystemIntakeDecisionState,
+  SystemIntakeLCIDType
+} from 'gql/generated/graphql';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
@@ -59,6 +62,16 @@ const checkFieldDefaults = async () => {
     expect(
       screen.getByRole('textbox', { name: 'Project cost baseline' })
     ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
+  });
+
+  await waitFor(() => {
+    expect(screen.getByRole('combobox', { name: 'LCID type *' })).toHaveValue(
+      systemIntakeWithLcid.lcidType!
+    );
+  });
+
+  await waitFor(() => {
+    expect(screen.getByRole('radio', { name: 'No' })).toBeChecked();
   });
 };
 
@@ -144,6 +157,12 @@ describe('Issue LCID form', async () => {
         name: 'No, they may if they wish but it’s not necessary'
       })
     );
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'LCID type *' }),
+      SystemIntakeLCIDType.NEW_SYSTEM
+    );
+    await user.click(screen.getByRole('radio', { name: 'No' }));
 
     const submitButton = screen.getByRole('button', {
       name: 'Complete action'
