@@ -71,7 +71,9 @@ const checkFieldDefaults = async () => {
   });
 
   await waitFor(() => {
-    expect(screen.getByRole('radio', { name: 'No' })).toBeChecked();
+    const noOptions = screen.getAllByRole('radio', { name: 'No' });
+    expect(noOptions[0]).toBeChecked();
+    expect(noOptions[1]).toBeChecked();
   });
 };
 
@@ -162,11 +164,20 @@ describe('Issue LCID form', async () => {
       screen.getByRole('combobox', { name: 'LCID type *' }),
       SystemIntakeLCIDType.NEW_SYSTEM
     );
-    await user.click(screen.getByRole('radio', { name: 'No' }));
+
+    const noOptions = screen.getAllByRole('radio', { name: 'No' });
+    await user.click(noOptions[1]);
 
     const submitButton = screen.getByRole('button', {
       name: 'Complete action'
     });
+
+    await user.click(submitButton);
+    expect(
+      await screen.findByText('Please make a selection')
+    ).toBeInTheDocument();
+
+    await user.click(noOptions[0]);
 
     expect(submitButton).not.toBeDisabled();
 
@@ -221,5 +232,33 @@ describe('Issue LCID form', async () => {
     ).toBeInTheDocument();
 
     checkFieldDefaults();
+  });
+
+  it('renders LCID type options without pilot shortened LCID', async () => {
+    render(
+      <VerboseMockedProvider
+        mocks={[
+          getSystemIntakeContactsQuery(),
+          getSystemIntakeQuery(),
+          getSystemIntakesWithLcidsQuery
+        ]}
+      >
+        <MemoryRouter>
+          <MessageProvider>
+            <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
+          </MessageProvider>
+        </MemoryRouter>
+      </VerboseMockedProvider>
+    );
+
+    await screen.findByText('Issue a Life Cycle ID');
+
+    const lcidTypeSelect = screen.getByRole('combobox', {
+      name: 'LCID type *'
+    });
+
+    expect(lcidTypeSelect).toHaveTextContent('New system');
+    expect(lcidTypeSelect).toHaveTextContent('Recompete');
+    expect(lcidTypeSelect).not.toHaveTextContent('Pilot (shortened LCID)');
   });
 });

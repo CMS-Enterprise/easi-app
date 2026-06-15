@@ -147,6 +147,7 @@ type SystemIntake struct {
 	LifecycleCostBaseline                             null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	LCIDType                                          *SystemIntakeLCIDType        `json:"lcidType" db:"lcid_type"`
 	LCIDIsLowIT                                       *bool                        `json:"lcidIsLowIt" db:"lcid_is_low_it"`
+	LCIDIsPilot                                       *bool                        `json:"lcidIsPilot" db:"lcid_is_pilot"`
 	LifecycleExpirationAlertTS                        *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
 	LifecycleRetiresAt                                *time.Time                   `json:"lcidRetiresAt" db:"lcid_retires_at" gqlgen:"lcidRetiresAt"`
 	LifecycleIssuedAt                                 *time.Time                   `json:"lcidIssuedAt" db:"lcid_issued_at" gqlgen:"lcidIssuedAt"`
@@ -237,9 +238,8 @@ type SystemIntakeLCIDType string
 
 // These are the options for SystemIntakeLCIDType
 const (
-	LCIDTypeNewSystem          SystemIntakeLCIDType = "NEW_SYSTEM"
-	LCIDTypeRecompete          SystemIntakeLCIDType = "RECOMPETE"
-	LCIDTypePilotShortenedLCID SystemIntakeLCIDType = "PILOT_SHORTENED_LCID"
+	LCIDTypeNewSystem SystemIntakeLCIDType = "NEW_SYSTEM"
+	LCIDTypeRecompete SystemIntakeLCIDType = "RECOMPETE"
 )
 
 // SystemIntakeTRBFollowUp represents whether a requester is recommended to follow up by consulting the TRB

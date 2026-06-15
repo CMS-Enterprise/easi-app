@@ -805,6 +805,7 @@ type ComplexityRoot struct {
 		ID                                                func(childComplexity int) int
 		ItGovTaskStatuses                                 func(childComplexity int) int
 		LCIDIsLowIT                                       func(childComplexity int) int
+		LCIDIsPilot                                       func(childComplexity int) int
 		LCIDType                                          func(childComplexity int) int
 		LastMeetingDate                                   func(childComplexity int) int
 		Lcid                                              func(childComplexity int) int
@@ -5854,6 +5855,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.LCIDIsLowIT(childComplexity), true
+	case "SystemIntake.lcidIsPilot":
+		if e.complexity.SystemIntake.LCIDIsPilot == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LCIDIsPilot(childComplexity), true
 	case "SystemIntake.lcidType":
 		if e.complexity.SystemIntake.LCIDType == nil {
 			break
@@ -8999,6 +9006,7 @@ type SystemIntake {
   lcidRetiresAt: Time
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
+  lcidIsPilot: Boolean
   needsEaSupport: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
@@ -9828,6 +9836,7 @@ input SystemIntakeUpdateLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
+  lcidIsPilot: Boolean
   reason: HTML
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
@@ -9846,6 +9855,7 @@ input SystemIntakeConfirmLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
+  lcidIsPilot: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -9869,7 +9879,6 @@ Different options for the type of LCID being issued
 enum SystemIntakeLCIDType {
   NEW_SYSTEM
   RECOMPETE
-  PILOT_SHORTENED_LCID
 }
 
 """
@@ -9894,6 +9903,7 @@ input SystemIntakeIssueLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
+  lcidIsPilot: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -14518,6 +14528,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -21128,6 +21140,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -23601,6 +23615,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -27114,6 +27130,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -27365,6 +27383,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -29542,6 +29562,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -33294,6 +33316,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -33527,6 +33551,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -33759,6 +33785,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -33980,6 +34008,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -34201,6 +34231,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -38461,6 +38493,35 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidIsLowIt(_ context.Cont
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_lcidIsPilot(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_lcidIsPilot,
+		func(ctx context.Context) (any, error) {
+			return obj.LCIDIsPilot, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_lcidIsPilot(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_needsEaSupport(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -39819,6 +39880,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -40607,6 +40670,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -48135,6 +48200,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -50208,6 +50275,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -50806,6 +50875,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
+			case "lcidIsPilot":
+				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -54830,7 +54901,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsPilot", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -54893,6 +54964,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 				return it, err
 			}
 			it.LcidIsLowIt = data
+		case "lcidIsPilot":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsPilot"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LcidIsPilot = data
 		case "additionalInfo":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
@@ -55242,7 +55320,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "lcid", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "lcid", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsPilot", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55312,6 +55390,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 				return it, err
 			}
 			it.LcidIsLowIt = data
+		case "lcidIsPilot":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsPilot"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LcidIsPilot = data
 		case "additionalInfo":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
@@ -55807,7 +55892,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "lcidType", "lcidIsLowIt", "reason", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsPilot", "reason", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55863,6 +55948,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 				return it, err
 			}
 			it.LcidIsLowIt = data
+		case "lcidIsPilot":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsPilot"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LcidIsPilot = data
 		case "reason":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
@@ -62819,6 +62911,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_lcidType(ctx, field, obj)
 		case "lcidIsLowIt":
 			out.Values[i] = ec._SystemIntake_lcidIsLowIt(ctx, field, obj)
+		case "lcidIsPilot":
+			out.Values[i] = ec._SystemIntake_lcidIsPilot(ctx, field, obj)
 		case "needsEaSupport":
 			field := field
 

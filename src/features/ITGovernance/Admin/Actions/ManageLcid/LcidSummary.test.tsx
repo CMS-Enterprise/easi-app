@@ -1,6 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
+import {
+  SystemIntakeLCIDStatus,
+  SystemIntakeLCIDType
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import { formatDateLocal } from 'utils/date';
@@ -19,6 +22,9 @@ describe('LCID summary box', () => {
       decisionNextSteps: 'Test next steps',
       lcidScope: 'Test scope',
       lcidCostBaseline: 'Test cost baseline',
+      lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
+      lcidIsPilot: true,
+      lcidIsLowIt: false,
       lcidStatus: SystemIntakeLCIDStatus.ISSUED
     };
 
@@ -29,6 +35,11 @@ describe('LCID summary box', () => {
     expect(screen.getByText(props.decisionNextSteps!));
     expect(screen.getByText(props.lcidScope!));
     expect(screen.getByText(props.lcidCostBaseline!));
+    expect(screen.getByText('New system'));
+    expect(screen.getByText('Is this a pilot LCID?'));
+    expect(screen.getByText('Is this LCID low IT?'));
+    expect(screen.getByText('Yes'));
+    expect(screen.getByText('No'));
 
     expect(
       screen.getByText(formatDateLocal(props.lcidIssuedAt!, 'MM/dd/yyyy'))

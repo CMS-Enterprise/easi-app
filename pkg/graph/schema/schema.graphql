@@ -736,6 +736,7 @@ type SystemIntake {
   lcidRetiresAt: Time
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
+  lcidIsPilot: Boolean
   needsEaSupport: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
@@ -1565,6 +1566,7 @@ input SystemIntakeUpdateLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
+  lcidIsPilot: Boolean
   reason: HTML
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
@@ -1583,6 +1585,7 @@ input SystemIntakeConfirmLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
+  lcidIsPilot: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -1606,7 +1609,6 @@ Different options for the type of LCID being issued
 enum SystemIntakeLCIDType {
   NEW_SYSTEM
   RECOMPETE
-  PILOT_SHORTENED_LCID
 }
 
 """
@@ -1631,6 +1633,7 @@ input SystemIntakeIssueLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
+  lcidIsPilot: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML

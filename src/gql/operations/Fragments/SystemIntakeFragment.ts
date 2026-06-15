@@ -70,6 +70,7 @@ export default gql(/* GraphQL */ `
     lcidCostBaseline
     lcidType
     lcidIsLowIt
+    lcidIsPilot
     lcidStatus
     needsEaSupport
     productManager {

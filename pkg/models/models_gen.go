@@ -625,6 +625,7 @@ type SystemIntakeConfirmLCIDInput struct {
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
 	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
 	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
+	LcidIsPilot            bool                         `json:"lcidIsPilot"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -730,6 +731,7 @@ type SystemIntakeIssueLCIDInput struct {
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
 	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
 	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
+	LcidIsPilot            bool                         `json:"lcidIsPilot"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -843,6 +845,7 @@ type SystemIntakeUpdateLCIDInput struct {
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
 	LcidType               *SystemIntakeLCIDType        `json:"lcidType,omitempty"`
 	LcidIsLowIt            *bool                        `json:"lcidIsLowIt,omitempty"`
+	LcidIsPilot            *bool                        `json:"lcidIsPilot,omitempty"`
 	Reason                 *HTML                        `json:"reason,omitempty"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`

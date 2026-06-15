@@ -89,6 +89,7 @@ func issueLCID(
 		CostBaseline:   &costBaseline,
 		LcidType:       models.LCIDTypeNewSystem,
 		LcidIsLowIt:    false,
+		LcidIsPilot:    false,
 		AdditionalInfo: &additionalInfo,
 		AdminNote:      &adminNote,
 	}
@@ -151,6 +152,7 @@ func confirmLCID(
 		CostBaseline:   &costBaseline,
 		LcidType:       models.LCIDTypeNewSystem,
 		LcidIsLowIt:    false,
+		LcidIsPilot:    false,
 		AdditionalInfo: &additionalInfo,
 		AdminNote:      &adminNote,
 	}

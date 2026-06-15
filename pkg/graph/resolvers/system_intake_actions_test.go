@@ -363,6 +363,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 			LcidType:       models.LCIDTypeNewSystem,
 			LcidIsLowIt:    true,
+			LcidIsPilot:    false,
 		}
 
 		updatedIntake, err := IssueLCID(
@@ -391,6 +392,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 			LcidType:       models.LCIDTypeNewSystem,
 			LcidIsLowIt:    true,
+			LcidIsPilot:    false,
 		}
 
 		updatedIntake, err := IssueLCID(
@@ -420,6 +422,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 			LcidType:       models.LCIDTypeNewSystem,
 			LcidIsLowIt:    true,
+			LcidIsPilot:    false,
 
 			// optional fields
 			CostBaseline:   &costBaseline,
@@ -1189,6 +1192,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 				TrbFollowUp:    trbFollowUp,
 				LcidType:       models.LCIDTypeNewSystem,
 				LcidIsLowIt:    true,
+				LcidIsPilot:    false,
 				AdditionalInfo: additionalInfo,
 				CostBaseline:   &costBaseline,
 			})
@@ -1238,6 +1242,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 					TrbFollowUp:    trbFollowUp,
 					LcidType:       models.LCIDTypeNewSystem,
 					LcidIsLowIt:    true,
+					LcidIsPilot:    false,
 					AdditionalInfo: additionalInfoconfirm,
 					AdminNote:      &adminNote,
 				})
@@ -1279,6 +1284,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 			LcidType:       models.LCIDTypeNewSystem,
 			LcidIsLowIt:    true,
+			LcidIsPilot:    false,
 		}
 		updatedIntake, err := IssueLCID(
 			s.testConfigs.Context,
@@ -1358,6 +1364,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 			LcidType:       models.LCIDTypeNewSystem,
 			LcidIsLowIt:    true,
+			LcidIsPilot:    false,
 		}
 		updatedIntake, err := IssueLCID(
 			s.testConfigs.Context,
@@ -1433,6 +1440,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 			LcidType:       models.LCIDTypeNewSystem,
 			LcidIsLowIt:    true,
+			LcidIsPilot:    false,
 		}
 		intakeWithLCID, err := IssueLCID(
 			s.testConfigs.Context,

@@ -18,7 +18,8 @@ export const confirmLcidSchema = Yup.object().shape({
   lcidType: Yup.mixed<SystemIntakeLCIDType>()
     .oneOf(Object.values(SystemIntakeLCIDType))
     .required('Please make a selection'),
-  lcidIsLowIt: Yup.boolean().required('Please make a selection')
+  lcidIsLowIt: Yup.boolean().required('Please make a selection'),
+  lcidIsPilot: Yup.boolean().required('Please make a selection')
 });
 
 export const issueLcidSchema = confirmLcidSchema.shape({
@@ -38,7 +39,8 @@ export const updateLcidSchema = Yup.object().shape({
   lcidType: Yup.mixed<SystemIntakeLCIDType>().oneOf(
     Object.values(SystemIntakeLCIDType)
   ),
-  lcidIsLowIt: Yup.boolean()
+  lcidIsLowIt: Yup.boolean(),
+  lcidIsPilot: Yup.boolean()
 });
 
 export const retireLcidSchema = Yup.object().shape({

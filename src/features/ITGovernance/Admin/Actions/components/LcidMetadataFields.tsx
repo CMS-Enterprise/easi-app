@@ -56,6 +56,48 @@ const LcidMetadataFields = <T extends FieldValues>({
       />
 
       <Controller
+        name={'lcidIsPilot' as Path<T>}
+        control={control}
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <FormGroup error={!!error}>
+            <Label
+              htmlFor={field.name}
+              className="text-normal"
+              required={required}
+            >
+              {t('issueLCID.lcidIsPilot.label')}
+            </Label>
+            <HelpText className="margin-top-1" id={`${field.name}-hint`}>
+              {t('issueLCID.lcidIsPilot.helpText')}
+            </HelpText>
+            {!!error?.message && (
+              <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+            )}
+            <Radio
+              {...field}
+              inputRef={ref}
+              id="lcidIsPilotTrue"
+              label={t('issueLCID.lcidIsPilot.yes')}
+              checked={field.value === true}
+              onChange={() => field.onChange(true)}
+              value="true"
+              aria-describedby={`${field.name}-hint`}
+            />
+            <Radio
+              {...field}
+              inputRef={ref}
+              id="lcidIsPilotFalse"
+              label={t('issueLCID.lcidIsPilot.no')}
+              checked={field.value === false}
+              onChange={() => field.onChange(false)}
+              value="false"
+              aria-describedby={`${field.name}-hint`}
+            />
+          </FormGroup>
+        )}
+      />
+
+      <Controller
         name={'lcidIsLowIt' as Path<T>}
         control={control}
         render={({ field: { ref, ...field }, fieldState: { error } }) => (

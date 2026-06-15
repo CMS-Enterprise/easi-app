@@ -21,6 +21,7 @@ export type LcidSummaryProps = {
   lcidCostBaseline?: string | null | undefined;
   lcidType?: SystemIntakeLCIDType | null | undefined;
   lcidIsLowIt?: boolean | null | undefined;
+  lcidIsPilot?: boolean | null | undefined;
   lcidStatus?: SystemIntakeLCIDStatus | null | undefined;
 };
 
@@ -35,9 +36,17 @@ const LcidSummary = ({
   lcidCostBaseline,
   lcidType,
   lcidIsLowIt,
+  lcidIsPilot,
   className
 }: LcidSummaryProps & { className?: string }) => {
   const { t } = useTranslation('action');
+
+  let lcidIsPilotLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
+  if (lcidIsPilot === true) {
+    lcidIsPilotLabel = t('issueLCID.lcidIsPilot.yes');
+  } else if (lcidIsPilot === false) {
+    lcidIsPilotLabel = t('issueLCID.lcidIsPilot.no');
+  }
 
   let lcidIsLowItLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
   if (lcidIsLowIt === true) {
@@ -136,6 +145,13 @@ const LcidSummary = ({
           {lcidType
             ? t(`issueLCID.lcidType.${lcidType}`)
             : t('governanceReviewTeam:notes.extendLcid.noScope')}
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidIsPilot')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidIsPilotLabel}
         </dd>
 
         <dt className="text-bold margin-top-2">

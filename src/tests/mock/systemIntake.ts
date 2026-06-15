@@ -622,7 +622,8 @@ export const systemIntakeWithLcid: GetSystemIntakesWithLCIDSQuery['systemIntakes
     trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
     lcidCostBaseline: 'Text cost baseline',
     lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
-    lcidIsLowIt: false
+    lcidIsLowIt: false,
+    lcidIsPilot: false
   };
 
 export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSQuery> =
@@ -647,7 +648,8 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
             trbFollowUpRecommendation: null,
             lcidCostBaseline: null,
             lcidType: null,
-            lcidIsLowIt: null
+            lcidIsLowIt: null,
+            lcidIsPilot: null
           }
         ]
       }

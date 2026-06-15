@@ -536,6 +536,7 @@ func (s *ResolverSuite) TestSystemIntakeAdminWorkflowPermissions() {
 					TrbFollowUp:    models.TRBFRStronglyRecommended,
 					LcidType:       models.LCIDTypeNewSystem,
 					LcidIsLowIt:    true,
+					LcidIsPilot:    false,
 				})
 				return err
 			},
@@ -715,6 +716,7 @@ func (s *ResolverSuite) TestSystemIntakeAdminLCIDActionPermissions() {
 					TrbFollowUp:    models.TRBFRStronglyRecommended,
 					LcidType:       models.LCIDTypeNewSystem,
 					LcidIsLowIt:    true,
+					LcidIsPilot:    false,
 				})
 			},
 			assert: func(payload *models.UpdateSystemIntakePayload) {
