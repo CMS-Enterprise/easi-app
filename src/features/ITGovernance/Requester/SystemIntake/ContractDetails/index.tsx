@@ -315,10 +315,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 scrollElement="totalContractCosts.currentEstimatedCost"
                 error={!!errors.totalContractCosts?.currentEstimatedCost}
               >
-                <Label
-                  className="maxw-none"
-                  htmlFor="totalContractCosts.currentEstimatedCost"
-                >
+                <Label className="maxw-none" htmlFor="currentEstimatedCost">
                   {t('contractDetails.currentEstimatedCost')}
                 </Label>
                 <HelpText id="totalContractCosts.currentEstimatedCost">
@@ -351,7 +348,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               >
                 <Label
                   className="maxw-none"
-                  htmlFor="totalContractCosts.currentEstimatedCostITPortion"
+                  htmlFor="currentEstimatedCostITPortion"
                 >
                   {t('contractDetails.currentEstimatedCostITPortion')}
                 </Label>
@@ -384,7 +381,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               >
                 <Label
                   className="maxw-none"
-                  htmlFor="totalContractCosts.estimatedTotalContractValue"
+                  htmlFor="estimatedTotalContractValue"
                 >
                   {t('contractDetails.estimatedTotalContractValue')}
                 </Label>
@@ -421,7 +418,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               >
                 <Label
                   className="maxw-none"
-                  htmlFor="totalContractCosts.estimatedTotalContractValueITPortion"
+                  htmlFor="estimatedTotalContractValueITPortion"
                 >
                   {t('contractDetails.estimatedTotalContractValueITPortion')}
                 </Label>
