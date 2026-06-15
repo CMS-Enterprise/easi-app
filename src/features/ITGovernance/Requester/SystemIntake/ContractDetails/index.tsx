@@ -403,7 +403,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       'totalContractCosts.estimatedTotalContractValue'
                     )}
                     ref={null}
-                    id="currentEstimatedCost"
+                    id="estimatedTotalContractValue"
                     type="text"
                     maxLength={200}
                   />
