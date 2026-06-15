@@ -593,17 +593,18 @@ const intake = {
         fundingSource: 'Select a funding source'
       }
     },
-    currentAnnualSpending: 'What is the current annual spending?',
-    currentAnnualSpendingHelpText:
-      'Input the dollar amount of the current annual spending.',
-    currentAnnualSpendingITPortion:
-      'What percentage of the current annual spending is IT?',
-    plannedYearOneSpending:
-      'What is the planned annual spending for the first year of the new contract?',
-    plannedYearOneSpendingHelpText:
-      'Input the dollar amount of the planned annual spending.',
-    plannedYearOneSpendingITPortion:
-      'What percentage of the planned annual spending for the first year of the new contract is IT?',
+    currentEstimatedCost:
+      'What is the current estimated cost of doing this work?',
+    currentEstimatedCostHelpText:
+      'If this is a contract re-compete, enter the total contract value, including all option years, for the existing contract.',
+    currentEstimatedCostITPortion:
+      'What percentage of the current estimated spending is IT?',
+    estimatedTotalContractValue:
+      'What is the estimated total contract value, including all option years, for this effort?',
+    estimatedTotalContractValueHelpText:
+      'This value should equal the projected costs on the Acquisition Plan for this effort.',
+    estimatedTotalContractValueITPortion:
+      'What percentage of the planned spending for the new contract is IT?',
     contractHeading: 'Contract',
     hasContract:
       'Do you already have a contract in place to support this effort?',
@@ -672,6 +673,14 @@ const intake = {
       'What is the planned annual spending for the first year of the new contract?',
     plannedYearOneSpendingITPortion:
       'What percentage of the planned annual spending for the first year of the new contract is IT?',
+    currentEstimatedCost:
+      'What is the current estimated cost of doing this work?',
+    currentEstimatedCostITPortion:
+      'What percentage of the current estimated spending is IT?',
+    estimatedTotalContractValue:
+      'What is the estimated total contract value, including all option years, for this effort?',
+    estimatedTotalContractValueITPortion:
+      'What percentage of the planned spending for the new contract is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract vehicle',

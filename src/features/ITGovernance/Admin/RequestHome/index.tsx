@@ -12,8 +12,8 @@ import {
 import CollapsableLink from 'components/CollapsableLink';
 import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
-import ReviewRow from 'components/ReviewRow';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
+import SystemIntakeAnnualSpending from 'components/SystemIntakeReview/SystemIntakeAnnualCosts';
 import TaskStatusTag from 'components/TaskStatusTag';
 import useMessage from 'hooks/useMessage';
 
@@ -188,50 +188,11 @@ const RequestHome = ({
                   t('grbReview:businessCaseOverview.noSolution')
                 }
               />
-              <ReviewRow className="margin-bottom-0">
-                <div>
-                  <DefinitionCombo
-                    term={t('intake:review.currentAnnualSpending')}
-                    definition={
-                      systemIntake.annualSpending?.currentAnnualSpending ??
-                      t('grbReview:businessCaseOverview.noSolution')
-                    }
-                  />
-                </div>
-                <div>
-                  <DefinitionCombo
-                    term={t('intake:review.currentAnnualSpendingITPortion')}
-                    definition={
-                      systemIntake.annualSpending
-                        ?.currentAnnualSpendingITPortion ??
-                      t('grbReview:businessCaseOverview.noSolution')
-                    }
-                  />
-                </div>
-              </ReviewRow>
-              <ReviewRow className="margin-bottom-0">
-                <div>
-                  <DefinitionCombo
-                    term={t('intake:review.plannedYearOneSpending')}
-                    className="margin-bottom-0"
-                    definition={
-                      systemIntake.annualSpending?.plannedYearOneSpending ??
-                      t('grbReview:businessCaseOverview.noSolution')
-                    }
-                  />
-                </div>
-                <div>
-                  <DefinitionCombo
-                    term={t('intake:review.plannedYearOneSpendingITPortion')}
-                    className="margin-bottom-0"
-                    definition={
-                      systemIntake.annualSpending
-                        ?.plannedYearOneSpendingITPortion ??
-                      t('grbReview:businessCaseOverview.noSolution')
-                    }
-                  />
-                </div>
-              </ReviewRow>
+              <SystemIntakeAnnualSpending
+                totalContractCosts={systemIntake.totalContractCosts}
+                annualSpending={systemIntake.annualSpending}
+                costs={systemIntake.costs}
+              />
             </div>
           </CollapsableLink>
         </div>
