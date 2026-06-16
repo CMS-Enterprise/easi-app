@@ -16,7 +16,7 @@ describe('LCID summary box', () => {
   it('Renders LCID information', () => {
     const props: LcidSummaryProps = {
       lcid: '123456',
-      lcidDisplay: '2026 - OIT - 123456 - New system - Pilot',
+      lcidDisplay: '123456 - 2026 - OIT - NEW_SYSTEM - PILOT',
       lcidIssuedAt: currentDate.minus({ days: 7 }).toISO(),
       lcidExpiresAt: currentDate.plus({ year: 1 }).toISO(),
       lcidRetiresAt: null,

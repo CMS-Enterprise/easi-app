@@ -12,7 +12,7 @@ func formatLCIDDisplay(intake *models.SystemIntake, component *models.SystemInta
 		return nil
 	}
 
-	parts := []string{}
+	parts := []string{intake.LifecycleID.ValueOrZero()}
 	if intake.LifecycleIssuedAt != nil {
 		parts = append(parts, strconv.Itoa(intake.LifecycleIssuedAt.Year()))
 	}
@@ -21,22 +21,20 @@ func formatLCIDDisplay(intake *models.SystemIntake, component *models.SystemInta
 		parts = append(parts, componentLabel)
 	}
 
-	parts = append(parts, intake.LifecycleID.ValueOrZero())
-
 	if intake.LCIDType != nil {
 		switch *intake.LCIDType {
 		case models.LCIDTypeNewSystem:
-			parts = append(parts, "New system")
+			parts = append(parts, "NEW_SYSTEM")
 		case models.LCIDTypeRecompete:
-			parts = append(parts, "Recompete")
+			parts = append(parts, "RECOMPETE")
 		}
 	}
 
 	if intake.LCIDIsPilot != nil && *intake.LCIDIsPilot {
-		parts = append(parts, "Pilot")
+		parts = append(parts, "PILOT")
 	}
 	if intake.LCIDIsLowIT != nil && *intake.LCIDIsLowIT {
-		parts = append(parts, "Low IT")
+		parts = append(parts, "LOW_IT")
 	}
 
 	display := strings.Join(parts, " - ")
@@ -102,7 +100,7 @@ func formatLCIDDisplayComponent(component *models.SystemIntakeContactComponent) 
 	case models.SystemIntakeContactComponentOfficesOfHearingsAndInquiries:
 		return "OHI"
 	case models.SystemIntakeContactComponentOther:
-		return "Other"
+		return "OTHER"
 	default:
 		return ""
 	}

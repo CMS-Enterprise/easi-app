@@ -38,7 +38,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				LCIDIsLowIT:       &lowIT,
 			},
 			component: &component,
-			expected:  stringPtr("2026 - OIT - 123456 - New system - Pilot - Low IT"),
+			expected:  stringPtr("123456 - 2026 - OIT - NEW_SYSTEM - PILOT - LOW_IT"),
 		},
 		{
 			name: "partial metadata omits missing values",
@@ -48,7 +48,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				LifecycleIssuedAt: &issuedAt,
 				LCIDIsPilot:       &pilot,
 			},
-			expected: stringPtr("2026 - 654321 - Pilot"),
+			expected: stringPtr("654321 - 2026 - PILOT"),
 		},
 		{
 			name: "false booleans are omitted",
@@ -61,7 +61,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				LCIDIsLowIT:       &notLowIT,
 			},
 			component: &component,
-			expected:  stringPtr("2026 - OIT - 111111 - Recompete"),
+			expected:  stringPtr("111111 - 2026 - OIT - RECOMPETE"),
 		},
 		{
 			name: "missing lcid returns nil",

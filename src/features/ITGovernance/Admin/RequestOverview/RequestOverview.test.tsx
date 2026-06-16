@@ -80,7 +80,7 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
     __typename: 'SystemIntake',
     id: systemIntake.id,
     lcid: '123',
-    lcidDisplay: '2025 - OIT - 123 - Recompete - Pilot',
+    lcidDisplay: '123 - 2025 - OIT - RECOMPETE - PILOT',
     notes: [
       {
         __typename: 'SystemIntakeNote',
