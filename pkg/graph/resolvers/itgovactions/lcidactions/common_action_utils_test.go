@@ -18,6 +18,12 @@ func TestGetBaseLCIDAction(t *testing.T) {
 	newRetirementDate := time.Now() // will be passed into the action, won't be set on intake beforehand
 	nextSteps := models.HTML("<strong> My Next Steps! </strong>")
 	newScope := models.HTML("Scope Scope Scope")
+	previousLCIDType := models.LCIDTypeNewSystem
+	newLCIDType := models.LCIDTypeRecompete
+	previousIsPilot := false
+	newIsPilot := true
+	previousIsLowIT := true
+	newIsLowIT := false
 	userInfo := models.UserInfo{
 		DisplayName: "tester",
 		Email:       "test@email.email",
@@ -27,9 +33,12 @@ func TestGetBaseLCIDAction(t *testing.T) {
 		LifecycleID:           lcid,
 		LifecycleCostBaseline: oldCostBaseline,
 		LifecycleExpiresAt:    &expirationDate,
+		LCIDType:              &previousLCIDType,
+		LCIDIsPilot:           &previousIsPilot,
+		LCIDIsLowIT:           &previousIsLowIT,
 	}
 
-	action := getBaseLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo, &newRetirementDate)
+	action := getBaseLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo, &newRetirementDate, true, &newLCIDType, &newIsPilot, &newIsLowIT)
 
 	// old cost baseline set in Previous field
 	assert.EqualValues(t, oldCostBaseline, action.LCIDExpirationChangePreviousCostBaseline)
@@ -48,4 +57,11 @@ func TestGetBaseLCIDAction(t *testing.T) {
 
 	// new retirement date set in New field (wasn't set beforehand)
 	assert.EqualValues(t, &newRetirementDate, action.LCIDRetirementChangeNewDate)
+
+	assert.EqualValues(t, &previousLCIDType, action.LCIDTypeChangePreviousValue)
+	assert.EqualValues(t, &newLCIDType, action.LCIDTypeChangeNewValue)
+	assert.EqualValues(t, &previousIsPilot, action.LCIDIsPilotChangePreviousValue)
+	assert.EqualValues(t, &newIsPilot, action.LCIDIsPilotChangeNewValue)
+	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangePreviousValue)
+	assert.EqualValues(t, &newIsLowIT, action.LCIDIsLowITChangeNewValue)
 }

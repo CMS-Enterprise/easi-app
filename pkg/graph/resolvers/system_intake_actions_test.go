@@ -473,6 +473,12 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(models.ActionTypeISSUELCID, action.ActionType)
 		s.EqualValues(additionalInfo, *action.Feedback)
 		s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
+		s.Nil(action.LCIDTypeChangePreviousValue)
+		s.EqualValues(input.LcidType, *action.LCIDTypeChangeNewValue)
+		s.Nil(action.LCIDIsLowITChangePreviousValue)
+		s.EqualValues(input.LcidIsLowIt, *action.LCIDIsLowITChangeNewValue)
+		s.Nil(action.LCIDIsPilotChangePreviousValue)
+		s.EqualValues(input.LcidIsPilot, *action.LCIDIsPilotChangeNewValue)
 
 		// should create admin note (since input included it)
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
@@ -1066,11 +1072,19 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		})
 		s.NoError(err)
 		intakeWLCID.LifecycleID = null.StringFrom("123456")
+		lcidType := models.LCIDTypeNewSystem
+		lcidIsLowIT := true
+		lcidIsPilot := false
+		intakeWLCID.LCIDType = &lcidType
+		intakeWLCID.LCIDIsLowIT = &lcidIsLowIT
+		intakeWLCID.LCIDIsPilot = &lcidIsPilot
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intakeWLCID)
 		s.NoError(err)
 		scope := models.HTMLPointer("A really great new scope")
 		additionalInfo := models.HTMLPointer("My test info")
 		costBaseline := "the original costBaseline"
+		updatedLCIDType := models.LCIDTypeRecompete
+		updatedIsPilot := true
 
 		updatedIntakeLCID, err := UpdateLCID(
 			s.testConfigs.Context,
@@ -1082,10 +1096,15 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 				Scope:          scope,
 				AdditionalInfo: additionalInfo,
 				CostBaseline:   &costBaseline,
+				LcidType:       &updatedLCIDType,
+				LcidIsPilot:    &updatedIsPilot,
 			})
 		s.NoError(err)
 		s.EqualValues(scope, updatedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), updatedIntakeLCID.LifecycleCostBaseline)
+		s.EqualValues(updatedLCIDType, *updatedIntakeLCID.LCIDType)
+		s.EqualValues(updatedIsPilot, *updatedIntakeLCID.LCIDIsPilot)
+		s.EqualValues(lcidIsLowIT, *updatedIntakeLCID.LCIDIsLowIT)
 
 		// assert acion is created
 		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
@@ -1095,6 +1114,12 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		s.EqualValues(updatedIntakeLCID.ID, *action.IntakeID)
 		s.EqualValues(models.ActionTypeUPDATELCID, action.ActionType)
 		s.EqualValues(additionalInfo, action.Feedback)
+		s.EqualValues(lcidType, *action.LCIDTypeChangePreviousValue)
+		s.EqualValues(updatedLCIDType, *action.LCIDTypeChangeNewValue)
+		s.EqualValues(lcidIsPilot, *action.LCIDIsPilotChangePreviousValue)
+		s.EqualValues(updatedIsPilot, *action.LCIDIsPilotChangeNewValue)
+		s.EqualValues(lcidIsLowIT, *action.LCIDIsLowITChangePreviousValue)
+		s.EqualValues(lcidIsLowIT, *action.LCIDIsLowITChangeNewValue)
 
 		//assert there is not an admin note since not included
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
@@ -1209,6 +1234,12 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.EqualValues(confirmedIntakeLCID.ID, *action.IntakeID)
 		s.EqualValues(models.ActionTypeCONFIRMLCID, action.ActionType)
 		s.EqualValues(additionalInfo, action.Feedback)
+		s.Nil(action.LCIDTypeChangePreviousValue)
+		s.EqualValues(models.LCIDTypeNewSystem, *action.LCIDTypeChangeNewValue)
+		s.Nil(action.LCIDIsLowITChangePreviousValue)
+		s.EqualValues(true, *action.LCIDIsLowITChangeNewValue)
+		s.Nil(action.LCIDIsPilotChangePreviousValue)
+		s.EqualValues(false, *action.LCIDIsPilotChangeNewValue)
 
 		//assert there is not an admin note since not included
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, confirmedIntakeLCID.ID)

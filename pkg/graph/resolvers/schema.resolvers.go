@@ -1401,6 +1401,21 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline.Ptr(),
 			}
 		}
+		if action.LCIDTypeChangePreviousValue != nil ||
+			action.LCIDTypeChangeNewValue != nil ||
+			action.LCIDIsPilotChangePreviousValue != nil ||
+			action.LCIDIsPilotChangeNewValue != nil ||
+			action.LCIDIsLowITChangePreviousValue != nil ||
+			action.LCIDIsLowITChangeNewValue != nil {
+			graphAction.LcidMetadataChange = &models.SystemIntakeLCIDMetadataChange{
+				PreviousType:    action.LCIDTypeChangePreviousValue,
+				NewType:         action.LCIDTypeChangeNewValue,
+				PreviousIsPilot: action.LCIDIsPilotChangePreviousValue,
+				NewIsPilot:      action.LCIDIsPilotChangeNewValue,
+				PreviousIsLowIt: action.LCIDIsLowITChangePreviousValue,
+				NewIsLowIt:      action.LCIDIsLowITChangeNewValue,
+			}
+		}
 		results = append(results, &graphAction)
 	}
 	return results, nil

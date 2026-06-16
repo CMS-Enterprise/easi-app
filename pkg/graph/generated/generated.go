@@ -853,6 +853,7 @@ type ComplexityRoot struct {
 		Feedback               func(childComplexity int) int
 		ID                     func(childComplexity int) int
 		LcidExpirationChange   func(childComplexity int) int
+		LcidMetadataChange     func(childComplexity int) int
 		NewRetirementDate      func(childComplexity int) int
 		PreviousRetirementDate func(childComplexity int) int
 		Step                   func(childComplexity int) int
@@ -1019,6 +1020,15 @@ type ComplexityRoot struct {
 		PreviousDate         func(childComplexity int) int
 		PreviousNextSteps    func(childComplexity int) int
 		PreviousScope        func(childComplexity int) int
+	}
+
+	SystemIntakeLCIDMetadataChange struct {
+		NewIsLowIt      func(childComplexity int) int
+		NewIsPilot      func(childComplexity int) int
+		NewType         func(childComplexity int) int
+		PreviousIsLowIt func(childComplexity int) int
+		PreviousIsPilot func(childComplexity int) int
+		PreviousType    func(childComplexity int) int
 	}
 
 	SystemIntakeLCIDOption struct {
@@ -6128,6 +6138,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeAction.LcidExpirationChange(childComplexity), true
+	case "SystemIntakeAction.lcidMetadataChange":
+		if e.complexity.SystemIntakeAction.LcidMetadataChange == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.LcidMetadataChange(childComplexity), true
 	case "SystemIntakeAction.newRetirementDate":
 		if e.complexity.SystemIntakeAction.NewRetirementDate == nil {
 			break
@@ -6818,6 +6834,43 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeLCIDExpirationChange.PreviousScope(childComplexity), true
+
+	case "SystemIntakeLCIDMetadataChange.newIsLowIt":
+		if e.complexity.SystemIntakeLCIDMetadataChange.NewIsLowIt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.NewIsLowIt(childComplexity), true
+	case "SystemIntakeLCIDMetadataChange.newIsPilot":
+		if e.complexity.SystemIntakeLCIDMetadataChange.NewIsPilot == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.NewIsPilot(childComplexity), true
+	case "SystemIntakeLCIDMetadataChange.newType":
+		if e.complexity.SystemIntakeLCIDMetadataChange.NewType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.NewType(childComplexity), true
+	case "SystemIntakeLCIDMetadataChange.previousIsLowIt":
+		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsLowIt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsLowIt(childComplexity), true
+	case "SystemIntakeLCIDMetadataChange.previousIsPilot":
+		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsPilot == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsPilot(childComplexity), true
+	case "SystemIntakeLCIDMetadataChange.previousType":
+		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.PreviousType(childComplexity), true
 
 	case "SystemIntakeLCIDOption.id":
 		if e.complexity.SystemIntakeLCIDOption.ID == nil {
@@ -9485,6 +9538,7 @@ type SystemIntakeAction {
   step: SystemIntakeStep
   feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
+  lcidMetadataChange: SystemIntakeLCIDMetadataChange
   previousRetirementDate: Time # purposely nullable, unlike previousDate in lcidExpirationChange - not all intakes will have a retirement date
   newRetirementDate: Time # purposely nullable, unlike newDate in lcidExpirationChange - not all intakes will have a retirement date
   createdAt: Time!
@@ -9502,6 +9556,18 @@ type SystemIntakeLCIDExpirationChange {
   newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
+}
+
+"""
+Contains metadata changes for a system request's lifecycle ID
+"""
+type SystemIntakeLCIDMetadataChange {
+  previousType: SystemIntakeLCIDType
+  newType: SystemIntakeLCIDType
+  previousIsPilot: Boolean
+  newIsPilot: Boolean
+  previousIsLowIt: Boolean
+  newIsLowIt: Boolean
 }
 
 type RequesterUpdateEmailData {
@@ -37166,6 +37232,8 @@ func (ec *executionContext) fieldContext_SystemIntake_actions(_ context.Context,
 				return ec.fieldContext_SystemIntakeAction_feedback(ctx, field)
 			case "lcidExpirationChange":
 				return ec.fieldContext_SystemIntakeAction_lcidExpirationChange(ctx, field)
+			case "lcidMetadataChange":
+				return ec.fieldContext_SystemIntakeAction_lcidMetadataChange(ctx, field)
 			case "previousRetirementDate":
 				return ec.fieldContext_SystemIntakeAction_previousRetirementDate(ctx, field)
 			case "newRetirementDate":
@@ -41018,6 +41086,49 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_lcidExpirationChange
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeAction_lcidMetadataChange(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeAction) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeAction_lcidMetadataChange,
+		func(ctx context.Context) (any, error) {
+			return obj.LcidMetadataChange, nil
+		},
+		nil,
+		ec.marshalOSystemIntakeLCIDMetadataChange2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDMetadataChange,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeAction_lcidMetadataChange(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "previousType":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousType(ctx, field)
+			case "newType":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newType(ctx, field)
+			case "previousIsPilot":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsPilot(ctx, field)
+			case "newIsPilot":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsPilot(ctx, field)
+			case "previousIsLowIt":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsLowIt(ctx, field)
+			case "newIsLowIt":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsLowIt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeLCIDMetadataChange", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_previousRetirementDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeAction) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -44537,6 +44648,180 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDExpirationChange_newCos
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_previousType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_previousType,
+		func(ctx context.Context) (any, error) {
+			return obj.PreviousType, nil
+		},
+		nil,
+		ec.marshalOSystemIntakeLCIDType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDType,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_previousType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeLCIDType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_newType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_newType,
+		func(ctx context.Context) (any, error) {
+			return obj.NewType, nil
+		},
+		nil,
+		ec.marshalOSystemIntakeLCIDType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDType,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeLCIDType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_previousIsPilot(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsPilot,
+		func(ctx context.Context) (any, error) {
+			return obj.PreviousIsPilot, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_previousIsPilot(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_newIsPilot(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsPilot,
+		func(ctx context.Context) (any, error) {
+			return obj.NewIsPilot, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newIsPilot(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_previousIsLowIt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsLowIt,
+		func(ctx context.Context) (any, error) {
+			return obj.PreviousIsLowIt, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_previousIsLowIt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_newIsLowIt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsLowIt,
+		func(ctx context.Context) (any, error) {
+			return obj.NewIsLowIt, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newIsLowIt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -64004,6 +64289,8 @@ func (ec *executionContext) _SystemIntakeAction(ctx context.Context, sel ast.Sel
 			out.Values[i] = ec._SystemIntakeAction_feedback(ctx, field, obj)
 		case "lcidExpirationChange":
 			out.Values[i] = ec._SystemIntakeAction_lcidExpirationChange(ctx, field, obj)
+		case "lcidMetadataChange":
+			out.Values[i] = ec._SystemIntakeAction_lcidMetadataChange(ctx, field, obj)
 		case "previousRetirementDate":
 			out.Values[i] = ec._SystemIntakeAction_previousRetirementDate(ctx, field, obj)
 		case "newRetirementDate":
@@ -65630,6 +65917,52 @@ func (ec *executionContext) _SystemIntakeLCIDExpirationChange(ctx context.Contex
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_previousCostBaseline(ctx, field, obj)
 		case "newCostBaseline":
 			out.Values[i] = ec._SystemIntakeLCIDExpirationChange_newCostBaseline(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var systemIntakeLCIDMetadataChangeImplementors = []string{"SystemIntakeLCIDMetadataChange"}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeLCIDMetadataChange) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeLCIDMetadataChangeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeLCIDMetadataChange")
+		case "previousType":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousType(ctx, field, obj)
+		case "newType":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newType(ctx, field, obj)
+		case "previousIsPilot":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousIsPilot(ctx, field, obj)
+		case "newIsPilot":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newIsPilot(ctx, field, obj)
+		case "previousIsLowIt":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousIsLowIt(ctx, field, obj)
+		case "newIsLowIt":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newIsLowIt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -74739,6 +75072,13 @@ func (ec *executionContext) marshalOSystemIntakeLCIDExpirationChange2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._SystemIntakeLCIDExpirationChange(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeLCIDMetadataChange2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDMetadataChange(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeLCIDMetadataChange) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeLCIDMetadataChange(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDStatus(ctx context.Context, v any) (*models.SystemIntakeLCIDStatus, error) {

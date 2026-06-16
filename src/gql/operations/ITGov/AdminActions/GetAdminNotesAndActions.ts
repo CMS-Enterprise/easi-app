@@ -37,6 +37,14 @@ export default gql(/* GraphQL */ `
           previousCostBaseline
           newCostBaseline
         }
+        lcidMetadataChange {
+          previousType
+          newType
+          previousIsPilot
+          newIsPilot
+          previousIsLowIt
+          newIsLowIt
+        }
         actor {
           name
           email

@@ -17,6 +17,11 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	expirationDate := time.Now() //same for both
 	nextSteps := models.HTML("<strong> My Next Steps! </strong>")
 	newScope := models.HTML("Scope Scope Scope")
+	previousLCIDType := models.LCIDTypeNewSystem
+	previousIsPilot := false
+	previousIsLowIT := true
+	newLCIDType := models.LCIDTypeRecompete
+	newIsPilot := true
 	userInfo := models.UserInfo{
 		DisplayName: "tester",
 		Email:       "test@email.email",
@@ -26,8 +31,11 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 		LifecycleID:           lcid,
 		LifecycleCostBaseline: oldCostBaseline,
 		LifecycleExpiresAt:    &expirationDate,
+		LCIDType:              &previousLCIDType,
+		LCIDIsPilot:           &previousIsPilot,
+		LCIDIsLowIT:           &previousIsLowIT,
 	}
-	action := GetUpdateLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo)
+	action := GetUpdateLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, &newLCIDType, &newIsPilot, nil, userInfo)
 	assert.EqualValues(t, oldCostBaseline, action.LCIDExpirationChangePreviousCostBaseline)
 	assert.EqualValues(t, null.StringFrom(newCostBaseline), action.LCIDExpirationChangeNewCostBaseline)
 
@@ -38,6 +46,12 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	assert.EqualValues(t, &newScope, action.LCIDExpirationChangeNewScope)
 
 	assert.EqualValues(t, models.ActionTypeUPDATELCID, action.ActionType)
+	assert.EqualValues(t, &previousLCIDType, action.LCIDTypeChangePreviousValue)
+	assert.EqualValues(t, &newLCIDType, action.LCIDTypeChangeNewValue)
+	assert.EqualValues(t, &previousIsPilot, action.LCIDIsPilotChangePreviousValue)
+	assert.EqualValues(t, &newIsPilot, action.LCIDIsPilotChangeNewValue)
+	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangePreviousValue)
+	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangeNewValue)
 
 }
 

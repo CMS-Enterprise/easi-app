@@ -235,9 +235,22 @@ const governanceReviewTeam = {
       oldNextSteps: 'Old Next Steps',
       newCostBaseline: 'New Cost Baseline',
       oldCostBaseline: 'Old Cost Baseline',
+      newLcidType: 'New LCID type',
+      oldLcidType: 'Old LCID type',
+      newPilot: 'New Pilot',
+      oldPilot: 'Old Pilot',
+      newLowIt: 'New Low IT',
+      oldLowIt: 'Old Low IT',
       noScope: 'No scope specified',
       noNextSteps: 'No next steps specified',
-      noCostBaseline: 'No cost baseline specified'
+      noCostBaseline: 'No cost baseline specified',
+      notSpecified: 'Not specified',
+      yes: 'Yes',
+      no: 'No',
+      lcidType: {
+        NEW_SYSTEM: 'New system',
+        RECOMPETE: 'Recompete'
+      }
     }
   },
   dates: {

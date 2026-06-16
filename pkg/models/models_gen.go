@@ -547,6 +547,7 @@ type SystemIntakeAction struct {
 	Step                   *SystemIntakeStep                 `json:"step,omitempty"`
 	Feedback               *HTML                             `json:"feedback,omitempty"`
 	LcidExpirationChange   *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange,omitempty"`
+	LcidMetadataChange     *SystemIntakeLCIDMetadataChange   `json:"lcidMetadataChange,omitempty"`
 	PreviousRetirementDate *time.Time                        `json:"previousRetirementDate,omitempty"`
 	NewRetirementDate      *time.Time                        `json:"newRetirementDate,omitempty"`
 	CreatedAt              time.Time                         `json:"createdAt"`
@@ -747,6 +748,16 @@ type SystemIntakeLCIDExpirationChange struct {
 	NewNextSteps         *HTML     `json:"newNextSteps,omitempty"`
 	PreviousCostBaseline *string   `json:"previousCostBaseline,omitempty"`
 	NewCostBaseline      *string   `json:"newCostBaseline,omitempty"`
+}
+
+// Contains metadata changes for a system request's lifecycle ID
+type SystemIntakeLCIDMetadataChange struct {
+	PreviousType    *SystemIntakeLCIDType `json:"previousType,omitempty"`
+	NewType         *SystemIntakeLCIDType `json:"newType,omitempty"`
+	PreviousIsPilot *bool                 `json:"previousIsPilot,omitempty"`
+	NewIsPilot      *bool                 `json:"newIsPilot,omitempty"`
+	PreviousIsLowIt *bool                 `json:"previousIsLowIt,omitempty"`
+	NewIsLowIt      *bool                 `json:"newIsLowIt,omitempty"`
 }
 
 // Input for creating a Not an IT Governance Request Action in Admin Actions v2

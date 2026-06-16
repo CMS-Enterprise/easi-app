@@ -11,3 +11,11 @@ ADD COLUMN lcid_is_low_it BOOLEAN;
 
 ALTER TABLE system_intakes
 ADD COLUMN lcid_is_pilot BOOLEAN;
+
+ALTER TABLE actions
+ADD COLUMN lcid_type_change_previous_value SYSTEM_INTAKE_LCID_TYPE,
+ADD COLUMN lcid_type_change_new_value SYSTEM_INTAKE_LCID_TYPE,
+ADD COLUMN lcid_is_pilot_change_previous_value BOOLEAN,
+ADD COLUMN lcid_is_pilot_change_new_value BOOLEAN,
+ADD COLUMN lcid_is_low_it_change_previous_value BOOLEAN,
+ADD COLUMN lcid_is_low_it_change_new_value BOOLEAN;

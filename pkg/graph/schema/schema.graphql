@@ -1207,6 +1207,7 @@ type SystemIntakeAction {
   step: SystemIntakeStep
   feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
+  lcidMetadataChange: SystemIntakeLCIDMetadataChange
   previousRetirementDate: Time # purposely nullable, unlike previousDate in lcidExpirationChange - not all intakes will have a retirement date
   newRetirementDate: Time # purposely nullable, unlike newDate in lcidExpirationChange - not all intakes will have a retirement date
   createdAt: Time!
@@ -1224,6 +1225,18 @@ type SystemIntakeLCIDExpirationChange {
   newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
+}
+
+"""
+Contains metadata changes for a system request's lifecycle ID
+"""
+type SystemIntakeLCIDMetadataChange {
+  previousType: SystemIntakeLCIDType
+  newType: SystemIntakeLCIDType
+  previousIsPilot: Boolean
+  newIsPilot: Boolean
+  previousIsLowIt: Boolean
+  newIsLowIt: Boolean
 }
 
 type RequesterUpdateEmailData {

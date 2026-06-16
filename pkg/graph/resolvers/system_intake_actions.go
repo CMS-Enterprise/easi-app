@@ -488,12 +488,15 @@ func IssueLCID(
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
 		action := models.Action{
-			IntakeID:       &input.SystemIntakeID,
-			ActionType:     models.ActionTypeISSUELCID,
-			ActorName:      adminUserInfo.DisplayName,
-			ActorEmail:     adminUserInfo.Email,
-			ActorEUAUserID: adminEUAID,
-			Step:           &intake.Step,
+			IntakeID:                  &input.SystemIntakeID,
+			ActionType:                models.ActionTypeISSUELCID,
+			ActorName:                 adminUserInfo.DisplayName,
+			ActorEmail:                adminUserInfo.Email,
+			ActorEUAUserID:            adminEUAID,
+			Step:                      &intake.Step,
+			LCIDTypeChangeNewValue:    &input.LcidType,
+			LCIDIsLowITChangeNewValue: &input.LcidIsLowIt,
+			LCIDIsPilotChangeNewValue: &input.LcidIsPilot,
 		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
@@ -827,7 +830,7 @@ func UpdateLCID(
 	// input.Reason //TODO: The reason field will be retained in the DB in a future ticket
 
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsPilot, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -991,7 +994,7 @@ func ConfirmLCID(ctx context.Context,
 		return nil, err
 	}
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsPilot, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime

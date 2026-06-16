@@ -17,6 +17,10 @@ func getBaseLCIDAction(
 	costBaseline *string,
 	userInfo models.UserInfo,
 	retirementDate *time.Time,
+	includeLCIDMetadata bool,
+	lcidType *models.SystemIntakeLCIDType,
+	lcidIsPilot *bool,
+	lcidIsLowIT *bool,
 ) models.Action {
 
 	// action field values are set based on if the value was set or not. If not set, the new value and the old are the same.
@@ -58,6 +62,26 @@ func getBaseLCIDAction(
 	}
 	if retirementDate != nil {
 		action.LCIDRetirementChangeNewDate = retirementDate
+	}
+	if !includeLCIDMetadata {
+		return action
+	}
+
+	action.LCIDTypeChangeNewValue = intake.LCIDType
+	action.LCIDTypeChangePreviousValue = intake.LCIDType
+	action.LCIDIsPilotChangeNewValue = intake.LCIDIsPilot
+	action.LCIDIsPilotChangePreviousValue = intake.LCIDIsPilot
+	action.LCIDIsLowITChangeNewValue = intake.LCIDIsLowIT
+	action.LCIDIsLowITChangePreviousValue = intake.LCIDIsLowIT
+
+	if lcidType != nil {
+		action.LCIDTypeChangeNewValue = lcidType
+	}
+	if lcidIsPilot != nil {
+		action.LCIDIsPilotChangeNewValue = lcidIsPilot
+	}
+	if lcidIsLowIT != nil {
+		action.LCIDIsLowITChangeNewValue = lcidIsLowIT
 	}
 
 	return action
