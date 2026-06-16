@@ -6,6 +6,7 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   GetCedarSystemsDocument,
   GetCedarSystemsQuery,
@@ -45,6 +46,23 @@ const getCedarSystemsQuery: MockedQuery<
           name: 'Centers for Management Services',
           description: 'A test Cedar system',
           acronym: 'CMS',
+          status: 'ACTIVE',
+          businessOwnerOrg: null,
+          businessOwnerOrgComp: null,
+          systemMaintainerOrg: null,
+          systemMaintainerOrgComp: null,
+          isBookmarked: false,
+          viewerCanAccessProfile: true,
+          viewerCanAccessWorkspace: true,
+          atoExpirationDate: null,
+          oaStatus: null
+        },
+        {
+          __typename: 'CedarSystem',
+          id: '22AB1A00-1234-5678-ABC1-1A001B00CC0A',
+          name: 'Quality Payment Program',
+          description: 'Another test Cedar system',
+          acronym: 'QPP',
           status: 'ACTIVE',
           businessOwnerOrg: null,
           businessOwnerOrgComp: null,
@@ -141,8 +159,40 @@ describe('LinkedSystemsForm', () => {
       level: 1,
       name: 'Add a system link'
     });
-    screen.getByTestId('cedarSystemID');
+    screen.getByRole('combobox');
+    expect(
+      screen.queryByText('Please select a CMS System')
+    ).not.toBeInTheDocument();
     screen.getByRole('button', { name: 'Add system' });
+  });
+
+  it('filters Cedar system options as the requester types', async () => {
+    const user = userEvent.setup();
+
+    renderLinkedSystemsForm({
+      locationState: { from: 'task-list' }
+    });
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    const cedarSystemInput = screen.getByRole('combobox');
+
+    await user.type(cedarSystemInput, 'Centers');
+
+    const matchingSystem = await screen.findByRole('option', {
+      name: 'Centers for Management Services (CMS)'
+    });
+
+    expect(matchingSystem).toBeVisible();
+    expect(
+      screen.queryByRole('option', { name: 'Quality Payment Program (QPP)' })
+    ).not.toBeInTheDocument();
+
+    await user.click(matchingSystem);
+
+    expect(cedarSystemInput).toHaveValue(
+      'Centers for Management Services (CMS)'
+    );
   });
 
   it('renders the add-system form for an IT Gov admin', async () => {
@@ -160,7 +210,7 @@ describe('LinkedSystemsForm', () => {
       level: 1,
       name: 'Add a system link'
     });
-    screen.getByTestId('cedarSystemID');
+    screen.getByRole('combobox');
   });
 
   it('renders page not found for a non-requester without admin access', async () => {
