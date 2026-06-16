@@ -594,15 +594,15 @@ const intake = {
       }
     },
     currentEstimatedCost:
-      'What is the current estimated cost of doing this work?',
+      'What is the current estimated cost of performing this work?',
     currentEstimatedCostHelpText:
-      'If this is a contract re-compete, enter the total contract value, including all option years, for the existing contract.',
+      'Enter the total estimated cost of this work if it is currently being performed (e.g. existing contract, FTE hours, manual process). Enter $0 only if this is entirely new work not currently being done at CMS.',
     currentEstimatedCostITPortion:
       'What percentage of the current estimated spending is IT?',
     estimatedTotalContractValue:
-      'What is the estimated total contract value, including all option years, for this effort?',
+      'What is the estimated total cost of this effort going forward, including all option years?',
     estimatedTotalContractValueHelpText:
-      'This value should equal the projected costs on the Acquisition Plan for this effort.',
+      'Enter the estimated total cost of this effort going forward, including all option years (e.g. total contract value per IGCE, estimated FTE hours).',
     estimatedTotalContractValueITPortion:
       'What percentage of the planned spending for the new contract is IT?',
     contractHeading: 'Contract',
@@ -674,13 +674,13 @@ const intake = {
     plannedYearOneSpendingITPortion:
       'What percentage of the planned annual spending for the first year of the new contract is IT?',
     currentEstimatedCost:
-      'What is the current estimated cost of doing this work?',
+      'What is the current estimated cost of performing this work?',
     currentEstimatedCostITPortion:
       'What percentage of the current estimated spending is IT?',
     estimatedTotalContractValue:
-      'What is the estimated total contract value, including all option years, for this effort?',
+      'What is the estimated total cost of this effort going forward?',
     estimatedTotalContractValueITPortion:
-      'What percentage of the planned spending for the new contract is IT?',
+      'What percentage of the planned spending for this effort is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract vehicle',
