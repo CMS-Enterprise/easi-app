@@ -545,7 +545,39 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
+                  Does this project directly enable or facilitate interaction between the public and the Federal Government through Digital Services?
+                </dt>
+                <dd
+                  class="description-definition margin-0"
+                >
+                  No
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div>
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
                   Do you plan to use software products to fulfill your business needs?
+                </dt>
+                <dd
+                  class="description-definition margin-0"
+                >
+                  No
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div>
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Will protected CMS data be accessed, processed, stored, or transmitted outside of CMS-controlled information systems or environments?
                 </dt>
                 <dd
                   class="description-definition margin-0"

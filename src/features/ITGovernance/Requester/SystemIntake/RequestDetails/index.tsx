@@ -23,7 +23,8 @@ import {
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeSoftwareAcquisitionMethods,
-  useUpdateSystemIntakeRequestDetailsMutation
+  useUpdateSystemIntakeRequestDetailsMutation,
+  YesNoNotSure
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -57,6 +58,10 @@ type RequestDetailsForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  digitalServiceInteraction: YesNoNotSure | null;
+  digitalServiceInteractionDescription: string | null;
+  protectedCmsDataAccessedOutside: YesNoNotSure | null;
+  protectedCmsDataAccessedOutsideDescription: string | null;
   hasUiChanges: boolean | null;
   usesAiTech: boolean | null;
   usingSoftware: string | null;
@@ -78,6 +83,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     businessSolution,
     currentStage,
     needsEaSupport,
+    digitalServiceInteraction,
+    digitalServiceInteractionDescription,
+    protectedCmsDataAccessedOutside,
+    protectedCmsDataAccessedOutsideDescription,
     hasUiChanges,
     usesAiTech,
     usingSoftware,
@@ -104,6 +113,12 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       businessSolution: businessSolution || '',
       currentStage: currentStage || '',
       needsEaSupport,
+      digitalServiceInteraction: digitalServiceInteraction || null,
+      digitalServiceInteractionDescription:
+        digitalServiceInteractionDescription || '',
+      protectedCmsDataAccessedOutside: protectedCmsDataAccessedOutside || null,
+      protectedCmsDataAccessedOutsideDescription:
+        protectedCmsDataAccessedOutsideDescription || '',
       hasUiChanges,
       usesAiTech,
       usingSoftware,
@@ -648,6 +663,110 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup
+          scrollElement="digitalServiceInteraction"
+          error={!!errors.digitalServiceInteraction}
+        >
+          <Fieldset>
+            <Label
+              htmlFor="digitalServiceInteraction"
+              className="maxw-none"
+              required
+            >
+              {t('requestDetails.digitalServiceInteraction')}
+            </Label>
+            <HelpText
+              id="digitalServiceInteractionHelpText"
+              className="margin-top-1"
+            >
+              {t('requestDetails.digitalServiceInteractionHelpText')}
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="digitalServiceInteraction"
+              as={FieldErrorMsg}
+            />
+
+            <Controller
+              control={control}
+              name="digitalServiceInteraction"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="digitalServiceInteractionYes"
+                  label={t('Yes')}
+                  checked={field.value === 'YES'}
+                  onChange={() => field.onChange('YES')}
+                  value="YES"
+                  aria-describedby="digitalServiceInteractionHelpText"
+                />
+              )}
+            />
+            {watch('digitalServiceInteraction') === 'YES' && (
+              <FieldGroup
+                scrollElement="digitalServiceInteractionDescription"
+                error={!!errors.digitalServiceInteractionDescription}
+              >
+                <Label htmlFor="digitalServiceInteractionDescription" required>
+                  {t('requestDetails.digitalServiceInteractionDescription')}
+                </Label>
+                <ErrorMessage
+                  errors={errors}
+                  name="digitalServiceInteractionDescription"
+                  as={FieldErrorMsg}
+                />
+                <Textarea
+                  {...register('digitalServiceInteractionDescription')}
+                  ref={null}
+                  id="digitalServiceInteractionDescription"
+                  maxLength={10000}
+                />
+              </FieldGroup>
+            )}
+
+            <Controller
+              control={control}
+              name="digitalServiceInteraction"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="digitalServiceInteractionNo"
+                  label={t('No')}
+                  checked={field.value === 'NO'}
+                  onChange={() => {
+                    field.onChange('NO');
+                    setValue('digitalServiceInteractionDescription', '');
+                  }}
+                  value="NO"
+                  aria-describedby="digitalServiceInteractionHelpText"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="digitalServiceInteraction"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="digitalServiceInteractionNotSure"
+                  label={t('general:notSure')}
+                  checked={field.value === 'NOT_SURE'}
+                  onChange={() => {
+                    field.onChange('NOT_SURE');
+                    setValue('digitalServiceInteractionDescription', '');
+                  }}
+                  value="NOT_SURE"
+                  aria-describedby="digitalServiceInteractionHelpText"
+                />
+              )}
+            />
+          </Fieldset>
+        </FieldGroup>
+
+        <FieldGroup
           scrollElement="softwareAcquisition"
           error={!!errors.usingSoftware}
         >
@@ -779,7 +898,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 {...field}
                 inputRef={ref}
                 id="usingSoftwareNotSure"
-                label={t('requestDetails.softwareAcquisition.notSure')}
+                label={t('general:notSure')}
                 checked={value === 'NOT_SURE'}
                 onChange={() => {
                   field.onChange('NOT_SURE');
@@ -788,6 +907,115 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               />
             )}
           />
+        </FieldGroup>
+
+        <FieldGroup
+          scrollElement="protectedCmsDataAccessedOutside"
+          error={!!errors.protectedCmsDataAccessedOutside}
+        >
+          <Fieldset>
+            <Label
+              htmlFor="protectedCmsDataAccessedOutside"
+              className="maxw-none"
+              required
+            >
+              {t('requestDetails.protectedCmsDataAccessedOutside')}
+            </Label>
+            <HelpText
+              id="protectedCmsDataAccessedOutsideHelpText"
+              className="margin-top-1"
+            >
+              {t('requestDetails.protectedCmsDataAccessedOutsideHelpText')}
+            </HelpText>
+            <ErrorMessage
+              errors={errors}
+              name="protectedCmsDataAccessedOutside"
+              as={FieldErrorMsg}
+            />
+
+            <Controller
+              control={control}
+              name="protectedCmsDataAccessedOutside"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="protectedCmsDataAccessedOutsideYes"
+                  label={t('Yes')}
+                  checked={field.value === 'YES'}
+                  onChange={() => field.onChange('YES')}
+                  value="YES"
+                  aria-describedby="protectedCmsDataAccessedOutsideHelpText"
+                />
+              )}
+            />
+            {watch('protectedCmsDataAccessedOutside') === 'YES' && (
+              <FieldGroup
+                scrollElement="protectedCmsDataAccessedOutsideDescription"
+                error={!!errors.protectedCmsDataAccessedOutsideDescription}
+              >
+                <Label
+                  htmlFor="protectedCmsDataAccessedOutsideDescription"
+                  required
+                >
+                  {t(
+                    'requestDetails.protectedCmsDataAccessedOutsideDescription'
+                  )}
+                </Label>
+                <ErrorMessage
+                  errors={errors}
+                  name="protectedCmsDataAccessedOutsideDescription"
+                  as={FieldErrorMsg}
+                />
+                <Textarea
+                  {...register('protectedCmsDataAccessedOutsideDescription')}
+                  ref={null}
+                  id="protectedCmsDataAccessedOutsideDescription"
+                  maxLength={10000}
+                />
+              </FieldGroup>
+            )}
+
+            <Controller
+              control={control}
+              name="protectedCmsDataAccessedOutside"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="protectedCmsDataAccessedOutsideNo"
+                  label={t('No')}
+                  checked={field.value === 'NO'}
+                  onChange={() => {
+                    field.onChange('NO');
+                    setValue('protectedCmsDataAccessedOutsideDescription', '');
+                  }}
+                  value="NO"
+                  aria-describedby="protectedCmsDataAccessedOutsideHelpText"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="protectedCmsDataAccessedOutside"
+              render={({ field: { ref, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id="protectedCmsDataAccessedOutsideNotSure"
+                  label={t('general:notSure')}
+                  checked={field.value === 'NOT_SURE'}
+                  onChange={() => {
+                    field.onChange('NOT_SURE');
+                    setValue('protectedCmsDataAccessedOutsideDescription', '');
+                  }}
+                  value="NOT_SURE"
+                  aria-describedby="protectedCmsDataAccessedOutsideHelpText"
+                />
+              )}
+            />
+          </Fieldset>
         </FieldGroup>
 
         <Pager
