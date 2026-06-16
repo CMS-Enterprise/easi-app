@@ -141,7 +141,7 @@ const useRequestTableColumns = (
       return t(
         `governanceReviewTeam:systemIntakeStatusAdmin.${obj.statusAdmin}`,
         {
-          lcid: obj.lcid
+          lcid: obj.lcidDisplay || obj.lcid
         }
       ) as string;
     },

@@ -149,14 +149,14 @@ const Table = ({
               if (isITGovAdmin || isTRBAdmin) {
                 return t<string>(
                   `governanceReviewTeam:systemIntakeStatusAdmin.${request.status}`,
-                  { lcid: request.lcid }
+                  { lcid: request.lcidDisplay || request.lcid }
                 );
               }
 
               // return requester status for non-admins
               return t<string>(
                 `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
-                { lcid: request.lcid }
+                { lcid: request.lcidDisplay || request.lcid }
               );
 
             case 'TRB':
@@ -271,6 +271,7 @@ const Table = ({
             submissionDate: systemIntake.submittedAt,
             systems: systemIntake.systems.map(system => system.name),
             lcid: systemIntake.lcid,
+            lcidDisplay: systemIntake.lcidDisplay,
             type: 'IT Governance',
             statusRequester: systemIntake.statusRequester
           });

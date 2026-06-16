@@ -168,6 +168,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
             state={state}
             decisionState={decisionState}
             lcid={systemIntake.lcid}
+            lcidDisplay={systemIntake.lcidDisplay}
             lcidStatus={systemIntake.lcidStatus}
           />
         </Route>

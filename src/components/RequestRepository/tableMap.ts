@@ -138,9 +138,10 @@ const tableMap = (
       status: i18next.t(
         `governanceReviewTeam:systemIntakeStatusAdmin.${intake.statusAdmin}`,
         {
-          lcid: intake.lcid
+          lcid: intake.lcidDisplay || intake.lcid
         }
       ),
+      lcidDisplay: intake.lcidDisplay || intake.lcid,
       lastAdminNote,
       filterDate
     };

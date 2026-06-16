@@ -6,6 +6,7 @@ export default gql(/* GraphQL */ `
     systemIntake(id: $id) {
       id
       lcid
+      lcidDisplay
       notes {
         id
         createdAt

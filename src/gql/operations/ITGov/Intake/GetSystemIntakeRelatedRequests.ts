@@ -14,6 +14,7 @@ export default gql(/* GraphQL */ `
         statusRequester
         submittedAt
         lcid
+        lcidDisplay
       }
       relatedTRBRequests {
         id

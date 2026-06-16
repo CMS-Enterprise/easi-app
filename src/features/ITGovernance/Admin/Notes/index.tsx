@@ -372,7 +372,10 @@ const Notes = () => {
                 type === SystemIntakeActionType.UPDATE_LCID && (
                   <dl>
                     <dt>Life Cycle ID</dt>
-                    <dd>{data.systemIntake?.lcid}</dd>
+                    <dd>
+                      {data.systemIntake?.lcidDisplay ??
+                        data.systemIntake?.lcid}
+                    </dd>
                     <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
                     <dd>
                       {formatDateUtc(

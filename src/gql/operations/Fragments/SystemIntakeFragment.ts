@@ -63,6 +63,7 @@ export default gql(/* GraphQL */ `
       ...FundingSourceFragment
     }
     lcid
+    lcidDisplay
     lcidIssuedAt
     lcidExpiresAt
     lcidRetiresAt

@@ -101,6 +101,7 @@ const UpdateLcid = ({
           >
             <LcidSummary
               lcid={lcid}
+              lcidDisplay={defaultValues?.lcidDisplay}
               lcidStatus={lcidStatus}
               lcidIssuedAt={defaultValues?.lcidIssuedAt || ''}
               lcidExpiresAt={defaultValues?.lcidExpiresAt || ''}

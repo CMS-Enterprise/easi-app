@@ -15,6 +15,7 @@ export default gql(/* GraphQL */ `
         name
       }
       lcid
+      lcidDisplay
       nextMeetingDate
       lastMeetingDate
     }

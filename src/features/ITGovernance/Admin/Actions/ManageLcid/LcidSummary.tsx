@@ -13,6 +13,7 @@ import { formatDateLocal } from 'utils/date';
 
 export type LcidSummaryProps = {
   lcid: string | null | undefined;
+  lcidDisplay?: string | null | undefined;
   lcidIssuedAt?: string | null | undefined;
   lcidExpiresAt?: string | null | undefined;
   lcidRetiresAt?: string | null | undefined;
@@ -28,6 +29,7 @@ export type LcidSummaryProps = {
 const LcidSummary = ({
   lcidStatus,
   lcid,
+  lcidDisplay,
   lcidIssuedAt,
   lcidExpiresAt,
   lcidRetiresAt,
@@ -80,7 +82,7 @@ const LcidSummary = ({
           {t('updateLcid.currentLcid')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {lcid}
+          {lcidDisplay ?? lcid}
         </dd>
 
         <Grid row>

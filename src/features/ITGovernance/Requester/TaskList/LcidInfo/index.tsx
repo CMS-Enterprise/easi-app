@@ -60,7 +60,7 @@ const LcidInfo = () => {
               <dl>
                 <dt>{t('decision.lcid')}</dt>
                 <dd className="margin-left-0 font-body-xl text-bold">
-                  {systemIntake.lcid}
+                  {systemIntake.lcidDisplay ?? systemIntake.lcid}
                 </dd>
                 <dd className="margin-left-0">
                   <p>{t('decision.tempLcidExplanation')}</p>

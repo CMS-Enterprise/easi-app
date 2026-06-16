@@ -84,6 +84,7 @@ export default gql(/* GraphQL */ `
       grbDate
 
       lcid
+      lcidDisplay
       lcidScope
       lcidIssuedAt
       lcidExpiresAt

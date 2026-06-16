@@ -729,6 +729,7 @@ type SystemIntake {
   grbVotingInformation: GRBVotingInformation!
   id: UUID!
   lcid: String
+  lcidDisplay: String
   lcidIssuedAt: Time
   lcidExpiresAt: Time
   lcidScope: HTML

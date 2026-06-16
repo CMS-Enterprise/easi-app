@@ -43,6 +43,7 @@ export type RequestSummaryProps = {
   adminLead?: string | null;
   submittedAt?: string | null;
   lcid?: string | null;
+  lcidDisplay?: string | null;
   contractNumbers: string[];
   state: SystemIntakeState;
   contractName?: string | null;
@@ -59,6 +60,7 @@ const RequestSummary = ({
   adminLead,
   submittedAt,
   lcid,
+  lcidDisplay,
   contractNumbers = [],
   state,
   contractName,
@@ -195,7 +197,9 @@ const RequestSummary = ({
                     className="text-base-dark"
                     data-testid="grt-current-status"
                   >
-                    {t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })}
+                    {t(`systemIntakeStatusAdmin.${statusAdmin}`, {
+                      lcid: lcidDisplay ?? lcid
+                    })}
                   </p>
                 )
               }

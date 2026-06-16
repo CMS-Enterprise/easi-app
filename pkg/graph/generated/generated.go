@@ -810,6 +810,7 @@ type ComplexityRoot struct {
 		LastMeetingDate                                   func(childComplexity int) int
 		Lcid                                              func(childComplexity int) int
 		LcidCostBaseline                                  func(childComplexity int) int
+		LcidDisplay                                       func(childComplexity int) int
 		LcidScope                                         func(childComplexity int) int
 		LcidStatus                                        func(childComplexity int) int
 		LifecycleExpiresAt                                func(childComplexity int) int
@@ -1524,6 +1525,7 @@ type SystemIntakeResolver interface {
 	GrbVotingInformation(ctx context.Context, obj *models.SystemIntake) (*models.GRBVotingInformation, error)
 
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	LcidDisplay(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
 	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -5885,6 +5887,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.LcidCostBaseline(childComplexity), true
+	case "SystemIntake.lcidDisplay":
+		if e.complexity.SystemIntake.LcidDisplay == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LcidDisplay(childComplexity), true
 	case "SystemIntake.lcidScope":
 		if e.complexity.SystemIntake.LcidScope == nil {
 			break
@@ -8999,6 +9007,7 @@ type SystemIntake {
   grbVotingInformation: GRBVotingInformation!
   id: UUID!
   lcid: String
+  lcidDisplay: String
   lcidIssuedAt: Time
   lcidExpiresAt: Time
   lcidScope: HTML
@@ -14514,6 +14523,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -21126,6 +21137,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -23601,6 +23614,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -27116,6 +27131,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -27369,6 +27386,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -29548,6 +29567,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -33302,6 +33323,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -33537,6 +33560,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -33771,6 +33796,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -33994,6 +34021,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -34217,6 +34246,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -38290,6 +38321,35 @@ func (ec *executionContext) fieldContext_SystemIntake_lcid(_ context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_lcidDisplay(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_lcidDisplay,
+		func(ctx context.Context) (any, error) {
+			return ec.resolvers.SystemIntake().LcidDisplay(ctx, obj)
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_lcidDisplay(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_lcidIssuedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -39866,6 +39926,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -40656,6 +40718,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -48186,6 +48250,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -50261,6 +50327,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -50861,6 +50929,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidDisplay":
+				return ec.fieldContext_SystemIntake_lcidDisplay(ctx, field)
 			case "lcidIssuedAt":
 				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
 			case "lcidExpiresAt":
@@ -62812,6 +62882,39 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_lcid(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "lcidDisplay":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_lcidDisplay(ctx, field, obj)
 				return res
 			}
 
