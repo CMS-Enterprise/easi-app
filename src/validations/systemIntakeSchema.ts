@@ -136,12 +136,42 @@ const SystemIntakeValidationSchema = {
       .trim()
       .required('Tell us how you think of solving your business need'),
     currentStage: Yup.string().required('Tell us where you are in the process'),
-    usesAiTech: Yup.boolean()
-      .nullable()
-      .required('Tell us if your request involves AI technologies'),
     needsEaSupport: Yup.boolean()
       .nullable()
       .required('Tell us if you need Enterprise Architecture (EA) support'),
+    digitalServiceInteraction: Yup.string()
+      .nullable()
+      .trim()
+      .required('Tell us if this project enables digital service interaction'),
+    digitalServiceInteractionDescription: Yup.string().when(
+      'digitalServiceInteraction',
+      {
+        is: 'YES',
+        then: Yup.string()
+          .trim()
+          .required('Describe the digital service interaction')
+      }
+    ),
+    protectedCmsDataAccessedOutside: Yup.string()
+      .nullable()
+      .trim()
+      .required(
+        'Tell us if protected CMS data will be accessed outside CMS-controlled systems'
+      ),
+    protectedCmsDataAccessedOutsideDescription: Yup.string().when(
+      'protectedCmsDataAccessedOutside',
+      {
+        is: 'YES',
+        then: Yup.string()
+          .trim()
+          .required(
+            'Describe how protected CMS data will be accessed outside CMS-controlled systems'
+          )
+      }
+    ),
+    usesAiTech: Yup.boolean()
+      .nullable()
+      .required('Tell us if your request involves AI technologies'),
     hasUiChanges: Yup.boolean()
       .nullable()
       .required(

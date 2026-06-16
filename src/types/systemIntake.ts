@@ -4,7 +4,8 @@ import {
   SystemIntakeCollaboratorInput,
   SystemIntakeContactFragment,
   SystemIntakeGRBReviewType,
-  SystemIntakeStatusAdmin
+  SystemIntakeStatusAdmin,
+  YesNoNotSure
 } from 'gql/generated/graphql';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
@@ -50,6 +51,10 @@ export type SystemIntakeForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  digitalServiceInteraction: YesNoNotSure | null;
+  digitalServiceInteractionDescription: string | null;
+  protectedCmsDataAccessedOutside: YesNoNotSure | null;
+  protectedCmsDataAccessedOutsideDescription: string | null;
   usesAiTech: boolean | null;
   hasUiChanges: boolean | null;
   usingSoftware: string | null;
