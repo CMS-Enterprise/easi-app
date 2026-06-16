@@ -299,6 +299,11 @@ const intake = {
     currentAnnualSpendITPortion: 'Current Annual Spend IT Portion',
     plannedAnnualSpend: 'Planned Annual Spend',
     plannedAnnualSpendITPortion: 'Planned Annual Spend IT Portion',
+    currentEstimatedCost: 'Current Estimated Cost',
+    currentEstimatedCostITPortion: 'Current Estimated Cost IT Portion',
+    estimatedTotalContractValue: 'Estimated Total Contract Value',
+    estimatedTotalContractValueITPortion:
+      'Estimated Total Contract Value IT Portion',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
