@@ -309,7 +309,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             </Fieldset>
           </FieldGroup>
 
-          <div className="grid-row grid-gap">
+          <div className="grid-row grid-gap display-flex flex-align-end">
             <div className="grid-col-12 desktop:grid-col-7">
               <FieldGroup
                 scrollElement="totalContractCosts.currentEstimatedCost"
@@ -373,7 +373,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             </div>
           </div>
 
-          <div className="grid-row grid-gap">
+          <div className="grid-row grid-gap display-flex flex-align-end">
             <div className="grid-col-12 desktop:grid-col-7">
               <FieldGroup
                 scrollElement="totalContractCosts.estimatedTotalContractValue"
