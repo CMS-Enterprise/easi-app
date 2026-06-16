@@ -132,6 +132,8 @@ const UpdateLcid = ({
           )
         }
 
+        <LcidMetadataFields control={control} />
+
         <Controller
           name="expiresAt"
           control={control}
@@ -245,8 +247,6 @@ const UpdateLcid = ({
             </FormGroup>
           )}
         />
-
-        <LcidMetadataFields control={control} />
 
         <Divider className="margin-top-3" />
 
