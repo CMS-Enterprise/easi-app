@@ -38,7 +38,7 @@ func GetRetireLCIDAction(
 	userInfo models.UserInfo,
 ) models.Action {
 	// pass in nil for most parameters - only change is to the retirement date
-	action := getBaseLCIDAction(intake, nil, nil, nil, nil, userInfo, &newRetirementDate, false, nil, nil, nil)
+	action := getBaseLCIDAction(intake, nil, nil, nil, nil, userInfo, &newRetirementDate, nil, nil, nil)
 	action.ActionType = models.ActionTypeRETIRELCID
 
 	return action
