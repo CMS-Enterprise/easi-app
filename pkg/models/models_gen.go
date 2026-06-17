@@ -822,6 +822,22 @@ type SystemIntakeRetireLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
+// Represents total contract costs for a system
+type SystemIntakeTotalContractCosts struct {
+	CurrentEstimatedCost                 *string `json:"currentEstimatedCost,omitempty"`
+	CurrentEstimatedCostITPortion        *string `json:"currentEstimatedCostITPortion,omitempty"`
+	EstimatedTotalContractValue          *string `json:"estimatedTotalContractValue,omitempty"`
+	EstimatedTotalContractValueITPortion *string `json:"estimatedTotalContractValueITPortion,omitempty"`
+}
+
+// Input data for total contract costs associated with a system request
+type SystemIntakeTotalContractCostsInput struct {
+	CurrentEstimatedCost                 *string `json:"currentEstimatedCost,omitempty"`
+	CurrentEstimatedCostITPortion        *string `json:"currentEstimatedCostITPortion,omitempty"`
+	EstimatedTotalContractValue          *string `json:"estimatedTotalContractValue,omitempty"`
+	EstimatedTotalContractValueITPortion *string `json:"estimatedTotalContractValueITPortion,omitempty"`
+}
+
 // Input for "unretiring" (i.e. removing retirement date) an LCID in IT Gov v2
 type SystemIntakeUnretireLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -939,11 +955,12 @@ type UpdateSystemIntakeContactInput struct {
 
 // Input data for updating contract details related to a system request
 type UpdateSystemIntakeContractDetailsInput struct {
-	ID             uuid.UUID                        `json:"id"`
-	FundingSources *SystemIntakeFundingSourcesInput `json:"fundingSources,omitempty"`
-	Costs          *SystemIntakeCostsInput          `json:"costs,omitempty"`
-	AnnualSpending *SystemIntakeAnnualSpendingInput `json:"annualSpending,omitempty"`
-	Contract       *SystemIntakeContractInput       `json:"contract,omitempty"`
+	ID                 uuid.UUID                            `json:"id"`
+	FundingSources     *SystemIntakeFundingSourcesInput     `json:"fundingSources,omitempty"`
+	Costs              *SystemIntakeCostsInput              `json:"costs,omitempty"`
+	AnnualSpending     *SystemIntakeAnnualSpendingInput     `json:"annualSpending,omitempty"`
+	TotalContractCosts *SystemIntakeTotalContractCostsInput `json:"totalContractCosts,omitempty"`
+	Contract           *SystemIntakeContractInput           `json:"contract,omitempty"`
 }
 
 type UpdateSystemIntakeGRBReviewerInput struct {

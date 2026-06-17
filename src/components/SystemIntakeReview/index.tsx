@@ -39,8 +39,14 @@ export const SystemIntakeReview = ({
   showSubmissionDate = true,
   showEditSectionLink = false
 }: SystemIntakeReviewProps) => {
-  const { annualSpending, costs, contract, submittedAt, contractNumbers } =
-    systemIntake;
+  const {
+    totalContractCosts,
+    annualSpending,
+    costs,
+    contract,
+    submittedAt,
+    contractNumbers
+  } = systemIntake;
 
   const { t } = useTranslation('intake');
 
@@ -351,6 +357,7 @@ export const SystemIntakeReview = ({
         </ReviewRow>
 
         <SystemIntakeAnnualSpending
+          totalContractCosts={totalContractCosts}
           annualSpending={annualSpending}
           costs={costs}
         />

@@ -196,29 +196,35 @@ const SystemIntakeValidationSchema = {
       is: true,
       then: Yup.array().min(1, 'Add at least one funding source to the request')
     }),
-    annualSpending: Yup.object().shape({
-      currentAnnualSpending: Yup.number()
-        .typeError(
-          'Please enter a valid number for the current annual spending'
-        )
-        .required('Tell us what the current annual spending for the contract')
-        .min(0, 'Annual spending cannot be a negative number'),
-      currentAnnualSpendingITPortion: Yup.number()
-        .typeError('Please enter a valid number')
+    totalContractCosts: Yup.object().shape({
+      currentEstimatedCost: Yup.number()
+        .required('Tell us what the current estimated cost for the contract is')
+        .typeError('Please enter a valid number for the current estimated cost')
+        .min(0, 'Current estimated cost cannot be a negative number'),
+      currentEstimatedCostITPortion: Yup.number()
         .required(
-          'Please enter a valid number for the current annual spending'
-        ),
-      plannedYearOneSpending: Yup.number()
+          'Tell us what percentage of the estimated costs are IT related'
+        )
         .typeError(
-          'Please enter a valid number for the planned annual spending'
+          'Please enter a valid percentage for the IT portion of current estimated costs'
         )
+        .min(0, 'Percentage of IT cannot be a negative number')
+        .max(100, 'Percentage of IT cannot exceed 100'),
+      estimatedTotalContractValue: Yup.number()
+        .required('Tell us what the estimated total contract value is')
+        .typeError(
+          'Please enter a valid number for the estimated total contract value'
+        )
+        .min(0, 'Estimated total contract value cannot be a negative number'),
+      estimatedTotalContractValueITPortion: Yup.number()
         .required(
-          'Tell us the planned annual spending of the first year of the new contract?'
+          'Tell us what percentage of the estimated total contract value is IT related'
         )
-        .min(0, 'Annual spending cannot be a negative number'),
-      plannedYearOneSpendingITPortion: Yup.number()
-        .typeError('Please enter a valid number')
-        .required('Please enter a valid number for the planned annual spending')
+        .typeError(
+          'Please enter a valid percentage for the IT portion of estimated total contract value'
+        )
+        .min(0, 'Percentage of IT cannot be a negative number')
+        .max(100, 'Percentage of IT cannot exceed 100')
     }),
     contract: Yup.object().shape({
       hasContract: Yup.string()
