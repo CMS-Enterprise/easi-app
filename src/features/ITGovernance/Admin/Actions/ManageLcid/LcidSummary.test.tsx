@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import {
+  SystemIntakeContactComponent,
   SystemIntakeLCIDStatus,
   SystemIntakeLCIDType
 } from 'gql/generated/graphql';
@@ -24,6 +25,8 @@ describe('LCID summary box', () => {
       lcidScope: 'Test scope',
       lcidCostBaseline: 'Test cost baseline',
       lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
+      lcidComponent:
+        SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT,
       lcidIsShortened: true,
       lcidIsLowIt: false,
       lcidStatus: SystemIntakeLCIDStatus.ISSUED
@@ -37,6 +40,8 @@ describe('LCID summary box', () => {
     expect(screen.getByText(props.lcidScope!));
     expect(screen.getByText(props.lcidCostBaseline!));
     expect(screen.getByText('New system'));
+    expect(screen.getByText('Current LCID component'));
+    expect(screen.getByText('Office of Information Technology'));
     expect(screen.getByText('Is this a shortened LCID?'));
     expect(screen.getByText('Is this LCID low IT?'));
     expect(screen.getByText('Yes'));

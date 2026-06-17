@@ -61,6 +61,7 @@ const UpdateLcid = ({
     'nextSteps',
     'costBaseline',
     'lcidType',
+    'lcidComponent',
     'lcidIsLowIt',
     'lcidIsShortened'
   ]);
@@ -110,6 +111,7 @@ const UpdateLcid = ({
               decisionNextSteps={defaultValues?.decisionNextSteps}
               lcidCostBaseline={defaultValues?.lcidCostBaseline}
               lcidType={defaultValues?.lcidType}
+              lcidComponent={defaultValues?.lcidComponent}
               lcidIsLowIt={defaultValues?.lcidIsLowIt}
               lcidIsShortened={defaultValues?.lcidIsShortened}
               className="margin-top-3 margin-bottom-6"

@@ -535,6 +535,7 @@ func (s *ResolverSuite) TestSystemIntakeAdminWorkflowPermissions() {
 					NextSteps:       nextSteps,
 					TrbFollowUp:     models.TRBFRStronglyRecommended,
 					LcidType:        models.LCIDTypeNewSystem,
+					LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 					LcidIsLowIt:     true,
 					LcidIsShortened: false,
 				})
@@ -715,6 +716,7 @@ func (s *ResolverSuite) TestSystemIntakeAdminLCIDActionPermissions() {
 					NextSteps:       models.HTML("Confirmed LCID next steps"),
 					TrbFollowUp:     models.TRBFRStronglyRecommended,
 					LcidType:        models.LCIDTypeNewSystem,
+					LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 					LcidIsLowIt:     true,
 					LcidIsShortened: false,
 				})

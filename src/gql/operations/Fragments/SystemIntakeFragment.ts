@@ -70,6 +70,7 @@ export default gql(/* GraphQL */ `
     lcidScope
     lcidCostBaseline
     lcidType
+    lcidComponent
     lcidIsLowIt
     lcidIsShortened
     lcidStatus

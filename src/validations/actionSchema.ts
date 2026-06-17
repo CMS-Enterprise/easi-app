@@ -1,4 +1,5 @@
 import {
+  SystemIntakeContactComponent,
   SystemIntakeLCIDType,
   SystemIntakeStepToProgressTo,
   SystemIntakeTRBFollowUp
@@ -17,6 +18,9 @@ export const confirmLcidSchema = Yup.object().shape({
     .required('Please make a selection'),
   lcidType: Yup.mixed<SystemIntakeLCIDType>()
     .oneOf(Object.values(SystemIntakeLCIDType))
+    .required('Please make a selection'),
+  lcidComponent: Yup.mixed<SystemIntakeContactComponent>()
+    .oneOf(Object.values(SystemIntakeContactComponent))
     .required('Please make a selection'),
   lcidIsLowIt: Yup.boolean().required('Please make a selection'),
   lcidIsShortened: Yup.boolean().required('Please make a selection')
@@ -38,6 +42,9 @@ export const updateLcidSchema = Yup.object().shape({
   expiresAt: Yup.date().typeError('Please enter a valid date'),
   lcidType: Yup.mixed<SystemIntakeLCIDType>().oneOf(
     Object.values(SystemIntakeLCIDType)
+  ),
+  lcidComponent: Yup.mixed<SystemIntakeContactComponent>().oneOf(
+    Object.values(SystemIntakeContactComponent)
   ),
   lcidIsLowIt: Yup.boolean(),
   lcidIsShortened: Yup.boolean()

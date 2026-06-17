@@ -301,6 +301,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   lcidScope: null,
   lcidCostBaseline: null,
   lcidType: null,
+  lcidComponent: null,
   lcidIsLowIt: null,
   lcidIsShortened: null,
   lcidStatus: null,
@@ -449,6 +450,7 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   lcidScope: null,
   lcidCostBaseline: null,
   lcidType: null,
+  lcidComponent: null,
   lcidIsLowIt: null,
   lcidIsShortened: null,
   lcidStatus: null,
@@ -631,6 +633,7 @@ export const systemIntakeWithLcid: GetSystemIntakesWithLCIDSQuery['systemIntakes
     trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
     lcidCostBaseline: 'Text cost baseline',
     lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
+    lcidComponent: SystemIntakeContactComponent.CENTER_FOR_MEDICARE_CM,
     lcidIsLowIt: false,
     lcidIsShortened: false
   };
@@ -657,6 +660,7 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
             trbFollowUpRecommendation: null,
             lcidCostBaseline: null,
             lcidType: null,
+            lcidComponent: null,
             lcidIsLowIt: null,
             lcidIsShortened: null
           }

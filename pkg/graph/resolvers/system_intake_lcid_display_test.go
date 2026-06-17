@@ -22,10 +22,9 @@ func TestFormatLCIDDisplay(t *testing.T) {
 	component := models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit
 
 	tests := []struct {
-		name      string
-		intake    *models.SystemIntake
-		component *models.SystemIntakeContactComponent
-		expected  *string
+		name     string
+		intake   *models.SystemIntake
+		expected *string
 	}{
 		{
 			name: "full metadata",
@@ -34,11 +33,11 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				LifecycleID:       null.StringFrom("123456"),
 				LifecycleIssuedAt: &issuedAt,
 				LCIDType:          &lcidType,
+				LCIDComponent:     &component,
 				LCIDIsShortened:   &shortened,
 				LCIDIsLowIT:       &lowIT,
 			},
-			component: &component,
-			expected:  stringPtr("123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED - LOW_IT"),
+			expected: stringPtr("123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED - LOW_IT"),
 		},
 		{
 			name: "partial metadata omits missing values",
@@ -51,17 +50,27 @@ func TestFormatLCIDDisplay(t *testing.T) {
 			expected: stringPtr("654321 - 2026 - SHORTENED"),
 		},
 		{
+			name: "missing saved component omits component",
+			intake: &models.SystemIntake{
+				ID:                uuid.New(),
+				LifecycleID:       null.StringFrom("333333"),
+				LifecycleIssuedAt: &issuedAt,
+				LCIDType:          &lcidType,
+			},
+			expected: stringPtr("333333 - 2026 - NEW_SYSTEM"),
+		},
+		{
 			name: "false booleans are omitted",
 			intake: &models.SystemIntake{
 				ID:                uuid.New(),
 				LifecycleID:       null.StringFrom("111111"),
 				LifecycleIssuedAt: &issuedAt,
 				LCIDType:          &recompeteType,
+				LCIDComponent:     &component,
 				LCIDIsShortened:   &notShortened,
 				LCIDIsLowIT:       &notLowIT,
 			},
-			component: &component,
-			expected:  stringPtr("111111 - 2026 - OIT - RECOMPETE"),
+			expected: stringPtr("111111 - 2026 - OIT - RECOMPETE"),
 		},
 		{
 			name: "missing lcid returns nil",
@@ -70,8 +79,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				LifecycleIssuedAt: &issuedAt,
 				LCIDType:          &lcidType,
 			},
-			component: &component,
-			expected:  nil,
+			expected: nil,
 		},
 		{
 			name: "raw lcid is included when all other metadata is missing",
@@ -85,7 +93,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.expected, formatLCIDDisplay(tt.intake, tt.component))
+			assert.Equal(t, tt.expected, formatLCIDDisplay(tt.intake))
 		})
 	}
 }

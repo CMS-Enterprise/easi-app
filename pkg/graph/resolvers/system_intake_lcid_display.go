@@ -7,7 +7,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func formatLCIDDisplay(intake *models.SystemIntake, component *models.SystemIntakeContactComponent) *string {
+func formatLCIDDisplay(intake *models.SystemIntake) *string {
 	if intake == nil || intake.LifecycleID.ValueOrZero() == "" {
 		return nil
 	}
@@ -17,7 +17,7 @@ func formatLCIDDisplay(intake *models.SystemIntake, component *models.SystemInta
 		parts = append(parts, strconv.Itoa(intake.LifecycleIssuedAt.Year()))
 	}
 
-	if componentLabel := formatLCIDDisplayComponent(component); componentLabel != "" {
+	if componentLabel := formatLCIDDisplayComponent(intake.LCIDComponent); componentLabel != "" {
 		parts = append(parts, componentLabel)
 	}
 

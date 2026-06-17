@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  SystemIntakeContactComponent,
   SystemIntakeDecisionState,
   SystemIntakeLCIDType
 } from 'gql/generated/graphql';
@@ -68,6 +69,12 @@ const checkFieldDefaults = async () => {
     expect(screen.getByRole('combobox', { name: 'LCID type *' })).toHaveValue(
       systemIntakeWithLcid.lcidType!
     );
+  });
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole('combobox', { name: 'LCID component *' })
+    ).toHaveValue(systemIntakeWithLcid.lcidComponent!);
   });
 
   await waitFor(() => {
@@ -165,6 +172,11 @@ describe('Issue LCID form', async () => {
       SystemIntakeLCIDType.NEW_SYSTEM
     );
 
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'LCID component *' }),
+      SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT
+    );
+
     const noOptions = screen.getAllByRole('radio', { name: 'No' });
     await user.click(noOptions[1]);
 
@@ -234,7 +246,7 @@ describe('Issue LCID form', async () => {
     checkFieldDefaults();
   });
 
-  it('renders LCID type options without shortened LCID', async () => {
+  it('renders LCID type and component options', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
@@ -260,5 +272,15 @@ describe('Issue LCID form', async () => {
     expect(lcidTypeSelect).toHaveTextContent('New system');
     expect(lcidTypeSelect).toHaveTextContent('Recompete');
     expect(lcidTypeSelect).not.toHaveTextContent('Shortened LCID');
+
+    const lcidComponentSelect = screen.getByRole('combobox', {
+      name: 'LCID component *'
+    });
+
+    expect(lcidComponentSelect).toHaveValue(systemIntake.requester?.component);
+    expect(lcidComponentSelect).toHaveTextContent(
+      'Office of Information Technology'
+    );
+    expect(lcidComponentSelect).toHaveTextContent('Center for Medicare');
   });
 });

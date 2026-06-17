@@ -70,32 +70,34 @@ const (
 
 // Action is the model for an action on a system intake
 type Action struct {
-	ID                                       uuid.UUID             `json:"id"`
-	IntakeID                                 *uuid.UUID            `db:"intake_id"`
-	BusinessCaseID                           *uuid.UUID            `db:"business_case_id"`
-	ActionType                               ActionType            `json:"actionType" db:"action_type"`
-	ActorName                                string                `json:"actorName" db:"actor_name"`
-	ActorEmail                               EmailAddress          `json:"actorEmail" db:"actor_email"`
-	ActorEUAUserID                           string                `json:"actorEuaUserId" db:"actor_eua_user_id"`
-	Feedback                                 *HTML                 `json:"feedback"`       // Feedback to requestor sent via email
-	Step                                     *SystemIntakeStep     `json:"step" db:"step"` // optional to account for previous actions that didn't save Step information
-	CreatedAt                                *time.Time            `json:"createdAt" db:"created_at"`
-	LCIDExpirationChangeNewDate              *time.Time            `db:"lcid_expiration_change_new_date"`
-	LCIDExpirationChangePreviousDate         *time.Time            `db:"lcid_expiration_change_previous_date"`
-	LCIDExpirationChangeNewScope             *HTML                 `db:"lcid_expiration_change_new_scope"`
-	LCIDExpirationChangePreviousScope        *HTML                 `db:"lcid_expiration_change_previous_scope"`
-	LCIDExpirationChangeNewNextSteps         *HTML                 `db:"lcid_expiration_change_new_next_steps"`
-	LCIDExpirationChangePreviousNextSteps    *HTML                 `db:"lcid_expiration_change_previous_next_steps"`
-	LCIDExpirationChangeNewCostBaseline      null.String           `db:"lcid_expiration_change_new_cost_baseline"`
-	LCIDExpirationChangePreviousCostBaseline null.String           `db:"lcid_expiration_change_previous_cost_baseline"`
-	LCIDRetirementChangeNewDate              *time.Time            `json:"newRetirementDate" db:"lcid_retirement_change_new_date"`
-	LCIDRetirementChangePreviousDate         *time.Time            `json:"previousRetirementDate" db:"lcid_retirement_change_previous_date"`
-	LCIDTypeChangePreviousValue              *SystemIntakeLCIDType `db:"lcid_type_change_previous_value"`
-	LCIDTypeChangeNewValue                   *SystemIntakeLCIDType `db:"lcid_type_change_new_value"`
-	LCIDIsShortenedChangePreviousValue       *bool                 `db:"lcid_is_shortened_change_previous_value"`
-	LCIDIsShortenedChangeNewValue            *bool                 `db:"lcid_is_shortened_change_new_value"`
-	LCIDIsLowITChangePreviousValue           *bool                 `db:"lcid_is_low_it_change_previous_value"`
-	LCIDIsLowITChangeNewValue                *bool                 `db:"lcid_is_low_it_change_new_value"`
+	ID                                       uuid.UUID                     `json:"id"`
+	IntakeID                                 *uuid.UUID                    `db:"intake_id"`
+	BusinessCaseID                           *uuid.UUID                    `db:"business_case_id"`
+	ActionType                               ActionType                    `json:"actionType" db:"action_type"`
+	ActorName                                string                        `json:"actorName" db:"actor_name"`
+	ActorEmail                               EmailAddress                  `json:"actorEmail" db:"actor_email"`
+	ActorEUAUserID                           string                        `json:"actorEuaUserId" db:"actor_eua_user_id"`
+	Feedback                                 *HTML                         `json:"feedback"`       // Feedback to requestor sent via email
+	Step                                     *SystemIntakeStep             `json:"step" db:"step"` // optional to account for previous actions that didn't save Step information
+	CreatedAt                                *time.Time                    `json:"createdAt" db:"created_at"`
+	LCIDExpirationChangeNewDate              *time.Time                    `db:"lcid_expiration_change_new_date"`
+	LCIDExpirationChangePreviousDate         *time.Time                    `db:"lcid_expiration_change_previous_date"`
+	LCIDExpirationChangeNewScope             *HTML                         `db:"lcid_expiration_change_new_scope"`
+	LCIDExpirationChangePreviousScope        *HTML                         `db:"lcid_expiration_change_previous_scope"`
+	LCIDExpirationChangeNewNextSteps         *HTML                         `db:"lcid_expiration_change_new_next_steps"`
+	LCIDExpirationChangePreviousNextSteps    *HTML                         `db:"lcid_expiration_change_previous_next_steps"`
+	LCIDExpirationChangeNewCostBaseline      null.String                   `db:"lcid_expiration_change_new_cost_baseline"`
+	LCIDExpirationChangePreviousCostBaseline null.String                   `db:"lcid_expiration_change_previous_cost_baseline"`
+	LCIDRetirementChangeNewDate              *time.Time                    `json:"newRetirementDate" db:"lcid_retirement_change_new_date"`
+	LCIDRetirementChangePreviousDate         *time.Time                    `json:"previousRetirementDate" db:"lcid_retirement_change_previous_date"`
+	LCIDTypeChangePreviousValue              *SystemIntakeLCIDType         `db:"lcid_type_change_previous_value"`
+	LCIDTypeChangeNewValue                   *SystemIntakeLCIDType         `db:"lcid_type_change_new_value"`
+	LCIDComponentChangePreviousValue         *SystemIntakeContactComponent `db:"lcid_component_change_previous_value"`
+	LCIDComponentChangeNewValue              *SystemIntakeContactComponent `db:"lcid_component_change_new_value"`
+	LCIDIsShortenedChangePreviousValue       *bool                         `db:"lcid_is_shortened_change_previous_value"`
+	LCIDIsShortenedChangeNewValue            *bool                         `db:"lcid_is_shortened_change_new_value"`
+	LCIDIsLowITChangePreviousValue           *bool                         `db:"lcid_is_low_it_change_previous_value"`
+	LCIDIsLowITChangeNewValue                *bool                         `db:"lcid_is_low_it_change_new_value"`
 }
 
 func (a Action) GetMappingKey() uuid.UUID {

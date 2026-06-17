@@ -7,6 +7,7 @@ import { SystemIntakeLCIDType } from 'gql/generated/graphql';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
+import { getNonLegacyComponents } from 'constants/cmsComponentsMap';
 
 type LcidMetadataFieldsProps<T extends FieldValues> = {
   control: Control<T>;
@@ -48,6 +49,38 @@ const LcidMetadataFields = <T extends FieldValues>({
               {lcidTypeOptions.map(option => (
                 <option key={option} value={option}>
                   {t(`issueLCID.lcidType.${option}`)}
+                </option>
+              ))}
+            </Select>
+          </FormGroup>
+        )}
+      />
+
+      <Controller
+        name={'lcidComponent' as Path<T>}
+        control={control}
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <FormGroup error={!!error}>
+            <Label
+              htmlFor={field.name}
+              className="text-normal"
+              required={required}
+            >
+              {t('issueLCID.lcidComponent.label')}
+            </Label>
+            {!!error?.message && (
+              <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+            )}
+            <Select
+              {...field}
+              id={field.name}
+              value={field.value || ''}
+              onChange={e => field.onChange(e.target.value || undefined)}
+            >
+              <option value="">{`- ${t('Select')} -`}</option>
+              {getNonLegacyComponents().map(component => (
+                <option key={component.enum} value={component.enum}>
+                  {t(component.labelKey)}
                 </option>
               ))}
             </Select>

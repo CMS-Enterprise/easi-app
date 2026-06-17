@@ -7,6 +7,7 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import {
   GetAdminNotesAndActionsDocument,
   SystemIntakeActionType,
+  SystemIntakeContactComponent,
   SystemIntakeLCIDType,
   useCreateSystemIntakeNoteMutation,
   useGetAdminNotesAndActionsQuery,
@@ -34,6 +35,7 @@ import {
   RichTextViewer
 } from 'components/RichTextEditor';
 import TruncatedText from 'components/TruncatedText';
+import { getComponentByEnum } from 'constants/cmsComponentsMap';
 import { formatDateUtc } from 'utils/date';
 
 import './index.scss';
@@ -48,6 +50,15 @@ const formatLCIDType = (
 ) => {
   return value
     ? t(`notes.extendLcid.lcidType.${value}`)
+    : t('notes.extendLcid.notSpecified');
+};
+
+const formatLCIDComponent = (
+  t: TFunction,
+  value: SystemIntakeContactComponent | null | undefined
+) => {
+  return value
+    ? t(getComponentByEnum(value).labelKey)
     : t('notes.extendLcid.notSpecified');
 };
 
@@ -408,6 +419,20 @@ const Notes = () => {
                         <dt>{t('notes.extendLcid.oldLcidType')}</dt>
                         <dd>
                           {formatLCIDType(t, lcidMetadataChange.previousType)}
+                        </dd>
+                        <dt>{t('notes.extendLcid.newComponent')}</dt>
+                        <dd>
+                          {formatLCIDComponent(
+                            t,
+                            lcidMetadataChange.newComponent
+                          )}
+                        </dd>
+                        <dt>{t('notes.extendLcid.oldComponent')}</dt>
+                        <dd>
+                          {formatLCIDComponent(
+                            t,
+                            lcidMetadataChange.previousComponent
+                          )}
                         </dd>
                         <dt>{t('notes.extendLcid.newShortened')}</dt>
                         <dd>

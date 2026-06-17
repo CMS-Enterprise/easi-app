@@ -1403,6 +1403,8 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 		}
 		if action.LCIDTypeChangePreviousValue != nil ||
 			action.LCIDTypeChangeNewValue != nil ||
+			action.LCIDComponentChangePreviousValue != nil ||
+			action.LCIDComponentChangeNewValue != nil ||
 			action.LCIDIsShortenedChangePreviousValue != nil ||
 			action.LCIDIsShortenedChangeNewValue != nil ||
 			action.LCIDIsLowITChangePreviousValue != nil ||
@@ -1410,6 +1412,8 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 			graphAction.LcidMetadataChange = &models.SystemIntakeLCIDMetadataChange{
 				PreviousType:        action.LCIDTypeChangePreviousValue,
 				NewType:             action.LCIDTypeChangeNewValue,
+				PreviousComponent:   action.LCIDComponentChangePreviousValue,
+				NewComponent:        action.LCIDComponentChangeNewValue,
 				PreviousIsShortened: action.LCIDIsShortenedChangePreviousValue,
 				NewIsShortened:      action.LCIDIsShortenedChangeNewValue,
 				PreviousIsLowIt:     action.LCIDIsLowITChangePreviousValue,
@@ -1634,21 +1638,12 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 
 // LcidDisplay is the resolver for the lcidDisplay field.
 func (r *systemIntakeResolver) LcidDisplay(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	_ = ctx
 	if obj.LifecycleID.ValueOrZero() == "" {
 		return nil, nil
 	}
 
-	requester, err := SystemIntakeContactGetRequester(ctx, obj.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	var component *models.SystemIntakeContactComponent
-	if requester != nil {
-		component = requester.FilteredComponent()
-	}
-
-	return formatLCIDDisplay(obj, component), nil
+	return formatLCIDDisplay(obj), nil
 }
 
 // LcidScope is the resolver for the lcidScope field.

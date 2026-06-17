@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
+  SystemIntakeContactComponent,
   SystemIntakeLCIDStatus,
   SystemIntakeLCIDType
 } from 'gql/generated/graphql';
 
 import LcidStatusTag from 'components/LcidStatusTag';
 import { RichTextViewer } from 'components/RichTextEditor';
+import { getComponentByEnum } from 'constants/cmsComponentsMap';
 import { formatDateLocal } from 'utils/date';
 
 export type LcidSummaryProps = {
@@ -21,6 +23,7 @@ export type LcidSummaryProps = {
   decisionNextSteps?: string | null | undefined;
   lcidCostBaseline?: string | null | undefined;
   lcidType?: SystemIntakeLCIDType | null | undefined;
+  lcidComponent?: SystemIntakeContactComponent | null | undefined;
   lcidIsLowIt?: boolean | null | undefined;
   lcidIsShortened?: boolean | null | undefined;
   lcidStatus?: SystemIntakeLCIDStatus | null | undefined;
@@ -37,6 +40,7 @@ const LcidSummary = ({
   decisionNextSteps,
   lcidCostBaseline,
   lcidType,
+  lcidComponent,
   lcidIsLowIt,
   lcidIsShortened,
   className
@@ -56,6 +60,10 @@ const LcidSummary = ({
   } else if (lcidIsLowIt === false) {
     lcidIsLowItLabel = t('issueLCID.lcidIsLowIt.no');
   }
+
+  const lcidComponentLabel = lcidComponent
+    ? t(getComponentByEnum(lcidComponent).labelKey)
+    : t('governanceReviewTeam:notes.extendLcid.noScope');
 
   return (
     <div
@@ -147,6 +155,13 @@ const LcidSummary = ({
           {lcidType
             ? t(`issueLCID.lcidType.${lcidType}`)
             : t('governanceReviewTeam:notes.extendLcid.noScope')}
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidComponent')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidComponentLabel}
         </dd>
 
         <dt className="text-bold margin-top-2">

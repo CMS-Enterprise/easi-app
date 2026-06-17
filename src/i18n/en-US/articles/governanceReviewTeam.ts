@@ -237,6 +237,8 @@ const governanceReviewTeam = {
       oldCostBaseline: 'Old Cost Baseline',
       newLcidType: 'New LCID type',
       oldLcidType: 'Old LCID type',
+      newComponent: 'New Component',
+      oldComponent: 'Old Component',
       newShortened: 'New Shortened',
       oldShortened: 'Old Shortened',
       newLowIt: 'New Low IT',

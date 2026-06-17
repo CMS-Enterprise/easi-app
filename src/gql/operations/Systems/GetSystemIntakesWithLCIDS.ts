@@ -12,6 +12,7 @@ export default gql(/* GraphQL */ `
       trbFollowUpRecommendation
       lcidCostBaseline
       lcidType
+      lcidComponent
       lcidIsLowIt
       lcidIsShortened
     }

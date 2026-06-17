@@ -7,6 +7,7 @@ import {
   GetAdminNotesAndActionsDocument,
   GetAdminNotesAndActionsQuery,
   SystemIntakeActionType,
+  SystemIntakeContactComponent,
   SystemIntakeLCIDType,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
@@ -113,6 +114,9 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
           __typename: 'SystemIntakeLCIDMetadataChange',
           previousType: SystemIntakeLCIDType.NEW_SYSTEM,
           newType: SystemIntakeLCIDType.RECOMPETE,
+          previousComponent:
+            SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT,
+          newComponent: SystemIntakeContactComponent.CENTER_FOR_MEDICARE_CM,
           previousIsShortened: false,
           newIsShortened: true,
           previousIsLowIt: true,
@@ -241,12 +245,18 @@ describe('Governance Review Team', () => {
 
     expect(screen.getByText('New LCID type')).toBeInTheDocument();
     expect(screen.getByText('Old LCID type')).toBeInTheDocument();
+    expect(screen.getByText('New Component')).toBeInTheDocument();
+    expect(screen.getByText('Old Component')).toBeInTheDocument();
     expect(screen.getByText('New Shortened')).toBeInTheDocument();
     expect(screen.getByText('Old Shortened')).toBeInTheDocument();
     expect(screen.getByText('New Low IT')).toBeInTheDocument();
     expect(screen.getByText('Old Low IT')).toBeInTheDocument();
     expect(screen.getByText('Recompete')).toBeInTheDocument();
     expect(screen.getByText('New system')).toBeInTheDocument();
+    expect(screen.getByText('Center for Medicare')).toBeInTheDocument();
+    expect(
+      screen.getByText('Office of Information Technology')
+    ).toBeInTheDocument();
     expect(screen.getAllByText('Yes')).toHaveLength(2);
     expect(screen.getAllByText('No')).toHaveLength(2);
   });

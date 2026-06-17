@@ -18,6 +18,7 @@ func getBaseLCIDAction(
 	userInfo models.UserInfo,
 	retirementDate *time.Time,
 	lcidType *models.SystemIntakeLCIDType,
+	lcidComponent *models.SystemIntakeContactComponent,
 	lcidIsShortened *bool,
 	lcidIsLowIT *bool,
 ) models.Action {
@@ -48,6 +49,8 @@ func getBaseLCIDAction(
 
 		LCIDTypeChangeNewValue:             intake.LCIDType,
 		LCIDTypeChangePreviousValue:        intake.LCIDType,
+		LCIDComponentChangeNewValue:        intake.LCIDComponent,
+		LCIDComponentChangePreviousValue:   intake.LCIDComponent,
 		LCIDIsShortenedChangeNewValue:      intake.LCIDIsShortened,
 		LCIDIsShortenedChangePreviousValue: intake.LCIDIsShortened,
 		LCIDIsLowITChangeNewValue:          intake.LCIDIsLowIT,
@@ -72,6 +75,9 @@ func getBaseLCIDAction(
 
 	if lcidType != nil {
 		action.LCIDTypeChangeNewValue = lcidType
+	}
+	if lcidComponent != nil {
+		action.LCIDComponentChangeNewValue = lcidComponent
 	}
 	if lcidIsShortened != nil {
 		action.LCIDIsShortenedChangeNewValue = lcidIsShortened

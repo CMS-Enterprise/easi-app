@@ -7,6 +7,7 @@ import {
   CreateSystemIntakeActionConfirmLCIDMutationVariables,
   CreateSystemIntakeActionIssueLCIDMutationVariables,
   GetSystemIntakesWithLCIDSQuery,
+  SystemIntakeContactComponent,
   SystemIntakeDecisionState,
   SystemIntakeIssueLCIDInput,
   SystemIntakeLCIDType,
@@ -51,8 +52,12 @@ interface IssueLcidProps extends ResolutionProps {
   trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
   lcidCostBaseline?: string | null;
   lcidType?: SystemIntakeLCIDType | null;
+  lcidComponent?: SystemIntakeContactComponent | null;
   lcidIsLowIt?: boolean | null;
   lcidIsShortened?: boolean | null;
+  requester?: {
+    component?: SystemIntakeContactComponent | null;
+  } | null;
 }
 
 /**
@@ -84,6 +89,11 @@ const IssueLcid = ({
 
   const { data, loading } = useGetSystemIntakesWithLCIDSQuery();
 
+  const defaultLcidComponent =
+    systemIntake.lcidComponent ||
+    systemIntake.requester?.component ||
+    undefined;
+
   /** System intakes with LCIDs, formatted for Use Existing LCID dropdown */
   const systemIntakesWithLcids = useMemo(() => {
     if (!data?.systemIntakesWithLcids) return undefined;
@@ -110,13 +120,15 @@ const IssueLcid = ({
         trbFollowUp: systemIntake.trbFollowUpRecommendation || undefined,
         costBaseline: systemIntake.lcidCostBaseline || '',
         lcidType: systemIntake.lcidType || undefined,
+        lcidComponent: defaultLcidComponent,
         lcidIsLowIt: systemIntake.lcidIsLowIt ?? undefined,
         lcidIsShortened: systemIntake.lcidIsShortened ?? undefined
       }
     : {
         lcid: systemIntake.lcid || '',
         expiresAt: systemIntake.lcidExpiresAt || '',
-        scope: systemIntake.lcidScope || ''
+        scope: systemIntake.lcidScope || '',
+        lcidComponent: defaultLcidComponent
       };
 
   const form = useForm<IssueLcidFields>({
@@ -208,6 +220,12 @@ const IssueLcid = ({
           resetField('lcidType');
         }
 
+        if (selectedLcidData.lcidComponent) {
+          setValue('lcidComponent', selectedLcidData.lcidComponent);
+        } else {
+          resetField('lcidComponent');
+        }
+
         if (selectedLcidData.lcidIsLowIt != null) {
           setValue('lcidIsLowIt', selectedLcidData.lcidIsLowIt);
         } else {
@@ -230,10 +248,22 @@ const IssueLcid = ({
       resetField('costBaseline');
       resetField('trbFollowUp');
       resetField('lcidType');
+      if (defaultLcidComponent) {
+        setValue('lcidComponent', defaultLcidComponent);
+      } else {
+        resetField('lcidComponent');
+      }
       resetField('lcidIsLowIt');
       resetField('lcidIsShortened');
     }
-  }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue, resetField]);
+  }, [
+    lcid,
+    useExistingLcid,
+    systemIntakesWithLcids,
+    setValue,
+    resetField,
+    defaultLcidComponent
+  ]);
 
   if (loading) return <PageLoading />;
 

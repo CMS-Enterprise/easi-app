@@ -362,6 +362,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 			NextSteps:       "test next steps",
 			TrbFollowUp:     models.TRBFRStronglyRecommended,
 			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 			LcidIsLowIt:     true,
 			LcidIsShortened: false,
 		}
@@ -391,6 +392,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 			NextSteps:       "test next steps",
 			TrbFollowUp:     models.TRBFRStronglyRecommended,
 			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 			LcidIsLowIt:     true,
 			LcidIsShortened: false,
 		}
@@ -421,6 +423,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 			NextSteps:       "test next steps after issuing LCID",
 			TrbFollowUp:     models.TRBFRStronglyRecommended,
 			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 			LcidIsLowIt:     true,
 			LcidIsShortened: false,
 
@@ -1073,9 +1076,11 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		s.NoError(err)
 		intakeWLCID.LifecycleID = null.StringFrom("123456")
 		lcidType := models.LCIDTypeNewSystem
+		lcidComponent := models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit
 		lcidIsLowIT := true
 		lcidIsShortened := false
 		intakeWLCID.LCIDType = &lcidType
+		intakeWLCID.LCIDComponent = &lcidComponent
 		intakeWLCID.LCIDIsLowIT = &lcidIsLowIT
 		intakeWLCID.LCIDIsShortened = &lcidIsShortened
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intakeWLCID)
@@ -1084,6 +1089,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		additionalInfo := models.HTMLPointer("My test info")
 		costBaseline := "the original costBaseline"
 		updatedLCIDType := models.LCIDTypeRecompete
+		updatedLCIDComponent := models.SystemIntakeContactComponentCenterForMedicareCm
 		updatedIsShortened := true
 
 		updatedIntakeLCID, err := UpdateLCID(
@@ -1097,12 +1103,14 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 				AdditionalInfo:  additionalInfo,
 				CostBaseline:    &costBaseline,
 				LcidType:        &updatedLCIDType,
+				LcidComponent:   &updatedLCIDComponent,
 				LcidIsShortened: &updatedIsShortened,
 			})
 		s.NoError(err)
 		s.EqualValues(scope, updatedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), updatedIntakeLCID.LifecycleCostBaseline)
 		s.EqualValues(updatedLCIDType, *updatedIntakeLCID.LCIDType)
+		s.EqualValues(updatedLCIDComponent, *updatedIntakeLCID.LCIDComponent)
 		s.EqualValues(updatedIsShortened, *updatedIntakeLCID.LCIDIsShortened)
 		s.EqualValues(lcidIsLowIT, *updatedIntakeLCID.LCIDIsLowIT)
 
@@ -1116,6 +1124,8 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		s.EqualValues(additionalInfo, action.Feedback)
 		s.EqualValues(lcidType, *action.LCIDTypeChangePreviousValue)
 		s.EqualValues(updatedLCIDType, *action.LCIDTypeChangeNewValue)
+		s.EqualValues(lcidComponent, *action.LCIDComponentChangePreviousValue)
+		s.EqualValues(updatedLCIDComponent, *action.LCIDComponentChangeNewValue)
 		s.EqualValues(lcidIsShortened, *action.LCIDIsShortenedChangePreviousValue)
 		s.EqualValues(updatedIsShortened, *action.LCIDIsShortenedChangeNewValue)
 		s.EqualValues(lcidIsLowIT, *action.LCIDIsLowITChangePreviousValue)
@@ -1216,6 +1226,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 				NextSteps:       nextSteps,
 				TrbFollowUp:     trbFollowUp,
 				LcidType:        models.LCIDTypeNewSystem,
+				LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 				LcidIsLowIt:     true,
 				LcidIsShortened: false,
 				AdditionalInfo:  additionalInfo,
@@ -1224,6 +1235,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.NoError(err)
 		s.EqualValues(&scope, confirmedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), confirmedIntakeLCID.LifecycleCostBaseline)
+		s.EqualValues(models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit, *confirmedIntakeLCID.LCIDComponent)
 		s.Nil(confirmedIntakeLCID.LifecycleExpirationAlertTS)
 
 		// assert action is created
@@ -1236,6 +1248,8 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.EqualValues(additionalInfo, action.Feedback)
 		s.Nil(action.LCIDTypeChangePreviousValue)
 		s.EqualValues(models.LCIDTypeNewSystem, *action.LCIDTypeChangeNewValue)
+		s.Nil(action.LCIDComponentChangePreviousValue)
+		s.EqualValues(models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit, *action.LCIDComponentChangeNewValue)
 		s.Nil(action.LCIDIsLowITChangePreviousValue)
 		s.EqualValues(true, *action.LCIDIsLowITChangeNewValue)
 		s.Nil(action.LCIDIsShortenedChangePreviousValue)
@@ -1272,6 +1286,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 					NextSteps:       nextSteps,
 					TrbFollowUp:     trbFollowUp,
 					LcidType:        models.LCIDTypeNewSystem,
+					LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 					LcidIsLowIt:     true,
 					LcidIsShortened: false,
 					AdditionalInfo:  additionalInfoconfirm,
@@ -1314,6 +1329,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 			NextSteps:       "test next steps after issuing LCID, before expiring",
 			TrbFollowUp:     models.TRBFRStronglyRecommended,
 			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 			LcidIsLowIt:     true,
 			LcidIsShortened: false,
 		}
@@ -1394,6 +1410,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 			NextSteps:       "test next steps after issuing LCID, before expiring",
 			TrbFollowUp:     models.TRBFRStronglyRecommended,
 			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 			LcidIsLowIt:     true,
 			LcidIsShortened: false,
 		}
@@ -1470,6 +1487,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 			NextSteps:       "test next steps after issuing LCID, before retiring",
 			TrbFollowUp:     models.TRBFRStronglyRecommended,
 			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
 			LcidIsLowIt:     true,
 			LcidIsShortened: false,
 		}

@@ -40,6 +40,8 @@ export default gql(/* GraphQL */ `
         lcidMetadataChange {
           previousType
           newType
+          previousComponent
+          newComponent
           previousIsShortened
           newIsShortened
           previousIsLowIt

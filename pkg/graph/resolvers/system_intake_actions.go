@@ -461,6 +461,7 @@ func IssueLCID(
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 	intake.LCIDType = &input.LcidType
+	intake.LCIDComponent = &input.LcidComponent
 	intake.LCIDIsLowIT = &input.LcidIsLowIt
 	intake.LCIDIsShortened = &input.LcidIsShortened
 
@@ -495,6 +496,7 @@ func IssueLCID(
 			ActorEUAUserID:                adminEUAID,
 			Step:                          &intake.Step,
 			LCIDTypeChangeNewValue:        &input.LcidType,
+			LCIDComponentChangeNewValue:   &input.LcidComponent,
 			LCIDIsLowITChangeNewValue:     &input.LcidIsLowIt,
 			LCIDIsShortenedChangeNewValue: &input.LcidIsShortened,
 		}
@@ -830,7 +832,7 @@ func UpdateLCID(
 	// input.Reason //TODO: The reason field will be retained in the DB in a future ticket
 
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
+	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidComponent, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -877,6 +879,9 @@ func UpdateLCID(
 	}
 	if input.LcidType != nil {
 		intake.LCIDType = input.LcidType
+	}
+	if input.LcidComponent != nil {
+		intake.LCIDComponent = input.LcidComponent
 	}
 	if input.LcidIsLowIt != nil {
 		intake.LCIDIsLowIT = input.LcidIsLowIt
@@ -994,7 +999,7 @@ func ConfirmLCID(ctx context.Context,
 		return nil, err
 	}
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
+	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidComponent, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -1016,6 +1021,7 @@ func ConfirmLCID(ctx context.Context,
 		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 	}
 	intake.LCIDType = &input.LcidType
+	intake.LCIDComponent = &input.LcidComponent
 	intake.LCIDIsLowIT = &input.LcidIsLowIt
 	intake.LCIDIsShortened = &input.LcidIsShortened
 

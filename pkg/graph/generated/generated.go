@@ -804,6 +804,7 @@ type ComplexityRoot struct {
 		HasUIChanges                                      func(childComplexity int) int
 		ID                                                func(childComplexity int) int
 		ItGovTaskStatuses                                 func(childComplexity int) int
+		LCIDComponent                                     func(childComplexity int) int
 		LCIDIsLowIT                                       func(childComplexity int) int
 		LCIDIsShortened                                   func(childComplexity int) int
 		LCIDType                                          func(childComplexity int) int
@@ -1023,9 +1024,11 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeLCIDMetadataChange struct {
+		NewComponent        func(childComplexity int) int
 		NewIsLowIt          func(childComplexity int) int
 		NewIsShortened      func(childComplexity int) int
 		NewType             func(childComplexity int) int
+		PreviousComponent   func(childComplexity int) int
 		PreviousIsLowIt     func(childComplexity int) int
 		PreviousIsShortened func(childComplexity int) int
 		PreviousType        func(childComplexity int) int
@@ -5861,6 +5864,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.ItGovTaskStatuses(childComplexity), true
+	case "SystemIntake.lcidComponent":
+		if e.complexity.SystemIntake.LCIDComponent == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LCIDComponent(childComplexity), true
 	case "SystemIntake.lcidIsLowIt":
 		if e.complexity.SystemIntake.LCIDIsLowIT == nil {
 			break
@@ -6835,6 +6844,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeLCIDExpirationChange.PreviousScope(childComplexity), true
 
+	case "SystemIntakeLCIDMetadataChange.newComponent":
+		if e.complexity.SystemIntakeLCIDMetadataChange.NewComponent == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.NewComponent(childComplexity), true
 	case "SystemIntakeLCIDMetadataChange.newIsLowIt":
 		if e.complexity.SystemIntakeLCIDMetadataChange.NewIsLowIt == nil {
 			break
@@ -6853,6 +6868,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeLCIDMetadataChange.NewType(childComplexity), true
+	case "SystemIntakeLCIDMetadataChange.previousComponent":
+		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousComponent == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeLCIDMetadataChange.PreviousComponent(childComplexity), true
 	case "SystemIntakeLCIDMetadataChange.previousIsLowIt":
 		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsLowIt == nil {
 			break
@@ -9067,6 +9088,7 @@ type SystemIntake {
   lcidCostBaseline: String
   lcidRetiresAt: Time
   lcidType: SystemIntakeLCIDType
+  lcidComponent: SystemIntakeContactComponent
   lcidIsLowIt: Boolean
   lcidIsShortened: Boolean
   needsEaSupport: Boolean
@@ -9564,6 +9586,8 @@ Contains metadata changes for a system request's lifecycle ID
 type SystemIntakeLCIDMetadataChange {
   previousType: SystemIntakeLCIDType
   newType: SystemIntakeLCIDType
+  previousComponent: SystemIntakeContactComponent
+  newComponent: SystemIntakeContactComponent
   previousIsShortened: Boolean
   newIsShortened: Boolean
   previousIsLowIt: Boolean
@@ -9910,6 +9934,7 @@ input SystemIntakeUpdateLCIDInput {
   nextSteps: HTML
   costBaseline: String
   lcidType: SystemIntakeLCIDType
+  lcidComponent: SystemIntakeContactComponent
   lcidIsLowIt: Boolean
   lcidIsShortened: Boolean
   reason: HTML
@@ -9929,6 +9954,7 @@ input SystemIntakeConfirmLCIDInput {
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
+  lcidComponent: SystemIntakeContactComponent!
   lcidIsLowIt: Boolean!
   lcidIsShortened: Boolean!
   additionalInfo: HTML
@@ -9977,6 +10003,7 @@ input SystemIntakeIssueLCIDInput {
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
+  lcidComponent: SystemIntakeContactComponent!
   lcidIsLowIt: Boolean!
   lcidIsShortened: Boolean!
   additionalInfo: HTML
@@ -14603,6 +14630,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -21217,6 +21246,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -23694,6 +23725,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -27211,6 +27244,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -27466,6 +27501,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -29647,6 +29684,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -33403,6 +33442,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -33640,6 +33681,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -33876,6 +33919,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -34101,6 +34146,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -34326,6 +34373,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -38592,6 +38641,35 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidType(_ context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_lcidComponent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_lcidComponent,
+		func(ctx context.Context) (any, error) {
+			return obj.LCIDComponent, nil
+		},
+		nil,
+		ec.marshalOSystemIntakeContactComponent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_lcidComponent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeContactComponent does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_lcidIsLowIt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -40008,6 +40086,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -40800,6 +40880,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -41114,6 +41196,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_lcidMetadataChange(_
 				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousType(ctx, field)
 			case "newType":
 				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newType(ctx, field)
+			case "previousComponent":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousComponent(ctx, field)
+			case "newComponent":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newComponent(ctx, field)
 			case "previousIsShortened":
 				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsShortened(ctx, field)
 			case "newIsShortened":
@@ -44706,6 +44792,64 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newType(
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeLCIDType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_previousComponent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_previousComponent,
+		func(ctx context.Context) (any, error) {
+			return obj.PreviousComponent, nil
+		},
+		nil,
+		ec.marshalOSystemIntakeContactComponent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_previousComponent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeContactComponent does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_newComponent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_newComponent,
+		func(ctx context.Context) (any, error) {
+			return obj.NewComponent, nil
+		},
+		nil,
+		ec.marshalOSystemIntakeContactComponent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newComponent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeLCIDMetadataChange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeContactComponent does not have child fields")
 		},
 	}
 	return fc, nil
@@ -48549,6 +48693,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -50626,6 +50772,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -51228,6 +51376,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
 			case "lcidType":
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
+			case "lcidComponent":
+				return ec.fieldContext_SystemIntake_lcidComponent(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
 			case "lcidIsShortened":
@@ -55256,7 +55406,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsShortened", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidComponent", "lcidIsLowIt", "lcidIsShortened", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55312,6 +55462,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 				return it, err
 			}
 			it.LcidType = data
+		case "lcidComponent":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidComponent"))
+			data, err := ec.unmarshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LcidComponent = data
 		case "lcidIsLowIt":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsLowIt"))
 			data, err := ec.unmarshalNBoolean2bool(ctx, v)
@@ -55675,7 +55832,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "lcid", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsShortened", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "lcid", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidComponent", "lcidIsLowIt", "lcidIsShortened", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55738,6 +55895,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 				return it, err
 			}
 			it.LcidType = data
+		case "lcidComponent":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidComponent"))
+			data, err := ec.unmarshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LcidComponent = data
 		case "lcidIsLowIt":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsLowIt"))
 			data, err := ec.unmarshalNBoolean2bool(ctx, v)
@@ -56247,7 +56411,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsShortened", "reason", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "lcidType", "lcidComponent", "lcidIsLowIt", "lcidIsShortened", "reason", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56296,6 +56460,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 				return it, err
 			}
 			it.LcidType = data
+		case "lcidComponent":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidComponent"))
+			data, err := ec.unmarshalOSystemIntakeContactComponent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LcidComponent = data
 		case "lcidIsLowIt":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsLowIt"))
 			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
@@ -63297,6 +63468,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_lcidRetiresAt(ctx, field, obj)
 		case "lcidType":
 			out.Values[i] = ec._SystemIntake_lcidType(ctx, field, obj)
+		case "lcidComponent":
+			out.Values[i] = ec._SystemIntake_lcidComponent(ctx, field, obj)
 		case "lcidIsLowIt":
 			out.Values[i] = ec._SystemIntake_lcidIsLowIt(ctx, field, obj)
 		case "lcidIsShortened":
@@ -65955,6 +66128,10 @@ func (ec *executionContext) _SystemIntakeLCIDMetadataChange(ctx context.Context,
 			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousType(ctx, field, obj)
 		case "newType":
 			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newType(ctx, field, obj)
+		case "previousComponent":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousComponent(ctx, field, obj)
+		case "newComponent":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newComponent(ctx, field, obj)
 		case "previousIsShortened":
 			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousIsShortened(ctx, field, obj)
 		case "newIsShortened":
