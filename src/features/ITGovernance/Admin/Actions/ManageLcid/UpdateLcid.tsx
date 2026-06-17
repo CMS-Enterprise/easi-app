@@ -41,7 +41,17 @@ const UpdateLcid = ({
 }: UpdateLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<UpdateLcidFields>({
-    resolver: yupResolver(updateLcidSchema)
+    resolver: yupResolver(updateLcidSchema),
+    defaultValues: {
+      expiresAt: defaultValues.lcidExpiresAt || undefined,
+      scope: defaultValues.lcidScope || undefined,
+      nextSteps: defaultValues.decisionNextSteps || undefined,
+      costBaseline: defaultValues.lcidCostBaseline || undefined,
+      lcidType: defaultValues.lcidType || undefined,
+      lcidComponent: defaultValues.lcidComponent || undefined,
+      lcidIsLowIt: defaultValues.lcidIsLowIt ?? undefined,
+      lcidIsShortened: defaultValues.lcidIsShortened ?? undefined
+    }
   });
 
   const [updateLcid] = useCreateSystemIntakeActionUpdateLCIDMutation({

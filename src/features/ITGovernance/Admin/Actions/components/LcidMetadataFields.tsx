@@ -80,7 +80,7 @@ const LcidMetadataFields = <T extends FieldValues>({
               <option value="">{`- ${t('Select')} -`}</option>
               {getNonLegacyComponents().map(component => (
                 <option key={component.enum} value={component.enum}>
-                  {t(component.labelKey)}
+                  {component.acronym || component.enum}
                 </option>
               ))}
             </Select>

@@ -278,9 +278,8 @@ describe('Issue LCID form', async () => {
     });
 
     expect(lcidComponentSelect).toHaveValue(systemIntake.requester?.component);
-    expect(lcidComponentSelect).toHaveTextContent(
-      'Office of Information Technology'
-    );
-    expect(lcidComponentSelect).toHaveTextContent('Center for Medicare');
+    expect(lcidComponentSelect).toHaveTextContent('OIT');
+    expect(lcidComponentSelect).toHaveTextContent('CM');
+    expect(lcidComponentSelect).toHaveTextContent('OTHER');
   });
 });
