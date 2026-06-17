@@ -122,6 +122,22 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.plannedAnnualSpendITPortion')
   },
   {
+    key: 'totalContractCosts.currentEstimatedCost',
+    label: t('intake:csvHeadings.currentEstimatedCost')
+  },
+  {
+    key: 'totalContractCosts.currentEstimatedCostITPortion',
+    label: t('intake:csvHeadings.currentEstimatedCostITPortion')
+  },
+  {
+    key: 'totalContractCosts.estimatedTotalContractValue',
+    label: t('intake:csvHeadings.estimatedTotalContractValue')
+  },
+  {
+    key: 'totalContractCosts.estimatedTotalContractValueITPortion',
+    label: t('intake:csvHeadings.estimatedTotalContractValueITPortion')
+  },
+  {
     key: 'contract.hasContract',
     label: t('intake:csvHeadings.existingContract')
   },

@@ -299,6 +299,11 @@ const intake = {
     currentAnnualSpendITPortion: 'Current Annual Spend IT Portion',
     plannedAnnualSpend: 'Planned Annual Spend',
     plannedAnnualSpendITPortion: 'Planned Annual Spend IT Portion',
+    currentEstimatedCost: 'Current Estimated Cost',
+    currentEstimatedCostITPortion: 'Current Estimated Cost IT Portion',
+    estimatedTotalContractValue: 'Estimated Total Contract Value',
+    estimatedTotalContractValueITPortion:
+      'Estimated Total Contract Value IT Portion',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
@@ -593,17 +598,18 @@ const intake = {
         fundingSource: 'Select a funding source'
       }
     },
-    currentAnnualSpending: 'What is the current annual spending?',
-    currentAnnualSpendingHelpText:
-      'Input the dollar amount of the current annual spending.',
-    currentAnnualSpendingITPortion:
-      'What percentage of the current annual spending is IT?',
-    plannedYearOneSpending:
-      'What is the planned annual spending for the first year of the new contract?',
-    plannedYearOneSpendingHelpText:
-      'Input the dollar amount of the planned annual spending.',
-    plannedYearOneSpendingITPortion:
-      'What percentage of the planned annual spending for the first year of the new contract is IT?',
+    currentEstimatedCost:
+      'What is the current estimated cost of performing this work?',
+    currentEstimatedCostHelpText:
+      'Enter the total estimated cost of this work if it is currently being performed (e.g. existing contract, FTE hours, manual process). Enter $0 only if this is entirely new work not currently being done at CMS.',
+    currentEstimatedCostITPortion:
+      'What percentage of the current estimated spending is IT?',
+    estimatedTotalContractValue:
+      'What is the estimated total cost of this effort going forward, including all option years?',
+    estimatedTotalContractValueHelpText:
+      'Enter the estimated total cost of this effort going forward, including all option years (e.g. total contract value per IGCE, estimated FTE hours).',
+    estimatedTotalContractValueITPortion:
+      'What percentage of the planned spending for the new contract is IT?',
     contractHeading: 'Contract',
     hasContract:
       'Do you already have a contract in place to support this effort?',
@@ -672,6 +678,14 @@ const intake = {
       'What is the planned annual spending for the first year of the new contract?',
     plannedYearOneSpendingITPortion:
       'What percentage of the planned annual spending for the first year of the new contract is IT?',
+    currentEstimatedCost:
+      'What is the current estimated cost of performing this work?',
+    currentEstimatedCostITPortion:
+      'What percentage of the current estimated spending is IT?',
+    estimatedTotalContractValue:
+      'What is the estimated total cost of this effort going forward?',
+    estimatedTotalContractValueITPortion:
+      'What percentage of the planned spending for this effort is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract vehicle',

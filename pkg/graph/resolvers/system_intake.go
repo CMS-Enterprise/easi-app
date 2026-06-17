@@ -433,6 +433,13 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 			intake.PlannedYearOneSpendingITPortion = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpendingITPortion)
 		}
 
+		if input.TotalContractCosts != nil {
+			intake.CurrentEstimatedCost = null.StringFromPtr(input.TotalContractCosts.CurrentEstimatedCost)
+			intake.CurrentEstimatedCostITPortion = null.StringFromPtr(input.TotalContractCosts.CurrentEstimatedCostITPortion)
+			intake.EstimatedTotalContractValue = null.StringFromPtr(input.TotalContractCosts.EstimatedTotalContractValue)
+			intake.EstimatedTotalContractValueITPortion = null.StringFromPtr(input.TotalContractCosts.EstimatedTotalContractValueITPortion)
+		}
+
 		if input.Contract != nil {
 			contractNumbers := input.Contract.Numbers
 

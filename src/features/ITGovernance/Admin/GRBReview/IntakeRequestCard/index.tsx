@@ -16,12 +16,14 @@ import {
 } from 'components/DescriptionGroup';
 import IconLink from 'components/IconLink';
 import ReviewRow from 'components/ReviewRow';
+import SystemIntakeAnnualSpending from 'components/SystemIntakeReview/SystemIntakeAnnualCosts';
 import { formatDateLocal } from 'utils/date';
 
 export type IntakeRequestCardProps = {
   systemIntakeID: string;
   currentStage: SystemIntakeFragmentFragment['currentStage'];
   annualSpending: SystemIntakeFragmentFragment['annualSpending'];
+  totalContractCosts: SystemIntakeFragmentFragment['totalContractCosts'];
   submittedAt: SystemIntakeFragmentFragment['submittedAt'];
   className?: string;
 };
@@ -30,6 +32,7 @@ const IntakeRequestCard = ({
   systemIntakeID,
   currentStage,
   annualSpending,
+  totalContractCosts,
   submittedAt,
   className
 }: IntakeRequestCardProps) => {
@@ -66,50 +69,11 @@ const IntakeRequestCard = ({
             />
           </div>
         </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm
-              className="font-body-sm margin-bottom-0"
-              term={t('review.currentAnnualSpending')}
-            />
-            <DescriptionDefinition
-              className="font-body-md text-light"
-              definition={annualSpending?.currentAnnualSpending}
-            />
-          </div>
-          <div>
-            <DescriptionTerm
-              className="font-body-sm margin-bottom-0"
-              term={t('review.currentAnnualSpendingITPortion')}
-            />
-            <DescriptionDefinition
-              className="font-body-md text-light"
-              definition={annualSpending?.currentAnnualSpendingITPortion}
-            />
-          </div>
-        </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm
-              className="font-body-sm margin-bottom-0"
-              term={t('review.plannedYearOneSpending')}
-            />
-            <DescriptionDefinition
-              className="font-body-md text-light"
-              definition={annualSpending?.plannedYearOneSpending}
-            />
-          </div>
-          <div>
-            <DescriptionTerm
-              className="font-body-sm margin-bottom-0"
-              term={t('review.plannedYearOneSpendingITPortion')}
-            />
-            <DescriptionDefinition
-              className="font-body-md text-light"
-              definition={annualSpending?.plannedYearOneSpendingITPortion}
-            />
-          </div>
-        </ReviewRow>
+        <SystemIntakeAnnualSpending
+          costs={null}
+          annualSpending={annualSpending}
+          totalContractCosts={totalContractCosts}
+        />
       </CardBody>
 
       <CardFooter>
