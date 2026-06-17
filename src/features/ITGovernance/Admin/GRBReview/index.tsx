@@ -55,6 +55,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     state,
     submittedAt,
     annualSpending,
+    totalContractCosts,
     governanceRequestFeedbacks,
     statusAdmin
   } = systemIntake;
@@ -266,6 +267,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           systemIntakeID={id}
           currentStage={currentStage}
           annualSpending={annualSpending}
+          totalContractCosts={totalContractCosts}
           submittedAt={submittedAt}
         />
         {/* Additional Documents Title and Link */}
