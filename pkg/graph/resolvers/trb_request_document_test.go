@@ -2,10 +2,13 @@ package resolvers
 
 import (
 	"bytes"
+	"context"
+	"errors"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -29,6 +32,160 @@ func (s *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	createdDocument := createTRBRequestDocumentSubtest(s, trbRequestID, documentToCreate)
 	getTRBRequestDocumentsByRequestIDSubtest(s, trbRequestID, createdDocument)
 	deleteTRBRequestDocumentSubtest(s, createdDocument)
+}
+
+func (s *ResolverSuite) TestCreateTRBRequestDocumentUnauthorized() {
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	testContents := "Test file content"
+	encodedFileContent := easiencoding.EncodeBase64String(testContents)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	for _, ctx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		fileToUpload := bytes.NewReader([]byte(encodedFileContent))
+		_, err = CreateTRBRequestDocument(
+			ctx,
+			s.testConfigs.Store,
+			s.testConfigs.S3Client,
+			models.CreateTRBRequestDocumentInput{
+				RequestID:    trbRequest.ID,
+				DocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+				FileData: graphql.Upload{
+					File:        fileToUpload,
+					Filename:    "unauthorized.pdf",
+					Size:        fileToUpload.Size(),
+					ContentType: "application/pdf",
+				},
+			},
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
+
+	documents, fetchErr := GetTRBRequestDocumentsByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
+	s.NoError(fetchErr)
+	s.Len(documents, 0)
+}
+
+func (s *ResolverSuite) TestDeleteTRBRequestDocumentUnauthorized() {
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	documentToCreate := &models.TRBRequestDocument{
+		TRBRequestID:       trbRequest.ID,
+		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+		FileName:           "create_and_get.pdf",
+		Bucket:             "bukkit",
+		S3Key:              uuid.NewString(),
+	}
+
+	createdDocument := createTRBRequestDocumentSubtest(s, trbRequest.ID, documentToCreate)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	for _, ctx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = DeleteTRBRequestDocument(ctx, s.testConfigs.Store, createdDocument.ID)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
+
+	documents, fetchErr := GetTRBRequestDocumentsByRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
+	s.NoError(fetchErr)
+	s.Len(documents, 1)
+}
+
+func (s *ResolverSuite) TestGetTRBRequestDocumentURLUnauthorized() {
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	documentToCreate := &models.TRBRequestDocument{
+		TRBRequestID:       trbRequest.ID,
+		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+		FileName:           "create_and_get.pdf",
+		Bucket:             "bukkit",
+		S3Key:              uuid.NewString(),
+	}
+
+	createdDocument := createTRBRequestDocumentSubtest(s, trbRequest.ID, documentToCreate)
+
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	_, err = GetURLForTRBRequestDocument(
+		otherCtx,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		createdDocument.TRBRequestID,
+		createdDocument.S3Key,
+	)
+	s.Error(err)
+	var unauthorizedErr *apperrors.UnauthorizedError
+	s.True(errors.As(err, &unauthorizedErr))
+
+	url, err := GetURLForTRBRequestDocument(
+		adminCtx,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		createdDocument.TRBRequestID,
+		createdDocument.S3Key,
+	)
+	s.NoError(err)
+	s.NotEmpty(url)
+}
+
+func (s *ResolverSuite) TestGetTRBRequestDocumentURLLeadAuthorized() {
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, trbRequest)
+	s.NoError(err)
+
+	documentToCreate := &models.TRBRequestDocument{
+		TRBRequestID:       trbRequest.ID,
+		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+		FileName:           "create_and_get.pdf",
+		Bucket:             "bukkit",
+		S3Key:              uuid.NewString(),
+	}
+
+	createdDocument := createTRBRequestDocumentSubtest(s, trbRequest.ID, documentToCreate)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	url, err := GetURLForTRBRequestDocument(
+		leadCtx,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		createdDocument.TRBRequestID,
+		createdDocument.S3Key,
+	)
+	s.NoError(err)
+	s.NotEmpty(url)
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially

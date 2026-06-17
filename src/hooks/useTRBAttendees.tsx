@@ -47,13 +47,17 @@ type UseTRBAttendees = {
  */
 export default function useTRBAttendees(
   /** TRB Request ID */
-  trbRequestId: string
+  trbRequestId: string,
+  options?: {
+    skip?: boolean;
+  }
 ): UseTRBAttendees {
   /**
    * Query to get attendees by TRB request ID
    */
   const { data, loading } = useGetTRBRequestAttendeesQuery({
-    variables: { id: trbRequestId }
+    variables: { id: trbRequestId },
+    skip: options?.skip
   });
 
   /**

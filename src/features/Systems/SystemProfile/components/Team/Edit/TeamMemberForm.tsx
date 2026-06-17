@@ -49,6 +49,7 @@ export type TeamMemberFields = {
 
 type TeamMemberFormProps = {
   cedarSystemId: string;
+  returnPath: string;
   updateRoles: (
     options?: MutationFunctionOptions<
       SetRolesForUserOnSystemMutation,
@@ -69,6 +70,7 @@ const teamMemberSchema: yup.SchemaOf<TeamMemberFields> = yup.object({
  */
 const TeamMemberForm = ({
   cedarSystemId,
+  returnPath,
   updateRoles,
   loading,
   team
@@ -161,7 +163,7 @@ const TeamMemberForm = ({
           )
         );
         history.push({
-          pathname: `/systems/${cedarSystemId}/team/edit`,
+          pathname: returnPath,
           search: isWorkspace ? 'workspace' : undefined
         });
       });
@@ -352,11 +354,10 @@ const TeamMemberForm = ({
 
       <IconLink
         icon={<Icon.ArrowBack aria-hidden />}
-        to={
-          isWorkspace
-            ? `/systems/${cedarSystemId}/workspace`
-            : `/systems/${cedarSystemId}/team/edit`
-        }
+        to={{
+          pathname: returnPath,
+          search: isWorkspace ? 'workspace' : undefined
+        }}
         className="margin-top-3"
       >
         {t(`${keyPrefix}.returnButtonLabel`)}

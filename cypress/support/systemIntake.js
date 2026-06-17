@@ -81,6 +81,14 @@ cy.systemIntake = {
         .check({ force: true })
         .should('be.checked');
 
+      cy.get('#digitalServiceInteractionNo')
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get('#protectedCmsDataAccessedOutsideNo')
+        .check({ force: true })
+        .should('be.checked');
+
       cy.get('#hasUiChangesFalse').check({ force: true }).should('be.checked');
 
       cy.get('#usingSoftwareNo').check({ force: true }).should('be.checked');

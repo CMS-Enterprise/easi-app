@@ -102,6 +102,10 @@ export default gql(/* GraphQL */ `
       }
 
       hasUiChanges
+      digitalServiceInteraction
+      digitalServiceInteractionDescription
+      protectedCmsDataAccessedOutside
+      protectedCmsDataAccessedOutsideDescription
       usesAiTech
       usingSoftware
       acquisitionMethods

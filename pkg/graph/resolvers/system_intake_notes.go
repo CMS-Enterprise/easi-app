@@ -17,6 +17,10 @@ func CreateSystemIntakeNote(
 	store *storage.Store,
 	input models.CreateSystemIntakeNoteInput,
 ) (*models.SystemIntakeNote, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	systemIntakeNote := models.SystemIntakeNote{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
 		AuthorName:     null.StringFrom(input.AuthorName),
@@ -35,6 +39,10 @@ func UpdateSystemIntakeNote(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input models.UpdateSystemIntakeNoteInput,
 ) (*models.SystemIntakeNote, error) {
+	if err := authorizeUserCanManageSystemIntakeAdminWorkflow(ctx); err != nil {
+		return nil, err
+	}
+
 	userInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
 		return nil, err

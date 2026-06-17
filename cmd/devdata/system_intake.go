@@ -53,6 +53,10 @@ func makeSystemIntake(
 		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
+	// Refresh loaders after creating the requester contact. The non-admin seed
+	// path authorizes contact creation by looking up existing requester contacts,
+	// which can cache an empty result before the requester row exists.
+	ctx = mock.CtxWithNewDataloaders(ctx, store)
 	createSystemIntakeDocument(ctx, store, intake, "first_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeDraftIGCE)
 	createSystemIntakeDocument(ctx, store, intake, "second_doc.pdf", models.SystemIntakeDocumentVersionHISTORICAL, models.SystemIntakeDocumentCommonTypeMEETINGMINS)
 	createSystemIntakeDocument(ctx, store, intake, "third_doc.pdf", models.SystemIntakeDocumentVersionCURRENT, models.SystemIntakeDocumentCommonTypeACQPLANSTRAT)
@@ -87,9 +91,13 @@ func fillOutInitialIntake(
 		true,
 		"Some CEDAR System ID",
 		uuid.New(),
+		"YES",
+		"Because we need to interact with a digital service",
 		true,
 		"YES",
 		acqMethods,
+		"YES",
+		"Because we will be accessing protected CMS data outside of CMS",
 	)
 	contacts, err := resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, intake.ID)
 	if err != nil {
@@ -250,22 +258,30 @@ func updateSystemIntakeRequestDetails(
 	usesAiTech bool,
 	currentStage string,
 	cedarSystemID uuid.UUID,
+	digitalServiceInteraction models.YesNoNotSure,
+	digitalServiceInteractionDescription string,
 	hasUIChanges bool,
 	usingSoftware string,
 	acquisitionMethods []models.SystemIntakeSoftwareAcquisitionMethods,
+	protectedCmsDataAccessedOutside models.YesNoNotSure,
+	protectedCmsDataAccessedOutsideDescription string,
 ) *models.SystemIntake {
 	input := models.UpdateSystemIntakeRequestDetailsInput{
-		ID:                 intake.ID,
-		RequestName:        &requestName,
-		BusinessNeed:       &businessNeed,
-		BusinessSolution:   &businessSolution,
-		NeedsEaSupport:     &needsEaSupport,
-		UsesAiTech:         &usesAiTech,
-		CurrentStage:       &currentStage,
-		CedarSystemID:      &cedarSystemID,
-		HasUIChanges:       &hasUIChanges,
-		UsingSoftware:      &usingSoftware,
-		AcquisitionMethods: acquisitionMethods,
+		ID:                                   intake.ID,
+		RequestName:                          &requestName,
+		BusinessNeed:                         &businessNeed,
+		BusinessSolution:                     &businessSolution,
+		NeedsEaSupport:                       &needsEaSupport,
+		UsesAiTech:                           &usesAiTech,
+		CurrentStage:                         &currentStage,
+		CedarSystemID:                        &cedarSystemID,
+		DigitalServiceInteraction:            &digitalServiceInteraction,
+		DigitalServiceInteractionDescription: &digitalServiceInteractionDescription,
+		HasUIChanges:                         &hasUIChanges,
+		UsingSoftware:                        &usingSoftware,
+		AcquisitionMethods:                   acquisitionMethods,
+		ProtectedCmsDataAccessedOutside:      &protectedCmsDataAccessedOutside,
+		ProtectedCmsDataAccessedOutsideDescription: &protectedCmsDataAccessedOutsideDescription,
 	}
 	fetchCedarSystemMock := func(context.Context, uuid.UUID) (*models.CedarSystem, error) {
 		return &models.CedarSystem{}, nil

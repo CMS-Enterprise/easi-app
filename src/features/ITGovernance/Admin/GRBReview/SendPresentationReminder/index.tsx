@@ -93,6 +93,7 @@ function SendPresentationReminder({
 
   return (
     <Card
+      data-testid="presentation-deck-upload-card"
       containerProps={{
         className: 'margin-0 shadow-2 radius-md'
       }}

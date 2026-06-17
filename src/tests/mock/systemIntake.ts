@@ -42,7 +42,8 @@ import {
   SystemIntakeStep,
   SystemIntakeTRBFollowUp,
   SystemIntakeWithReviewRequestedFragment,
-  TRBRequestStatus
+  TRBRequestStatus,
+  YesNoNotSure
 } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
@@ -219,6 +220,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   requestName: null,
   projectAcronym: null,
   id: systemIntakeId,
+  viewerIsRequester: true,
   euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
@@ -282,6 +284,10 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   businessSolution: null,
   currentStage: null,
   needsEaSupport: null,
+  digitalServiceInteraction: null,
+  digitalServiceInteractionDescription: null,
+  protectedCmsDataAccessedOutside: null,
+  protectedCmsDataAccessedOutsideDescription: null,
   usesAiTech: null,
   usingSoftware: null,
   acquisitionMethods: [],
@@ -362,6 +368,7 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   requestName: 'Mock System Intake Request',
   projectAcronym: 'MSIR',
   id: systemIntakeId,
+  viewerIsRequester: true,
   euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
@@ -425,6 +432,11 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   businessSolution: 'The quick brown fox jumps over the lazy dog.',
   currentStage: 'The quick brown fox jumps over the lazy dog.',
   needsEaSupport: false,
+  digitalServiceInteraction: YesNoNotSure.NO,
+  digitalServiceInteractionDescription:
+    'The quick brown fox jumps over the lazy dog.',
+  protectedCmsDataAccessedOutside: YesNoNotSure.NO,
+  protectedCmsDataAccessedOutsideDescription: '',
   usesAiTech: true,
   usingSoftware: 'NO',
   acquisitionMethods: [],
@@ -565,6 +577,13 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     businessSolution: systemIntake.businessSolution,
     currentStage: systemIntake.currentStage,
     needsEaSupport: systemIntake.needsEaSupport,
+    digitalServiceInteraction: systemIntake.digitalServiceInteraction,
+    digitalServiceInteractionDescription:
+      systemIntake.digitalServiceInteractionDescription,
+    protectedCmsDataAccessedOutside:
+      systemIntake.protectedCmsDataAccessedOutside,
+    protectedCmsDataAccessedOutsideDescription:
+      systemIntake.protectedCmsDataAccessedOutsideDescription,
     usesAiTech: systemIntake.usesAiTech,
     usingSoftware: systemIntake.usingSoftware,
     acquisitionMethods: systemIntake.acquisitionMethods,
@@ -681,6 +700,7 @@ export const taskListSystemIntake: NonNullable<
 > = {
   __typename: 'SystemIntake',
   id: systemIntakeId,
+  viewerIsRequester: true,
   requestName: 'Mock system intake',
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
@@ -735,6 +755,7 @@ export const getGovernanceTaskListQuery = (
       __typename: 'Query',
       systemIntake: {
         ...taskListSystemIntake,
+        viewerIsRequester: true,
         ...taskListData,
         __typename: 'SystemIntake',
         requester: {

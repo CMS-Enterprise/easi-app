@@ -123,6 +123,8 @@ func main() {
 	futureMeetingDate := time.Now().AddDate(0, 2, 0)
 	pastMeetingDate := time.Now().AddDate(0, -2, 0)
 
+	var noType = models.YesNoNotSureNo
+
 	// generate closed requests
 	for i := range closedRequestCount {
 		caseNum := i + 1
@@ -1192,18 +1194,23 @@ func main() {
 	createSystemIntakeNote(ctx, store, intake, "This is my note")
 
 	intakeID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
-	// Create context with E2E1 as principal so the system_intake_contact is created with E2E1's user account ID
+	// Create and submit as E2E1 so the requester contact is tied to that user
+	// account, then progress the admin-only workflow step with IT Gov access.
 	e2e1Ctx := userCtxNonAdmin(mock.EndToEndUserOne)
-	intake = makeSystemIntakeAndProgressToStep(
+	e2e1AdminCtx := userCtxITGovAdmin(mock.EndToEndUserOne)
+	intake = makeSystemIntakeAndSubmit(
 		e2e1Ctx,
 		"For Business Case Cypress test",
 		&intakeID,
 		mock.EndToEndUserOne,
 		store,
+	)
+	intake = progressIntake(
+		e2e1AdminCtx,
+		store,
+		intake,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
-		&progressOptions{
-			fillForm: false,
-		},
+		nil,
 	)
 	modifySystemIntake(ctx, store, intake, func(i *models.SystemIntake) {
 		i.RequestType = models.SystemIntakeRequestTypeNEW
@@ -1223,7 +1230,11 @@ func main() {
 		i.Solution = null.StringFrom("The quick brown fox jumps over the lazy dog.")
 		i.ProcessStatus = null.StringFrom("Initial development underway")
 		i.EASupportRequest = null.BoolFrom(false)
+		i.DigitalServiceInteraction = &noType
+		i.DigitalServiceInteractionDescription = null.StringFrom("")
 		i.HasUIChanges = null.BoolFrom(false)
+		i.ProtectedCmsDataAccessedOutside = &noType
+		i.ProtectedCmsDataAccessedOutsideDescription = null.StringFrom("")
 		i.ExistingContract = null.StringFrom("No")
 		i.GrtReviewEmailBody = null.StringFrom("")
 	})

@@ -54,6 +54,22 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.usesAiTech')
   },
   {
+    key: 'digitalServiceInteraction',
+    label: t('intake:csvHeadings.digitalServiceInteraction')
+  },
+  {
+    key: 'digitalServiceInteractionDescription',
+    label: t('intake:csvHeadings.digitalServiceInteractionDescription')
+  },
+  {
+    key: 'protectedCmsDataAccessedOutside',
+    label: t('intake:csvHeadings.protectedCmsDataAccessedOutside')
+  },
+  {
+    key: 'protectedCmsDataAccessedOutsideDescription',
+    label: t('intake:csvHeadings.protectedCmsDataAccessedOutsideDescription')
+  },
+  {
     key: 'fundingSources',
     label: t('intake:csvHeadings.fundingSource')
   },

@@ -82,6 +82,7 @@ export default gql(/* GraphQL */ `
         ...UserAccount
       }
     }
+    viewerIsRequester
     requestName
     projectAcronym
     requestType
@@ -95,6 +96,10 @@ export default gql(/* GraphQL */ `
     createdAt
     archivedAt
     euaUserId
+    digitalServiceInteraction
+    digitalServiceInteractionDescription
+    protectedCmsDataAccessedOutside
+    protectedCmsDataAccessedOutsideDescription
     hasUiChanges
     usesAiTech
     usingSoftware

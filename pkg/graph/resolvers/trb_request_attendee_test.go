@@ -1,7 +1,11 @@
 package resolvers
 
 import (
+	"context"
+	"errors"
+
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -99,4 +103,80 @@ func (s *ResolverSuite) TestTRBRequestAttendee() {
 		s.NotNil(fetchedRequesterComponent)
 		s.Equal(component, *fetchedRequesterComponent)
 	})
+}
+
+func (s *ResolverSuite) TestTRBRequestAttendeeUnauthorized() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+
+	config := testhelpers.NewConfig()
+	emailConfig := email.Config{
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+
+	env, _ := appconfig.NewEnvironment("test")
+	localSender := local.NewSender(env)
+	emailClient, err := email.NewClient(emailConfig, localSender)
+	s.NoError(err)
+
+	trbRequest := s.createNewTRBRequest()
+	otherCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
+	adminCtx, _ := s.getTestContextWithPrincipal("TRBA", true)
+
+	leadEUA := "LEAD"
+	trbRequest.TRBLead = &leadEUA
+	trbRequest, err = s.testConfigs.Store.UpdateTRBRequest(ctx, trbRequest)
+	s.NoError(err)
+	leadCtx, _ := s.getTestContextWithPrincipal(leadEUA, false)
+
+	paRole := models.PersonRolePrivacyAdvisor
+	attendee := models.TRBRequestAttendee{
+		EUAUserID:    "WXYZ",
+		TRBRequestID: trbRequest.ID,
+		Role:         &paRole,
+	}
+
+	var unauthorizedErr *apperrors.UnauthorizedError
+	for _, unauthorizedCtx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = CreateTRBRequestAttendee(
+			unauthorizedCtx,
+			store,
+			emailClient.SendTRBAttendeeAddedNotification,
+			okta.FetchUserInfo,
+			&attendee,
+		)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
+
+	createdAttendee, err := CreateTRBRequestAttendee(
+		ctx,
+		store,
+		emailClient.SendTRBAttendeeAddedNotification,
+		okta.FetchUserInfo,
+		&attendee,
+	)
+	s.NoError(err)
+
+	component := "The Citadel of Ricks"
+	createdAttendee.Component = &component
+	for _, unauthorizedCtx := range []context.Context{otherCtx, adminCtx, leadCtx} {
+		_, err = UpdateTRBRequestAttendee(unauthorizedCtx, store, createdAttendee)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+
+		_, err = DeleteTRBRequestAttendee(unauthorizedCtx, store, createdAttendee.ID)
+		s.Error(err)
+		s.True(errors.As(err, &unauthorizedErr))
+		unauthorizedErr = nil
+	}
 }

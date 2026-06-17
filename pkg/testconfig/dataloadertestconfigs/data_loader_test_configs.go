@@ -11,15 +11,26 @@ import (
 )
 
 // BuildDataLoaders creates a function that builds dataloaders
-func BuildDataLoaders(store *storage.Store, fetchUserInfos func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error), getCedarSystems func(ctx context.Context) ([]*models.CedarSystem, error)) dataloaders.BuildDataloaders {
+func BuildDataLoaders(
+	store *storage.Store,
+	fetchUserInfos func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error),
+	getCedarSystems func(ctx context.Context) ([]*models.CedarSystem, error),
+	getMyCedarSystems func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error),
+) dataloaders.BuildDataloaders {
 	buildDataloaders := func() *dataloaders.Dataloaders {
-		return dataloaders.NewDataloaders(store, fetchUserInfos, getCedarSystems)
+		return dataloaders.NewDataloaders(store, fetchUserInfos, getCedarSystems, getMyCedarSystems)
 	}
 	return buildDataloaders
 }
 
 // DecorateTestContextWithDataLoader Wraps a context with data loaders as needed for some unit testing
-func DecorateTestContextWithDataLoader(ctx context.Context, store *storage.Store, fetchUserInfos func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error), getCedarSystems func(ctx context.Context) ([]*models.CedarSystem, error)) context.Context {
+func DecorateTestContextWithDataLoader(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfos func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error),
+	getCedarSystems func(ctx context.Context) ([]*models.CedarSystem, error),
+	getMyCedarSystems func(ctx context.Context, euaUserID string) ([]*models.CedarSystem, error),
+) context.Context {
 
-	return dataloaders.CTXWithLoaders(ctx, BuildDataLoaders(store, fetchUserInfos, getCedarSystems))
+	return dataloaders.CTXWithLoaders(ctx, BuildDataLoaders(store, fetchUserInfos, getCedarSystems, getMyCedarSystems))
 }

@@ -1,12 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, FieldPath, FormProvider } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   Checkbox,
+  ComboBox,
   Fieldset,
   Form,
   FormGroup,
@@ -14,9 +16,9 @@ import {
   Icon,
   Label,
   Link,
-  Select,
   TextInput
 } from '@trussworks/react-uswds';
+import NotFound from 'features/Miscellaneous/NotFound';
 import {
   SystemRelationshipType,
   UpdateSystemLinkMutationFn,
@@ -28,6 +30,8 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
@@ -42,6 +46,8 @@ import RequiredFieldsText from 'components/RequiredFieldsText';
 import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import flattenFormErrors from 'utils/flattenFormErrors';
+import isSystemIntakeRequester from 'utils/isSystemIntakeRequester';
+import user from 'utils/user';
 import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
 
 type LinkedSystemsFormFields = {
@@ -143,6 +149,8 @@ const LinkedSystemsForm = () => {
     systemIntakeID: string;
     linkedSystemID?: string;
   }>();
+  const { groups } = useSelector((state: AppState) => state.auth);
+  const flags = useFlags();
 
   const history = useHistory();
   const location = useLocation<{ from?: string }>();
@@ -150,6 +158,8 @@ const LinkedSystemsForm = () => {
   const isFromAdmin = location.state?.from === 'admin';
 
   const { Message } = useMessage();
+
+  const cedarSystemComboBoxInitialized = useRef(false);
 
   const form = useEasiForm<LinkedSystemsFormFields>({
     resolver: yupResolver(linkedSystemsSchema),
@@ -170,7 +180,8 @@ const LinkedSystemsForm = () => {
     'linkedSystems',
     'itGov',
     'technicalAssistance',
-    'error'
+    'error',
+    'general'
   ]);
 
   const [addSystemLink] = useAddSystemLinkMutation();
@@ -193,21 +204,26 @@ const LinkedSystemsForm = () => {
         }));
   }, [systemIntakeAndCedarSystems?.cedarSystems]);
 
-  const { data: linkedSystem } = useGetSystemIntakeSystemQuery({
-    variables: { systemIntakeSystemID: linkedSystemID || '' },
-    skip: !linkedSystemID
-  });
+  const { data: linkedSystem, loading: linkedSystemLoading } =
+    useGetSystemIntakeSystemQuery({
+      variables: { systemIntakeSystemID: linkedSystemID || '' },
+      skip: !linkedSystemID
+    });
 
   const { data: systemsData } = useGetSystemIntakeSystemsQuery({
     variables: { systemIntakeId: systemIntakeID },
     skip: !systemIntakeID
   });
 
-  const { data: systemData } = useGetSystemIntakeQuery({
+  const { data: systemData, loading: intakeLoading } = useGetSystemIntakeQuery({
     variables: { id: systemIntakeID }
   });
 
   const doesNotSupportSystems = systemData?.systemIntake?.doesNotSupportSystems;
+  const isITGovAdmin = user.isITGovAdmin(groups, flags);
+  const isRequester = isSystemIntakeRequester({
+    intake: systemData?.systemIntake
+  });
 
   const filteredCedarSystemIdOptions = useMemo<
     { label: string; value: string }[]
@@ -309,12 +325,26 @@ const LinkedSystemsForm = () => {
     });
   });
 
-  const systemOptions = linkedSystemID
-    ? cedarSystemIdOptions
-    : filteredCedarSystemIdOptions;
+  const systemOptions = useMemo(
+    () =>
+      [
+        ...(linkedSystemID
+          ? cedarSystemIdOptions
+          : filteredCedarSystemIdOptions)
+      ].sort((a, b) => a.label.localeCompare(b.label)),
+    [cedarSystemIdOptions, filteredCedarSystemIdOptions, linkedSystemID]
+  );
 
-  if (relationLoading) {
+  if (relationLoading || intakeLoading || linkedSystemLoading) {
     return <PageLoading />;
+  }
+
+  if (!systemData?.systemIntake) {
+    return <NotFound />;
+  }
+
+  if (!isRequester && !isITGovAdmin) {
+    return <NotFound />;
   }
 
   return (
@@ -401,26 +431,29 @@ const LinkedSystemsForm = () => {
                           >
                             {t('cmsSystemsDropdown.title')} <RequiredAsterisk />
                           </Label>
-                          <Select
+                          <ComboBox
                             id="cedarSystemID"
-                            data-testid="cedarSystemID"
-                            {...field}
-                            ref={null}
-                            value={field.value || ''}
+                            name={field.name}
+                            className="maxw-none margin-top-1"
+                            options={systemOptions}
+                            defaultValue={
+                              linkedSystem?.systemIntakeSystem?.systemID ||
+                              field.value ||
+                              undefined
+                            }
+                            onChange={value => {
+                              if (!cedarSystemComboBoxInitialized.current) {
+                                cedarSystemComboBoxInitialized.current = true;
+                                return;
+                              }
+                              field.onChange(value || '');
+                            }}
                             disabled={!!linkedSystemID}
-                          >
-                            <option
-                              label={`- ${t('technicalAssistance:basic.options.select')} -`}
-                              disabled
-                            />
-                            {systemOptions.map(system => (
-                              <option
-                                key={system.value}
-                                value={system.value}
-                                label={system.label}
-                              />
-                            ))}
-                          </Select>
+                            noResults={t('general:noResults')}
+                            inputProps={{
+                              onBlur: field.onBlur
+                            }}
+                          />
                         </FormGroup>
                       )}
                     />

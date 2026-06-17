@@ -1,5 +1,4 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { CSVLink } from 'react-csv';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
@@ -32,18 +31,18 @@ import { useGetSystemIntakesTableQuery } from 'gql/generated/graphql';
 import { startCase } from 'lodash';
 import { ActiveStateType, TableStateContext } from 'wrappers/TableStateWrapper';
 
-import CsvDownloadLink from 'components/CsvDownloadLink';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import SafeCSVLink from 'components/SafeCSVLink';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import { convertIntakeToCSV } from 'data/systemIntake';
+import { prepareIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useTableState from 'hooks/useTableState';
 import globalFilterCellText from 'utils/globalFilterCellText';
@@ -137,9 +136,8 @@ const RequestRepository = () => {
   }, [systemIntakes.closed, dateRangeStart, dateRangeEnd]);
 
   /** Convert selected intakes to CSV format */
-  const convertIntakesToCSV = (
-    intakes: SystemIntakeForTable[]
-  ): SystemIntakeForTable[] => intakes.map(convertIntakeToCSV);
+  const prepareIntakesToCSV = (intakes: SystemIntakeForTable[]) =>
+    intakes.map(prepareIntakeToCSV);
 
   const csvHeaders = csvHeaderMap(t);
   const csvPortfolioReportHeaders = csvPortfolioReportHeaderMap(t);
@@ -336,8 +334,8 @@ const RequestRepository = () => {
             />
 
             <ButtonGroup>
-              <CSVLink
-                data={convertIntakesToCSV(portfolioUpdateReport)}
+              <SafeCSVLink
+                data={prepareIntakesToCSV(portfolioUpdateReport)}
                 filename="EASi-Portfolio-Update-Report.csv"
                 headers={csvPortfolioReportHeaders}
                 onClick={() => setConfigReportModalOpen(false)}
@@ -347,7 +345,7 @@ const RequestRepository = () => {
                 )}
               >
                 {t('home:adminHome.GRT.configureReport.download')}
-              </CSVLink>
+              </SafeCSVLink>
 
               <Button
                 type="button"
@@ -450,13 +448,13 @@ const RequestRepository = () => {
             className="maxw-tablet margin-bottom-4 desktop:margin-bottom-0 desktop:grid-col-5 tablet:padding-right-6"
           />
 
-          <CsvDownloadLink
-            data={convertIntakesToCSV(data)}
+          <SafeCSVLink
+            data={prepareIntakesToCSV(data)}
             filename={`EASi-${startCase(activeTable)}-ITGO-Requests.csv`}
             headers={csvHeaders}
           >
             {t('home:adminHome.GRT.downloadLabel', { status: activeTable })}
-          </CsvDownloadLink>
+          </SafeCSVLink>
         </div>
 
         <TableResults

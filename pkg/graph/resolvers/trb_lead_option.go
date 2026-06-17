@@ -2,8 +2,10 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -30,6 +32,18 @@ func GetTRBLeadOptions(
 	}
 
 	return leadInfos, err
+}
+
+func ListTRBLeadOptions(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+) ([]*models.UserInfo, error) {
+	if !appcontext.Principal(ctx).AllowTRBAdmin() {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch TRB lead options")}
+	}
+
+	return GetTRBLeadOptions(ctx, store, fetchUserInfos)
 }
 
 // CreateTRBLeadOption creates a TRBLeadOption in the database and returns the user info for the

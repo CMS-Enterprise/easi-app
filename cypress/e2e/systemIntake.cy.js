@@ -20,6 +20,10 @@ describe('The System Intake Form', () => {
         req.alias = 'createContact';
       }
 
+      if (req.body.operationName === 'UpdateSystemIntakeContact') {
+        req.alias = 'updateContact';
+      }
+
       if (req.body.operationName === 'UpdateSystemIntakeContractDetails') {
         req.alias = 'updateContractDetails';
       }
@@ -131,6 +135,18 @@ describe('The System Intake Form', () => {
     cy.getByTestId('contact-row-ADMI').contains('OC');
     cy.getByTestId('contact-row-ADMI').contains('Other');
 
+    cy.getByTestId('contact-row-ADMI').contains('button', 'Edit').click();
+
+    cy.getByTestId('component-select')
+      .select('Office of Information Technology (OIT)')
+      .should('have.value', 'OFFICE_OF_INFORMATION_TECHNOLOGY_OIT');
+
+    cy.contains('button', 'Save changes').click();
+    cy.wait('@updateContact').its('response.statusCode').should('eq', 200);
+
+    cy.getByTestId('contact-row-ADMI').contains('OIT');
+    cy.getByTestId('contact-row-ADMI').contains('Other');
+
     cy.getByTestId('contact-row-ADMI').contains('button', 'Remove').click();
 
     cy.contains('button', 'Remove contact').click();
@@ -156,6 +172,26 @@ describe('The System Intake Form', () => {
 
     // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
+
+    cy.get('#digitalServiceInteractionYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#digitalServiceInteractionDescription').should('be.visible');
+
+    cy.get('#digitalServiceInteractionDescription')
+      .type('Digital service interaction description')
+      .should('have.value', 'Digital service interaction description');
+
+    cy.get('#protectedCmsDataAccessedOutsideYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#protectedCmsDataAccessedOutsideDescription').should('be.visible');
+
+    cy.get('#protectedCmsDataAccessedOutsideDescription')
+      .type('Protected CMS data accessed outside description')
+      .should('have.value', 'Protected CMS data accessed outside description');
 
     cy.get('#currentStage').select('Other').should('have.value', 'Other');
 

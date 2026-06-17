@@ -37,6 +37,10 @@ func SystemIntakeGRBDiscussions(
 
 // CreateSystemIntakeGRBReviewers creates GRB Reviewers for a System Intake
 func CreateSystemIntakeGRBReviewers(ctx context.Context, store *storage.Store, emailClient *email.Client, fetchUsers userhelpers.GetAccountInfosFunc, input *models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
 		// Fetch intake by ID
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
@@ -140,6 +144,10 @@ func UpdateSystemIntakeGRBReviewer(
 	store *storage.Store,
 	input *models.UpdateSystemIntakeGRBReviewerInput,
 ) (*models.SystemIntakeGRBReviewer, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	intake, err := store.GetSystemIntakeByGRBReviewerID(ctx, input.ReviewerID)
 	if err != nil {
 		return nil, err
@@ -164,6 +172,10 @@ func DeleteSystemIntakeGRBReviewer(
 	store *storage.Store,
 	reviewerID uuid.UUID,
 ) error {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return err
+	}
+
 	intake, err := store.GetSystemIntakeByGRBReviewerID(ctx, reviewerID)
 	if err != nil {
 		return err
@@ -407,6 +419,10 @@ func StartGRBReview(
 	emailClient *email.Client,
 	intakeID uuid.UUID,
 ) (*string, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*string, error) {
 		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
@@ -473,6 +489,10 @@ func getPrincipalAsGRBReviewerBySystemIntakeID(ctx context.Context, systemIntake
 
 // SendSystemIntakeGRBReviewerReminder sends out individual emails to GRB reviewers who have not yet voted (only send to those with voting role)
 func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Store, emailClient *email.Client, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	// first, confirm a reminder wasn't sent in last 24 hours
 	systemIntake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
@@ -552,6 +572,18 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 	return &models.SendSystemIntakeGRBReviewReminderPayload{
 		TimeSent: sentTime,
 	}, nil
+}
+
+func CompareGRBReviewersByIntakeID(
+	ctx context.Context,
+	store *storage.Store,
+	intakeID uuid.UUID,
+) ([]*models.GRBReviewerComparisonIntake, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
+	return SystemIntakeCompareGRBReviewers(ctx, store, intakeID)
 }
 
 func validateCanSendReminder(systemIntake *models.SystemIntake) error {

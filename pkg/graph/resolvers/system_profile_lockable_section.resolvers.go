@@ -21,6 +21,10 @@ func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSy
 		return false, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return false, err
+	}
+
 	principal := appcontext.Principal(ctx)
 
 	return LockSystemProfileSection(r.pubsub, cedarSystemID, section, principal)
@@ -30,6 +34,10 @@ func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSy
 func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error) {
 	if cedarSystemID == uuid.Nil {
 		return false, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return false, err
 	}
 
 	account := appcontext.Principal(ctx).Account()
@@ -47,6 +55,10 @@ func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, c
 		return nil, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	return UnlockAllSystemProfileSections(r.pubsub, cedarSystemID)
 }
 
@@ -56,6 +68,10 @@ func (r *queryResolver) SystemProfileSectionLocks(ctx context.Context, cedarSyst
 		return nil, fmt.Errorf("cedarSystemID cannot be empty")
 	}
 
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
+	}
+
 	return GetSystemProfileSectionLocks(cedarSystemID)
 }
 
@@ -63,6 +79,10 @@ func (r *queryResolver) SystemProfileSectionLocks(ctx context.Context, cedarSyst
 func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
 	if cedarSystemID == uuid.Nil {
 		return nil, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
+	if err := authorizeUserCanAccessCEDARReadQueries(ctx); err != nil {
+		return nil, err
 	}
 
 	principal := appcontext.Principal(ctx)

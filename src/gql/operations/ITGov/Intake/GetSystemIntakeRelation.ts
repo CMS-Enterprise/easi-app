@@ -4,6 +4,12 @@ const GetSystemIntakeRelationQuery = gql(/* GraphQL */ `
   query GetSystemIntakeRelation($id: UUID!) {
     systemIntake(id: $id) {
       id
+      viewerIsRequester
+      requester {
+        userAccount {
+          username
+        }
+      }
       relationType
       contractName
       contractNumbers {

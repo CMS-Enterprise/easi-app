@@ -19,6 +19,10 @@ func SetRolesForUserOnCEDARSystem(
 	emailClient *email.Client,
 	input models.SetRolesForUserOnSystemInput,
 ) (*string, error) {
+	if err := authorizeUserCanManageCEDARSystemTeam(ctx, cedarCoreClient, input.CedarSystemID); err != nil {
+		return nil, err
+	}
+
 	preExistingRoles, err := cedarCoreClient.GetRolesBySystem(ctx, input.CedarSystemID, nil)
 	if err != nil {
 		return nil, err

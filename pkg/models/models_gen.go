@@ -153,6 +153,27 @@ type CedarSystemMaintainerInformation struct {
 	YearToRetireReplace                   *string    `json:"yearToRetireReplace,omitempty"`
 }
 
+// This is the subset of the core CEDAR system record that a system team member
+// can use from workspace-scoped queries without broader EASi-only read
+// permissions.
+type CedarSystemWorkspace struct {
+	ID          uuid.UUID                   `json:"id"`
+	CedarSystem *CedarSystemWorkspaceSystem `json:"cedarSystem"`
+	Roles       []*CedarRole                `json:"roles"`
+	IsMySystem  bool                        `json:"isMySystem"`
+}
+
+// This is the subset of CEDAR system data that a system team member can use to
+// access workspace-scoped features without broader EASi-only read permissions.
+type CedarSystemWorkspaceSystem struct {
+	ID                     uuid.UUID       `json:"id"`
+	Name                   string          `json:"name"`
+	IsBookmarked           bool            `json:"isBookmarked"`
+	ViewerCanAccessProfile bool            `json:"viewerCanAccessProfile"`
+	LinkedTrbRequests      []*TRBRequest   `json:"linkedTrbRequests"`
+	LinkedSystemIntakes    []*SystemIntake `json:"linkedSystemIntakes"`
+}
+
 // The input needed to close a TRB request
 type CloseTRBRequestInput struct {
 	ID             uuid.UUID `json:"id"`
@@ -931,12 +952,6 @@ type UpdateSystemIntakeGRBReviewerInput struct {
 	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
 }
 
-// Input data for updating a system intake's relationship to a CEDAR system
-type UpdateSystemIntakeLinkedCedarSystemInput struct {
-	ID            uuid.UUID  `json:"id"`
-	CedarSystemID *uuid.UUID `json:"cedarSystemId,omitempty"`
-}
-
 // Input data for updating an IT governance admin note
 type UpdateSystemIntakeNoteInput struct {
 	Content    HTML      `json:"content"`
@@ -952,18 +967,22 @@ type UpdateSystemIntakePayload struct {
 
 // Input to update some fields on a system request
 type UpdateSystemIntakeRequestDetailsInput struct {
-	ID                 uuid.UUID                                `json:"id"`
-	RequestName        *string                                  `json:"requestName,omitempty"`
-	ProjectAcronym     *string                                  `json:"projectAcronym,omitempty"`
-	BusinessNeed       *string                                  `json:"businessNeed,omitempty"`
-	BusinessSolution   *string                                  `json:"businessSolution,omitempty"`
-	CurrentStage       *string                                  `json:"currentStage,omitempty"`
-	NeedsEaSupport     *bool                                    `json:"needsEaSupport,omitempty"`
-	HasUIChanges       *bool                                    `json:"hasUiChanges,omitempty"`
-	UsesAiTech         *bool                                    `json:"usesAiTech,omitempty"`
-	UsingSoftware      *string                                  `json:"usingSoftware,omitempty"`
-	AcquisitionMethods []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
-	CedarSystemID      *uuid.UUID                               `json:"cedarSystemId,omitempty"`
+	ID                                         uuid.UUID                                `json:"id"`
+	RequestName                                *string                                  `json:"requestName,omitempty"`
+	ProjectAcronym                             *string                                  `json:"projectAcronym,omitempty"`
+	BusinessNeed                               *string                                  `json:"businessNeed,omitempty"`
+	BusinessSolution                           *string                                  `json:"businessSolution,omitempty"`
+	CurrentStage                               *string                                  `json:"currentStage,omitempty"`
+	NeedsEaSupport                             *bool                                    `json:"needsEaSupport,omitempty"`
+	DigitalServiceInteraction                  *YesNoNotSure                            `json:"digitalServiceInteraction,omitempty"`
+	DigitalServiceInteractionDescription       *string                                  `json:"digitalServiceInteractionDescription,omitempty"`
+	ProtectedCmsDataAccessedOutside            *YesNoNotSure                            `json:"protectedCmsDataAccessedOutside,omitempty"`
+	ProtectedCmsDataAccessedOutsideDescription *string                                  `json:"protectedCmsDataAccessedOutsideDescription,omitempty"`
+	HasUIChanges                               *bool                                    `json:"hasUiChanges,omitempty"`
+	UsesAiTech                                 *bool                                    `json:"usesAiTech,omitempty"`
+	UsingSoftware                              *string                                  `json:"usingSoftware,omitempty"`
+	AcquisitionMethods                         []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
+	CedarSystemID                              *uuid.UUID                               `json:"cedarSystemId,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request
@@ -1895,6 +1914,64 @@ func (e *TagType) UnmarshalJSON(b []byte) error {
 }
 
 func (e TagType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+// YesNoNotSure is a common enum used for questions that have yes, no, or not sure options
+type YesNoNotSure string
+
+const (
+	YesNoNotSureYes     YesNoNotSure = "YES"
+	YesNoNotSureNo      YesNoNotSure = "NO"
+	YesNoNotSureNotSure YesNoNotSure = "NOT_SURE"
+)
+
+var AllYesNoNotSure = []YesNoNotSure{
+	YesNoNotSureYes,
+	YesNoNotSureNo,
+	YesNoNotSureNotSure,
+}
+
+func (e YesNoNotSure) IsValid() bool {
+	switch e {
+	case YesNoNotSureYes, YesNoNotSureNo, YesNoNotSureNotSure:
+		return true
+	}
+	return false
+}
+
+func (e YesNoNotSure) String() string {
+	return string(e)
+}
+
+func (e *YesNoNotSure) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = YesNoNotSure(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid YesNoNotSure", str)
+	}
+	return nil
+}
+
+func (e YesNoNotSure) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *YesNoNotSure) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e YesNoNotSure) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	e.MarshalGQL(&buf)
 	return buf.Bytes(), nil

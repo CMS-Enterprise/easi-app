@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -106,6 +107,10 @@ func CreateSystemIntake(ctx context.Context, np sqlutils.NamedPreparer, intake *
 			contract_end_date,
 			grt_date,
 			grb_date,
+			digital_service_interaction,
+			digital_service_interaction_description,
+			protected_cms_data_accessed_outside,
+			protected_cms_data_accessed_outside_description,
 			has_ui_changes,
 			uses_ai_tech,
 			using_software,
@@ -172,6 +177,10 @@ func CreateSystemIntake(ctx context.Context, np sqlutils.NamedPreparer, intake *
 			:contract_end_date,
 			:grt_date,
 			:grb_date,
+			:digital_service_interaction,
+			:digital_service_interaction_description,
+			:protected_cms_data_accessed_outside,
+			:protected_cms_data_accessed_outside_description,
 			:has_ui_changes,
 			:uses_ai_tech,
 			:using_software,
@@ -283,6 +292,10 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			rejection_reason = :rejection_reason,
 			admin_lead = :admin_lead,
 			cedar_system_id = :cedar_system_id,
+			digital_service_interaction = :digital_service_interaction,
+			digital_service_interaction_description = :digital_service_interaction_description,
+			protected_cms_data_accessed_outside = :protected_cms_data_accessed_outside,
+			protected_cms_data_accessed_outside_description = :protected_cms_data_accessed_outside_description,
 			has_ui_changes = :has_ui_changes,
 			uses_ai_tech = :uses_ai_tech,
 			using_software = :using_software,
@@ -425,6 +438,42 @@ func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id 
 	intake.FundingSources = sources
 
 	return &intake, nil
+}
+
+// FetchSystemIntakesByIDNP queries the DB for system intakes matching the given IDs.
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses Store methods to use a transactional wrapper.
+func FetchSystemIntakesByIDNP(
+	ctx context.Context,
+	np sqlutils.NamedPreparer,
+	ids []uuid.UUID,
+) (models.SystemIntakes, error) {
+	if len(ids) == 0 {
+		return models.SystemIntakes{}, nil
+	}
+
+	const whereClause = `
+		WHERE system_intakes.id = ANY(:ids)
+	`
+
+	var intakes models.SystemIntakes
+	err := namedSelect(ctx, np, &intakes, fetchSystemIntakeSQL+whereClause, args{
+		"ids": pq.Array(ids),
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch system intakes by ID",
+			zap.Error(err),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     ids,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return intakes, nil
 }
 
 // FetchSystemIntakes queries the DB for all system intakes
@@ -608,6 +657,13 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 		return nil, err
 	}
 	return intakes, nil
+}
+
+// GetSystemIntakeLCIDOptions retrieves requester-safe LCID lookup options.
+func (s *Store) GetSystemIntakeLCIDOptions(ctx context.Context) ([]*models.SystemIntakeLCIDOption, error) {
+	var intakes []*models.SystemIntakeLCIDOption
+	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetLCIDOptions, args{})
+	return intakes, err
 }
 
 func (s *Store) GetMySystemIntakes(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {

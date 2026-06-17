@@ -4,6 +4,9 @@ export default gql(/* GraphQL */ `
   query GetTRBRequest($id: UUID!) {
     trbRequest(id: $id) {
       ...TrbRequestFormFieldsFragment
+      requesterInfo {
+        euaUserId
+      }
     }
   }
 `);

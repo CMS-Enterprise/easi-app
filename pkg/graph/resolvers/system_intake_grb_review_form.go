@@ -23,6 +23,10 @@ func UpdateSystemIntakeGRBReviewType(
 	store *storage.Store,
 	input models.UpdateSystemIntakeGRBReviewTypeInput,
 ) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	return storage.UpdateSystemIntakeGRBReviewType(
 		ctx,
 		store,
@@ -38,6 +42,10 @@ func UpdateSystemIntakeGRBReviewFormInputPresentationStandard(
 	store *storage.Store,
 	input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard,
 ) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
@@ -79,6 +87,10 @@ func UpdateSystemIntakeGRBReviewFormInputPresentationAsync(
 	store *storage.Store,
 	input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync,
 ) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
@@ -108,6 +120,10 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	emailClient *email.Client,
 	input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync,
 ) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
@@ -244,6 +260,10 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 	emailClient *email.Client,
 	systemIntakeID uuid.UUID,
 ) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	currentTime := time.Now()
 
 	// Fetch intake by ID
@@ -314,6 +334,10 @@ func ExtendGRBReviewDeadlineAsync(
 	emailClient *email.Client,
 	input models.ExtendGRBReviewDeadlineInput,
 ) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
@@ -391,6 +415,10 @@ func RestartGRBReviewAsync(
 	emailClient *email.Client,
 	input models.RestartGRBReviewInput,
 ) (*models.UpdateSystemIntakePayload, error) {
+	if err := authorizeUserCanManageSystemIntakeGRBReview(ctx); err != nil {
+		return nil, err
+	}
+
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
