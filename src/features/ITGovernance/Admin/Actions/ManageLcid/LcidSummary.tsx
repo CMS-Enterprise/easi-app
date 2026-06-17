@@ -22,7 +22,7 @@ export type LcidSummaryProps = {
   lcidCostBaseline?: string | null | undefined;
   lcidType?: SystemIntakeLCIDType | null | undefined;
   lcidIsLowIt?: boolean | null | undefined;
-  lcidIsPilot?: boolean | null | undefined;
+  lcidIsShortened?: boolean | null | undefined;
   lcidStatus?: SystemIntakeLCIDStatus | null | undefined;
 };
 
@@ -38,16 +38,16 @@ const LcidSummary = ({
   lcidCostBaseline,
   lcidType,
   lcidIsLowIt,
-  lcidIsPilot,
+  lcidIsShortened,
   className
 }: LcidSummaryProps & { className?: string }) => {
   const { t } = useTranslation('action');
 
-  let lcidIsPilotLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
-  if (lcidIsPilot === true) {
-    lcidIsPilotLabel = t('issueLCID.lcidIsPilot.yes');
-  } else if (lcidIsPilot === false) {
-    lcidIsPilotLabel = t('issueLCID.lcidIsPilot.no');
+  let lcidIsShortenedLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
+  if (lcidIsShortened === true) {
+    lcidIsShortenedLabel = t('issueLCID.lcidIsShortened.yes');
+  } else if (lcidIsShortened === false) {
+    lcidIsShortenedLabel = t('issueLCID.lcidIsShortened.no');
   }
 
   let lcidIsLowItLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
@@ -150,10 +150,10 @@ const LcidSummary = ({
         </dd>
 
         <dt className="text-bold margin-top-2">
-          {t('updateLcid.currentLcidIsPilot')}
+          {t('updateLcid.currentLcidIsShortened')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {lcidIsPilotLabel}
+          {lcidIsShortenedLabel}
         </dd>
 
         <dt className="text-bold margin-top-2">

@@ -409,11 +409,16 @@ const Notes = () => {
                         <dd>
                           {formatLCIDType(t, lcidMetadataChange.previousType)}
                         </dd>
-                        <dt>{t('notes.extendLcid.newPilot')}</dt>
-                        <dd>{formatYesNo(t, lcidMetadataChange.newIsPilot)}</dd>
-                        <dt>{t('notes.extendLcid.oldPilot')}</dt>
+                        <dt>{t('notes.extendLcid.newShortened')}</dt>
                         <dd>
-                          {formatYesNo(t, lcidMetadataChange.previousIsPilot)}
+                          {formatYesNo(t, lcidMetadataChange.newIsShortened)}
+                        </dd>
+                        <dt>{t('notes.extendLcid.oldShortened')}</dt>
+                        <dd>
+                          {formatYesNo(
+                            t,
+                            lcidMetadataChange.previousIsShortened
+                          )}
                         </dd>
                         <dt>{t('notes.extendLcid.newLowIt')}</dt>
                         <dd>{formatYesNo(t, lcidMetadataChange.newIsLowIt)}</dd>

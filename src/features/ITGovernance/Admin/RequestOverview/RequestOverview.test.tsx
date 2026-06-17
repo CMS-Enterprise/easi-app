@@ -80,7 +80,7 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
     __typename: 'SystemIntake',
     id: systemIntake.id,
     lcid: '123',
-    lcidDisplay: '123 - 2025 - OIT - RECOMPETE - PILOT',
+    lcidDisplay: '123 - 2025 - OIT - RECOMPETE - SHORTENED',
     notes: [
       {
         __typename: 'SystemIntakeNote',
@@ -113,8 +113,8 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
           __typename: 'SystemIntakeLCIDMetadataChange',
           previousType: SystemIntakeLCIDType.NEW_SYSTEM,
           newType: SystemIntakeLCIDType.RECOMPETE,
-          previousIsPilot: false,
-          newIsPilot: true,
+          previousIsShortened: false,
+          newIsShortened: true,
           previousIsLowIt: true,
           newIsLowIt: false
         },
@@ -241,8 +241,8 @@ describe('Governance Review Team', () => {
 
     expect(screen.getByText('New LCID type')).toBeInTheDocument();
     expect(screen.getByText('Old LCID type')).toBeInTheDocument();
-    expect(screen.getByText('New Pilot')).toBeInTheDocument();
-    expect(screen.getByText('Old Pilot')).toBeInTheDocument();
+    expect(screen.getByText('New Shortened')).toBeInTheDocument();
+    expect(screen.getByText('Old Shortened')).toBeInTheDocument();
     expect(screen.getByText('New Low IT')).toBeInTheDocument();
     expect(screen.getByText('Old Low IT')).toBeInTheDocument();
     expect(screen.getByText('Recompete')).toBeInTheDocument();

@@ -56,7 +56,7 @@ const LcidMetadataFields = <T extends FieldValues>({
       />
 
       <Controller
-        name={'lcidIsPilot' as Path<T>}
+        name={'lcidIsShortened' as Path<T>}
         control={control}
         render={({ field: { ref, ...field }, fieldState: { error } }) => (
           <FormGroup error={!!error}>
@@ -65,10 +65,10 @@ const LcidMetadataFields = <T extends FieldValues>({
               className="text-normal"
               required={required}
             >
-              {t('issueLCID.lcidIsPilot.label')}
+              {t('issueLCID.lcidIsShortened.label')}
             </Label>
             <HelpText className="margin-top-1" id={`${field.name}-hint`}>
-              {t('issueLCID.lcidIsPilot.helpText')}
+              {t('issueLCID.lcidIsShortened.helpText')}
             </HelpText>
             {!!error?.message && (
               <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
@@ -76,8 +76,8 @@ const LcidMetadataFields = <T extends FieldValues>({
             <Radio
               {...field}
               inputRef={ref}
-              id="lcidIsPilotTrue"
-              label={t('issueLCID.lcidIsPilot.yes')}
+              id="lcidIsShortenedTrue"
+              label={t('issueLCID.lcidIsShortened.yes')}
               checked={field.value === true}
               onChange={() => field.onChange(true)}
               value="true"
@@ -86,8 +86,8 @@ const LcidMetadataFields = <T extends FieldValues>({
             <Radio
               {...field}
               inputRef={ref}
-              id="lcidIsPilotFalse"
-              label={t('issueLCID.lcidIsPilot.no')}
+              id="lcidIsShortenedFalse"
+              label={t('issueLCID.lcidIsShortened.no')}
               checked={field.value === false}
               onChange={() => field.onChange(false)}
               value="false"

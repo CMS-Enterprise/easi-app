@@ -52,7 +52,7 @@ interface IssueLcidProps extends ResolutionProps {
   lcidCostBaseline?: string | null;
   lcidType?: SystemIntakeLCIDType | null;
   lcidIsLowIt?: boolean | null;
-  lcidIsPilot?: boolean | null;
+  lcidIsShortened?: boolean | null;
 }
 
 /**
@@ -111,7 +111,7 @@ const IssueLcid = ({
         costBaseline: systemIntake.lcidCostBaseline || '',
         lcidType: systemIntake.lcidType || undefined,
         lcidIsLowIt: systemIntake.lcidIsLowIt ?? undefined,
-        lcidIsPilot: systemIntake.lcidIsPilot ?? undefined
+        lcidIsShortened: systemIntake.lcidIsShortened ?? undefined
       }
     : {
         lcid: systemIntake.lcid || '',
@@ -214,10 +214,10 @@ const IssueLcid = ({
           resetField('lcidIsLowIt');
         }
 
-        if (selectedLcidData.lcidIsPilot != null) {
-          setValue('lcidIsPilot', selectedLcidData.lcidIsPilot);
+        if (selectedLcidData.lcidIsShortened != null) {
+          setValue('lcidIsShortened', selectedLcidData.lcidIsShortened);
         } else {
-          resetField('lcidIsPilot');
+          resetField('lcidIsShortened');
         }
       }
     }
@@ -231,7 +231,7 @@ const IssueLcid = ({
       resetField('trbFollowUp');
       resetField('lcidType');
       resetField('lcidIsLowIt');
-      resetField('lcidIsPilot');
+      resetField('lcidIsShortened');
     }
   }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue, resetField]);
 

@@ -98,7 +98,7 @@ describe('The GRT Review page', () => {
 
   it('shows life cycle id if it exists', async () => {
     const lcid = '123456';
-    const lcidDisplay = '123456 - 2026 - OIT - NEW_SYSTEM - PILOT';
+    const lcidDisplay = '123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED';
 
     render(
       <MemoryRouter>

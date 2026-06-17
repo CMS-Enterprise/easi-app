@@ -265,11 +265,10 @@ const action = {
       NEW_SYSTEM: 'New system',
       RECOMPETE: 'Recompete'
     },
-    lcidIsPilot: {
-      label: 'Is this a pilot LCID?',
+    lcidIsShortened: {
+      label: 'Is this a shortened LCID?',
       // TODO: Replace placeholder copy with final mockup copy before merge.
-      helpText:
-        'Choose "Yes" if this LCID is for a pilot or shortened LCID request.',
+      helpText: 'Choose "Yes" if this LCID is for a shortened LCID request.',
       yes: 'Yes',
       no: 'No'
     },
@@ -375,7 +374,7 @@ const action = {
     currentCostBaseline: 'Current project cost baseline',
     currentNextSteps: 'Current next steps',
     currentLcidType: 'Current LCID type',
-    currentLcidIsPilot: 'Is this a pilot LCID?',
+    currentLcidIsShortened: 'Is this a shortened LCID?',
     currentLcidIsLowIt: 'Is this LCID low IT?',
     emptyForm: 'Please fill out at least one field below'
   },

@@ -18,7 +18,7 @@ func getBaseLCIDAction(
 	userInfo models.UserInfo,
 	retirementDate *time.Time,
 	lcidType *models.SystemIntakeLCIDType,
-	lcidIsPilot *bool,
+	lcidIsShortened *bool,
 	lcidIsLowIT *bool,
 ) models.Action {
 
@@ -46,12 +46,12 @@ func getBaseLCIDAction(
 		LCIDRetirementChangeNewDate:      intake.LifecycleRetiresAt,
 		LCIDRetirementChangePreviousDate: intake.LifecycleRetiresAt,
 
-		LCIDTypeChangeNewValue:         intake.LCIDType,
-		LCIDTypeChangePreviousValue:    intake.LCIDType,
-		LCIDIsPilotChangeNewValue:      intake.LCIDIsPilot,
-		LCIDIsPilotChangePreviousValue: intake.LCIDIsPilot,
-		LCIDIsLowITChangeNewValue:      intake.LCIDIsLowIT,
-		LCIDIsLowITChangePreviousValue: intake.LCIDIsLowIT,
+		LCIDTypeChangeNewValue:             intake.LCIDType,
+		LCIDTypeChangePreviousValue:        intake.LCIDType,
+		LCIDIsShortenedChangeNewValue:      intake.LCIDIsShortened,
+		LCIDIsShortenedChangePreviousValue: intake.LCIDIsShortened,
+		LCIDIsLowITChangeNewValue:          intake.LCIDIsLowIT,
+		LCIDIsLowITChangePreviousValue:     intake.LCIDIsLowIT,
 	}
 
 	if expirationDate != nil {
@@ -73,8 +73,8 @@ func getBaseLCIDAction(
 	if lcidType != nil {
 		action.LCIDTypeChangeNewValue = lcidType
 	}
-	if lcidIsPilot != nil {
-		action.LCIDIsPilotChangeNewValue = lcidIsPilot
+	if lcidIsShortened != nil {
+		action.LCIDIsShortenedChangeNewValue = lcidIsShortened
 	}
 	if lcidIsLowIT != nil {
 		action.LCIDIsLowITChangeNewValue = lcidIsLowIT

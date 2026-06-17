@@ -20,8 +20,8 @@ func TestGetBaseLCIDAction(t *testing.T) {
 	newScope := models.HTML("Scope Scope Scope")
 	previousLCIDType := models.LCIDTypeNewSystem
 	newLCIDType := models.LCIDTypeRecompete
-	previousIsPilot := false
-	newIsPilot := true
+	previousIsShortened := false
+	newIsShortened := true
 	previousIsLowIT := true
 	newIsLowIT := false
 	userInfo := models.UserInfo{
@@ -34,11 +34,11 @@ func TestGetBaseLCIDAction(t *testing.T) {
 		LifecycleCostBaseline: oldCostBaseline,
 		LifecycleExpiresAt:    &expirationDate,
 		LCIDType:              &previousLCIDType,
-		LCIDIsPilot:           &previousIsPilot,
+		LCIDIsShortened:       &previousIsShortened,
 		LCIDIsLowIT:           &previousIsLowIT,
 	}
 
-	action := getBaseLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo, &newRetirementDate, &newLCIDType, &newIsPilot, &newIsLowIT)
+	action := getBaseLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo, &newRetirementDate, &newLCIDType, &newIsShortened, &newIsLowIT)
 
 	// old cost baseline set in Previous field
 	assert.EqualValues(t, oldCostBaseline, action.LCIDExpirationChangePreviousCostBaseline)
@@ -60,8 +60,8 @@ func TestGetBaseLCIDAction(t *testing.T) {
 
 	assert.EqualValues(t, &previousLCIDType, action.LCIDTypeChangePreviousValue)
 	assert.EqualValues(t, &newLCIDType, action.LCIDTypeChangeNewValue)
-	assert.EqualValues(t, &previousIsPilot, action.LCIDIsPilotChangePreviousValue)
-	assert.EqualValues(t, &newIsPilot, action.LCIDIsPilotChangeNewValue)
+	assert.EqualValues(t, &previousIsShortened, action.LCIDIsShortenedChangePreviousValue)
+	assert.EqualValues(t, &newIsShortened, action.LCIDIsShortenedChangeNewValue)
 	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangePreviousValue)
 	assert.EqualValues(t, &newIsLowIT, action.LCIDIsLowITChangeNewValue)
 }

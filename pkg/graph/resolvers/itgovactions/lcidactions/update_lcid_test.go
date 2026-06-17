@@ -18,10 +18,10 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	nextSteps := models.HTML("<strong> My Next Steps! </strong>")
 	newScope := models.HTML("Scope Scope Scope")
 	previousLCIDType := models.LCIDTypeNewSystem
-	previousIsPilot := false
+	previousIsShortened := false
 	previousIsLowIT := true
 	newLCIDType := models.LCIDTypeRecompete
-	newIsPilot := true
+	newIsShortened := true
 	userInfo := models.UserInfo{
 		DisplayName: "tester",
 		Email:       "test@email.email",
@@ -32,10 +32,10 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 		LifecycleCostBaseline: oldCostBaseline,
 		LifecycleExpiresAt:    &expirationDate,
 		LCIDType:              &previousLCIDType,
-		LCIDIsPilot:           &previousIsPilot,
+		LCIDIsShortened:       &previousIsShortened,
 		LCIDIsLowIT:           &previousIsLowIT,
 	}
-	action := GetUpdateLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, &newLCIDType, &newIsPilot, nil, userInfo)
+	action := GetUpdateLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, &newLCIDType, &newIsShortened, nil, userInfo)
 	assert.EqualValues(t, oldCostBaseline, action.LCIDExpirationChangePreviousCostBaseline)
 	assert.EqualValues(t, null.StringFrom(newCostBaseline), action.LCIDExpirationChangeNewCostBaseline)
 
@@ -48,8 +48,8 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	assert.EqualValues(t, models.ActionTypeUPDATELCID, action.ActionType)
 	assert.EqualValues(t, &previousLCIDType, action.LCIDTypeChangePreviousValue)
 	assert.EqualValues(t, &newLCIDType, action.LCIDTypeChangeNewValue)
-	assert.EqualValues(t, &previousIsPilot, action.LCIDIsPilotChangePreviousValue)
-	assert.EqualValues(t, &newIsPilot, action.LCIDIsPilotChangeNewValue)
+	assert.EqualValues(t, &previousIsShortened, action.LCIDIsShortenedChangePreviousValue)
+	assert.EqualValues(t, &newIsShortened, action.LCIDIsShortenedChangeNewValue)
 	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangePreviousValue)
 	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangeNewValue)
 

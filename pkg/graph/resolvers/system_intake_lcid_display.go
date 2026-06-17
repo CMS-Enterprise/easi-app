@@ -30,8 +30,8 @@ func formatLCIDDisplay(intake *models.SystemIntake, component *models.SystemInta
 		}
 	}
 
-	if intake.LCIDIsPilot != nil && *intake.LCIDIsPilot {
-		parts = append(parts, "PILOT")
+	if intake.LCIDIsShortened != nil && *intake.LCIDIsShortened {
+		parts = append(parts, "SHORTENED")
 	}
 	if intake.LCIDIsLowIT != nil && *intake.LCIDIsLowIT {
 		parts = append(parts, "LOW_IT")

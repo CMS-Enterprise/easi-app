@@ -805,7 +805,7 @@ type ComplexityRoot struct {
 		ID                                                func(childComplexity int) int
 		ItGovTaskStatuses                                 func(childComplexity int) int
 		LCIDIsLowIT                                       func(childComplexity int) int
-		LCIDIsPilot                                       func(childComplexity int) int
+		LCIDIsShortened                                   func(childComplexity int) int
 		LCIDType                                          func(childComplexity int) int
 		LastMeetingDate                                   func(childComplexity int) int
 		Lcid                                              func(childComplexity int) int
@@ -1023,12 +1023,12 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeLCIDMetadataChange struct {
-		NewIsLowIt      func(childComplexity int) int
-		NewIsPilot      func(childComplexity int) int
-		NewType         func(childComplexity int) int
-		PreviousIsLowIt func(childComplexity int) int
-		PreviousIsPilot func(childComplexity int) int
-		PreviousType    func(childComplexity int) int
+		NewIsLowIt          func(childComplexity int) int
+		NewIsShortened      func(childComplexity int) int
+		NewType             func(childComplexity int) int
+		PreviousIsLowIt     func(childComplexity int) int
+		PreviousIsShortened func(childComplexity int) int
+		PreviousType        func(childComplexity int) int
 	}
 
 	SystemIntakeLCIDOption struct {
@@ -5867,12 +5867,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.LCIDIsLowIT(childComplexity), true
-	case "SystemIntake.lcidIsPilot":
-		if e.complexity.SystemIntake.LCIDIsPilot == nil {
+	case "SystemIntake.lcidIsShortened":
+		if e.complexity.SystemIntake.LCIDIsShortened == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.LCIDIsPilot(childComplexity), true
+		return e.complexity.SystemIntake.LCIDIsShortened(childComplexity), true
 	case "SystemIntake.lcidType":
 		if e.complexity.SystemIntake.LCIDType == nil {
 			break
@@ -6841,12 +6841,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeLCIDMetadataChange.NewIsLowIt(childComplexity), true
-	case "SystemIntakeLCIDMetadataChange.newIsPilot":
-		if e.complexity.SystemIntakeLCIDMetadataChange.NewIsPilot == nil {
+	case "SystemIntakeLCIDMetadataChange.newIsShortened":
+		if e.complexity.SystemIntakeLCIDMetadataChange.NewIsShortened == nil {
 			break
 		}
 
-		return e.complexity.SystemIntakeLCIDMetadataChange.NewIsPilot(childComplexity), true
+		return e.complexity.SystemIntakeLCIDMetadataChange.NewIsShortened(childComplexity), true
 	case "SystemIntakeLCIDMetadataChange.newType":
 		if e.complexity.SystemIntakeLCIDMetadataChange.NewType == nil {
 			break
@@ -6859,12 +6859,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsLowIt(childComplexity), true
-	case "SystemIntakeLCIDMetadataChange.previousIsPilot":
-		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsPilot == nil {
+	case "SystemIntakeLCIDMetadataChange.previousIsShortened":
+		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsShortened == nil {
 			break
 		}
 
-		return e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsPilot(childComplexity), true
+		return e.complexity.SystemIntakeLCIDMetadataChange.PreviousIsShortened(childComplexity), true
 	case "SystemIntakeLCIDMetadataChange.previousType":
 		if e.complexity.SystemIntakeLCIDMetadataChange.PreviousType == nil {
 			break
@@ -9068,7 +9068,7 @@ type SystemIntake {
   lcidRetiresAt: Time
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
-  lcidIsPilot: Boolean
+  lcidIsShortened: Boolean
   needsEaSupport: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
@@ -9564,8 +9564,8 @@ Contains metadata changes for a system request's lifecycle ID
 type SystemIntakeLCIDMetadataChange {
   previousType: SystemIntakeLCIDType
   newType: SystemIntakeLCIDType
-  previousIsPilot: Boolean
-  newIsPilot: Boolean
+  previousIsShortened: Boolean
+  newIsShortened: Boolean
   previousIsLowIt: Boolean
   newIsLowIt: Boolean
 }
@@ -9911,7 +9911,7 @@ input SystemIntakeUpdateLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
-  lcidIsPilot: Boolean
+  lcidIsShortened: Boolean
   reason: HTML
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
@@ -9930,7 +9930,7 @@ input SystemIntakeConfirmLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
-  lcidIsPilot: Boolean!
+  lcidIsShortened: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -9978,7 +9978,7 @@ input SystemIntakeIssueLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
-  lcidIsPilot: Boolean!
+  lcidIsShortened: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -14605,8 +14605,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -21219,8 +21219,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -23696,8 +23696,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -27213,8 +27213,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -27468,8 +27468,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -29649,8 +29649,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -33405,8 +33405,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -33642,8 +33642,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -33878,8 +33878,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -34103,8 +34103,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -34328,8 +34328,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -38621,14 +38621,14 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidIsLowIt(_ context.Cont
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_lcidIsPilot(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntake_lcidIsShortened(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
 		ec.OperationContext,
 		field,
-		ec.fieldContext_SystemIntake_lcidIsPilot,
+		ec.fieldContext_SystemIntake_lcidIsShortened,
 		func(ctx context.Context) (any, error) {
-			return obj.LCIDIsPilot, nil
+			return obj.LCIDIsShortened, nil
 		},
 		nil,
 		ec.marshalOBoolean2ᚖbool,
@@ -38637,7 +38637,7 @@ func (ec *executionContext) _SystemIntake_lcidIsPilot(ctx context.Context, field
 	)
 }
 
-func (ec *executionContext) fieldContext_SystemIntake_lcidIsPilot(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntake_lcidIsShortened(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
@@ -40010,8 +40010,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -40802,8 +40802,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -41114,10 +41114,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_lcidMetadataChange(_
 				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousType(ctx, field)
 			case "newType":
 				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newType(ctx, field)
-			case "previousIsPilot":
-				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsPilot(ctx, field)
-			case "newIsPilot":
-				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsPilot(ctx, field)
+			case "previousIsShortened":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsShortened(ctx, field)
+			case "newIsShortened":
+				return ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsShortened(ctx, field)
 			case "previousIsLowIt":
 				return ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsLowIt(ctx, field)
 			case "newIsLowIt":
@@ -44711,14 +44711,14 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newType(
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeLCIDMetadataChange_previousIsPilot(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_previousIsShortened(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
 		ec.OperationContext,
 		field,
-		ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsPilot,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_previousIsShortened,
 		func(ctx context.Context) (any, error) {
-			return obj.PreviousIsPilot, nil
+			return obj.PreviousIsShortened, nil
 		},
 		nil,
 		ec.marshalOBoolean2ᚖbool,
@@ -44727,7 +44727,7 @@ func (ec *executionContext) _SystemIntakeLCIDMetadataChange_previousIsPilot(ctx 
 	)
 }
 
-func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_previousIsPilot(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_previousIsShortened(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeLCIDMetadataChange",
 		Field:      field,
@@ -44740,14 +44740,14 @@ func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_previous
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeLCIDMetadataChange_newIsPilot(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntakeLCIDMetadataChange_newIsShortened(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeLCIDMetadataChange) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
 		ec.OperationContext,
 		field,
-		ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsPilot,
+		ec.fieldContext_SystemIntakeLCIDMetadataChange_newIsShortened,
 		func(ctx context.Context) (any, error) {
-			return obj.NewIsPilot, nil
+			return obj.NewIsShortened, nil
 		},
 		nil,
 		ec.marshalOBoolean2ᚖbool,
@@ -44756,7 +44756,7 @@ func (ec *executionContext) _SystemIntakeLCIDMetadataChange_newIsPilot(ctx conte
 	)
 }
 
-func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newIsPilot(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntakeLCIDMetadataChange_newIsShortened(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeLCIDMetadataChange",
 		Field:      field,
@@ -48551,8 +48551,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -50628,8 +50628,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -51230,8 +51230,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lcidType(ctx, field)
 			case "lcidIsLowIt":
 				return ec.fieldContext_SystemIntake_lcidIsLowIt(ctx, field)
-			case "lcidIsPilot":
-				return ec.fieldContext_SystemIntake_lcidIsPilot(ctx, field)
+			case "lcidIsShortened":
+				return ec.fieldContext_SystemIntake_lcidIsShortened(ctx, field)
 			case "needsEaSupport":
 				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
 			case "usingSoftware":
@@ -55256,7 +55256,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsPilot", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsShortened", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55319,13 +55319,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeConfirmLCIDInput(ctx conte
 				return it, err
 			}
 			it.LcidIsLowIt = data
-		case "lcidIsPilot":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsPilot"))
+		case "lcidIsShortened":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsShortened"))
 			data, err := ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.LcidIsPilot = data
+			it.LcidIsShortened = data
 		case "additionalInfo":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
@@ -55675,7 +55675,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "lcid", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsPilot", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "lcid", "expiresAt", "scope", "nextSteps", "trbFollowUp", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsShortened", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -55745,13 +55745,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context
 				return it, err
 			}
 			it.LcidIsLowIt = data
-		case "lcidIsPilot":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsPilot"))
+		case "lcidIsShortened":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsShortened"))
 			data, err := ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.LcidIsPilot = data
+			it.LcidIsShortened = data
 		case "additionalInfo":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("additionalInfo"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
@@ -56247,7 +56247,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsPilot", "reason", "additionalInfo", "notificationRecipients", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "expiresAt", "scope", "nextSteps", "costBaseline", "lcidType", "lcidIsLowIt", "lcidIsShortened", "reason", "additionalInfo", "notificationRecipients", "adminNote"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56303,13 +56303,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 				return it, err
 			}
 			it.LcidIsLowIt = data
-		case "lcidIsPilot":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsPilot"))
+		case "lcidIsShortened":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lcidIsShortened"))
 			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.LcidIsPilot = data
+			it.LcidIsShortened = data
 		case "reason":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
 			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
@@ -63299,8 +63299,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_lcidType(ctx, field, obj)
 		case "lcidIsLowIt":
 			out.Values[i] = ec._SystemIntake_lcidIsLowIt(ctx, field, obj)
-		case "lcidIsPilot":
-			out.Values[i] = ec._SystemIntake_lcidIsPilot(ctx, field, obj)
+		case "lcidIsShortened":
+			out.Values[i] = ec._SystemIntake_lcidIsShortened(ctx, field, obj)
 		case "needsEaSupport":
 			field := field
 
@@ -65955,10 +65955,10 @@ func (ec *executionContext) _SystemIntakeLCIDMetadataChange(ctx context.Context,
 			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousType(ctx, field, obj)
 		case "newType":
 			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newType(ctx, field, obj)
-		case "previousIsPilot":
-			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousIsPilot(ctx, field, obj)
-		case "newIsPilot":
-			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newIsPilot(ctx, field, obj)
+		case "previousIsShortened":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousIsShortened(ctx, field, obj)
+		case "newIsShortened":
+			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_newIsShortened(ctx, field, obj)
 		case "previousIsLowIt":
 			out.Values[i] = ec._SystemIntakeLCIDMetadataChange_previousIsLowIt(ctx, field, obj)
 		case "newIsLowIt":

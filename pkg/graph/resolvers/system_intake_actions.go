@@ -462,7 +462,7 @@ func IssueLCID(
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 	intake.LCIDType = &input.LcidType
 	intake.LCIDIsLowIT = &input.LcidIsLowIt
-	intake.LCIDIsPilot = &input.LcidIsPilot
+	intake.LCIDIsShortened = &input.LcidIsShortened
 
 	// update other fields
 	intake.UpdatedAt = &currTime
@@ -488,15 +488,15 @@ func IssueLCID(
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
 		action := models.Action{
-			IntakeID:                  &input.SystemIntakeID,
-			ActionType:                models.ActionTypeISSUELCID,
-			ActorName:                 adminUserInfo.DisplayName,
-			ActorEmail:                adminUserInfo.Email,
-			ActorEUAUserID:            adminEUAID,
-			Step:                      &intake.Step,
-			LCIDTypeChangeNewValue:    &input.LcidType,
-			LCIDIsLowITChangeNewValue: &input.LcidIsLowIt,
-			LCIDIsPilotChangeNewValue: &input.LcidIsPilot,
+			IntakeID:                      &input.SystemIntakeID,
+			ActionType:                    models.ActionTypeISSUELCID,
+			ActorName:                     adminUserInfo.DisplayName,
+			ActorEmail:                    adminUserInfo.Email,
+			ActorEUAUserID:                adminEUAID,
+			Step:                          &intake.Step,
+			LCIDTypeChangeNewValue:        &input.LcidType,
+			LCIDIsLowITChangeNewValue:     &input.LcidIsLowIt,
+			LCIDIsShortenedChangeNewValue: &input.LcidIsShortened,
 		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
@@ -830,7 +830,7 @@ func UpdateLCID(
 	// input.Reason //TODO: The reason field will be retained in the DB in a future ticket
 
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsPilot, input.LcidIsLowIt, *adminUserInfo)
+	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -881,8 +881,8 @@ func UpdateLCID(
 	if input.LcidIsLowIt != nil {
 		intake.LCIDIsLowIT = input.LcidIsLowIt
 	}
-	if input.LcidIsPilot != nil {
-		intake.LCIDIsPilot = input.LcidIsPilot
+	if input.LcidIsShortened != nil {
+		intake.LCIDIsShortened = input.LcidIsShortened
 	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -994,7 +994,7 @@ func ConfirmLCID(ctx context.Context,
 		return nil, err
 	}
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsPilot, input.LcidIsLowIt, *adminUserInfo)
+	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -1017,7 +1017,7 @@ func ConfirmLCID(ctx context.Context,
 	}
 	intake.LCIDType = &input.LcidType
 	intake.LCIDIsLowIT = &input.LcidIsLowIt
-	intake.LCIDIsPilot = &input.LcidIsPilot
+	intake.LCIDIsShortened = &input.LcidIsShortened
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 

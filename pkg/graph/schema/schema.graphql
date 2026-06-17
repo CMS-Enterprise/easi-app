@@ -737,7 +737,7 @@ type SystemIntake {
   lcidRetiresAt: Time
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
-  lcidIsPilot: Boolean
+  lcidIsShortened: Boolean
   needsEaSupport: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
@@ -1233,8 +1233,8 @@ Contains metadata changes for a system request's lifecycle ID
 type SystemIntakeLCIDMetadataChange {
   previousType: SystemIntakeLCIDType
   newType: SystemIntakeLCIDType
-  previousIsPilot: Boolean
-  newIsPilot: Boolean
+  previousIsShortened: Boolean
+  newIsShortened: Boolean
   previousIsLowIt: Boolean
   newIsLowIt: Boolean
 }
@@ -1580,7 +1580,7 @@ input SystemIntakeUpdateLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType
   lcidIsLowIt: Boolean
-  lcidIsPilot: Boolean
+  lcidIsShortened: Boolean
   reason: HTML
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
@@ -1599,7 +1599,7 @@ input SystemIntakeConfirmLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
-  lcidIsPilot: Boolean!
+  lcidIsShortened: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -1647,7 +1647,7 @@ input SystemIntakeIssueLCIDInput {
   costBaseline: String
   lcidType: SystemIntakeLCIDType!
   lcidIsLowIt: Boolean!
-  lcidIsPilot: Boolean!
+  lcidIsShortened: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML

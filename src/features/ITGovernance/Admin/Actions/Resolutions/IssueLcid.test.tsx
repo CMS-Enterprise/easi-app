@@ -234,7 +234,7 @@ describe('Issue LCID form', async () => {
     checkFieldDefaults();
   });
 
-  it('renders LCID type options without pilot shortened LCID', async () => {
+  it('renders LCID type options without shortened LCID', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
@@ -259,6 +259,6 @@ describe('Issue LCID form', async () => {
 
     expect(lcidTypeSelect).toHaveTextContent('New system');
     expect(lcidTypeSelect).toHaveTextContent('Recompete');
-    expect(lcidTypeSelect).not.toHaveTextContent('Pilot (shortened LCID)');
+    expect(lcidTypeSelect).not.toHaveTextContent('Shortened LCID');
   });
 });

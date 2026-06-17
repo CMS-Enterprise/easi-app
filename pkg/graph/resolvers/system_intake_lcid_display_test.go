@@ -15,9 +15,9 @@ func TestFormatLCIDDisplay(t *testing.T) {
 	issuedAt := time.Date(2026, time.June, 15, 0, 0, 0, 0, time.UTC)
 	lcidType := models.LCIDTypeNewSystem
 	recompeteType := models.LCIDTypeRecompete
-	pilot := true
+	shortened := true
 	lowIT := true
-	notPilot := false
+	notShortened := false
 	notLowIT := false
 	component := models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit
 
@@ -34,11 +34,11 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				LifecycleID:       null.StringFrom("123456"),
 				LifecycleIssuedAt: &issuedAt,
 				LCIDType:          &lcidType,
-				LCIDIsPilot:       &pilot,
+				LCIDIsShortened:   &shortened,
 				LCIDIsLowIT:       &lowIT,
 			},
 			component: &component,
-			expected:  stringPtr("123456 - 2026 - OIT - NEW_SYSTEM - PILOT - LOW_IT"),
+			expected:  stringPtr("123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED - LOW_IT"),
 		},
 		{
 			name: "partial metadata omits missing values",
@@ -46,9 +46,9 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				ID:                uuid.New(),
 				LifecycleID:       null.StringFrom("654321"),
 				LifecycleIssuedAt: &issuedAt,
-				LCIDIsPilot:       &pilot,
+				LCIDIsShortened:   &shortened,
 			},
-			expected: stringPtr("654321 - 2026 - PILOT"),
+			expected: stringPtr("654321 - 2026 - SHORTENED"),
 		},
 		{
 			name: "false booleans are omitted",
@@ -57,7 +57,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 				LifecycleID:       null.StringFrom("111111"),
 				LifecycleIssuedAt: &issuedAt,
 				LCIDType:          &recompeteType,
-				LCIDIsPilot:       &notPilot,
+				LCIDIsShortened:   &notShortened,
 				LCIDIsLowIT:       &notLowIT,
 			},
 			component: &component,

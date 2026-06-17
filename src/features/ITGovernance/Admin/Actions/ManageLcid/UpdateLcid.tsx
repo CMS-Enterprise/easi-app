@@ -62,7 +62,7 @@ const UpdateLcid = ({
     'costBaseline',
     'lcidType',
     'lcidIsLowIt',
-    'lcidIsPilot'
+    'lcidIsShortened'
   ]);
 
   /** Whether or not at least one LCID field is filled out */
@@ -111,7 +111,7 @@ const UpdateLcid = ({
               lcidCostBaseline={defaultValues?.lcidCostBaseline}
               lcidType={defaultValues?.lcidType}
               lcidIsLowIt={defaultValues?.lcidIsLowIt}
-              lcidIsPilot={defaultValues?.lcidIsPilot}
+              lcidIsShortened={defaultValues?.lcidIsShortened}
               className="margin-top-3 margin-bottom-6"
             />
           </LcidTitleBox>

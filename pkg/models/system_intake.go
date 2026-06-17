@@ -147,7 +147,7 @@ type SystemIntake struct {
 	LifecycleCostBaseline                             null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	LCIDType                                          *SystemIntakeLCIDType        `json:"lcidType" db:"lcid_type"`
 	LCIDIsLowIT                                       *bool                        `json:"lcidIsLowIt" db:"lcid_is_low_it"`
-	LCIDIsPilot                                       *bool                        `json:"lcidIsPilot" db:"lcid_is_pilot"`
+	LCIDIsShortened                                   *bool                        `json:"lcidIsShortened" db:"lcid_is_shortened"`
 	LifecycleExpirationAlertTS                        *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
 	LifecycleRetiresAt                                *time.Time                   `json:"lcidRetiresAt" db:"lcid_retires_at" gqlgen:"lcidRetiresAt"`
 	LifecycleIssuedAt                                 *time.Time                   `json:"lcidIssuedAt" db:"lcid_issued_at" gqlgen:"lcidIssuedAt"`

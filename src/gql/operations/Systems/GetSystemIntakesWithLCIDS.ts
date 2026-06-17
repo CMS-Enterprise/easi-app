@@ -13,7 +13,7 @@ export default gql(/* GraphQL */ `
       lcidCostBaseline
       lcidType
       lcidIsLowIt
-      lcidIsPilot
+      lcidIsShortened
     }
   }
 `);

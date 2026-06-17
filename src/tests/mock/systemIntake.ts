@@ -302,7 +302,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   lcidCostBaseline: null,
   lcidType: null,
   lcidIsLowIt: null,
-  lcidIsPilot: null,
+  lcidIsShortened: null,
   lcidStatus: null,
   rejectionReason: null,
   updatedAt: null,
@@ -450,7 +450,7 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   lcidCostBaseline: null,
   lcidType: null,
   lcidIsLowIt: null,
-  lcidIsPilot: null,
+  lcidIsShortened: null,
   lcidStatus: null,
   rejectionReason: null,
   updatedAt: null,
@@ -632,7 +632,7 @@ export const systemIntakeWithLcid: GetSystemIntakesWithLCIDSQuery['systemIntakes
     lcidCostBaseline: 'Text cost baseline',
     lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
     lcidIsLowIt: false,
-    lcidIsPilot: false
+    lcidIsShortened: false
   };
 
 export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCIDSQuery> =
@@ -658,7 +658,7 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
             lcidCostBaseline: null,
             lcidType: null,
             lcidIsLowIt: null,
-            lcidIsPilot: null
+            lcidIsShortened: null
           }
         ]
       }

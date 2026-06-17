@@ -16,7 +16,7 @@ describe('LCID summary box', () => {
   it('Renders LCID information', () => {
     const props: LcidSummaryProps = {
       lcid: '123456',
-      lcidDisplay: '123456 - 2026 - OIT - NEW_SYSTEM - PILOT',
+      lcidDisplay: '123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED',
       lcidIssuedAt: currentDate.minus({ days: 7 }).toISO(),
       lcidExpiresAt: currentDate.plus({ year: 1 }).toISO(),
       lcidRetiresAt: null,
@@ -24,7 +24,7 @@ describe('LCID summary box', () => {
       lcidScope: 'Test scope',
       lcidCostBaseline: 'Test cost baseline',
       lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
-      lcidIsPilot: true,
+      lcidIsShortened: true,
       lcidIsLowIt: false,
       lcidStatus: SystemIntakeLCIDStatus.ISSUED
     };
@@ -37,7 +37,7 @@ describe('LCID summary box', () => {
     expect(screen.getByText(props.lcidScope!));
     expect(screen.getByText(props.lcidCostBaseline!));
     expect(screen.getByText('New system'));
-    expect(screen.getByText('Is this a pilot LCID?'));
+    expect(screen.getByText('Is this a shortened LCID?'));
     expect(screen.getByText('Is this LCID low IT?'));
     expect(screen.getByText('Yes'));
     expect(screen.getByText('No'));

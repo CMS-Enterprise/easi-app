@@ -626,7 +626,7 @@ type SystemIntakeConfirmLCIDInput struct {
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
 	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
 	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
-	LcidIsPilot            bool                         `json:"lcidIsPilot"`
+	LcidIsShortened        bool                         `json:"lcidIsShortened"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -732,7 +732,7 @@ type SystemIntakeIssueLCIDInput struct {
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
 	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
 	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
-	LcidIsPilot            bool                         `json:"lcidIsPilot"`
+	LcidIsShortened        bool                         `json:"lcidIsShortened"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -752,12 +752,12 @@ type SystemIntakeLCIDExpirationChange struct {
 
 // Contains metadata changes for a system request's lifecycle ID
 type SystemIntakeLCIDMetadataChange struct {
-	PreviousType    *SystemIntakeLCIDType `json:"previousType,omitempty"`
-	NewType         *SystemIntakeLCIDType `json:"newType,omitempty"`
-	PreviousIsPilot *bool                 `json:"previousIsPilot,omitempty"`
-	NewIsPilot      *bool                 `json:"newIsPilot,omitempty"`
-	PreviousIsLowIt *bool                 `json:"previousIsLowIt,omitempty"`
-	NewIsLowIt      *bool                 `json:"newIsLowIt,omitempty"`
+	PreviousType        *SystemIntakeLCIDType `json:"previousType,omitempty"`
+	NewType             *SystemIntakeLCIDType `json:"newType,omitempty"`
+	PreviousIsShortened *bool                 `json:"previousIsShortened,omitempty"`
+	NewIsShortened      *bool                 `json:"newIsShortened,omitempty"`
+	PreviousIsLowIt     *bool                 `json:"previousIsLowIt,omitempty"`
+	NewIsLowIt          *bool                 `json:"newIsLowIt,omitempty"`
 }
 
 // Input for creating a Not an IT Governance Request Action in Admin Actions v2
@@ -856,7 +856,7 @@ type SystemIntakeUpdateLCIDInput struct {
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
 	LcidType               *SystemIntakeLCIDType        `json:"lcidType,omitempty"`
 	LcidIsLowIt            *bool                        `json:"lcidIsLowIt,omitempty"`
-	LcidIsPilot            *bool                        `json:"lcidIsPilot,omitempty"`
+	LcidIsShortened        *bool                        `json:"lcidIsShortened,omitempty"`
 	Reason                 *HTML                        `json:"reason,omitempty"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`

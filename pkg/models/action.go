@@ -92,8 +92,8 @@ type Action struct {
 	LCIDRetirementChangePreviousDate         *time.Time            `json:"previousRetirementDate" db:"lcid_retirement_change_previous_date"`
 	LCIDTypeChangePreviousValue              *SystemIntakeLCIDType `db:"lcid_type_change_previous_value"`
 	LCIDTypeChangeNewValue                   *SystemIntakeLCIDType `db:"lcid_type_change_new_value"`
-	LCIDIsPilotChangePreviousValue           *bool                 `db:"lcid_is_pilot_change_previous_value"`
-	LCIDIsPilotChangeNewValue                *bool                 `db:"lcid_is_pilot_change_new_value"`
+	LCIDIsShortenedChangePreviousValue       *bool                 `db:"lcid_is_shortened_change_previous_value"`
+	LCIDIsShortenedChangeNewValue            *bool                 `db:"lcid_is_shortened_change_new_value"`
 	LCIDIsLowITChangePreviousValue           *bool                 `db:"lcid_is_low_it_change_previous_value"`
 	LCIDIsLowITChangeNewValue                *bool                 `db:"lcid_is_low_it_change_new_value"`
 }

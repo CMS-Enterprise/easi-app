@@ -45,8 +45,8 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			lcid_retirement_change_previous_date,
 			lcid_type_change_previous_value,
 			lcid_type_change_new_value,
-			lcid_is_pilot_change_previous_value,
-			lcid_is_pilot_change_new_value,
+			lcid_is_shortened_change_previous_value,
+			lcid_is_shortened_change_new_value,
 			lcid_is_low_it_change_previous_value,
 			lcid_is_low_it_change_new_value
 		)
@@ -72,8 +72,8 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			:lcid_retirement_change_previous_date,
 			:lcid_type_change_previous_value,
 			:lcid_type_change_new_value,
-			:lcid_is_pilot_change_previous_value,
-			:lcid_is_pilot_change_new_value,
+			:lcid_is_shortened_change_previous_value,
+			:lcid_is_shortened_change_new_value,
 			:lcid_is_low_it_change_previous_value,
 			:lcid_is_low_it_change_new_value
 		)`
