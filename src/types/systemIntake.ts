@@ -95,11 +95,11 @@ export type FormattedFundingSource = {
 export type ContractDetailsForm = {
   existingFunding: boolean | null;
   fundingSources: FormattedFundingSource[];
-  annualSpending: {
-    currentAnnualSpending: string;
-    currentAnnualSpendingITPortion: string;
-    plannedYearOneSpending: string;
-    plannedYearOneSpendingITPortion: string;
+  totalContractCosts: {
+    currentEstimatedCost?: string;
+    currentEstimatedCostITPortion?: string;
+    estimatedTotalContractValue?: string;
+    estimatedTotalContractValueITPortion?: string;
   };
   contract: {
     hasContract: SystemIntakeContractStatus | null;

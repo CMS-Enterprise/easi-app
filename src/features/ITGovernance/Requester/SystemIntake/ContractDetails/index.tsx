@@ -89,7 +89,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const {
     id,
     fundingSources,
-    annualSpending,
+    totalContractCosts,
     contract,
     existingFunding,
     contractNumbers
@@ -109,13 +109,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     defaultValues: {
       existingFunding: existingFunding !== false,
       fundingSources: formatFundingSourcesForApp(fundingSources),
-      annualSpending: {
-        currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
-        currentAnnualSpendingITPortion:
-          annualSpending?.currentAnnualSpendingITPortion || '',
-        plannedYearOneSpending: annualSpending?.plannedYearOneSpending || '',
-        plannedYearOneSpendingITPortion:
-          annualSpending?.plannedYearOneSpendingITPortion || ''
+      totalContractCosts: {
+        currentEstimatedCost: totalContractCosts?.currentEstimatedCost || '',
+        currentEstimatedCostITPortion:
+          totalContractCosts?.currentEstimatedCostITPortion || '',
+        estimatedTotalContractValue:
+          totalContractCosts?.estimatedTotalContractValue || '',
+        estimatedTotalContractValueITPortion:
+          totalContractCosts?.estimatedTotalContractValueITPortion || ''
       },
       contract: {
         contractor: contract.contractor || '',
@@ -168,7 +169,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             existingFunding: payload.existingFunding,
             fundingSources: formatFundingSourcesForApi(payload.fundingSources)
           },
-          annualSpending: payload.annualSpending,
+          totalContractCosts: payload.totalContractCosts,
           contract: {
             ...payload.contract,
             // Convert to ISO or null for API
@@ -308,32 +309,29 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             </Fieldset>
           </FieldGroup>
 
-          <div className="grid-row grid-gap">
+          <div className="grid-row grid-gap display-flex flex-align-end">
             <div className="grid-col-12 desktop:grid-col-7">
               <FieldGroup
-                scrollElement="annualSpending.currentAnnualSpending"
-                error={!!errors.annualSpending?.currentAnnualSpending}
+                scrollElement="totalContractCosts.currentEstimatedCost"
+                error={!!errors.totalContractCosts?.currentEstimatedCost}
               >
-                <Label
-                  className="maxw-none"
-                  htmlFor="annualSpending.currentAnnualSpending"
-                >
-                  {t('contractDetails.currentAnnualSpending')}
+                <Label className="maxw-none" htmlFor="currentEstimatedCost">
+                  {t('contractDetails.currentEstimatedCost')}
                 </Label>
-                <HelpText id="annualSpending.currentAnnualSpending">
-                  {t('contractDetails.currentAnnualSpendingHelpText')}
+                <HelpText id="totalContractCosts.currentEstimatedCost">
+                  {t('contractDetails.currentEstimatedCostHelpText')}
                 </HelpText>
                 <ErrorMessage
                   errors={errors}
-                  name="annualSpending.currentAnnualSpending"
+                  name="totalContractCosts.currentEstimatedCost"
                   as={FieldErrorMsg}
                 />
                 <InputGroup className="maxw-none">
                   <InputPrefix>$</InputPrefix>
                   <TextInput
-                    {...register('annualSpending.currentAnnualSpending')}
+                    {...register('totalContractCosts.currentEstimatedCost')}
                     ref={null}
-                    id="currentAnnualSpending"
+                    id="currentEstimatedCost"
                     type="text"
                     maxLength={200}
                   />
@@ -343,28 +341,29 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
             <div className="grid-col-12 desktop:grid-col-5">
               <FieldGroup
-                scrollElement="annualSpending.currentAnnualSpendingITPortion"
-                error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
+                scrollElement="totalContractCosts.currentEstimatedCostITPortion"
+                error={
+                  !!errors.totalContractCosts?.currentEstimatedCostITPortion
+                }
               >
                 <Label
                   className="maxw-none"
-                  htmlFor="annualSpending.currentAnnualSpendingITPortion"
+                  htmlFor="currentEstimatedCostITPortion"
                 >
-                  {t('contractDetails.currentAnnualSpendingITPortion')}
+                  {t('contractDetails.currentEstimatedCostITPortion')}
                 </Label>
-
                 <ErrorMessage
                   errors={errors}
-                  name="annualSpending.currentAnnualSpendingITPortion"
+                  name="totalContractCosts.currentEstimatedCostITPortion"
                   as={FieldErrorMsg}
                 />
                 <InputGroup className="maxw-none">
                   <TextInput
                     {...register(
-                      'annualSpending.currentAnnualSpendingITPortion'
+                      'totalContractCosts.currentEstimatedCostITPortion'
                     )}
                     ref={null}
-                    id="currentAnnualSpendingITPortion"
+                    id="currentEstimatedCostITPortion"
                     type="text"
                     maxLength={200}
                   />
@@ -374,32 +373,34 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             </div>
           </div>
 
-          <div className="grid-row grid-gap">
+          <div className="grid-row grid-gap display-flex flex-align-end">
             <div className="grid-col-12 desktop:grid-col-7">
               <FieldGroup
-                scrollElement="annualSpending.plannedYearOneSpending"
-                error={!!errors.annualSpending?.plannedYearOneSpending}
+                scrollElement="totalContractCosts.estimatedTotalContractValue"
+                error={!!errors.totalContractCosts?.estimatedTotalContractValue}
               >
                 <Label
                   className="maxw-none"
-                  htmlFor="annualSpending.plannedYearOneSpending"
+                  htmlFor="estimatedTotalContractValue"
                 >
-                  {t('contractDetails.plannedYearOneSpending')}
+                  {t('contractDetails.estimatedTotalContractValue')}
                 </Label>
-                <HelpText id="annualSpending.plannedYearOneSpending">
-                  {t('contractDetails.plannedYearOneSpendingHelpText')}
+                <HelpText id="totalContractCosts.estimatedTotalContractValue">
+                  {t('contractDetails.estimatedTotalContractValueHelpText')}
                 </HelpText>
                 <ErrorMessage
                   errors={errors}
-                  name="annualSpending.plannedYearOneSpending"
+                  name="totalContractCosts.estimatedTotalContractValue"
                   as={FieldErrorMsg}
                 />
                 <InputGroup className="maxw-none">
                   <InputPrefix>$</InputPrefix>
                   <TextInput
-                    {...register('annualSpending.plannedYearOneSpending')}
+                    {...register(
+                      'totalContractCosts.estimatedTotalContractValue'
+                    )}
                     ref={null}
-                    id="plannedYearOneSpending"
+                    id="estimatedTotalContractValue"
                     type="text"
                     maxLength={200}
                   />
@@ -409,27 +410,30 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
             <div className="grid-col-12 desktop:grid-col-5">
               <FieldGroup
-                scrollElement="annualSpending.plannedYearOneSpendingITPortion"
-                error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
+                scrollElement="totalContractCosts.estimatedTotalContractValueITPortion"
+                error={
+                  !!errors.totalContractCosts
+                    ?.estimatedTotalContractValueITPortion
+                }
               >
                 <Label
                   className="maxw-none"
-                  htmlFor="annualSpending.plannedYearOneSpendingITPortion"
+                  htmlFor="estimatedTotalContractValueITPortion"
                 >
-                  {t('contractDetails.plannedYearOneSpendingITPortion')}
+                  {t('contractDetails.estimatedTotalContractValueITPortion')}
                 </Label>
                 <ErrorMessage
                   errors={errors}
-                  name="annualSpending.plannedYearOneSpendingITPortion"
+                  name="totalContractCosts.estimatedTotalContractValueITPortion"
                   as={FieldErrorMsg}
                 />
                 <InputGroup className="maxw-none">
                   <TextInput
                     {...register(
-                      'annualSpending.plannedYearOneSpendingITPortion'
+                      'totalContractCosts.estimatedTotalContractValueITPortion'
                     )}
                     ref={null}
-                    id="plannedYearOneSpendingITPortion"
+                    id="estimatedTotalContractValueITPortion"
                     type="text"
                     maxLength={200}
                   />

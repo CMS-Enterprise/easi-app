@@ -569,6 +569,14 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
       plannedYearOneSpending: 'Planned year one spending',
       plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
     },
+    totalContractCosts: {
+      __typename: 'SystemIntakeTotalContractCosts',
+      currentEstimatedCost: 'Current estimated cost',
+      currentEstimatedCostITPortion: 'Current estimated spending IT portion',
+      estimatedTotalContractValue: 'Estimated total contract value',
+      estimatedTotalContractValueITPortion:
+        'Estimated total contract value IT portion'
+    },
     contract: systemIntake.contract,
     contractName: '',
     contractNumbers: [],

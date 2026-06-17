@@ -47,13 +47,13 @@ describe('System intake form - Contract details', () => {
 
     expect(
       within(errorSummary).getByText(
-        'Please enter a valid number for the current annual spending'
+        'Please enter a valid number for the current estimated cost'
       )
     ).toBeInTheDocument();
 
     expect(
       within(errorSummary).getByText(
-        'Please enter a valid number for the planned annual spending'
+        'Please enter a valid number for the estimated total contract value'
       )
     ).toBeInTheDocument();
 
