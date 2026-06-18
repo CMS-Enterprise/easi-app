@@ -37,11 +37,11 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   existingFunding: null,
   fundingSources: [],
-  annualSpending: {
-    currentAnnualSpending: '',
-    currentAnnualSpendingITPortion: '',
-    plannedYearOneSpending: '',
-    plannedYearOneSpendingITPortion: ''
+  totalContractCosts: {
+    currentEstimatedCost: '',
+    currentEstimatedCostITPortion: '',
+    estimatedTotalContractValue: '',
+    estimatedTotalContractValueITPortion: ''
   },
   contract: {
     hasContract: null,

@@ -30,11 +30,11 @@ export const UpdateSystemIntakeContractDetails = gql(/* GraphQL */ `
         costs {
           expectedIncreaseAmount
         }
-        annualSpending {
-          currentAnnualSpending
-          currentAnnualSpendingITPortion
-          plannedYearOneSpending
-          plannedYearOneSpendingITPortion
+        totalContractCosts {
+          currentEstimatedCost
+          currentEstimatedCostITPortion
+          estimatedTotalContractValue
+          estimatedTotalContractValueITPortion
         }
         contract {
           contractor

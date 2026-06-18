@@ -80,19 +80,19 @@ describe('The System Intake Form', () => {
       restart: true
     });
 
-    cy.get('#currentAnnualSpending')
+    cy.get('#currentEstimatedCost')
       .type('123456')
       .should('have.value', '123456');
 
-    cy.get('#currentAnnualSpendingITPortion')
+    cy.get('#currentEstimatedCostITPortion')
       .type('23')
       .should('have.value', '23');
 
-    cy.get('#plannedYearOneSpending')
+    cy.get('#estimatedTotalContractValue')
       .type('654321')
       .should('have.value', '654321');
 
-    cy.get('#plannedYearOneSpendingITPortion')
+    cy.get('#estimatedTotalContractValueITPortion')
       .type('99')
       .should('have.value', '99');
 
@@ -215,19 +215,19 @@ describe('The System Intake Form', () => {
     });
     cy.get(`[data-testid="fundingSource${projectNumber}"]`);
 
-    cy.get('#currentAnnualSpending')
+    cy.get('#currentEstimatedCost')
       .type('123456')
       .should('have.value', '123456');
 
-    cy.get('#currentAnnualSpendingITPortion')
+    cy.get('#currentEstimatedCostITPortion')
       .type('23')
       .should('have.value', '23');
 
-    cy.get('#plannedYearOneSpending')
+    cy.get('#estimatedTotalContractValue')
       .type('654321')
       .should('have.value', '654321');
 
-    cy.get('#plannedYearOneSpendingITPortion')
+    cy.get('#estimatedTotalContractValueITPortion')
       .type('99')
       .should('have.value', '99');
 

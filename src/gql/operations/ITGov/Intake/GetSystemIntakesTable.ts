@@ -51,6 +51,13 @@ export default gql(/* GraphQL */ `
         plannedYearOneSpendingITPortion
       }
 
+      totalContractCosts {
+        currentEstimatedCost
+        currentEstimatedCostITPortion
+        estimatedTotalContractValue
+        estimatedTotalContractValueITPortion
+      }
+
       contract {
         hasContract
         contractor
