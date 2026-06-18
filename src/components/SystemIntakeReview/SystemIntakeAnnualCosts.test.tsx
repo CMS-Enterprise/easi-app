@@ -6,6 +6,31 @@ import SystemIntakeAnnualCosts from './SystemIntakeAnnualCosts';
 
 describe('SystemIntakeAnnualCosts', () => {
   describe('SystemIntakeAnnualCosts component', () => {
+    it('renders the new "total" contract costs data', () => {
+      const totalContractCosts: SystemIntakeFragmentFragment['totalContractCosts'] =
+        {
+          __typename: 'SystemIntakeTotalContractCosts',
+
+          currentEstimatedCost: '31525',
+          currentEstimatedCostITPortion: '75',
+          estimatedTotalContractValue: '456789',
+          estimatedTotalContractValueITPortion: '100'
+        };
+
+      render(
+        <SystemIntakeAnnualCosts
+          annualSpending={null}
+          totalContractCosts={totalContractCosts}
+          costs={null}
+        />
+      );
+
+      expect(screen.getByText('$31,525')).toBeInTheDocument();
+      expect(screen.getByText('75%')).toBeInTheDocument();
+      expect(screen.getByText('$456,789')).toBeInTheDocument();
+      expect(screen.getByText('100%')).toBeInTheDocument();
+    });
+
     it('renders the formatted annual spending data', () => {
       const annualSpending: SystemIntakeFragmentFragment['annualSpending'] = {
         __typename: 'SystemIntakeAnnualSpending',
@@ -16,7 +41,11 @@ describe('SystemIntakeAnnualCosts', () => {
       };
 
       render(
-        <SystemIntakeAnnualCosts annualSpending={annualSpending} costs={null} />
+        <SystemIntakeAnnualCosts
+          annualSpending={annualSpending}
+          totalContractCosts={null}
+          costs={null}
+        />
       );
 
       expect(screen.getByText('$3.5')).toBeInTheDocument();
@@ -38,6 +67,7 @@ describe('SystemIntakeAnnualCosts', () => {
       render(
         <SystemIntakeAnnualCosts
           annualSpending={legacyAnnualSpending}
+          totalContractCosts={null}
           costs={null}
         />
       );
@@ -55,7 +85,13 @@ describe('SystemIntakeAnnualCosts', () => {
         expectedIncreaseAmount: 'less than $1 million'
       };
 
-      render(<SystemIntakeAnnualCosts annualSpending={null} costs={costs} />);
+      render(
+        <SystemIntakeAnnualCosts
+          totalContractCosts={null}
+          annualSpending={null}
+          costs={costs}
+        />
+      );
 
       expect(screen.getByText('less than $1 million')).toBeInTheDocument();
     });

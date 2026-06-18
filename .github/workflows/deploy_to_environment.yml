@@ -112,12 +112,11 @@ jobs:
         run: |
           export TASK_REVISION=$(./scripts/update_ecs_task_definition.sh)
           ./scripts/deploy_ecs_service.sh
-      - name: Wait for /healthcheck to return new version
+      - name: Wait for ECS service to stabilize
         env:
           APP_ENV: ${{ inputs.env }}
-          NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
         run: |
-          ./scripts/healthcheck "$NEW_IMAGE_TAG"
+          ./scripts/healthcheck
       - name: Announce failure
         if: ${{ failure() }}
         run: |

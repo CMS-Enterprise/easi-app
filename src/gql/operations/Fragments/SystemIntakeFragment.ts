@@ -40,6 +40,12 @@ export default gql(/* GraphQL */ `
       plannedYearOneSpending
       plannedYearOneSpendingITPortion
     }
+    totalContractCosts {
+      currentEstimatedCost
+      currentEstimatedCostITPortion
+      estimatedTotalContractValue
+      estimatedTotalContractValueITPortion
+    }
     currentStage
     decisionNextSteps
     grbDate

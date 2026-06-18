@@ -28,7 +28,7 @@ go-coverage.*
 .envrc.local
 .eslintcache
 .tool-versions
-.claude
+.claude/
 
 
 # npm/js ignores

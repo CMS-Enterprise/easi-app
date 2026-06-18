@@ -14,6 +14,7 @@ import { showSystemVal } from 'utils/showVal';
 type SystemIntakeAnnualSpendingProps = {
   annualSpending: SystemIntakeFragmentFragment['annualSpending'];
   costs: SystemIntakeFragmentFragment['costs'];
+  totalContractCosts: SystemIntakeFragmentFragment['totalContractCosts'];
 };
 
 /* Conditionally render cost and annual spending information depending on what info is present.
@@ -23,7 +24,8 @@ type SystemIntakeAnnualSpendingProps = {
 */
 const SystemIntakeAnnualSpending = ({
   annualSpending,
-  costs
+  costs,
+  totalContractCosts
 }: SystemIntakeAnnualSpendingProps) => {
   const { t } = useTranslation('intake');
 
@@ -33,6 +35,13 @@ const SystemIntakeAnnualSpending = ({
     plannedYearOneSpending,
     plannedYearOneSpendingITPortion
   } = annualSpending || {};
+
+  const {
+    currentEstimatedCost,
+    currentEstimatedCostITPortion,
+    estimatedTotalContractValue,
+    estimatedTotalContractValueITPortion
+  } = totalContractCosts || {};
 
   const formatDollarsString = (value: string | null | undefined) =>
     showSystemVal(value, {
@@ -46,6 +55,51 @@ const SystemIntakeAnnualSpending = ({
     showSystemVal(value, {
       format: val => (Number.isNaN(Number(val)) ? val : `${val}%`)
     });
+
+  // If new estimated cost fields are present (future intakes), show them first
+  if (
+    currentEstimatedCost ||
+    currentEstimatedCostITPortion ||
+    estimatedTotalContractValue ||
+    estimatedTotalContractValueITPortion
+  ) {
+    return (
+      <>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.currentEstimatedCost')} />
+            <DescriptionDefinition
+              definition={formatDollarsString(currentEstimatedCost)}
+            />
+          </div>
+          <div>
+            <DescriptionTerm term={t('review.currentEstimatedCostITPortion')} />
+            <DescriptionDefinition
+              definition={formatPercentageString(currentEstimatedCostITPortion)}
+            />
+          </div>
+        </ReviewRow>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.estimatedTotalContractValue')} />
+            <DescriptionDefinition
+              definition={formatDollarsString(estimatedTotalContractValue)}
+            />
+          </div>
+          <div>
+            <DescriptionTerm
+              term={t('review.estimatedTotalContractValueITPortion')}
+            />
+            <DescriptionDefinition
+              definition={formatPercentageString(
+                estimatedTotalContractValueITPortion
+              )}
+            />
+          </div>
+        </ReviewRow>
+      </>
+    );
+  }
 
   if (currentAnnualSpendingITPortion) {
     return (
