@@ -41,7 +41,19 @@ func TestGetBaseLCIDAction(t *testing.T) {
 		LCIDIsLowIT:           &previousIsLowIT,
 	}
 
-	action := getBaseLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo, &newRetirementDate, &newLCIDType, &newLCIDComponent, &newIsShortened, &newIsLowIT)
+	action := getBaseLCIDAction(baseLCIDActionArgs{
+		intake:          intake,
+		userInfo:        userInfo,
+		expirationDate:  &expirationDate,
+		nextSteps:       &nextSteps,
+		scope:           &newScope,
+		costBaseline:    &newCostBaseline,
+		retirementDate:  &newRetirementDate,
+		lcidType:        &newLCIDType,
+		lcidComponent:   &newLCIDComponent,
+		lcidIsShortened: &newIsShortened,
+		lcidIsLowIT:     &newIsLowIT,
+	})
 
 	// old cost baseline set in Previous field
 	assert.EqualValues(t, oldCostBaseline, action.LCIDExpirationChangePreviousCostBaseline)

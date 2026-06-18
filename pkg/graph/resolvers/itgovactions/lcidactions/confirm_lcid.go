@@ -21,7 +21,18 @@ func GetConfirmLCIDAction(
 	userInfo models.UserInfo,
 ) models.Action {
 
-	action := getBaseLCIDAction(intake, &expirationDate, &nextSteps, &scope, costBaseline, userInfo, nil, &lcidType, &lcidComponent, &lcidIsShortened, &lcidIsLowIT)
+	action := getBaseLCIDAction(baseLCIDActionArgs{
+		intake:          intake,
+		userInfo:        userInfo,
+		expirationDate:  &expirationDate,
+		nextSteps:       &nextSteps,
+		scope:           &scope,
+		costBaseline:    costBaseline,
+		lcidType:        &lcidType,
+		lcidComponent:   &lcidComponent,
+		lcidIsShortened: &lcidIsShortened,
+		lcidIsLowIT:     &lcidIsLowIT,
+	})
 	action.ActionType = models.ActionTypeCONFIRMLCID
 
 	return action

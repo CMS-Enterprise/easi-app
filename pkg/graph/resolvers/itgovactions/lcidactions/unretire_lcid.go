@@ -9,8 +9,10 @@ func GetUnretireLCIDAction(
 	intake models.SystemIntake,
 	userInfo models.UserInfo,
 ) models.Action {
-	// pass in nil for most parameters - only change is to set the retirement date to nil
-	action := getBaseLCIDAction(intake, nil, nil, nil, nil, userInfo, nil, nil, nil, nil, nil)
+	action := getBaseLCIDAction(baseLCIDActionArgs{
+		intake:   intake,
+		userInfo: userInfo,
+	})
 	action.ActionType = models.ActionTypeUNRETIRELCID
 
 	return action
