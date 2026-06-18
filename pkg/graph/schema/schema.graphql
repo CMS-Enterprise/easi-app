@@ -583,6 +583,15 @@ type SystemIntakeAnnualSpending {
   plannedYearOneSpending: String
   plannedYearOneSpendingITPortion: String
 }
+"""
+Represents total contract costs for a system
+"""
+type SystemIntakeTotalContractCosts {
+  currentEstimatedCost: String
+  currentEstimatedCostITPortion: String
+  estimatedTotalContractValue: String
+  estimatedTotalContractValueITPortion: String
+}
 
 """
 Represents a contact in OIT who is collaborating with the user
@@ -694,6 +703,7 @@ type SystemIntake {
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
+  totalContractCosts: SystemIntakeTotalContractCosts
   createdAt: Time # TODO - This should probably not be nullable, but some data in IMPL & PROD has it nulled out. We should fix this in the future. (see EASI-3090)
   currentStage: String
   decisionNextSteps: HTML
@@ -765,6 +775,10 @@ type SystemIntake {
   businessCaseId: UUID
   cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
+  digitalServiceInteraction: YesNoNotSure
+  digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   itGovTaskStatuses: ITGovTaskStatuses!
@@ -966,6 +980,15 @@ enum SystemIntakeSoftwareAcquisitionMethods {
 }
 
 """
+YesNoNotSure is a common enum used for questions that have yes, no, or not sure options
+"""
+enum YesNoNotSure {
+  YES
+  NO
+  NOT_SURE
+}
+
+"""
 The statuses of the different steps in the IT Gov v2 workflow
 """
 type ITGovTaskStatuses {
@@ -1030,6 +1053,10 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessSolution: String
   currentStage: String
   needsEaSupport: Boolean
+  digitalServiceInteraction: YesNoNotSure
+  digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   usingSoftware: String
@@ -1081,6 +1108,15 @@ input SystemIntakeAnnualSpendingInput {
   plannedYearOneSpending: String
   plannedYearOneSpendingITPortion: String
 }
+"""
+Input data for total contract costs associated with a system request
+"""
+input SystemIntakeTotalContractCostsInput {
+  currentEstimatedCost: String
+  currentEstimatedCostITPortion: String
+  estimatedTotalContractValue: String
+  estimatedTotalContractValueITPortion: String
+}
 
 """
 Input data containing information about a contract related to a system request
@@ -1101,6 +1137,7 @@ input UpdateSystemIntakeContractDetailsInput {
   fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
   annualSpending: SystemIntakeAnnualSpendingInput
+  totalContractCosts: SystemIntakeTotalContractCostsInput
   contract: SystemIntakeContractInput
 }
 

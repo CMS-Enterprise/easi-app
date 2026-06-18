@@ -4,7 +4,8 @@ import {
   SystemIntakeCollaboratorInput,
   SystemIntakeContactFragment,
   SystemIntakeGRBReviewType,
-  SystemIntakeStatusAdmin
+  SystemIntakeStatusAdmin,
+  YesNoNotSure
 } from 'gql/generated/graphql';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
@@ -50,6 +51,10 @@ export type SystemIntakeForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
+  digitalServiceInteraction: YesNoNotSure | null;
+  digitalServiceInteractionDescription: string | null;
+  protectedCmsDataAccessedOutside: YesNoNotSure | null;
+  protectedCmsDataAccessedOutsideDescription: string | null;
   usesAiTech: boolean | null;
   hasUiChanges: boolean | null;
   usingSoftware: string | null;
@@ -90,11 +95,11 @@ export type FormattedFundingSource = {
 export type ContractDetailsForm = {
   existingFunding: boolean | null;
   fundingSources: FormattedFundingSource[];
-  annualSpending: {
-    currentAnnualSpending: string;
-    currentAnnualSpendingITPortion: string;
-    plannedYearOneSpending: string;
-    plannedYearOneSpendingITPortion: string;
+  totalContractCosts: {
+    currentEstimatedCost?: string;
+    currentEstimatedCostITPortion?: string;
+    estimatedTotalContractValue?: string;
+    estimatedTotalContractValueITPortion?: string;
   };
   contract: {
     hasContract: SystemIntakeContractStatus | null;

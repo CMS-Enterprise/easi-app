@@ -54,6 +54,22 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.usesAiTech')
   },
   {
+    key: 'digitalServiceInteraction',
+    label: t('intake:csvHeadings.digitalServiceInteraction')
+  },
+  {
+    key: 'digitalServiceInteractionDescription',
+    label: t('intake:csvHeadings.digitalServiceInteractionDescription')
+  },
+  {
+    key: 'protectedCmsDataAccessedOutside',
+    label: t('intake:csvHeadings.protectedCmsDataAccessedOutside')
+  },
+  {
+    key: 'protectedCmsDataAccessedOutsideDescription',
+    label: t('intake:csvHeadings.protectedCmsDataAccessedOutsideDescription')
+  },
+  {
     key: 'fundingSources',
     label: t('intake:csvHeadings.fundingSource')
   },
@@ -72,6 +88,22 @@ const csvHeaderMap = (t: TFunction) => [
   {
     key: 'annualSpending.plannedYearOneSpendingITPortion',
     label: t('intake:csvHeadings.plannedAnnualSpendITPortion')
+  },
+  {
+    key: 'totalContractCosts.currentEstimatedCost',
+    label: t('intake:csvHeadings.currentEstimatedCost')
+  },
+  {
+    key: 'totalContractCosts.currentEstimatedCostITPortion',
+    label: t('intake:csvHeadings.currentEstimatedCostITPortion')
+  },
+  {
+    key: 'totalContractCosts.estimatedTotalContractValue',
+    label: t('intake:csvHeadings.estimatedTotalContractValue')
+  },
+  {
+    key: 'totalContractCosts.estimatedTotalContractValueITPortion',
+    label: t('intake:csvHeadings.estimatedTotalContractValueITPortion')
   },
   {
     key: 'contract.contractor',

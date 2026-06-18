@@ -20,10 +20,13 @@ describe('CEDAR permissions', () => {
 
     cy.contains('h1', 'Add a system link').should('be.visible');
     cy.wait('@getCedarSystems').its('response.statusCode').should('eq', 200);
-    cy.getByTestId('cedarSystemID')
-      .find('option')
+    cy.get('input#cedarSystemID')
+      .should('have.attr', 'role', 'combobox')
+      .type('a');
+    cy.get('.usa-combo-box__list-option')
+      .filter(':visible')
       .its('length')
-      .should('be.gt', 1);
+      .should('be.gt', 0);
     cy.contains('We were unable to retrieve Cedar Systems').should('not.exist');
   });
 

@@ -136,12 +136,42 @@ const SystemIntakeValidationSchema = {
       .trim()
       .required('Tell us how you think of solving your business need'),
     currentStage: Yup.string().required('Tell us where you are in the process'),
-    usesAiTech: Yup.boolean()
-      .nullable()
-      .required('Tell us if your request involves AI technologies'),
     needsEaSupport: Yup.boolean()
       .nullable()
       .required('Tell us if you need Enterprise Architecture (EA) support'),
+    digitalServiceInteraction: Yup.string()
+      .nullable()
+      .trim()
+      .required('Tell us if this project enables digital service interaction'),
+    digitalServiceInteractionDescription: Yup.string().when(
+      'digitalServiceInteraction',
+      {
+        is: 'YES',
+        then: Yup.string()
+          .trim()
+          .required('Describe the digital service interaction')
+      }
+    ),
+    protectedCmsDataAccessedOutside: Yup.string()
+      .nullable()
+      .trim()
+      .required(
+        'Tell us if protected CMS data will be accessed outside CMS-controlled systems'
+      ),
+    protectedCmsDataAccessedOutsideDescription: Yup.string().when(
+      'protectedCmsDataAccessedOutside',
+      {
+        is: 'YES',
+        then: Yup.string()
+          .trim()
+          .required(
+            'Describe how protected CMS data will be accessed outside CMS-controlled systems'
+          )
+      }
+    ),
+    usesAiTech: Yup.boolean()
+      .nullable()
+      .required('Tell us if your request involves AI technologies'),
     hasUiChanges: Yup.boolean()
       .nullable()
       .required(
@@ -166,29 +196,35 @@ const SystemIntakeValidationSchema = {
       is: true,
       then: Yup.array().min(1, 'Add at least one funding source to the request')
     }),
-    annualSpending: Yup.object().shape({
-      currentAnnualSpending: Yup.number()
-        .typeError(
-          'Please enter a valid number for the current annual spending'
-        )
-        .required('Tell us what the current annual spending for the contract')
-        .min(0, 'Annual spending cannot be a negative number'),
-      currentAnnualSpendingITPortion: Yup.number()
-        .typeError('Please enter a valid number')
+    totalContractCosts: Yup.object().shape({
+      currentEstimatedCost: Yup.number()
+        .required('Tell us what the current estimated cost for the contract is')
+        .typeError('Please enter a valid number for the current estimated cost')
+        .min(0, 'Current estimated cost cannot be a negative number'),
+      currentEstimatedCostITPortion: Yup.number()
         .required(
-          'Please enter a valid number for the current annual spending'
-        ),
-      plannedYearOneSpending: Yup.number()
+          'Tell us what percentage of the estimated costs are IT related'
+        )
         .typeError(
-          'Please enter a valid number for the planned annual spending'
+          'Please enter a valid percentage for the IT portion of current estimated costs'
         )
+        .min(0, 'Percentage of IT cannot be a negative number')
+        .max(100, 'Percentage of IT cannot exceed 100'),
+      estimatedTotalContractValue: Yup.number()
+        .required('Tell us what the estimated total contract value is')
+        .typeError(
+          'Please enter a valid number for the estimated total contract value'
+        )
+        .min(0, 'Estimated total contract value cannot be a negative number'),
+      estimatedTotalContractValueITPortion: Yup.number()
         .required(
-          'Tell us the planned annual spending of the first year of the new contract?'
+          'Tell us what percentage of the estimated total contract value is IT related'
         )
-        .min(0, 'Annual spending cannot be a negative number'),
-      plannedYearOneSpendingITPortion: Yup.number()
-        .typeError('Please enter a valid number')
-        .required('Please enter a valid number for the planned annual spending')
+        .typeError(
+          'Please enter a valid percentage for the IT portion of estimated total contract value'
+        )
+        .min(0, 'Percentage of IT cannot be a negative number')
+        .max(100, 'Percentage of IT cannot exceed 100')
     }),
     contract: Yup.object().shape({
       hasContract: Yup.string()

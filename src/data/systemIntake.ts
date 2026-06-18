@@ -37,11 +37,11 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   existingFunding: null,
   fundingSources: [],
-  annualSpending: {
-    currentAnnualSpending: '',
-    currentAnnualSpendingITPortion: '',
-    plannedYearOneSpending: '',
-    plannedYearOneSpendingITPortion: ''
+  totalContractCosts: {
+    currentEstimatedCost: '',
+    currentEstimatedCostITPortion: '',
+    estimatedTotalContractValue: '',
+    estimatedTotalContractValueITPortion: ''
   },
   contract: {
     hasContract: null,
@@ -57,6 +57,10 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
+  digitalServiceInteraction: null,
+  digitalServiceInteractionDescription: '',
+  protectedCmsDataAccessedOutside: null,
+  protectedCmsDataAccessedOutsideDescription: '',
   grtReviewEmailBody: '',
   decidedAt: null,
   businessCaseId: null,
@@ -113,6 +117,13 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
   const existingFunding = convertBoolToYesNo(intake?.existingFunding);
   const usesAiTech = convertBoolToYesNo(intake?.usesAiTech);
   const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
+  const digitalServiceInteraction = intake?.digitalServiceInteraction;
+  const digitalServiceInteractionDescription =
+    intake?.digitalServiceInteractionDescription;
+  const protectedCmsDataAccessedOutside =
+    intake?.protectedCmsDataAccessedOutside;
+  const protectedCmsDataAccessedOutsideDescription =
+    intake?.protectedCmsDataAccessedOutsideDescription;
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
   const usingSoftware = intake?.usingSoftware;
   const acquisitionMethods = intake?.acquisitionMethods;
@@ -130,6 +141,10 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
     existingFunding,
     usesAiTech,
     needsEaSupport,
+    digitalServiceInteraction,
+    digitalServiceInteractionDescription,
+    protectedCmsDataAccessedOutside,
+    protectedCmsDataAccessedOutsideDescription,
     hasUiChanges,
     usingSoftware,
     acquisitionMethods,

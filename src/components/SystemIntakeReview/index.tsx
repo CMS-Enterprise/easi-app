@@ -39,8 +39,14 @@ export const SystemIntakeReview = ({
   showSubmissionDate = true,
   showEditSectionLink = false
 }: SystemIntakeReviewProps) => {
-  const { annualSpending, costs, contract, submittedAt, contractNumbers } =
-    systemIntake;
+  const {
+    totalContractCosts,
+    annualSpending,
+    costs,
+    contract,
+    submittedAt,
+    contractNumbers
+  } = systemIntake;
 
   const { t } = useTranslation('intake');
 
@@ -241,8 +247,78 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
+
+        {/* Digital Service Interaction and conditional rendering of description */}
+        <>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.digitalServiceInteraction')} />
+              <DescriptionDefinition
+                definition={
+                  systemIntake.digitalServiceInteraction !== null &&
+                  systemIntake.digitalServiceInteraction !== undefined &&
+                  systemIntake.digitalServiceInteraction in yesNoMap
+                    ? yesNoMap[systemIntake.digitalServiceInteraction]
+                    : 'N/A'
+                }
+              />
+            </div>
+          </ReviewRow>
+          {systemIntake.digitalServiceInteraction === 'YES' && (
+            <ReviewRow>
+              <div>
+                <DescriptionTerm
+                  term={t('review.digitalServiceInteractionDescription')}
+                />
+                <DescriptionDefinition
+                  className="text-pre-wrap"
+                  definition={
+                    systemIntake.digitalServiceInteractionDescription || 'N/A'
+                  }
+                />
+              </div>
+            </ReviewRow>
+          )}
+        </>
+
         {/* Component that formats and conditionally renders software acquisition information */}
         <SoftwareAcquisition />
+
+        {/* Protected CMS Data Accessed Outside and conditional rendering of description */}
+        <>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm
+                term={t('review.protectedCmsDataAccessedOutside')}
+              />
+              <DescriptionDefinition
+                definition={
+                  systemIntake.protectedCmsDataAccessedOutside !== null &&
+                  systemIntake.protectedCmsDataAccessedOutside !== undefined &&
+                  systemIntake.protectedCmsDataAccessedOutside in yesNoMap
+                    ? yesNoMap[systemIntake.protectedCmsDataAccessedOutside]
+                    : 'N/A'
+                }
+              />
+            </div>
+          </ReviewRow>
+          {systemIntake.protectedCmsDataAccessedOutside === 'YES' && (
+            <ReviewRow>
+              <div>
+                <DescriptionTerm
+                  term={t('review.protectedCmsDataAccessedOutsideDescription')}
+                />
+                <DescriptionDefinition
+                  className="text-pre-wrap"
+                  definition={
+                    systemIntake.protectedCmsDataAccessedOutsideDescription ||
+                    'N/A'
+                  }
+                />
+              </div>
+            </ReviewRow>
+          )}
+        </>
       </DescriptionList>
 
       <h2 className="font-heading-xl margin-top-3 margin-bottom-0 border-top border-base-light padding-top-3">
@@ -281,6 +357,7 @@ export const SystemIntakeReview = ({
         </ReviewRow>
 
         <SystemIntakeAnnualSpending
+          totalContractCosts={totalContractCosts}
           annualSpending={annualSpending}
           costs={costs}
         />

@@ -80,19 +80,19 @@ describe('The System Intake Form', () => {
       restart: true
     });
 
-    cy.get('#currentAnnualSpending')
+    cy.get('#currentEstimatedCost')
       .type('123456')
       .should('have.value', '123456');
 
-    cy.get('#currentAnnualSpendingITPortion')
+    cy.get('#currentEstimatedCostITPortion')
       .type('23')
       .should('have.value', '23');
 
-    cy.get('#plannedYearOneSpending')
+    cy.get('#estimatedTotalContractValue')
       .type('654321')
       .should('have.value', '654321');
 
-    cy.get('#plannedYearOneSpendingITPortion')
+    cy.get('#estimatedTotalContractValueITPortion')
       .type('99')
       .should('have.value', '99');
 
@@ -173,6 +173,26 @@ describe('The System Intake Form', () => {
     // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
+    cy.get('#digitalServiceInteractionYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#digitalServiceInteractionDescription').should('be.visible');
+
+    cy.get('#digitalServiceInteractionDescription')
+      .type('Digital service interaction description')
+      .should('have.value', 'Digital service interaction description');
+
+    cy.get('#protectedCmsDataAccessedOutsideYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#protectedCmsDataAccessedOutsideDescription').should('be.visible');
+
+    cy.get('#protectedCmsDataAccessedOutsideDescription')
+      .type('Protected CMS data accessed outside description')
+      .should('have.value', 'Protected CMS data accessed outside description');
+
     cy.get('#currentStage').select('Other').should('have.value', 'Other');
 
     cy.get('#usingSoftwareYes').check({ force: true }).should('be.checked');
@@ -195,19 +215,19 @@ describe('The System Intake Form', () => {
     });
     cy.get(`[data-testid="fundingSource${projectNumber}"]`);
 
-    cy.get('#currentAnnualSpending')
+    cy.get('#currentEstimatedCost')
       .type('123456')
       .should('have.value', '123456');
 
-    cy.get('#currentAnnualSpendingITPortion')
+    cy.get('#currentEstimatedCostITPortion')
       .type('23')
       .should('have.value', '23');
 
-    cy.get('#plannedYearOneSpending')
+    cy.get('#estimatedTotalContractValue')
       .type('654321')
       .should('have.value', '654321');
 
-    cy.get('#plannedYearOneSpendingITPortion')
+    cy.get('#estimatedTotalContractValueITPortion')
       .type('99')
       .should('have.value', '99');
 

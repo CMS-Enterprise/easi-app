@@ -131,10 +131,12 @@ const RequestLinkForm = ({
     const cedarSystemsData = data?.cedarSystems;
     return !cedarSystemsData
       ? []
-      : cedarSystemsData.map(system => ({
-          label: `${system.name} (${system.acronym})`,
-          value: system.id
-        }));
+      : cedarSystemsData
+          .map(system => ({
+            label: `${system.name} (${system.acronym})`,
+            value: system.id
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label));
   }, [data?.cedarSystems]);
 
   const [setNewTRBSystem] = useSetTrbRequestRelationNewSystemMutation();

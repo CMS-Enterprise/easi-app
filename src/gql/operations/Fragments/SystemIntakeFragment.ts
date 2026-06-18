@@ -40,6 +40,12 @@ export default gql(/* GraphQL */ `
       plannedYearOneSpending
       plannedYearOneSpendingITPortion
     }
+    totalContractCosts {
+      currentEstimatedCost
+      currentEstimatedCostITPortion
+      estimatedTotalContractValue
+      estimatedTotalContractValueITPortion
+    }
     currentStage
     decisionNextSteps
     grbDate
@@ -101,6 +107,10 @@ export default gql(/* GraphQL */ `
     createdAt
     archivedAt
     euaUserId
+    digitalServiceInteraction
+    digitalServiceInteractionDescription
+    protectedCmsDataAccessedOutside
+    protectedCmsDataAccessedOutsideDescription
     hasUiChanges
     usesAiTech
     usingSoftware

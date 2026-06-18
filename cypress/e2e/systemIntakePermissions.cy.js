@@ -51,27 +51,32 @@ const linkedSystemsRoute = `/linked-systems/${requesterFormIntakeId}`;
 const linkedAdminSystemsRoute = `/linked-systems/${adminManagedIntakeId}`;
 const adminSystemInformationLinkRoute = `/it-governance/${adminManagedIntakeId}/system-information/link`;
 
-const selectAvailableLinkedSystem = () =>
-  cy
-    .getByTestId('cedarSystemID')
-    .find('option')
-    .then($options => {
-      const option = [...$options].find(
-        ({ value, disabled }) => value && !disabled
-      );
+const selectAvailableLinkedSystem = () => {
+  cy.get('input#cedarSystemID')
+    .should('have.attr', 'role', 'combobox')
+    .click({ force: true });
 
-      expect(option, 'available cedar system option').not.to.equal(undefined);
-
-      const { value } = option;
-      const name = (option.label || option.text || '')
+  return cy
+    .get('.usa-combo-box__list-option:visible')
+    .should('have.length.at.least', 1)
+    .first()
+    .then($option => {
+      const value = $option.attr('data-value');
+      const name = $option
+        .text()
         .trim()
         .replace(/\s+\([^)]+\)$/, '');
 
+      expect(value, 'available cedar system option value').to.be.a('string');
+      expect(value, 'available cedar system option value').not.to.equal('');
+      expect(name, 'available cedar system option name').not.to.equal('');
+
       return cy
-        .getByTestId('cedarSystemID')
-        .select(value)
+        .wrap($option)
+        .click({ force: true })
         .then(() => ({ value, name }));
     });
+};
 
 const selectFirstRequestLinkSystem = () => {
   cy.get('.easi-multiselect input[id$="-input"]').first().as('systemLinkInput');

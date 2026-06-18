@@ -288,6 +288,10 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)
+	intake.DigitalServiceInteraction = input.DigitalServiceInteraction
+	intake.DigitalServiceInteractionDescription = null.StringFromPtr(input.DigitalServiceInteractionDescription)
+	intake.ProtectedCmsDataAccessedOutside = input.ProtectedCmsDataAccessedOutside
+	intake.ProtectedCmsDataAccessedOutsideDescription = null.StringFromPtr(input.ProtectedCmsDataAccessedOutsideDescription)
 	intake.HasUIChanges = null.BoolFromPtr(input.HasUIChanges)
 	intake.UsesAITech = null.BoolFromPtr(input.UsesAiTech)
 	intake.UsingSoftware = zero.StringFromPtr(input.UsingSoftware)
@@ -427,6 +431,13 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 			intake.CurrentAnnualSpendingITPortion = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpendingITPortion)
 			intake.PlannedYearOneSpending = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpending)
 			intake.PlannedYearOneSpendingITPortion = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpendingITPortion)
+		}
+
+		if input.TotalContractCosts != nil {
+			intake.CurrentEstimatedCost = null.StringFromPtr(input.TotalContractCosts.CurrentEstimatedCost)
+			intake.CurrentEstimatedCostITPortion = null.StringFromPtr(input.TotalContractCosts.CurrentEstimatedCostITPortion)
+			intake.EstimatedTotalContractValue = null.StringFromPtr(input.TotalContractCosts.EstimatedTotalContractValue)
+			intake.EstimatedTotalContractValueITPortion = null.StringFromPtr(input.TotalContractCosts.EstimatedTotalContractValueITPortion)
 		}
 
 		if input.Contract != nil {

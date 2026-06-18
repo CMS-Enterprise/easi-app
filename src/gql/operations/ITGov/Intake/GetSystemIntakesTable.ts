@@ -51,6 +51,13 @@ export default gql(/* GraphQL */ `
         plannedYearOneSpendingITPortion
       }
 
+      totalContractCosts {
+        currentEstimatedCost
+        currentEstimatedCostITPortion
+        estimatedTotalContractValue
+        estimatedTotalContractValueITPortion
+      }
+
       contract {
         hasContract
         contractor
@@ -103,6 +110,10 @@ export default gql(/* GraphQL */ `
       }
 
       hasUiChanges
+      digitalServiceInteraction
+      digitalServiceInteractionDescription
+      protectedCmsDataAccessedOutside
+      protectedCmsDataAccessedOutsideDescription
       usesAiTech
       usingSoftware
       acquisitionMethods

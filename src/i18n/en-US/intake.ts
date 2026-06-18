@@ -285,6 +285,12 @@ const intake = {
     businessSolution: 'Business Solution',
     currentStage: 'Process Status',
     usesAiTech: 'AI Tech Involved',
+    digitalServiceInteraction: 'Enables Digital Service Interaction',
+    digitalServiceInteractionDescription:
+      'Digital Service Interaction Description',
+    protectedCmsDataAccessedOutside: 'Protected CMS Data Accessed Outside',
+    protectedCmsDataAccessedOutsideDescription:
+      'Protected CMS Data Accessed Outside Description',
     eaSupport: 'EA Support Requested',
     hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
@@ -293,6 +299,11 @@ const intake = {
     currentAnnualSpendITPortion: 'Current Annual Spend IT Portion',
     plannedAnnualSpend: 'Planned Annual Spend',
     plannedAnnualSpendITPortion: 'Planned Annual Spend IT Portion',
+    currentEstimatedCost: 'Current Estimated Cost',
+    currentEstimatedCostITPortion: 'Current Estimated Cost IT Portion',
+    estimatedTotalContractValue: 'Estimated Total Contract Value',
+    estimatedTotalContractValueITPortion:
+      'Estimated Total Contract Value IT Portion',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
@@ -515,6 +526,16 @@ const intake = {
     itDev:
       'If IT development will be a part of this contract, when is the project scheduled to go live in production?',
     itDevHelp: 'If you are unsure, you may input your best guess.',
+    digitalServiceInteraction:
+      'Does this project directly enable or facilitate interaction between the public and the Federal Government through Digital Services?',
+    digitalServiceInteractionHelpText:
+      'A "digital service" is a transactional service (e.g., online form, account management tool) or an informational service delivered over the internet across a variety of platforms, devices, and delivery mechanisms (e.g., websites, mobile applications, text/SMS).',
+    digitalServiceInteractionDescription: 'Please describe',
+    protectedCmsDataAccessedOutside:
+      'Will protected CMS data be accessed, processed, stored, or transmitted outside of CMS-controlled information systems or environments?',
+    protectedCmsDataAccessedOutsideHelpText:
+      '"Protected CMS data" includes Personally Identifiable Information (PII), Protected Health Information (PHI), or other forms of Controlled Unclassified Information (CUI) such as commercially sensitive or proprietary data. "CMS-controlled information systems or environments" are systems, platforms, or infrastructure owned, operated, or formally authorized by CMS where CMS maintains full responsibility and oversight for security, access controls, continuous monitoring, and compliance with federal and agency policies (e.g., Integrated Data Repository, Chronic Conditions Data Warehouse).',
+    protectedCmsDataAccessedOutsideDescription: 'Please describe',
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
@@ -523,7 +544,6 @@ const intake = {
         'Do you plan to use any software products to fulfill your business needs?',
       usingSoftwareHelp:
         'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
-      notSure: "I'm not sure",
       selectedLabel: 'Selected software',
       whichSoftwareLabel: 'Which software?',
       whichSoftwareHelp:
@@ -578,17 +598,18 @@ const intake = {
         fundingSource: 'Select a funding source'
       }
     },
-    currentAnnualSpending: 'What is the current annual spending?',
-    currentAnnualSpendingHelpText:
-      'Input the dollar amount of the current annual spending.',
-    currentAnnualSpendingITPortion:
-      'What percentage of the current annual spending is IT?',
-    plannedYearOneSpending:
-      'What is the planned annual spending for the first year of the new contract?',
-    plannedYearOneSpendingHelpText:
-      'Input the dollar amount of the planned annual spending.',
-    plannedYearOneSpendingITPortion:
-      'What percentage of the planned annual spending for the first year of the new contract is IT?',
+    currentEstimatedCost:
+      'What is the current estimated cost of performing this work?',
+    currentEstimatedCostHelpText:
+      'Enter the total estimated cost of this work if it is currently being performed (e.g. existing contract, FTE hours, manual process). Enter $0 only if this is entirely new work not currently being done at CMS.',
+    currentEstimatedCostITPortion:
+      'What percentage of the current estimated spending is IT?',
+    estimatedTotalContractValue:
+      'What is the estimated total cost of this effort going forward, including all option years?',
+    estimatedTotalContractValueHelpText:
+      'Enter the estimated total cost of this effort going forward, including all option years (e.g. total contract value per IGCE, estimated FTE hours).',
+    estimatedTotalContractValueITPortion:
+      'What percentage of the planned spending for the new contract is IT?',
     contractHeading: 'Contract',
     hasContract:
       'Do you already have a contract in place to support this effort?',
@@ -636,9 +657,16 @@ const intake = {
     usesAiTech: 'Does this project plan to use AI technologies?',
     hasUiChanges:
       'Does your project involve any user interface component or changes to an interface component?',
+    digitalServiceInteraction:
+      'Does this project directly enable or facilitate interaction between the public and the Federal Government through Digital Services?',
+    digitalServiceInteractionDescription: 'Please describe the interaction.',
     usingSoftware:
       'Do you plan to use software products to fulfill your business needs?',
     softwareAcquisitionMethods: 'How will the software be acquired?',
+    protectedCmsDataAccessedOutside:
+      'Will protected CMS data be accessed, processed, stored, or transmitted outside of CMS-controlled information systems or environments?',
+    protectedCmsDataAccessedOutsideDescription:
+      'Please describe how protected CMS data will be accessed outside of CMS.',
     contractDetails: 'Contract details',
     costs:
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
@@ -650,6 +678,14 @@ const intake = {
       'What is the planned annual spending for the first year of the new contract?',
     plannedYearOneSpendingITPortion:
       'What percentage of the planned annual spending for the first year of the new contract is IT?',
+    currentEstimatedCost:
+      'What is the current estimated cost of performing this work?',
+    currentEstimatedCostITPortion:
+      'What percentage of the current estimated spending is IT?',
+    estimatedTotalContractValue:
+      'What is the estimated total cost of this effort going forward?',
+    estimatedTotalContractValueITPortion:
+      'What percentage of the planned spending for this effort is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract vehicle',

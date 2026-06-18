@@ -771,6 +771,8 @@ type ComplexityRoot struct {
 		DecidedAt                                         func(childComplexity int) int
 		DecisionNextSteps                                 func(childComplexity int) int
 		DecisionState                                     func(childComplexity int) int
+		DigitalServiceInteraction                         func(childComplexity int) int
+		DigitalServiceInteractionDescription              func(childComplexity int) int
 		Documents                                         func(childComplexity int) int
 		DoesNotSupportSystems                             func(childComplexity int) int
 		DraftBusinessCaseState                            func(childComplexity int) int
@@ -824,6 +826,8 @@ type ComplexityRoot struct {
 		OITSecurityCollaboratorName                       func(childComplexity int) int
 		ProductManager                                    func(childComplexity int) int
 		ProjectAcronym                                    func(childComplexity int) int
+		ProtectedCmsDataAccessedOutside                   func(childComplexity int) int
+		ProtectedCmsDataAccessedOutsideDescription        func(childComplexity int) int
 		RejectionReason                                   func(childComplexity int) int
 		RelatedIntakes                                    func(childComplexity int) int
 		RelatedTRBRequests                                func(childComplexity int) int
@@ -842,6 +846,7 @@ type ComplexityRoot struct {
 		TRBCollaborator                                   func(childComplexity int) int
 		TRBCollaboratorName                               func(childComplexity int) int
 		TRBFollowUpRecommendation                         func(childComplexity int) int
+		TotalContractCosts                                func(childComplexity int) int
 		UpdatedAt                                         func(childComplexity int) int
 		UsesAITech                                        func(childComplexity int) int
 		UsingSoftware                                     func(childComplexity int) int
@@ -1068,6 +1073,13 @@ type ComplexityRoot struct {
 		SystemID                           func(childComplexity int) int
 		SystemIntakeID                     func(childComplexity int) int
 		SystemRelationshipType             func(childComplexity int) int
+	}
+
+	SystemIntakeTotalContractCosts struct {
+		CurrentEstimatedCost                 func(childComplexity int) int
+		CurrentEstimatedCostITPortion        func(childComplexity int) int
+		EstimatedTotalContractValue          func(childComplexity int) int
+		EstimatedTotalContractValueITPortion func(childComplexity int) int
 	}
 
 	SystemProfileSectionLockStatus struct {
@@ -1524,6 +1536,7 @@ type SystemIntakeResolver interface {
 	Contract(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContract, error)
 	Costs(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeCosts, error)
 	AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeAnnualSpending, error)
+	TotalContractCosts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeTotalContractCosts, error)
 
 	CurrentStage(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
@@ -5666,6 +5679,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.DecisionState(childComplexity), true
+	case "SystemIntake.digitalServiceInteraction":
+		if e.complexity.SystemIntake.DigitalServiceInteraction == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.DigitalServiceInteraction(childComplexity), true
+	case "SystemIntake.digitalServiceInteractionDescription":
+		if e.complexity.SystemIntake.DigitalServiceInteractionDescription == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.DigitalServiceInteractionDescription(childComplexity), true
 	case "SystemIntake.documents":
 		if e.complexity.SystemIntake.Documents == nil {
 			break
@@ -5984,6 +6009,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.ProjectAcronym(childComplexity), true
+	case "SystemIntake.protectedCmsDataAccessedOutside":
+		if e.complexity.SystemIntake.ProtectedCmsDataAccessedOutside == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.ProtectedCmsDataAccessedOutside(childComplexity), true
+	case "SystemIntake.protectedCmsDataAccessedOutsideDescription":
+		if e.complexity.SystemIntake.ProtectedCmsDataAccessedOutsideDescription == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.ProtectedCmsDataAccessedOutsideDescription(childComplexity), true
 	case "SystemIntake.rejectionReason":
 		if e.complexity.SystemIntake.RejectionReason == nil {
 			break
@@ -6092,6 +6129,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.TRBFollowUpRecommendation(childComplexity), true
+	case "SystemIntake.totalContractCosts":
+		if e.complexity.SystemIntake.TotalContractCosts == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.TotalContractCosts(childComplexity), true
 	case "SystemIntake.updatedAt":
 		if e.complexity.SystemIntake.UpdatedAt == nil {
 			break
@@ -7023,6 +7066,31 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeSystem.SystemRelationshipType(childComplexity), true
+
+	case "SystemIntakeTotalContractCosts.currentEstimatedCost":
+		if e.complexity.SystemIntakeTotalContractCosts.CurrentEstimatedCost == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeTotalContractCosts.CurrentEstimatedCost(childComplexity), true
+	case "SystemIntakeTotalContractCosts.currentEstimatedCostITPortion":
+		if e.complexity.SystemIntakeTotalContractCosts.CurrentEstimatedCostITPortion == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeTotalContractCosts.CurrentEstimatedCostITPortion(childComplexity), true
+	case "SystemIntakeTotalContractCosts.estimatedTotalContractValue":
+		if e.complexity.SystemIntakeTotalContractCosts.EstimatedTotalContractValue == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeTotalContractCosts.EstimatedTotalContractValue(childComplexity), true
+	case "SystemIntakeTotalContractCosts.estimatedTotalContractValueITPortion":
+		if e.complexity.SystemIntakeTotalContractCosts.EstimatedTotalContractValueITPortion == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeTotalContractCosts.EstimatedTotalContractValueITPortion(childComplexity), true
 
 	case "SystemProfileSectionLockStatus.cedarSystemId":
 		if e.complexity.SystemProfileSectionLockStatus.CedarSystemID == nil {
@@ -8208,6 +8276,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRequestEditsInput,
 		ec.unmarshalInputSystemIntakeRequesterInput,
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
+		ec.unmarshalInputSystemIntakeTotalContractCostsInput,
 		ec.unmarshalInputSystemIntakeUnretireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
 		ec.unmarshalInputSystemRelationshipInput,
@@ -8935,6 +9004,15 @@ type SystemIntakeAnnualSpending {
   plannedYearOneSpending: String
   plannedYearOneSpendingITPortion: String
 }
+"""
+Represents total contract costs for a system
+"""
+type SystemIntakeTotalContractCosts {
+  currentEstimatedCost: String
+  currentEstimatedCostITPortion: String
+  estimatedTotalContractValue: String
+  estimatedTotalContractValueITPortion: String
+}
 
 """
 Represents a contact in OIT who is collaborating with the user
@@ -9046,6 +9124,7 @@ type SystemIntake {
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
+  totalContractCosts: SystemIntakeTotalContractCosts
   createdAt: Time # TODO - This should probably not be nullable, but some data in IMPL & PROD has it nulled out. We should fix this in the future. (see EASI-3090)
   currentStage: String
   decisionNextSteps: HTML
@@ -9117,6 +9196,10 @@ type SystemIntake {
   businessCaseId: UUID
   cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
+  digitalServiceInteraction: YesNoNotSure
+  digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   itGovTaskStatuses: ITGovTaskStatuses!
@@ -9318,6 +9401,15 @@ enum SystemIntakeSoftwareAcquisitionMethods {
 }
 
 """
+YesNoNotSure is a common enum used for questions that have yes, no, or not sure options
+"""
+enum YesNoNotSure {
+  YES
+  NO
+  NOT_SURE
+}
+
+"""
 The statuses of the different steps in the IT Gov v2 workflow
 """
 type ITGovTaskStatuses {
@@ -9382,6 +9474,10 @@ input UpdateSystemIntakeRequestDetailsInput {
   businessSolution: String
   currentStage: String
   needsEaSupport: Boolean
+  digitalServiceInteraction: YesNoNotSure
+  digitalServiceInteractionDescription: String
+  protectedCmsDataAccessedOutside: YesNoNotSure
+  protectedCmsDataAccessedOutsideDescription: String
   hasUiChanges: Boolean
   usesAiTech: Boolean
   usingSoftware: String
@@ -9433,6 +9529,15 @@ input SystemIntakeAnnualSpendingInput {
   plannedYearOneSpending: String
   plannedYearOneSpendingITPortion: String
 }
+"""
+Input data for total contract costs associated with a system request
+"""
+input SystemIntakeTotalContractCostsInput {
+  currentEstimatedCost: String
+  currentEstimatedCostITPortion: String
+  estimatedTotalContractValue: String
+  estimatedTotalContractValueITPortion: String
+}
 
 """
 Input data containing information about a contract related to a system request
@@ -9453,6 +9558,7 @@ input UpdateSystemIntakeContractDetailsInput {
   fundingSources: SystemIntakeFundingSourcesInput
   costs: SystemIntakeCostsInput
   annualSpending: SystemIntakeAnnualSpendingInput
+  totalContractCosts: SystemIntakeTotalContractCostsInput
   contract: SystemIntakeContractInput
 }
 
@@ -14566,6 +14672,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -14676,6 +14784,14 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -21182,6 +21298,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -21292,6 +21410,14 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -23661,6 +23787,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -23771,6 +23899,14 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -27180,6 +27316,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -27290,6 +27428,14 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -27437,6 +27583,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -27547,6 +27695,14 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -29620,6 +29776,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -29730,6 +29888,14 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33378,6 +33544,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -33488,6 +33656,14 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33617,6 +33793,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -33727,6 +33905,14 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -33855,6 +34041,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -33965,6 +34153,14 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -34082,6 +34278,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -34192,6 +34390,14 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -34309,6 +34515,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -34419,6 +34627,14 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -37637,6 +37853,45 @@ func (ec *executionContext) fieldContext_SystemIntake_annualSpending(_ context.C
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_totalContractCosts(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_totalContractCosts,
+		func(ctx context.Context) (any, error) {
+			return ec.resolvers.SystemIntake().TotalContractCosts(ctx, obj)
+		},
+		nil,
+		ec.marshalOSystemIntakeTotalContractCosts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTotalContractCosts,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_totalContractCosts(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "currentEstimatedCost":
+				return ec.fieldContext_SystemIntakeTotalContractCosts_currentEstimatedCost(ctx, field)
+			case "currentEstimatedCostITPortion":
+				return ec.fieldContext_SystemIntakeTotalContractCosts_currentEstimatedCostITPortion(ctx, field)
+			case "estimatedTotalContractValue":
+				return ec.fieldContext_SystemIntakeTotalContractCosts_estimatedTotalContractValue(ctx, field)
+			case "estimatedTotalContractValueITPortion":
+				return ec.fieldContext_SystemIntakeTotalContractCosts_estimatedTotalContractValueITPortion(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeTotalContractCosts", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -39382,6 +39637,122 @@ func (ec *executionContext) fieldContext_SystemIntake_documents(_ context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_digitalServiceInteraction(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_digitalServiceInteraction,
+		func(ctx context.Context) (any, error) {
+			return obj.DigitalServiceInteraction, nil
+		},
+		nil,
+		ec.marshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_digitalServiceInteraction(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type YesNoNotSure does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_digitalServiceInteractionDescription(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_digitalServiceInteractionDescription,
+		func(ctx context.Context) (any, error) {
+			return obj.DigitalServiceInteractionDescription, nil
+		},
+		nil,
+		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_digitalServiceInteractionDescription(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_protectedCmsDataAccessedOutside(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside,
+		func(ctx context.Context) (any, error) {
+			return obj.ProtectedCmsDataAccessedOutside, nil
+		},
+		nil,
+		ec.marshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_protectedCmsDataAccessedOutside(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type YesNoNotSure does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription,
+		func(ctx context.Context) (any, error) {
+			return obj.ProtectedCmsDataAccessedOutsideDescription, nil
+		},
+		nil,
+		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_hasUiChanges(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -40022,6 +40393,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -40132,6 +40505,14 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -40816,6 +41197,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -40926,6 +41309,14 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -45640,6 +46031,122 @@ func (ec *executionContext) fieldContext_SystemIntakeSystem_otherSystemRelations
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeTotalContractCosts_currentEstimatedCost(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeTotalContractCosts) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeTotalContractCosts_currentEstimatedCost,
+		func(ctx context.Context) (any, error) {
+			return obj.CurrentEstimatedCost, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeTotalContractCosts_currentEstimatedCost(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeTotalContractCosts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeTotalContractCosts_currentEstimatedCostITPortion(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeTotalContractCosts) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeTotalContractCosts_currentEstimatedCostITPortion,
+		func(ctx context.Context) (any, error) {
+			return obj.CurrentEstimatedCostITPortion, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeTotalContractCosts_currentEstimatedCostITPortion(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeTotalContractCosts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeTotalContractCosts_estimatedTotalContractValue(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeTotalContractCosts) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeTotalContractCosts_estimatedTotalContractValue,
+		func(ctx context.Context) (any, error) {
+			return obj.EstimatedTotalContractValue, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeTotalContractCosts_estimatedTotalContractValue(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeTotalContractCosts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeTotalContractCosts_estimatedTotalContractValueITPortion(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeTotalContractCosts) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntakeTotalContractCosts_estimatedTotalContractValueITPortion,
+		func(ctx context.Context) (any, error) {
+			return obj.EstimatedTotalContractValueITPortion, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeTotalContractCosts_estimatedTotalContractValueITPortion(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeTotalContractCosts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemProfileSectionLockStatus_cedarSystemId(ctx context.Context, field graphql.CollectedField, obj *models.SystemProfileSectionLockStatus) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -48629,6 +49136,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -48739,6 +49248,14 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -50708,6 +51225,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -50818,6 +51337,14 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -51312,6 +51839,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_costs(ctx, field)
 			case "annualSpending":
 				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "totalContractCosts":
+				return ec.fieldContext_SystemIntake_totalContractCosts(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
 			case "currentStage":
@@ -51422,6 +51951,14 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
 				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "digitalServiceInteraction":
+				return ec.fieldContext_SystemIntake_digitalServiceInteraction(ctx, field)
+			case "digitalServiceInteractionDescription":
+				return ec.fieldContext_SystemIntake_digitalServiceInteractionDescription(ctx, field)
+			case "protectedCmsDataAccessedOutside":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutside(ctx, field)
+			case "protectedCmsDataAccessedOutsideDescription":
+				return ec.fieldContext_SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field)
 			case "hasUiChanges":
 				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
 			case "usesAiTech":
@@ -56356,6 +56893,54 @@ func (ec *executionContext) unmarshalInputSystemIntakeRetireLCIDInput(ctx contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSystemIntakeTotalContractCostsInput(ctx context.Context, obj any) (models.SystemIntakeTotalContractCostsInput, error) {
+	var it models.SystemIntakeTotalContractCostsInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"currentEstimatedCost", "currentEstimatedCostITPortion", "estimatedTotalContractValue", "estimatedTotalContractValueITPortion"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "currentEstimatedCost":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentEstimatedCost"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CurrentEstimatedCost = data
+		case "currentEstimatedCostITPortion":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentEstimatedCostITPortion"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CurrentEstimatedCostITPortion = data
+		case "estimatedTotalContractValue":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("estimatedTotalContractValue"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EstimatedTotalContractValue = data
+		case "estimatedTotalContractValueITPortion":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("estimatedTotalContractValueITPortion"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EstimatedTotalContractValueITPortion = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSystemIntakeUnretireLCIDInput(ctx context.Context, obj any) (models.SystemIntakeUnretireLCIDInput, error) {
 	var it models.SystemIntakeUnretireLCIDInput
 	asMap := map[string]any{}
@@ -56720,7 +57305,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "fundingSources", "costs", "annualSpending", "contract"}
+	fieldsInOrder := [...]string{"id", "fundingSources", "costs", "annualSpending", "totalContractCosts", "contract"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56755,6 +57340,13 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 				return it, err
 			}
 			it.AnnualSpending = data
+		case "totalContractCosts":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("totalContractCosts"))
+			data, err := ec.unmarshalOSystemIntakeTotalContractCostsInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTotalContractCostsInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TotalContractCosts = data
 		case "contract":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contract"))
 			data, err := ec.unmarshalOSystemIntakeContractInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContractInput(ctx, v)
@@ -56857,7 +57449,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
+	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "digitalServiceInteraction", "digitalServiceInteractionDescription", "protectedCmsDataAccessedOutside", "protectedCmsDataAccessedOutsideDescription", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56913,6 +57505,34 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.NeedsEaSupport = data
+		case "digitalServiceInteraction":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("digitalServiceInteraction"))
+			data, err := ec.unmarshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DigitalServiceInteraction = data
+		case "digitalServiceInteractionDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("digitalServiceInteractionDescription"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DigitalServiceInteractionDescription = data
+		case "protectedCmsDataAccessedOutside":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("protectedCmsDataAccessedOutside"))
+			data, err := ec.unmarshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProtectedCmsDataAccessedOutside = data
+		case "protectedCmsDataAccessedOutsideDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("protectedCmsDataAccessedOutsideDescription"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProtectedCmsDataAccessedOutsideDescription = data
 		case "hasUiChanges":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasUiChanges"))
 			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
@@ -63014,6 +63634,39 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "totalContractCosts":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_totalContractCosts(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdAt":
 			out.Values[i] = ec._SystemIntake_createdAt(ctx, field, obj)
 		case "currentStage":
@@ -63786,6 +64439,14 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "digitalServiceInteraction":
+			out.Values[i] = ec._SystemIntake_digitalServiceInteraction(ctx, field, obj)
+		case "digitalServiceInteractionDescription":
+			out.Values[i] = ec._SystemIntake_digitalServiceInteractionDescription(ctx, field, obj)
+		case "protectedCmsDataAccessedOutside":
+			out.Values[i] = ec._SystemIntake_protectedCmsDataAccessedOutside(ctx, field, obj)
+		case "protectedCmsDataAccessedOutsideDescription":
+			out.Values[i] = ec._SystemIntake_protectedCmsDataAccessedOutsideDescription(ctx, field, obj)
 		case "hasUiChanges":
 			out.Values[i] = ec._SystemIntake_hasUiChanges(ctx, field, obj)
 		case "usesAiTech":
@@ -66512,6 +67173,48 @@ func (ec *executionContext) _SystemIntakeSystem(ctx context.Context, sel ast.Sel
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "otherSystemRelationshipDescription":
 			out.Values[i] = ec._SystemIntakeSystem_otherSystemRelationshipDescription(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var systemIntakeTotalContractCostsImplementors = []string{"SystemIntakeTotalContractCosts"}
+
+func (ec *executionContext) _SystemIntakeTotalContractCosts(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeTotalContractCosts) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeTotalContractCostsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeTotalContractCosts")
+		case "currentEstimatedCost":
+			out.Values[i] = ec._SystemIntakeTotalContractCosts_currentEstimatedCost(ctx, field, obj)
+		case "currentEstimatedCostITPortion":
+			out.Values[i] = ec._SystemIntakeTotalContractCosts_currentEstimatedCostITPortion(ctx, field, obj)
+		case "estimatedTotalContractValue":
+			out.Values[i] = ec._SystemIntakeTotalContractCosts_estimatedTotalContractValue(ctx, field, obj)
+		case "estimatedTotalContractValueITPortion":
+			out.Values[i] = ec._SystemIntakeTotalContractCosts_estimatedTotalContractValueITPortion(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -75348,6 +76051,21 @@ func (ec *executionContext) marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcm
 	return res
 }
 
+func (ec *executionContext) marshalOSystemIntakeTotalContractCosts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTotalContractCosts(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeTotalContractCosts) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeTotalContractCosts(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeTotalContractCostsInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTotalContractCostsInput(ctx context.Context, v any) (*models.SystemIntakeTotalContractCostsInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSystemIntakeTotalContractCostsInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx context.Context, v any) ([]models.TRBCollabGroupOption, error) {
 	if v == nil {
 		return nil, nil
@@ -75799,6 +76517,22 @@ func (ec *executionContext) marshalOUserInfo2ᚖgithubᚗcomᚋcmsᚑenterprise�
 		return graphql.Null
 	}
 	return ec._UserInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx context.Context, v any) (*models.YesNoNotSure, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.YesNoNotSure)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOYesNoNotSure2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐYesNoNotSure(ctx context.Context, sel ast.SelectionSet, v *models.YesNoNotSure) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

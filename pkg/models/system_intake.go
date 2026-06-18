@@ -115,12 +115,16 @@ type SystemIntake struct {
 	ProcessStatus                                     null.String                   `json:"processStatus" db:"process_status"`
 	EASupportRequest                                  null.Bool                     `json:"eaSupportRequest" db:"ea_support_request"`
 	ExistingContract                                  null.String                   `json:"existingContract" db:"existing_contract"`
-	CostIncrease                                      null.String                   `json:"costIncrease" db:"cost_increase"`
-	CostIncreaseAmount                                null.String                   `json:"costIncreaseAmount" db:"cost_increase_amount"`
-	CurrentAnnualSpending                             null.String                   `json:"currentAnnualSpending" db:"current_annual_spending"`
-	CurrentAnnualSpendingITPortion                    null.String                   `json:"currentAnnualSpendingITPortion" db:"current_annual_spending_it_portion"`
-	PlannedYearOneSpending                            null.String                   `json:"plannedYearOneSpending" db:"planned_year_one_spending"`
-	PlannedYearOneSpendingITPortion                   null.String                   `json:"plannedYearOneSpendingITPortion" db:"planned_year_one_spending_it_portion"`
+	CostIncrease                                      null.String                   `json:"costIncrease" db:"cost_increase"`                                           // Historic field - no longer collected but needed for legacy/display purposes
+	CostIncreaseAmount                                null.String                   `json:"costIncreaseAmount" db:"cost_increase_amount"`                              // Historic field - no longer collected but needed for legacy/display purposes
+	CurrentAnnualSpending                             null.String                   `json:"currentAnnualSpending" db:"current_annual_spending"`                        // Historic field - no longer collected but needed for legacy/display purposes
+	CurrentAnnualSpendingITPortion                    null.String                   `json:"currentAnnualSpendingITPortion" db:"current_annual_spending_it_portion"`    // Historic field - no longer collected but needed for legacy/display purposes
+	PlannedYearOneSpending                            null.String                   `json:"plannedYearOneSpending" db:"planned_year_one_spending"`                     // Historic field - no longer collected but needed for legacy/display purposes
+	PlannedYearOneSpendingITPortion                   null.String                   `json:"plannedYearOneSpendingITPortion" db:"planned_year_one_spending_it_portion"` // Historic field - no longer collected but needed for legacy/display purposes
+	CurrentEstimatedCost                              null.String                   `json:"currentEstimatedCost" db:"current_estimated_cost"`
+	CurrentEstimatedCostITPortion                     null.String                   `json:"currentEstimatedCostITPortion" db:"current_estimated_cost_it_portion"`
+	EstimatedTotalContractValue                       null.String                   `json:"estimatedTotalContractValue" db:"estimated_total_contract_value"`
+	EstimatedTotalContractValueITPortion              null.String                   `json:"estimatedTotalContractValueITPortion" db:"estimated_total_contract_value_it_portion"`
 	Contractor                                        null.String                   `json:"contractor" db:"contractor"`
 	ContractVehicle                                   null.String                   `json:"contractVehicle" db:"contract_vehicle"`
 	ContractStartDate                                 *time.Time                    `json:"contractStartDate" db:"contract_start_date"`
@@ -162,6 +166,10 @@ type SystemIntake struct {
 	FundingSources                                    []*SystemIntakeFundingSource  `json:"fundingSources"`
 	HasUIChanges                                      null.Bool                     `json:"hasUiChanges" db:"has_ui_changes"`
 	UsesAITech                                        null.Bool                     `json:"usesAiTech" db:"uses_ai_tech"`
+	DigitalServiceInteraction                         *YesNoNotSure                 `json:"digitalServiceInteraction" db:"digital_service_interaction"`
+	DigitalServiceInteractionDescription              null.String                   `json:"digitalServiceInteractionDescription" db:"digital_service_interaction_description"`
+	ProtectedCmsDataAccessedOutside                   *YesNoNotSure                 `json:"protectedCmsDataAccessedOutside" db:"protected_cms_data_accessed_outside"`
+	ProtectedCmsDataAccessedOutsideDescription        null.String                   `json:"protectedCmsDataAccessedOutsideDescription" db:"protected_cms_data_accessed_outside_description"`
 	UsingSoftware                                     zero.String                   `json:"usingSoftware" db:"using_software"`
 	AcquisitionMethods                                pq.StringArray                `json:"acquisitionMethods" db:"acquisition_methods"`
 	RequestFormState                                  SystemIntakeFormState         `json:"requestFormState" db:"request_form_state"`

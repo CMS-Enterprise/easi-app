@@ -1516,6 +1516,16 @@ func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.S
 	}, nil
 }
 
+// TotalContractCosts is the resolver for the totalContractCosts field.
+func (r *systemIntakeResolver) TotalContractCosts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeTotalContractCosts, error) {
+	return &models.SystemIntakeTotalContractCosts{
+		CurrentEstimatedCost:                 obj.CurrentEstimatedCost.Ptr(),
+		CurrentEstimatedCostITPortion:        obj.CurrentEstimatedCostITPortion.Ptr(),
+		EstimatedTotalContractValue:          obj.EstimatedTotalContractValue.Ptr(),
+		EstimatedTotalContractValueITPortion: obj.EstimatedTotalContractValueITPortion.Ptr(),
+	}, nil
+}
+
 // CurrentStage is the resolver for the currentStage field.
 func (r *systemIntakeResolver) CurrentStage(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ProcessStatus.Ptr(), nil
