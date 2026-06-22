@@ -1646,16 +1646,6 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 	return obj.LifecycleID.Ptr(), nil
 }
 
-// LcidDisplay is the resolver for the lcidDisplay field.
-func (r *systemIntakeResolver) LcidDisplay(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	_ = ctx
-	if obj.LifecycleID.ValueOrZero() == "" {
-		return nil, nil
-	}
-
-	return formatLCIDDisplay(obj), nil
-}
-
 // LcidScope is the resolver for the lcidScope field.
 func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error) {
 	return obj.LifecycleScope, nil

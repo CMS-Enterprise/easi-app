@@ -1,4 +1,4 @@
-package resolvers
+package models
 
 import (
 	"testing"
@@ -7,28 +7,26 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func TestFormatLCIDDisplay(t *testing.T) {
+func TestSystemIntakeLcidDisplay(t *testing.T) {
 	issuedAt := time.Date(2026, time.June, 15, 0, 0, 0, 0, time.UTC)
-	lcidType := models.LCIDTypeNewSystem
-	recompeteType := models.LCIDTypeRecompete
+	lcidType := LCIDTypeNewSystem
+	recompeteType := LCIDTypeRecompete
 	shortened := true
 	lowIT := true
 	notShortened := false
 	notLowIT := false
-	component := models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit
+	component := SystemIntakeContactComponentOfficeOfInformationTechnologyOit
 
 	tests := []struct {
 		name     string
-		intake   *models.SystemIntake
+		intake   *SystemIntake
 		expected *string
 	}{
 		{
 			name: "full metadata",
-			intake: &models.SystemIntake{
+			intake: &SystemIntake{
 				ID:                uuid.New(),
 				LifecycleID:       null.StringFrom("123456"),
 				LifecycleIssuedAt: &issuedAt,
@@ -41,7 +39,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 		},
 		{
 			name: "partial metadata omits missing values",
-			intake: &models.SystemIntake{
+			intake: &SystemIntake{
 				ID:                uuid.New(),
 				LifecycleID:       null.StringFrom("654321"),
 				LifecycleIssuedAt: &issuedAt,
@@ -51,7 +49,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 		},
 		{
 			name: "missing saved component omits component",
-			intake: &models.SystemIntake{
+			intake: &SystemIntake{
 				ID:                uuid.New(),
 				LifecycleID:       null.StringFrom("333333"),
 				LifecycleIssuedAt: &issuedAt,
@@ -61,7 +59,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 		},
 		{
 			name: "false booleans are omitted",
-			intake: &models.SystemIntake{
+			intake: &SystemIntake{
 				ID:                uuid.New(),
 				LifecycleID:       null.StringFrom("111111"),
 				LifecycleIssuedAt: &issuedAt,
@@ -74,7 +72,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 		},
 		{
 			name: "missing lcid returns nil",
-			intake: &models.SystemIntake{
+			intake: &SystemIntake{
 				ID:                uuid.New(),
 				LifecycleIssuedAt: &issuedAt,
 				LCIDType:          &lcidType,
@@ -83,7 +81,7 @@ func TestFormatLCIDDisplay(t *testing.T) {
 		},
 		{
 			name: "raw lcid is included when all other metadata is missing",
-			intake: &models.SystemIntake{
+			intake: &SystemIntake{
 				ID:          uuid.New(),
 				LifecycleID: null.StringFrom("222222"),
 			},
@@ -93,14 +91,14 @@ func TestFormatLCIDDisplay(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.expected, formatLCIDDisplay(tt.intake))
+			assert.Equal(t, tt.expected, tt.intake.LcidDisplay())
 		})
 	}
 }
 
-func TestRawLCIDValueUnchanged(t *testing.T) {
+func TestSystemIntakeRawLCIDValueUnchanged(t *testing.T) {
 	lcid := "123456"
-	intake := &models.SystemIntake{
+	intake := &SystemIntake{
 		LifecycleID: null.StringFrom(lcid),
 	}
 

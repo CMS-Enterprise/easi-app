@@ -1,6 +1,8 @@
 package models
 
 import (
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -260,6 +262,45 @@ const (
 	TRBFRRecommendedButNotCritical SystemIntakeTRBFollowUp = "RECOMMENDED_BUT_NOT_CRITICAL"
 	TRBFRNotRecommended            SystemIntakeTRBFollowUp = "NOT_RECOMMENDED"
 )
+
+// LcidDisplay assembles the backend LCID display string from saved LCID metadata.
+// The EASi UI uses this value so admins can quickly identify key LCID details.
+// Keeping this formatting in the backend keeps LCID display consistent across views
+// and avoids duplicating the same formatting logic in multiple frontend components.
+// Example: 123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED - LOW_IT
+func (si *SystemIntake) LcidDisplay() *string {
+	if si == nil || si.LifecycleID.ValueOrZero() == "" {
+		return nil
+	}
+
+	parts := []string{si.LifecycleID.ValueOrZero()}
+	if si.LifecycleIssuedAt != nil {
+		parts = append(parts, strconv.Itoa(si.LifecycleIssuedAt.Year()))
+	}
+
+	if componentLabel := si.LCIDComponent.LCIDDisplayLabel(); componentLabel != "" {
+		parts = append(parts, componentLabel)
+	}
+
+	if si.LCIDType != nil {
+		switch *si.LCIDType {
+		case LCIDTypeNewSystem:
+			parts = append(parts, "NEW_SYSTEM")
+		case LCIDTypeRecompete:
+			parts = append(parts, "RECOMPETE")
+		}
+	}
+
+	if si.LCIDIsShortened != nil && *si.LCIDIsShortened {
+		parts = append(parts, "SHORTENED")
+	}
+	if si.LCIDIsLowIT != nil && *si.LCIDIsLowIT {
+		parts = append(parts, "LOW_IT")
+	}
+
+	display := strings.Join(parts, " - ")
+	return &display
+}
 
 // LCIDStatus returns the status of this intake's LCID, if present
 func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatus {

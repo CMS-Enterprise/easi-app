@@ -1551,7 +1551,6 @@ type SystemIntakeResolver interface {
 	GrbVotingInformation(ctx context.Context, obj *models.SystemIntake) (*models.GRBVotingInformation, error)
 
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	LcidDisplay(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
 	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -38700,7 +38699,7 @@ func (ec *executionContext) _SystemIntake_lcidDisplay(ctx context.Context, field
 		field,
 		ec.fieldContext_SystemIntake_lcidDisplay,
 		func(ctx context.Context) (any, error) {
-			return ec.resolvers.SystemIntake().LcidDisplay(ctx, obj)
+			return obj.LcidDisplay(), nil
 		},
 		nil,
 		ec.marshalOString2ᚖstring,
@@ -38714,7 +38713,7 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidDisplay(_ context.Cont
 		Object:     "SystemIntake",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -64015,38 +64014,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "lcidDisplay":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_lcidDisplay(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntake_lcidDisplay(ctx, field, obj)
 		case "lcidIssuedAt":
 			out.Values[i] = ec._SystemIntake_lcidIssuedAt(ctx, field, obj)
 		case "lcidExpiresAt":
