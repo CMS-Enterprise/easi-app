@@ -270,7 +270,6 @@ const action = {
     },
     lcidIsShortened: {
       label: 'Is this a shortened LCID?',
-      // TODO: Replace placeholder copy with final mockup copy before merge.
       helpText: 'Choose "Yes" if this LCID is for a shortened LCID request.',
       yes: 'Yes',
       no: 'No'
