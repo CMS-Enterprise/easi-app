@@ -56,7 +56,9 @@ const LcidSummary = ({
     lcidIsShortenedLabel = t('issueLCID.lcidIsShortened.no');
   }
 
-  let lcidIsLowItLabel = t('governanceReviewTeam:notes.extendLcid.notSpecified');
+  let lcidIsLowItLabel = t(
+    'governanceReviewTeam:notes.extendLcid.notSpecified'
+  );
   if (lcidIsLowIt === true) {
     lcidIsLowItLabel = t('issueLCID.lcidIsLowIt.yes');
   } else if (lcidIsLowIt === false) {
