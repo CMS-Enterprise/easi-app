@@ -47,14 +47,16 @@ const LcidSummary = ({
 }: LcidSummaryProps & { className?: string }) => {
   const { t } = useTranslation('action');
 
-  let lcidIsShortenedLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
+  let lcidIsShortenedLabel = t(
+    'governanceReviewTeam:notes.extendLcid.notSpecified'
+  );
   if (lcidIsShortened === true) {
     lcidIsShortenedLabel = t('issueLCID.lcidIsShortened.yes');
   } else if (lcidIsShortened === false) {
     lcidIsShortenedLabel = t('issueLCID.lcidIsShortened.no');
   }
 
-  let lcidIsLowItLabel = t('governanceReviewTeam:notes.extendLcid.noScope');
+  let lcidIsLowItLabel = t('governanceReviewTeam:notes.extendLcid.notSpecified');
   if (lcidIsLowIt === true) {
     lcidIsLowItLabel = t('issueLCID.lcidIsLowIt.yes');
   } else if (lcidIsLowIt === false) {
@@ -63,8 +65,7 @@ const LcidSummary = ({
 
   const lcidComponentLabel = lcidComponent
     ? t(getComponentByEnum(lcidComponent).labelKey)
-    : t('governanceReviewTeam:notes.extendLcid.noScope');
-
+    : t('governanceReviewTeam:notes.extendLcid.notSpecified');
   return (
     <div
       className={classNames(
@@ -154,7 +155,7 @@ const LcidSummary = ({
         <dd className="margin-left-0 font-body-md line-height-body-5">
           {lcidType
             ? t(`issueLCID.lcidType.${lcidType}`)
-            : t('governanceReviewTeam:notes.extendLcid.noScope')}
+            : t('governanceReviewTeam:notes.extendLcid.notSpecified')}
         </dd>
 
         <dt className="text-bold margin-top-2">
