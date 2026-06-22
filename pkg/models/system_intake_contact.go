@@ -66,6 +66,72 @@ const (
 	SystemIntakeContactComponentOfficeOfSupportServicesAndOperations        SystemIntakeContactComponent = "OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS"
 )
 
+// LCIDDisplayLabel returns the component label used in formatted LCID display values.
+func (component *SystemIntakeContactComponent) LCIDDisplayLabel() string {
+	if component == nil {
+		return ""
+	}
+
+	switch *component {
+	case SystemIntakeContactComponentCenterForClinicalStandardsAndQualityCcsq:
+		return "CCSQ"
+	case SystemIntakeContactComponentCenterForConsumerInformationAndInsuranceOversightCciio:
+		return "CCIIO"
+	case SystemIntakeContactComponentCenterForMedicareCm:
+		return "CM"
+	case SystemIntakeContactComponentCenterForMedicaidAndChipServicesCmcs:
+		return "CMCS"
+	case SystemIntakeContactComponentCenterForMedicareAndMedicaidInnovationCmmi:
+		return "CMMI"
+	case SystemIntakeContactComponentCenterForProgramIntegrityCpi:
+		return "CPI"
+	case SystemIntakeContactComponentCmsWide:
+		return "CMS"
+	case SystemIntakeContactComponentEmergencyPreparednessAndResponseOperationsEpro:
+		return "EPRO"
+	case SystemIntakeContactComponentFederalCoordinatedHealthCareOffice:
+		return "FCHCO"
+	case SystemIntakeContactComponentOfficeOfAcquisitionAndGrantsManagementOagm:
+		return "OAGM"
+	case SystemIntakeContactComponentOfficeOfHealthcareExperienceAndInteroperability:
+		return "OHEI"
+	case SystemIntakeContactComponentOfficeOfCommunicationsOc:
+		return "OC"
+	case SystemIntakeContactComponentOfficeOfEnterpriseDataAndAnalyticsOeda:
+		return "OEDA"
+	case SystemIntakeContactComponentOfficeOfEqualOpportunityAndCivilRights:
+		return "OEOCR"
+	case SystemIntakeContactComponentOfficeOfFinancialManagementOfm:
+		return "OFM"
+	case SystemIntakeContactComponentOfficeOfHumanCapital:
+		return "OHC"
+	case SystemIntakeContactComponentOfficeOfInformationTechnologyOit:
+		return "OIT"
+	case SystemIntakeContactComponentOfficeOfLegislation:
+		return "OL"
+	case SystemIntakeContactComponentOfficeOfMinorityHealthOmh:
+		return "OMH"
+	case SystemIntakeContactComponentOfficeOfProgramOperationsAndLocalEngagementOpole:
+		return "OPOLE"
+	case SystemIntakeContactComponentOfficeOfSecurityFacilitiesAndLogisticsOperationsOsflo:
+		return "OSFLO"
+	case SystemIntakeContactComponentOfficeOfStrategicOperationsAndRegulatoryAffairsOsora:
+		return "OSORA"
+	case SystemIntakeContactComponentOfficeOfStrategyPerformanceAndResultsOspr:
+		return "OSPR"
+	case SystemIntakeContactComponentOfficeOfTheActuaryOact:
+		return "OACT"
+	case SystemIntakeContactComponentOfficeOfTheAdministrator:
+		return "OA"
+	case SystemIntakeContactComponentOfficesOfHearingsAndInquiries:
+		return "OHI"
+	case SystemIntakeContactComponentOther:
+		return "OTHER"
+	default:
+		return ""
+	}
+}
+
 // SystemIntakeContact represents an EUA user's association with a system intake
 type SystemIntakeContact struct {
 	userIDRelation

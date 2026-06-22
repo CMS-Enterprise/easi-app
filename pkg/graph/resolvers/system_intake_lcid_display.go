@@ -7,6 +7,11 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
+// formatLCIDDisplay assembles the backend LCID display string from saved LCID metadata.
+// The EASi UI uses this value so admins can quickly identify key LCID details.
+// Keeping this formatting in the backend keeps LCID display consistent across views
+// and avoids duplicating the same formatting logic in multiple frontend components.
+// Example: 123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED - LOW_IT
 func formatLCIDDisplay(intake *models.SystemIntake) *string {
 	if intake == nil || intake.LifecycleID.ValueOrZero() == "" {
 		return nil
@@ -17,7 +22,7 @@ func formatLCIDDisplay(intake *models.SystemIntake) *string {
 		parts = append(parts, strconv.Itoa(intake.LifecycleIssuedAt.Year()))
 	}
 
-	if componentLabel := formatLCIDDisplayComponent(intake.LCIDComponent); componentLabel != "" {
+	if componentLabel := intake.LCIDComponent.LCIDDisplayLabel(); componentLabel != "" {
 		parts = append(parts, componentLabel)
 	}
 
@@ -39,69 +44,4 @@ func formatLCIDDisplay(intake *models.SystemIntake) *string {
 
 	display := strings.Join(parts, " - ")
 	return &display
-}
-
-func formatLCIDDisplayComponent(component *models.SystemIntakeContactComponent) string {
-	if component == nil {
-		return ""
-	}
-
-	switch *component {
-	case models.SystemIntakeContactComponentCenterForClinicalStandardsAndQualityCcsq:
-		return "CCSQ"
-	case models.SystemIntakeContactComponentCenterForConsumerInformationAndInsuranceOversightCciio:
-		return "CCIIO"
-	case models.SystemIntakeContactComponentCenterForMedicareCm:
-		return "CM"
-	case models.SystemIntakeContactComponentCenterForMedicaidAndChipServicesCmcs:
-		return "CMCS"
-	case models.SystemIntakeContactComponentCenterForMedicareAndMedicaidInnovationCmmi:
-		return "CMMI"
-	case models.SystemIntakeContactComponentCenterForProgramIntegrityCpi:
-		return "CPI"
-	case models.SystemIntakeContactComponentCmsWide:
-		return "CMS"
-	case models.SystemIntakeContactComponentEmergencyPreparednessAndResponseOperationsEpro:
-		return "EPRO"
-	case models.SystemIntakeContactComponentFederalCoordinatedHealthCareOffice:
-		return "FCHCO"
-	case models.SystemIntakeContactComponentOfficeOfAcquisitionAndGrantsManagementOagm:
-		return "OAGM"
-	case models.SystemIntakeContactComponentOfficeOfHealthcareExperienceAndInteroperability:
-		return "OHEI"
-	case models.SystemIntakeContactComponentOfficeOfCommunicationsOc:
-		return "OC"
-	case models.SystemIntakeContactComponentOfficeOfEnterpriseDataAndAnalyticsOeda:
-		return "OEDA"
-	case models.SystemIntakeContactComponentOfficeOfEqualOpportunityAndCivilRights:
-		return "OEOCR"
-	case models.SystemIntakeContactComponentOfficeOfFinancialManagementOfm:
-		return "OFM"
-	case models.SystemIntakeContactComponentOfficeOfHumanCapital:
-		return "OHC"
-	case models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit:
-		return "OIT"
-	case models.SystemIntakeContactComponentOfficeOfLegislation:
-		return "OL"
-	case models.SystemIntakeContactComponentOfficeOfMinorityHealthOmh:
-		return "OMH"
-	case models.SystemIntakeContactComponentOfficeOfProgramOperationsAndLocalEngagementOpole:
-		return "OPOLE"
-	case models.SystemIntakeContactComponentOfficeOfSecurityFacilitiesAndLogisticsOperationsOsflo:
-		return "OSFLO"
-	case models.SystemIntakeContactComponentOfficeOfStrategicOperationsAndRegulatoryAffairsOsora:
-		return "OSORA"
-	case models.SystemIntakeContactComponentOfficeOfStrategyPerformanceAndResultsOspr:
-		return "OSPR"
-	case models.SystemIntakeContactComponentOfficeOfTheActuaryOact:
-		return "OACT"
-	case models.SystemIntakeContactComponentOfficeOfTheAdministrator:
-		return "OA"
-	case models.SystemIntakeContactComponentOfficesOfHearingsAndInquiries:
-		return "OHI"
-	case models.SystemIntakeContactComponentOther:
-		return "OTHER"
-	default:
-		return ""
-	}
 }
