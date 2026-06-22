@@ -820,6 +820,9 @@ func UpdateLCID(
 	if err != nil {
 		return nil, err
 	}
+	if adminUserInfo == nil {
+		return nil, fmt.Errorf("admin user info not found for EUA ID %s", adminEUAID)
+	}
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil || intake == nil {
@@ -988,6 +991,9 @@ func ConfirmLCID(ctx context.Context,
 	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
 	if err != nil {
 		return nil, err
+	}
+	if adminUserInfo == nil {
+		return nil, fmt.Errorf("admin user info not found for EUA ID %s", adminEUAID)
 	}
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
