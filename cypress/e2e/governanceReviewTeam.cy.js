@@ -7,6 +7,28 @@ describe('Governance Review Team', () => {
   // Matches pattern set in seed data: +1 year for expiration, +2 years for retirement
   const expirationDate = DateTime.local().plus({ year: 1 });
   const retirementDate = expirationDate.plus({ year: 1 });
+  const newSystemLCIDType = 'NEW_SYSTEM';
+  const recompeteLCIDType = 'RECOMPETE';
+  const oitComponent = 'OFFICE_OF_INFORMATION_TECHNOLOGY_OIT';
+  const cmComponent = 'CENTER_FOR_MEDICARE_CM';
+
+  const fillLCIDMetadataFields = ({
+    lcidType = newSystemLCIDType,
+    lcidComponent = oitComponent,
+    isShortened = true,
+    isLowIt = false
+  } = {}) => {
+    cy.get('#lcidType').select(lcidType).should('have.value', lcidType);
+    cy.get('#lcidComponent')
+      .select(lcidComponent)
+      .should('have.value', lcidComponent);
+    cy.get(isShortened ? '#lcidIsShortenedTrue' : '#lcidIsShortenedFalse')
+      .check({ force: true })
+      .should('be.checked');
+    cy.get(isLowIt ? '#lcidIsLowItTrue' : '#lcidIsLowItFalse')
+      .check({ force: true })
+      .should('be.checked');
+  };
 
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
@@ -293,6 +315,7 @@ describe('Governance Review Team', () => {
     cy.get('div#nextSteps').type(nextSteps);
     cy.get('#stronglyRecommended').check({ force: true });
     cy.get('#costBaseline').type(costBaseline);
+    fillLCIDMetadataFields();
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
@@ -312,6 +335,8 @@ describe('Governance Review Team', () => {
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
     cy.get('dd').contains(costBaseline);
+    cy.get('dd').contains('NEW_SYSTEM');
+    cy.get('dd').contains('OIT');
   });
 
   it('can issue an existing Life Cycle ID', () => {
@@ -359,6 +384,7 @@ describe('Governance Review Team', () => {
 
     cy.get('#costBaseline').clear();
     cy.get('#costBaseline').type(costBaseline);
+    fillLCIDMetadataFields();
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
@@ -402,10 +428,20 @@ describe('Governance Review Team', () => {
     const nextSteps = 'Updated test next steps for issuing LCID';
     const costBaseline = 'Updated test cost baseline for issuing LCID';
 
+    cy.get('#expiresAt').clear();
     cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+    cy.get('div#scope').clear();
     cy.get('div#scope').type(scope);
+    cy.get('div#nextSteps').clear();
     cy.get('div#nextSteps').type(nextSteps);
+    cy.get('#costBaseline').clear();
     cy.get('#costBaseline').type(costBaseline);
+    fillLCIDMetadataFields({
+      lcidType: recompeteLCIDType,
+      lcidComponent: cmComponent,
+      isShortened: false,
+      isLowIt: true
+    });
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
@@ -427,6 +463,8 @@ describe('Governance Review Team', () => {
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains(costBaseline);
+    cy.get('dd').contains('RECOMPETE');
+    cy.get('dd').contains('CM');
   });
 
   it('can expire a Life Cycle ID', () => {
