@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -31,6 +31,40 @@ type UpdateLcidFields = NonNullableProps<
   Omit<SystemIntakeUpdateLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
+type LcidFieldKey = keyof Pick<
+  SystemIntakeUpdateLCIDInput,
+  | 'expiresAt'
+  | 'scope'
+  | 'nextSteps'
+  | 'costBaseline'
+  | 'lcidType'
+  | 'lcidComponent'
+  | 'lcidIsLowIt'
+  | 'lcidIsShortened'
+>;
+
+const lcidFieldKeys = [
+  'expiresAt',
+  'scope',
+  'nextSteps',
+  'costBaseline',
+  'lcidType',
+  'lcidComponent',
+  'lcidIsLowIt',
+  'lcidIsShortened'
+] as const satisfies readonly LcidFieldKey[];
+
+const normalizeLcidFieldValue = (field: LcidFieldKey, value: unknown) => {
+  if (field === 'expiresAt' && value) {
+    const date = new Date(value as string | Date);
+    return Number.isNaN(date.getTime())
+      ? value
+      : date.toISOString().slice(0, 10);
+  }
+
+  return value ?? undefined;
+};
+
 type UpdateLcidProps = ManageLcidProps & LcidSummaryProps;
 
 const UpdateLcid = ({
@@ -60,36 +94,60 @@ const UpdateLcid = ({
 
   const {
     control,
-    watch,
-    formState: { errors }
+    formState: { dirtyFields, errors }
   } = form;
 
-  /** Array of LCID field values */
-  const lcidFields = watch([
-    'expiresAt',
-    'scope',
-    'nextSteps',
-    'costBaseline',
-    'lcidType',
-    'lcidComponent',
-    'lcidIsLowIt',
-    'lcidIsShortened'
-  ]);
+  const initialLcidValues: Partial<
+    Pick<SystemIntakeUpdateLCIDInput, LcidFieldKey>
+  > = {
+    expiresAt: defaultValues.lcidExpiresAt || undefined,
+    scope: defaultValues.lcidScope || undefined,
+    nextSteps: defaultValues.decisionNextSteps || undefined,
+    costBaseline: defaultValues.lcidCostBaseline || undefined,
+    lcidType: defaultValues.lcidType || undefined,
+    lcidComponent: defaultValues.lcidComponent || undefined,
+    lcidIsLowIt: defaultValues.lcidIsLowIt ?? undefined,
+    lcidIsShortened: defaultValues.lcidIsShortened ?? undefined
+  };
 
-  /** Whether or not at least one LCID field is filled out */
-  const formIsValid: boolean = useMemo(() => {
-    return lcidFields.some(value => value != null && value !== '');
-  }, [lcidFields]);
+  const lcidFieldHasChanged = (
+    field: LcidFieldKey,
+    value: UpdateLcidFields[LcidFieldKey]
+  ) => {
+    return (
+      normalizeLcidFieldValue(field, value) !==
+      normalizeLcidFieldValue(field, initialLcidValues[field])
+    );
+  };
+
+  /** Whether or not at least one editable LCID field has changed */
+  const hasLcidChanges = lcidFieldKeys.some(field => {
+    return (
+      dirtyFields[field] && lcidFieldHasChanged(field, form.getValues(field))
+    );
+  });
 
   /** Update LCID mutation on form submit */
   const onSubmit = async (formData: UpdateLcidFields) => {
-    // Check if at least one LCID field has been filled
-    if (formIsValid) {
+    // Check if at least one LCID field has changed
+    if (hasLcidChanges) {
+      const dirtyLcidInput: Partial<SystemIntakeUpdateLCIDInput> = {};
+
+      lcidFieldKeys.forEach(field => {
+        if (dirtyFields[field] && lcidFieldHasChanged(field, formData[field])) {
+          Object.assign(dirtyLcidInput, { [field]: formData[field] });
+        }
+      });
+
       return updateLcid({
         variables: {
           input: {
             systemIntakeID: systemIntakeId,
-            ...formData
+            reason: formData.reason,
+            additionalInfo: formData.additionalInfo,
+            adminNote: formData.adminNote,
+            notificationRecipients: formData.notificationRecipients,
+            ...dirtyLcidInput
           }
         }
       });
@@ -105,6 +163,7 @@ const UpdateLcid = ({
         successMessage={t('updateLcid.success', { lcid })}
         onSubmit={onSubmit}
         requiredFields={false}
+        disableSubmit={!hasLcidChanges}
         title={
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
