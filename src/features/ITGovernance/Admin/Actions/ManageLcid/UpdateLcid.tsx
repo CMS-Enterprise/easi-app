@@ -120,10 +120,13 @@ const UpdateLcid = ({
     );
   };
 
-  /** Whether or not at least one editable LCID field has changed */
   const hasLcidChanges = lcidFieldKeys.some(field => {
+    const value = form.getValues(field);
+
     return (
-      dirtyFields[field] && lcidFieldHasChanged(field, form.getValues(field))
+      dirtyFields[field] &&
+      value !== undefined &&
+      lcidFieldHasChanged(field, value)
     );
   });
 
@@ -134,7 +137,11 @@ const UpdateLcid = ({
       const dirtyLcidInput: Partial<SystemIntakeUpdateLCIDInput> = {};
 
       lcidFieldKeys.forEach(field => {
-        if (dirtyFields[field] && lcidFieldHasChanged(field, formData[field])) {
+        if (
+          dirtyFields[field] &&
+          formData[field] !== undefined &&
+          lcidFieldHasChanged(field, formData[field])
+        ) {
           Object.assign(dirtyLcidInput, { [field]: formData[field] });
         }
       });

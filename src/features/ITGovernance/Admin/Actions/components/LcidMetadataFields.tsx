@@ -94,7 +94,7 @@ const LcidMetadataFields = <T extends FieldValues>({
         render={({ field: { ref, ...field }, fieldState: { error } }) => (
           <FormGroup error={!!error}>
             <Label
-              htmlFor={field.name}
+              htmlFor="lcidIsShortenedTrue"
               className="text-normal"
               required={required}
             >
@@ -136,7 +136,7 @@ const LcidMetadataFields = <T extends FieldValues>({
         render={({ field: { ref, ...field }, fieldState: { error } }) => (
           <FormGroup error={!!error}>
             <Label
-              htmlFor={field.name}
+              htmlFor="lcidIsLowItTrue"
               className="text-normal"
               required={required}
             >
