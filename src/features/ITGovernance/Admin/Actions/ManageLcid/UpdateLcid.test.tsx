@@ -83,11 +83,8 @@ describe('Update LCID form', () => {
       screen.getByRole('textbox', { name: 'Project cost baseline' })
     ).toHaveValue('Test cost baseline');
 
-    const yesOptions = screen.getAllByRole('radio', { name: 'Yes' });
-    const noOptions = screen.getAllByRole('radio', { name: 'No' });
-
-    expect(yesOptions[0]).toBeChecked();
-    expect(noOptions[1]).toBeChecked();
+    expect(document.querySelector('#lcidIsShortenedTrue')).toBeChecked();
+    expect(document.querySelector('#lcidIsLowItFalse')).toBeChecked();
   });
 
   it('disables submit until an LCID field changes', async () => {
