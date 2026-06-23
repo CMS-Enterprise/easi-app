@@ -206,7 +206,7 @@ const RelatedRequestsTable = ({
 
           return t<string>(
             `governanceReviewTeam:systemIntakeStatusRequester.${request.status}`,
-            { lcid: request.lcidDisplay || request.lcid }
+            { lcid: request.lcid }
           );
         }
       },

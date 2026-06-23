@@ -1,7 +1,6 @@
 package models
 
 import (
-	"strconv"
 	"strings"
 	"time"
 
@@ -267,17 +266,13 @@ const (
 // The EASi UI uses this value so admins can quickly identify key LCID details.
 // Keeping this formatting in the backend keeps LCID display consistent across views
 // and avoids duplicating the same formatting logic in multiple frontend components.
-// Example: 123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED - LOW_IT
+// Example: 123456-OIT-NEW-S-L
 func (si *SystemIntake) LcidDisplay() *string {
 	if si == nil || si.LifecycleID.ValueOrZero() == "" {
 		return nil
 	}
 
 	parts := []string{si.LifecycleID.ValueOrZero()}
-	if si.LifecycleIssuedAt != nil {
-		parts = append(parts, strconv.Itoa(si.LifecycleIssuedAt.Year()))
-	}
-
 	if componentLabel := si.LCIDComponent.LCIDDisplayLabel(); componentLabel != "" {
 		parts = append(parts, componentLabel)
 	}
@@ -285,20 +280,20 @@ func (si *SystemIntake) LcidDisplay() *string {
 	if si.LCIDType != nil {
 		switch *si.LCIDType {
 		case LCIDTypeNewSystem:
-			parts = append(parts, "NEW_SYSTEM")
+			parts = append(parts, "NEW")
 		case LCIDTypeRecompete:
-			parts = append(parts, "RECOMPETE")
+			parts = append(parts, "RC")
 		}
 	}
 
 	if si.LCIDIsShortened != nil && *si.LCIDIsShortened {
-		parts = append(parts, "SHORTENED")
+		parts = append(parts, "S")
 	}
 	if si.LCIDIsLowIT != nil && *si.LCIDIsLowIT {
-		parts = append(parts, "LOW_IT")
+		parts = append(parts, "L")
 	}
 
-	display := strings.Join(parts, " - ")
+	display := strings.Join(parts, "-")
 	return &display
 }
 

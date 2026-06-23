@@ -335,7 +335,7 @@ describe('Governance Review Team', () => {
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
     cy.get('dd').contains(costBaseline);
-    cy.get('dd').contains('NEW_SYSTEM');
+    cy.get('dd').contains('NEW');
     cy.get('dd').contains('OIT');
   });
 
@@ -463,7 +463,7 @@ describe('Governance Review Team', () => {
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains(costBaseline);
-    cy.get('dd').contains('RECOMPETE');
+    cy.get('dd').contains('RC');
     cy.get('dd').contains('CM');
   });
 

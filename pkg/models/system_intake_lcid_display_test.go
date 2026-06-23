@@ -35,7 +35,7 @@ func TestSystemIntakeLcidDisplay(t *testing.T) {
 				LCIDIsShortened:   &shortened,
 				LCIDIsLowIT:       &lowIT,
 			},
-			expected: stringPtr("123456 - 2026 - OIT - NEW_SYSTEM - SHORTENED - LOW_IT"),
+			expected: stringPtr("123456-OIT-NEW-S-L"),
 		},
 		{
 			name: "partial metadata omits missing values",
@@ -45,7 +45,7 @@ func TestSystemIntakeLcidDisplay(t *testing.T) {
 				LifecycleIssuedAt: &issuedAt,
 				LCIDIsShortened:   &shortened,
 			},
-			expected: stringPtr("654321 - 2026 - SHORTENED"),
+			expected: stringPtr("654321-S"),
 		},
 		{
 			name: "missing saved component omits component",
@@ -55,7 +55,7 @@ func TestSystemIntakeLcidDisplay(t *testing.T) {
 				LifecycleIssuedAt: &issuedAt,
 				LCIDType:          &lcidType,
 			},
-			expected: stringPtr("333333 - 2026 - NEW_SYSTEM"),
+			expected: stringPtr("333333-NEW"),
 		},
 		{
 			name: "false booleans are omitted",
@@ -68,7 +68,7 @@ func TestSystemIntakeLcidDisplay(t *testing.T) {
 				LCIDIsShortened:   &notShortened,
 				LCIDIsLowIT:       &notLowIT,
 			},
-			expected: stringPtr("111111 - 2026 - OIT - RECOMPETE"),
+			expected: stringPtr("111111-OIT-RC"),
 		},
 		{
 			name: "missing lcid returns nil",

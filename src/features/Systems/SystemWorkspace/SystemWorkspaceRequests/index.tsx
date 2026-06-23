@@ -137,7 +137,7 @@ function LinkedRequestsTable({
           return (
             <>
               {t(`governanceReviewTeam:systemIntakeStatusRequester.${value}`, {
-                lcid: lr.lcidDisplay || lr.lcid
+                lcid: lr.lcid
               })}
             </>
           );

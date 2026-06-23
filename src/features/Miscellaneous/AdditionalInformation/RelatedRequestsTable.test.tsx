@@ -136,7 +136,7 @@ describe('Related Requests table', () => {
                   statusRequester: SystemIntakeStatusRequester.LCID_ISSUED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -177,9 +177,7 @@ describe('Related Requests table', () => {
         'There are no additional requests linked to this system'
       )
     ).not.toBeInTheDocument();
-    expect(
-      await screen.findByText('LCID issued: 123 - 2026 - OIT - NEW_SYSTEM')
-    ).toBeInTheDocument();
+    expect(await screen.findByText('LCID issued: 123')).toBeInTheDocument();
   });
 
   it('renders trb request related requests table with data', async () => {
@@ -212,7 +210,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -293,7 +291,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -368,7 +366,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -438,7 +436,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -512,7 +510,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -586,7 +584,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -661,7 +659,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -734,7 +732,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [
@@ -807,7 +805,7 @@ describe('Related Requests table', () => {
                     SystemIntakeStatusRequester.DRAFT_BUSINESS_CASE_EDITS_REQUESTED,
                   submittedAt: new Date(),
                   lcid: '123',
-                  lcidDisplay: '123 - 2026 - OIT - NEW_SYSTEM'
+                  lcidDisplay: '123-OIT-NEW'
                 }
               ],
               relatedTRBRequests: [

@@ -756,7 +756,7 @@ export const taskListSystemIntake: NonNullable<
   systems: [],
   statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
   lcid: '123',
-  lcidDisplay: '123 - 2020 - OIT - NEW_SYSTEM',
+  lcidDisplay: '123-OIT-NEW',
   lcidRetiresAt: '2020-10-08T03:11:24.478056Z',
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbReviewStartedAt: null,
