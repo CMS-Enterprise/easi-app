@@ -128,7 +128,10 @@ export const LcidInfoContainer = ({
 
               <DefinitionCombo
                 term={t('decision.terms.lcidNumber')}
-                definition={lcidDisplay ?? lcid ?? t('lifecycleID.noLCID')}
+                definition={
+                  (isRequester ? lcid : (lcidDisplay ?? lcid)) ??
+                  t('lifecycleID.noLCID')
+                }
               />
 
               <div className="grid-row">
