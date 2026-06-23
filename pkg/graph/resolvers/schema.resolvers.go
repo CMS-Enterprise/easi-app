@@ -1401,25 +1401,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline.Ptr(),
 			}
 		}
-		if action.LCIDTypeChangePreviousValue != nil ||
-			action.LCIDTypeChangeNewValue != nil ||
-			action.LCIDComponentChangePreviousValue != nil ||
-			action.LCIDComponentChangeNewValue != nil ||
-			action.LCIDIsShortenedChangePreviousValue != nil ||
-			action.LCIDIsShortenedChangeNewValue != nil ||
-			action.LCIDIsLowITChangePreviousValue != nil ||
-			action.LCIDIsLowITChangeNewValue != nil {
-			graphAction.LcidMetadataChange = &models.SystemIntakeLCIDMetadataChange{
-				PreviousType:        action.LCIDTypeChangePreviousValue,
-				NewType:             action.LCIDTypeChangeNewValue,
-				PreviousComponent:   action.LCIDComponentChangePreviousValue,
-				NewComponent:        action.LCIDComponentChangeNewValue,
-				PreviousIsShortened: action.LCIDIsShortenedChangePreviousValue,
-				NewIsShortened:      action.LCIDIsShortenedChangeNewValue,
-				PreviousIsLowIt:     action.LCIDIsLowITChangePreviousValue,
-				NewIsLowIt:          action.LCIDIsLowITChangeNewValue,
-			}
-		}
+		graphAction.LcidMetadataChange = newLCIDMetadataChange(action)
 		results = append(results, &graphAction)
 	}
 	return results, nil
