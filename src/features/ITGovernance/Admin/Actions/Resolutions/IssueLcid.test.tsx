@@ -29,8 +29,8 @@ import { EditsRequestedContext } from '..';
 
 import IssueLcid from './IssueLcid';
 
-/** Checks field default values when lcid is selected */
-const checkFieldDefaults = async () => {
+/** Checks saved LCID metadata default values when confirming an LCID */
+const checkConfirmFieldDefaults = async () => {
   await waitFor(() => {
     expect(
       screen.getByRole('textbox', { name: 'Expiration date *' })
@@ -89,7 +89,7 @@ describe('Issue LCID form', async () => {
   beforeEach(() => {
     user = userEvent.setup();
   });
-  it('Populates fields when existing LCID is selected', async () => {
+  it('does not copy metadata when an existing LCID is selected', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
@@ -121,7 +121,19 @@ describe('Issue LCID form', async () => {
     await user.selectOptions(selectLcid, [systemIntakeWithLcid.lcid!]);
     expect(selectLcid).toHaveValue(systemIntakeWithLcid.lcid);
 
-    checkFieldDefaults();
+    expect(screen.getByRole('combobox', { name: 'LCID type *' })).toHaveValue(
+      ''
+    );
+    expect(
+      screen.getByRole('combobox', { name: 'LCID component *' })
+    ).toHaveValue(systemIntake.requester?.component);
+    expect(
+      screen.getByRole('textbox', { name: 'Project cost baseline' })
+    ).toHaveValue('');
+    expect(document.querySelector('#lcidIsShortenedTrue')).not.toBeChecked();
+    expect(document.querySelector('#lcidIsShortenedFalse')).not.toBeChecked();
+    expect(document.querySelector('#lcidIsLowItTrue')).not.toBeChecked();
+    expect(document.querySelector('#lcidIsLowItFalse')).not.toBeChecked();
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
@@ -243,7 +255,7 @@ describe('Issue LCID form', async () => {
       )
     ).toBeInTheDocument();
 
-    checkFieldDefaults();
+    await checkConfirmFieldDefaults();
   });
 
   it('renders LCID type and component options', async () => {

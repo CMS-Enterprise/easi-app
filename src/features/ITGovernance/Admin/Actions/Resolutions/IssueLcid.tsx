@@ -197,49 +197,8 @@ const IssueLcid = ({
   const lcid = watch('lcid');
   const useExistingLcid = watch('useExistingLcid');
 
-  // When existing LCID is selected, populate fields
+  // Reset fields when switching back to a newly generated LCID.
   useEffect(() => {
-    if (systemIntakesWithLcids && useExistingLcid && lcid) {
-      const selectedLcidData = systemIntakesWithLcids[lcid];
-
-      if (selectedLcidData) {
-        setValue('expiresAt', selectedLcidData.lcidExpiresAt || '');
-        setValue('scope', selectedLcidData.lcidScope || '');
-        setValue('nextSteps', selectedLcidData.decisionNextSteps || '');
-        setValue('costBaseline', selectedLcidData.lcidCostBaseline || '');
-
-        if (selectedLcidData.trbFollowUpRecommendation) {
-          setValue('trbFollowUp', selectedLcidData.trbFollowUpRecommendation);
-        } else {
-          resetField('trbFollowUp');
-        }
-
-        if (selectedLcidData.lcidType) {
-          setValue('lcidType', selectedLcidData.lcidType);
-        } else {
-          resetField('lcidType');
-        }
-
-        if (selectedLcidData.lcidComponent) {
-          setValue('lcidComponent', selectedLcidData.lcidComponent);
-        } else {
-          resetField('lcidComponent');
-        }
-
-        if (selectedLcidData.lcidIsLowIt != null) {
-          setValue('lcidIsLowIt', selectedLcidData.lcidIsLowIt);
-        } else {
-          resetField('lcidIsLowIt');
-        }
-
-        if (selectedLcidData.lcidIsShortened != null) {
-          setValue('lcidIsShortened', selectedLcidData.lcidIsShortened);
-        } else {
-          resetField('lcidIsShortened');
-        }
-      }
-    }
-
     if (lcid && useExistingLcid === false) {
       resetField('lcid');
       resetField('expiresAt');
@@ -256,14 +215,7 @@ const IssueLcid = ({
       resetField('lcidIsLowIt');
       resetField('lcidIsShortened');
     }
-  }, [
-    lcid,
-    useExistingLcid,
-    systemIntakesWithLcids,
-    setValue,
-    resetField,
-    defaultLcidComponent
-  ]);
+  }, [lcid, useExistingLcid, setValue, resetField, defaultLcidComponent]);
 
   if (loading) return <PageLoading />;
 
