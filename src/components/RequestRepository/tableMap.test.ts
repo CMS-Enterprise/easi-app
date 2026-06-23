@@ -1,6 +1,13 @@
 import { useTranslation } from 'react-i18next';
-import { SystemIntakeState } from 'gql/generated/graphql';
+import {
+  SystemIntakeContactComponent,
+  SystemIntakeLCIDType,
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
+} from 'gql/generated/graphql';
 import { systemIntakeForTable } from 'tests/mock/systemIntake';
+
+import { prepareIntakeToCSV } from 'data/systemIntake';
 
 import tableMap, {
   TableSystemIntake,
@@ -135,5 +142,35 @@ describe('System Intake Request table map', () => {
     expect(intake.fundingSources).toEqual(
       '123456 (Research, HITECH Medicaid), 654321 (Prog Ops), 789012 (DARPA, Recovery Audit Contractors)'
     );
+  });
+
+  it('formats LCID metadata for CSV exports', () => {
+    const [intake] = tableMap(
+      [
+        {
+          ...systemIntakeForTable,
+          lcid: '123456',
+          lcidDisplay: '123456-OIT-NEW-S-L',
+          statusAdmin: SystemIntakeStatusAdmin.LCID_ISSUED,
+          lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
+          lcidComponent:
+            SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT,
+          lcidIsShortened: true,
+          lcidIsLowIt: false
+        }
+      ],
+      t
+    );
+
+    const csvIntake = prepareIntakeToCSV(intake);
+
+    expect(csvIntake.lcid).toEqual('123456');
+    expect(csvIntake.lcidDisplay).toEqual('123456-OIT-NEW-S-L');
+    expect(csvIntake.status).toContain('123456');
+    expect(csvIntake.status).not.toContain('123456-OIT-NEW-S-L');
+    expect(csvIntake.lcidType).toEqual('New system');
+    expect(csvIntake.lcidComponent).toEqual('OIT');
+    expect(csvIntake.lcidIsShortened).toEqual('Yes');
+    expect(csvIntake.lcidIsLowIt).toEqual('No');
   });
 });

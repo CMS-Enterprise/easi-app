@@ -95,6 +95,10 @@ export default gql(/* GraphQL */ `
       lcidScope
       lcidIssuedAt
       lcidExpiresAt
+      lcidType
+      lcidComponent
+      lcidIsShortened
+      lcidIsLowIt
 
       adminLead
 
