@@ -14,10 +14,25 @@ func GetUpdateLCIDAction(
 	nextSteps *models.HTML,
 	scope *models.HTML,
 	costBaseline *string,
+	lcidType *models.SystemIntakeLCIDType,
+	lcidComponent *models.SystemIntakeContactComponent,
+	lcidIsShortened *bool,
+	lcidIsLowIT *bool,
 	userInfo models.UserInfo,
 ) models.Action {
 
-	action := getBaseLCIDAction(intake, expirationDate, nextSteps, scope, costBaseline, userInfo, nil)
+	action := getBaseLCIDAction(baseLCIDActionArgs{
+		intake:          intake,
+		userInfo:        userInfo,
+		expirationDate:  expirationDate,
+		nextSteps:       nextSteps,
+		scope:           scope,
+		costBaseline:    costBaseline,
+		lcidType:        lcidType,
+		lcidComponent:   lcidComponent,
+		lcidIsShortened: lcidIsShortened,
+		lcidIsLowIT:     lcidIsLowIT,
+	})
 	action.ActionType = models.ActionTypeUPDATELCID
 
 	return action

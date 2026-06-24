@@ -178,6 +178,22 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.lcid')
   },
   {
+    key: 'lcidType',
+    label: t('intake:csvHeadings.lcidType')
+  },
+  {
+    key: 'lcidComponent',
+    label: t('intake:csvHeadings.lcidComponent')
+  },
+  {
+    key: 'lcidIsShortened',
+    label: t('intake:csvHeadings.lcidIsShortened')
+  },
+  {
+    key: 'lcidIsLowIt',
+    label: t('intake:csvHeadings.lcidIsLowIt')
+  },
+  {
     key: 'lcidIssuedAt',
     label: t('intake:csvHeadings.lcidIssuedAt')
   },

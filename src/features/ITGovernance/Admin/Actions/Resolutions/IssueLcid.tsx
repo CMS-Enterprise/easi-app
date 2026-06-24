@@ -7,8 +7,10 @@ import {
   CreateSystemIntakeActionConfirmLCIDMutationVariables,
   CreateSystemIntakeActionIssueLCIDMutationVariables,
   GetSystemIntakesWithLCIDSQuery,
+  SystemIntakeContactComponent,
   SystemIntakeDecisionState,
   SystemIntakeIssueLCIDInput,
+  SystemIntakeLCIDType,
   SystemIntakeTRBFollowUp,
   useCreateSystemIntakeActionConfirmLCIDMutation,
   useCreateSystemIntakeActionIssueLCIDMutation,
@@ -28,6 +30,7 @@ import { NonNullableProps } from 'types/util';
 import { lcidActionSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import LcidMetadataFields from '../components/LcidMetadataFields';
 import { actionDateInPast } from '../ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '..';
 
@@ -48,6 +51,13 @@ interface IssueLcidProps extends ResolutionProps {
   decisionNextSteps?: string | null;
   trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
   lcidCostBaseline?: string | null;
+  lcidType?: SystemIntakeLCIDType | null;
+  lcidComponent?: SystemIntakeContactComponent | null;
+  lcidIsLowIt?: boolean | null;
+  lcidIsShortened?: boolean | null;
+  requester?: {
+    component?: SystemIntakeContactComponent | null;
+  } | null;
 }
 
 /**
@@ -79,6 +89,11 @@ const IssueLcid = ({
 
   const { data, loading } = useGetSystemIntakesWithLCIDSQuery();
 
+  const defaultLcidComponent =
+    systemIntake.lcidComponent ||
+    systemIntake.requester?.component ||
+    undefined;
+
   /** System intakes with LCIDs, formatted for Use Existing LCID dropdown */
   const systemIntakesWithLcids = useMemo(() => {
     if (!data?.systemIntakesWithLcids) return undefined;
@@ -103,12 +118,17 @@ const IssueLcid = ({
         nextSteps: systemIntake.decisionNextSteps || '',
         scope: systemIntake.lcidScope || '',
         trbFollowUp: systemIntake.trbFollowUpRecommendation || undefined,
-        costBaseline: systemIntake.lcidCostBaseline || ''
+        costBaseline: systemIntake.lcidCostBaseline || '',
+        lcidType: systemIntake.lcidType || undefined,
+        lcidComponent: defaultLcidComponent,
+        lcidIsLowIt: systemIntake.lcidIsLowIt ?? undefined,
+        lcidIsShortened: systemIntake.lcidIsShortened ?? undefined
       }
     : {
         lcid: systemIntake.lcid || '',
         expiresAt: systemIntake.lcidExpiresAt || '',
-        scope: systemIntake.lcidScope || ''
+        scope: systemIntake.lcidScope || '',
+        lcidComponent: defaultLcidComponent
       };
 
   const form = useForm<IssueLcidFields>({
@@ -177,27 +197,8 @@ const IssueLcid = ({
   const lcid = watch('lcid');
   const useExistingLcid = watch('useExistingLcid');
 
-  // When existing LCID is selected, populate fields
+  // Reset fields when switching back to a newly generated LCID.
   useEffect(() => {
-    if (systemIntakesWithLcids && useExistingLcid && lcid) {
-      const selectedLcidData = systemIntakesWithLcids[lcid];
-
-      if (selectedLcidData) {
-        setValue('expiresAt', selectedLcidData.lcidExpiresAt || '');
-        setValue('scope', selectedLcidData.lcidScope || '');
-        setValue('nextSteps', selectedLcidData.decisionNextSteps || '');
-        setValue('costBaseline', selectedLcidData.lcidCostBaseline || '');
-
-        if (selectedLcidData.trbFollowUpRecommendation) {
-          setValue('trbFollowUp', selectedLcidData.trbFollowUpRecommendation);
-        } else {
-          // If selected LCID has no trbFollowUp value, reset field
-          resetField('trbFollowUp');
-        }
-      }
-    }
-
-    // If user selects "Generate new life cycle ID", reset LCID fields
     if (lcid && useExistingLcid === false) {
       resetField('lcid');
       resetField('expiresAt');
@@ -205,8 +206,16 @@ const IssueLcid = ({
       resetField('nextSteps');
       resetField('costBaseline');
       resetField('trbFollowUp');
+      resetField('lcidType');
+      if (defaultLcidComponent) {
+        setValue('lcidComponent', defaultLcidComponent);
+      } else {
+        resetField('lcidComponent');
+      }
+      resetField('lcidIsLowIt');
+      resetField('lcidIsShortened');
     }
-  }, [lcid, useExistingLcid, systemIntakesWithLcids, setValue, resetField]);
+  }, [lcid, useExistingLcid, setValue, resetField, defaultLcidComponent]);
 
   if (loading) return <PageLoading />;
 
@@ -333,6 +342,8 @@ const IssueLcid = ({
             }}
           />
         )}
+
+        <LcidMetadataFields control={control} required />
 
         <Controller
           name="expiresAt"

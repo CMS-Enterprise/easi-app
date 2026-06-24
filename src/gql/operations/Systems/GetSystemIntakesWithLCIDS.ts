@@ -11,6 +11,10 @@ export default gql(/* GraphQL */ `
       decisionNextSteps
       trbFollowUpRecommendation
       lcidCostBaseline
+      lcidType
+      lcidComponent
+      lcidIsLowIt
+      lcidIsShortened
     }
   }
 `);

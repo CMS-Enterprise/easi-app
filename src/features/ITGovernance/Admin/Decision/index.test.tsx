@@ -65,6 +65,7 @@ describe('Decision component', () => {
         // DecisionProvider props (used via context)
         decidedAt="2025-09-29T00:00:00Z"
         lcid="E-12345"
+        lcidDisplay="E-12345-OIT-NEW-L"
         lcidIssuedAt="2025-09-20T00:00:00Z"
         lcidExpiresAt="2026-09-20T00:00:00Z"
         lcidRetiresAt={null}
@@ -94,7 +95,7 @@ describe('Decision component', () => {
     screen.getByText(
       i18next.t<string>('governanceReviewTeam:decision.terms.lcidNumber')
     );
-    screen.getByText('E-12345');
+    screen.getByText('E-12345-OIT-NEW-L');
 
     // Issue date term/value
     screen.getByText(

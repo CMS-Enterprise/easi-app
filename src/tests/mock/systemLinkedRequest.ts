@@ -21,6 +21,7 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     submittedAt: '2024-07-24T23:41:58.42997Z',
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
+    lcidDisplay: null,
     requester: {
       __typename: 'SystemIntakeContact',
       id: 'userOne',
@@ -40,6 +41,7 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     submittedAt: '2024-07-25T23:41:58.500526Z',
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
+    lcidDisplay: null,
     requester: {
       __typename: 'SystemIntakeContact',
       id: 'userOne',
@@ -59,6 +61,7 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     submittedAt: '2024-07-01T23:41:58.500526Z',
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
+    lcidDisplay: null,
     requester: {
       __typename: 'SystemIntakeContact',
       id: 'userUSR1',

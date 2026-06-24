@@ -42,7 +42,15 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			lcid_expiration_change_new_cost_baseline,
 			lcid_expiration_change_previous_cost_baseline,
 			lcid_retirement_change_new_date,
-			lcid_retirement_change_previous_date
+			lcid_retirement_change_previous_date,
+			lcid_type_change_previous_value,
+			lcid_type_change_new_value,
+			lcid_component_change_previous_value,
+			lcid_component_change_new_value,
+			lcid_is_shortened_change_previous_value,
+			lcid_is_shortened_change_new_value,
+			lcid_is_low_it_change_previous_value,
+			lcid_is_low_it_change_new_value
 		)
 		VALUES (
 			:id,
@@ -63,7 +71,15 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 			:lcid_expiration_change_new_cost_baseline,
 			:lcid_expiration_change_previous_cost_baseline,
 			:lcid_retirement_change_new_date,
-			:lcid_retirement_change_previous_date
+			:lcid_retirement_change_previous_date,
+			:lcid_type_change_previous_value,
+			:lcid_type_change_new_value,
+			:lcid_component_change_previous_value,
+			:lcid_component_change_new_value,
+			:lcid_is_shortened_change_previous_value,
+			:lcid_is_shortened_change_new_value,
+			:lcid_is_low_it_change_previous_value,
+			:lcid_is_low_it_change_new_value
 		)`
 	_, err := s.db.NamedExec(
 		createActionSQL,

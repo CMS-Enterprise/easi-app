@@ -1401,6 +1401,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				PreviousCostBaseline: action.LCIDExpirationChangePreviousCostBaseline.Ptr(),
 			}
 		}
+		graphAction.LcidMetadataChange = newLCIDMetadataChange(action)
 		results = append(results, &graphAction)
 	}
 	return results, nil

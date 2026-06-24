@@ -6,6 +6,7 @@ export default gql(/* GraphQL */ `
     systemIntake(id: $id) {
       id
       lcid
+      lcidDisplay
       notes {
         id
         createdAt
@@ -35,6 +36,16 @@ export default gql(/* GraphQL */ `
           newNextSteps
           previousCostBaseline
           newCostBaseline
+        }
+        lcidMetadataChange {
+          previousType
+          newType
+          previousComponent
+          newComponent
+          previousIsShortened
+          newIsShortened
+          previousIsLowIt
+          newIsLowIt
         }
         actor {
           name

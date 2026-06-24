@@ -7,6 +7,8 @@ import {
   GetAdminNotesAndActionsDocument,
   GetAdminNotesAndActionsQuery,
   SystemIntakeActionType,
+  SystemIntakeContactComponent,
+  SystemIntakeLCIDType,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
@@ -78,7 +80,8 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
   systemIntake: {
     __typename: 'SystemIntake',
     id: systemIntake.id,
-    lcid: null,
+    lcid: '123',
+    lcidDisplay: '123-OIT-RC-S',
     notes: [
       {
         __typename: 'SystemIntakeNote',
@@ -102,11 +105,37 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
     actions: [
       {
         __typename: 'SystemIntakeAction',
+        id: 'feae85a5-6e4f-4f2f-868e-0778d7e613d9',
+        createdAt: '2021-07-07T20:42:04Z',
+        feedback: null,
+        type: SystemIntakeActionType.UPDATE_LCID,
+        lcidExpirationChange: null,
+        lcidMetadataChange: {
+          __typename: 'SystemIntakeLCIDMetadataChange',
+          previousType: SystemIntakeLCIDType.NEW_SYSTEM,
+          newType: SystemIntakeLCIDType.RECOMPETE,
+          previousComponent:
+            SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT,
+          newComponent: SystemIntakeContactComponent.CENTER_FOR_MEDICARE_CM,
+          previousIsShortened: false,
+          newIsShortened: true,
+          previousIsLowIt: true,
+          newIsLowIt: false
+        },
+        actor: {
+          __typename: 'SystemIntakeActionActor',
+          name: 'Actor Name',
+          email: 'actor@example.com'
+        }
+      },
+      {
+        __typename: 'SystemIntakeAction',
         id: '9c3e767b-f1af-46ff-93cf-0ace61f30e89',
         createdAt: '2021-07-07T20:32:04Z',
         feedback: 'This business case needs feedback',
         type: SystemIntakeActionType.PROVIDE_FEEDBACK_NEED_BIZ_CASE,
         lcidExpirationChange: null,
+        lcidMetadataChange: null,
         actor: {
           __typename: 'SystemIntakeActionActor',
           name: 'Actor Name',
@@ -120,6 +149,7 @@ const adminNotesAndActionsQueryData: GetAdminNotesAndActionsQuery = {
         feedback: null,
         type: SystemIntakeActionType.SUBMIT_INTAKE,
         lcidExpirationChange: null,
+        lcidMetadataChange: null,
         actor: {
           __typename: 'SystemIntakeActionActor',
           name: 'Actor Name',
@@ -212,6 +242,23 @@ describe('Governance Review Team', () => {
       </MemoryRouter>
     );
     await waitForPageLoad('grt-notes-view');
+
+    expect(screen.getByText('New LCID type')).toBeInTheDocument();
+    expect(screen.getByText('Old LCID type')).toBeInTheDocument();
+    expect(screen.getByText('New Component')).toBeInTheDocument();
+    expect(screen.getByText('Old Component')).toBeInTheDocument();
+    expect(screen.getByText('New Shortened')).toBeInTheDocument();
+    expect(screen.getByText('Old Shortened')).toBeInTheDocument();
+    expect(screen.getByText('New Low IT')).toBeInTheDocument();
+    expect(screen.getByText('Old Low IT')).toBeInTheDocument();
+    expect(screen.getByText('Recompete')).toBeInTheDocument();
+    expect(screen.getByText('New system')).toBeInTheDocument();
+    expect(screen.getByText('Center for Medicare')).toBeInTheDocument();
+    expect(
+      screen.getByText('Office of Information Technology')
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('Yes')).toHaveLength(2);
+    expect(screen.getAllByText('No')).toHaveLength(2);
   });
 
   it('renders GRT dates view', async () => {

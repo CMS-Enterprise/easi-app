@@ -356,11 +356,15 @@ func (s *ResolverSuite) TestIssueLCID() {
 			Lcid: &providedLCID,
 
 			// required fields
-			SystemIntakeID: newIntake.ID,
-			ExpiresAt:      time.Now().AddDate(2, 0, 0),
-			Scope:          "test scope",
-			NextSteps:      "test next steps",
-			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			SystemIntakeID:  newIntake.ID,
+			ExpiresAt:       time.Now().AddDate(2, 0, 0),
+			Scope:           "test scope",
+			NextSteps:       "test next steps",
+			TrbFollowUp:     models.TRBFRStronglyRecommended,
+			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+			LcidIsLowIt:     true,
+			LcidIsShortened: false,
 		}
 
 		updatedIntake, err := IssueLCID(
@@ -382,11 +386,15 @@ func (s *ResolverSuite) TestIssueLCID() {
 			Lcid: nil,
 
 			// required fields
-			SystemIntakeID: newIntake.ID,
-			ExpiresAt:      time.Now().AddDate(2, 0, 0),
-			Scope:          "test scope",
-			NextSteps:      "test next steps",
-			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			SystemIntakeID:  newIntake.ID,
+			ExpiresAt:       time.Now().AddDate(2, 0, 0),
+			Scope:           "test scope",
+			NextSteps:       "test next steps",
+			TrbFollowUp:     models.TRBFRStronglyRecommended,
+			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+			LcidIsLowIt:     true,
+			LcidIsShortened: false,
 		}
 
 		updatedIntake, err := IssueLCID(
@@ -409,11 +417,15 @@ func (s *ResolverSuite) TestIssueLCID() {
 		additionalInfo := models.HTML("test additional info for issuing LCID")
 		input := models.SystemIntakeIssueLCIDInput{
 			// required fields
-			SystemIntakeID: newIntake.ID,
-			ExpiresAt:      time.Now().AddDate(2, 0, 0),
-			Scope:          "test scope",
-			NextSteps:      "test next steps after issuing LCID",
-			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			SystemIntakeID:  newIntake.ID,
+			ExpiresAt:       time.Now().AddDate(2, 0, 0),
+			Scope:           "test scope",
+			NextSteps:       "test next steps after issuing LCID",
+			TrbFollowUp:     models.TRBFRStronglyRecommended,
+			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+			LcidIsLowIt:     true,
+			LcidIsShortened: false,
 
 			// optional fields
 			CostBaseline:   &costBaseline,
@@ -464,6 +476,12 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(models.ActionTypeISSUELCID, action.ActionType)
 		s.EqualValues(additionalInfo, *action.Feedback)
 		s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
+		s.Nil(action.LCIDTypeChangePreviousValue)
+		s.EqualValues(input.LcidType, *action.LCIDTypeChangeNewValue)
+		s.Nil(action.LCIDIsLowITChangePreviousValue)
+		s.EqualValues(input.LcidIsLowIt, *action.LCIDIsLowITChangeNewValue)
+		s.Nil(action.LCIDIsShortenedChangePreviousValue)
+		s.EqualValues(input.LcidIsShortened, *action.LCIDIsShortenedChangeNewValue)
 
 		// should create admin note (since input included it)
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
@@ -1057,11 +1075,22 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		})
 		s.NoError(err)
 		intakeWLCID.LifecycleID = null.StringFrom("123456")
+		lcidType := models.LCIDTypeNewSystem
+		lcidComponent := models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit
+		lcidIsLowIT := true
+		lcidIsShortened := false
+		intakeWLCID.LCIDType = &lcidType
+		intakeWLCID.LCIDComponent = &lcidComponent
+		intakeWLCID.LCIDIsLowIT = &lcidIsLowIT
+		intakeWLCID.LCIDIsShortened = &lcidIsShortened
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intakeWLCID)
 		s.NoError(err)
 		scope := models.HTMLPointer("A really great new scope")
 		additionalInfo := models.HTMLPointer("My test info")
 		costBaseline := "the original costBaseline"
+		updatedLCIDType := models.LCIDTypeRecompete
+		updatedLCIDComponent := models.SystemIntakeContactComponentCenterForMedicareCm
+		updatedIsShortened := true
 
 		updatedIntakeLCID, err := UpdateLCID(
 			s.testConfigs.Context,
@@ -1069,14 +1098,21 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			models.SystemIntakeUpdateLCIDInput{
-				SystemIntakeID: intakeWLCID.ID,
-				Scope:          scope,
-				AdditionalInfo: additionalInfo,
-				CostBaseline:   &costBaseline,
+				SystemIntakeID:  intakeWLCID.ID,
+				Scope:           scope,
+				AdditionalInfo:  additionalInfo,
+				CostBaseline:    &costBaseline,
+				LcidType:        &updatedLCIDType,
+				LcidComponent:   &updatedLCIDComponent,
+				LcidIsShortened: &updatedIsShortened,
 			})
 		s.NoError(err)
 		s.EqualValues(scope, updatedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), updatedIntakeLCID.LifecycleCostBaseline)
+		s.EqualValues(updatedLCIDType, *updatedIntakeLCID.LCIDType)
+		s.EqualValues(updatedLCIDComponent, *updatedIntakeLCID.LCIDComponent)
+		s.EqualValues(updatedIsShortened, *updatedIntakeLCID.LCIDIsShortened)
+		s.EqualValues(lcidIsLowIT, *updatedIntakeLCID.LCIDIsLowIT)
 
 		// assert acion is created
 		allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
@@ -1086,6 +1122,14 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		s.EqualValues(updatedIntakeLCID.ID, *action.IntakeID)
 		s.EqualValues(models.ActionTypeUPDATELCID, action.ActionType)
 		s.EqualValues(additionalInfo, action.Feedback)
+		s.EqualValues(lcidType, *action.LCIDTypeChangePreviousValue)
+		s.EqualValues(updatedLCIDType, *action.LCIDTypeChangeNewValue)
+		s.EqualValues(lcidComponent, *action.LCIDComponentChangePreviousValue)
+		s.EqualValues(updatedLCIDComponent, *action.LCIDComponentChangeNewValue)
+		s.EqualValues(lcidIsShortened, *action.LCIDIsShortenedChangePreviousValue)
+		s.EqualValues(updatedIsShortened, *action.LCIDIsShortenedChangeNewValue)
+		s.EqualValues(lcidIsLowIT, *action.LCIDIsLowITChangePreviousValue)
+		s.EqualValues(lcidIsLowIT, *action.LCIDIsLowITChangeNewValue)
 
 		//assert there is not an admin note since not included
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntakeLCID.ID)
@@ -1176,17 +1220,22 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			models.SystemIntakeConfirmLCIDInput{
-				SystemIntakeID: intakeWLCID.ID,
-				ExpiresAt:      expiresAt,
-				Scope:          scope,
-				NextSteps:      nextSteps,
-				TrbFollowUp:    trbFollowUp,
-				AdditionalInfo: additionalInfo,
-				CostBaseline:   &costBaseline,
+				SystemIntakeID:  intakeWLCID.ID,
+				ExpiresAt:       expiresAt,
+				Scope:           scope,
+				NextSteps:       nextSteps,
+				TrbFollowUp:     trbFollowUp,
+				LcidType:        models.LCIDTypeNewSystem,
+				LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+				LcidIsLowIt:     true,
+				LcidIsShortened: false,
+				AdditionalInfo:  additionalInfo,
+				CostBaseline:    &costBaseline,
 			})
 		s.NoError(err)
 		s.EqualValues(&scope, confirmedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), confirmedIntakeLCID.LifecycleCostBaseline)
+		s.EqualValues(models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit, *confirmedIntakeLCID.LCIDComponent)
 		s.Nil(confirmedIntakeLCID.LifecycleExpirationAlertTS)
 
 		// assert action is created
@@ -1197,6 +1246,14 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.EqualValues(confirmedIntakeLCID.ID, *action.IntakeID)
 		s.EqualValues(models.ActionTypeCONFIRMLCID, action.ActionType)
 		s.EqualValues(additionalInfo, action.Feedback)
+		s.Nil(action.LCIDTypeChangePreviousValue)
+		s.EqualValues(models.LCIDTypeNewSystem, *action.LCIDTypeChangeNewValue)
+		s.Nil(action.LCIDComponentChangePreviousValue)
+		s.EqualValues(models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit, *action.LCIDComponentChangeNewValue)
+		s.Nil(action.LCIDIsLowITChangePreviousValue)
+		s.EqualValues(true, *action.LCIDIsLowITChangeNewValue)
+		s.Nil(action.LCIDIsShortenedChangePreviousValue)
+		s.EqualValues(false, *action.LCIDIsShortenedChangeNewValue)
 
 		//assert there is not an admin note since not included
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, confirmedIntakeLCID.ID)
@@ -1223,13 +1280,17 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
 				models.SystemIntakeConfirmLCIDInput{
-					SystemIntakeID: confirmedIntakeLCID.ID,
-					ExpiresAt:      expiresAt,
-					Scope:          confirmedScope,
-					NextSteps:      nextSteps,
-					TrbFollowUp:    trbFollowUp,
-					AdditionalInfo: additionalInfoconfirm,
-					AdminNote:      &adminNote,
+					SystemIntakeID:  confirmedIntakeLCID.ID,
+					ExpiresAt:       expiresAt,
+					Scope:           confirmedScope,
+					NextSteps:       nextSteps,
+					TrbFollowUp:     trbFollowUp,
+					LcidType:        models.LCIDTypeNewSystem,
+					LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+					LcidIsLowIt:     true,
+					LcidIsShortened: false,
+					AdditionalInfo:  additionalInfoconfirm,
+					AdminNote:       &adminNote,
 				})
 			s.NoError(err)
 			s.EqualValues(&confirmedScope, secondconfirmIntake.LifecycleScope)
@@ -1262,11 +1323,15 @@ func (s *ResolverSuite) TestExpireLCID() {
 		newIntake := s.createNewIntake()
 		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
-			SystemIntakeID: newIntake.ID,
-			ExpiresAt:      currentTime.AddDate(2, 0, 0),
-			Scope:          "test scope",
-			NextSteps:      "test next steps after issuing LCID, before expiring",
-			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			SystemIntakeID:  newIntake.ID,
+			ExpiresAt:       currentTime.AddDate(2, 0, 0),
+			Scope:           "test scope",
+			NextSteps:       "test next steps after issuing LCID, before expiring",
+			TrbFollowUp:     models.TRBFRStronglyRecommended,
+			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+			LcidIsLowIt:     true,
+			LcidIsShortened: false,
 		}
 		updatedIntake, err := IssueLCID(
 			s.testConfigs.Context,
@@ -1339,11 +1404,15 @@ func (s *ResolverSuite) TestRetireLCID() {
 		newIntake := s.createNewIntake()
 		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
-			SystemIntakeID: newIntake.ID,
-			ExpiresAt:      currentTime.AddDate(2, 0, 0),
-			Scope:          "test scope",
-			NextSteps:      "test next steps after issuing LCID, before expiring",
-			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			SystemIntakeID:  newIntake.ID,
+			ExpiresAt:       currentTime.AddDate(2, 0, 0),
+			Scope:           "test scope",
+			NextSteps:       "test next steps after issuing LCID, before expiring",
+			TrbFollowUp:     models.TRBFRStronglyRecommended,
+			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+			LcidIsLowIt:     true,
+			LcidIsShortened: false,
 		}
 		updatedIntake, err := IssueLCID(
 			s.testConfigs.Context,
@@ -1412,11 +1481,15 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 		newIntake := s.createNewIntake()
 		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
-			SystemIntakeID: newIntake.ID,
-			ExpiresAt:      expirationDate,
-			Scope:          "test scope",
-			NextSteps:      "test next steps after issuing LCID, before retiring",
-			TrbFollowUp:    models.TRBFRStronglyRecommended,
+			SystemIntakeID:  newIntake.ID,
+			ExpiresAt:       expirationDate,
+			Scope:           "test scope",
+			NextSteps:       "test next steps after issuing LCID, before retiring",
+			TrbFollowUp:     models.TRBFRStronglyRecommended,
+			LcidType:        models.LCIDTypeNewSystem,
+			LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+			LcidIsLowIt:     true,
+			LcidIsShortened: false,
 		}
 		intakeWithLCID, err := IssueLCID(
 			s.testConfigs.Context,

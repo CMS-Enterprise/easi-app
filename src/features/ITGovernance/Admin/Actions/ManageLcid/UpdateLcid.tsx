@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,6 +20,7 @@ import { NonNullableProps } from 'types/util';
 import { updateLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import LcidMetadataFields from '../components/LcidMetadataFields';
 
 import LcidSummary, { LcidSummaryProps } from './LcidSummary';
 import LcidTitleBox from './LcidTitleBox';
@@ -29,6 +30,40 @@ import { ManageLcidProps } from '.';
 type UpdateLcidFields = NonNullableProps<
   Omit<SystemIntakeUpdateLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
+
+type LcidFieldKey = keyof Pick<
+  SystemIntakeUpdateLCIDInput,
+  | 'expiresAt'
+  | 'scope'
+  | 'nextSteps'
+  | 'costBaseline'
+  | 'lcidType'
+  | 'lcidComponent'
+  | 'lcidIsLowIt'
+  | 'lcidIsShortened'
+>;
+
+const lcidFieldKeys = [
+  'expiresAt',
+  'scope',
+  'nextSteps',
+  'costBaseline',
+  'lcidType',
+  'lcidComponent',
+  'lcidIsLowIt',
+  'lcidIsShortened'
+] as const satisfies readonly LcidFieldKey[];
+
+const normalizeLcidFieldValue = (field: LcidFieldKey, value: unknown) => {
+  if (field === 'expiresAt' && value) {
+    const date = new Date(value as string | Date);
+    return Number.isNaN(date.getTime())
+      ? value
+      : date.toISOString().slice(0, 10);
+  }
+
+  return value ?? undefined;
+};
 
 type UpdateLcidProps = ManageLcidProps & LcidSummaryProps;
 
@@ -40,7 +75,17 @@ const UpdateLcid = ({
 }: UpdateLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<UpdateLcidFields>({
-    resolver: yupResolver(updateLcidSchema)
+    resolver: yupResolver(updateLcidSchema),
+    defaultValues: {
+      expiresAt: defaultValues.lcidExpiresAt || undefined,
+      scope: defaultValues.lcidScope || undefined,
+      nextSteps: defaultValues.decisionNextSteps || undefined,
+      costBaseline: defaultValues.lcidCostBaseline || undefined,
+      lcidType: defaultValues.lcidType || undefined,
+      lcidComponent: defaultValues.lcidComponent || undefined,
+      lcidIsLowIt: defaultValues.lcidIsLowIt ?? undefined,
+      lcidIsShortened: defaultValues.lcidIsShortened ?? undefined
+    }
   });
 
   const [updateLcid] = useCreateSystemIntakeActionUpdateLCIDMutation({
@@ -49,27 +94,67 @@ const UpdateLcid = ({
 
   const {
     control,
-    watch,
-    formState: { errors }
+    formState: { dirtyFields, errors }
   } = form;
 
-  /** Array of LCID field values */
-  const lcidFields = watch(['expiresAt', 'scope', 'nextSteps', 'costBaseline']);
+  const initialLcidValues: Partial<
+    Pick<SystemIntakeUpdateLCIDInput, LcidFieldKey>
+  > = {
+    expiresAt: defaultValues.lcidExpiresAt || undefined,
+    scope: defaultValues.lcidScope || undefined,
+    nextSteps: defaultValues.decisionNextSteps || undefined,
+    costBaseline: defaultValues.lcidCostBaseline || undefined,
+    lcidType: defaultValues.lcidType || undefined,
+    lcidComponent: defaultValues.lcidComponent || undefined,
+    lcidIsLowIt: defaultValues.lcidIsLowIt ?? undefined,
+    lcidIsShortened: defaultValues.lcidIsShortened ?? undefined
+  };
 
-  /** Whether or not at least one LCID field is filled out */
-  const formIsValid: boolean = useMemo(() => {
-    return lcidFields.filter(value => !!value).length > 0;
-  }, [lcidFields]);
+  const lcidFieldHasChanged = (
+    field: LcidFieldKey,
+    value: UpdateLcidFields[LcidFieldKey]
+  ) => {
+    return (
+      normalizeLcidFieldValue(field, value) !==
+      normalizeLcidFieldValue(field, initialLcidValues[field])
+    );
+  };
+
+  const hasLcidChanges = lcidFieldKeys.some(field => {
+    const value = form.getValues(field);
+
+    return (
+      dirtyFields[field] &&
+      value !== undefined &&
+      lcidFieldHasChanged(field, value)
+    );
+  });
 
   /** Update LCID mutation on form submit */
   const onSubmit = async (formData: UpdateLcidFields) => {
-    // Check if at least one LCID field has been filled
-    if (formIsValid) {
+    // Check if at least one LCID field has changed
+    if (hasLcidChanges) {
+      const dirtyLcidInput: Partial<SystemIntakeUpdateLCIDInput> = {};
+
+      lcidFieldKeys.forEach(field => {
+        if (
+          dirtyFields[field] &&
+          formData[field] !== undefined &&
+          lcidFieldHasChanged(field, formData[field])
+        ) {
+          Object.assign(dirtyLcidInput, { [field]: formData[field] });
+        }
+      });
+
       return updateLcid({
         variables: {
           input: {
             systemIntakeID: systemIntakeId,
-            ...formData
+            reason: formData.reason,
+            additionalInfo: formData.additionalInfo,
+            adminNote: formData.adminNote,
+            notificationRecipients: formData.notificationRecipients,
+            ...dirtyLcidInput
           }
         }
       });
@@ -85,6 +170,7 @@ const UpdateLcid = ({
         successMessage={t('updateLcid.success', { lcid })}
         onSubmit={onSubmit}
         requiredFields={false}
+        disableSubmit={!hasLcidChanges}
         title={
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
@@ -92,6 +178,7 @@ const UpdateLcid = ({
           >
             <LcidSummary
               lcid={lcid}
+              lcidDisplay={defaultValues?.lcidDisplay}
               lcidStatus={lcidStatus}
               lcidIssuedAt={defaultValues?.lcidIssuedAt || ''}
               lcidExpiresAt={defaultValues?.lcidExpiresAt || ''}
@@ -99,6 +186,10 @@ const UpdateLcid = ({
               lcidScope={defaultValues?.lcidScope}
               decisionNextSteps={defaultValues?.decisionNextSteps}
               lcidCostBaseline={defaultValues?.lcidCostBaseline}
+              lcidType={defaultValues?.lcidType}
+              lcidComponent={defaultValues?.lcidComponent}
+              lcidIsLowIt={defaultValues?.lcidIsLowIt}
+              lcidIsShortened={defaultValues?.lcidIsShortened}
               className="margin-top-3 margin-bottom-6"
             />
           </LcidTitleBox>
@@ -118,6 +209,8 @@ const UpdateLcid = ({
             </Alert>
           )
         }
+
+        <LcidMetadataFields control={control} />
 
         <Controller
           name="expiresAt"

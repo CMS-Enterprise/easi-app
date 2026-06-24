@@ -10,6 +10,7 @@ export type DecisionProps = {
   decisionNextSteps?: string | null;
   decisionState: SystemIntakeDecisionState;
   lcid?: string | null;
+  lcidDisplay?: string | null;
   lcidCostBaseline?: string | null;
   lcidExpiresAt?: string | null;
   lcidIssuedAt?: string | null;

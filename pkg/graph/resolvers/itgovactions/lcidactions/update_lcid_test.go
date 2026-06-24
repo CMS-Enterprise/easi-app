@@ -17,6 +17,13 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	expirationDate := time.Now() //same for both
 	nextSteps := models.HTML("<strong> My Next Steps! </strong>")
 	newScope := models.HTML("Scope Scope Scope")
+	previousLCIDType := models.LCIDTypeNewSystem
+	previousLCIDComponent := models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit
+	previousIsShortened := false
+	previousIsLowIT := true
+	newLCIDType := models.LCIDTypeRecompete
+	newLCIDComponent := models.SystemIntakeContactComponentCenterForMedicareCm
+	newIsShortened := true
 	userInfo := models.UserInfo{
 		DisplayName: "tester",
 		Email:       "test@email.email",
@@ -26,8 +33,12 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 		LifecycleID:           lcid,
 		LifecycleCostBaseline: oldCostBaseline,
 		LifecycleExpiresAt:    &expirationDate,
+		LCIDType:              &previousLCIDType,
+		LCIDComponent:         &previousLCIDComponent,
+		LCIDIsShortened:       &previousIsShortened,
+		LCIDIsLowIT:           &previousIsLowIT,
 	}
-	action := GetUpdateLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, userInfo)
+	action := GetUpdateLCIDAction(intake, &expirationDate, &nextSteps, &newScope, &newCostBaseline, &newLCIDType, &newLCIDComponent, &newIsShortened, nil, userInfo)
 	assert.EqualValues(t, oldCostBaseline, action.LCIDExpirationChangePreviousCostBaseline)
 	assert.EqualValues(t, null.StringFrom(newCostBaseline), action.LCIDExpirationChangeNewCostBaseline)
 
@@ -38,6 +49,14 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	assert.EqualValues(t, &newScope, action.LCIDExpirationChangeNewScope)
 
 	assert.EqualValues(t, models.ActionTypeUPDATELCID, action.ActionType)
+	assert.EqualValues(t, &previousLCIDType, action.LCIDTypeChangePreviousValue)
+	assert.EqualValues(t, &newLCIDType, action.LCIDTypeChangeNewValue)
+	assert.EqualValues(t, &previousLCIDComponent, action.LCIDComponentChangePreviousValue)
+	assert.EqualValues(t, &newLCIDComponent, action.LCIDComponentChangeNewValue)
+	assert.EqualValues(t, &previousIsShortened, action.LCIDIsShortenedChangePreviousValue)
+	assert.EqualValues(t, &newIsShortened, action.LCIDIsShortenedChangeNewValue)
+	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangePreviousValue)
+	assert.EqualValues(t, &previousIsLowIT, action.LCIDIsLowITChangeNewValue)
 
 }
 
