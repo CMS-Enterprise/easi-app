@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -64,10 +65,13 @@ func countIgnoredErrors(errorList gqlerror.List) int {
 				numIgnored++
 			}
 
-			// Ignore "input: no operation provided" errors
-			if err.Message == "input: no operation provided" {
-				numIgnored++
+			if err.Extensions["code"] == "GRAPHQL_VALIDATION_FAILED" {
+				// Ignore "input: no operation provided" errors
+				if strings.Contains(err.Message, "no operation provided") {
+					numIgnored++
+				}
 			}
+
 		}
 	}
 	return numIgnored
