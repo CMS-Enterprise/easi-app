@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -65,7 +66,7 @@ func countIgnoredErrors(errorList gqlerror.List) int {
 			}
 
 			// Ignore "input: no operation provided" errors
-			if err.Message == "input: no operation provided" {
+			if strings.Contains(err.Message, "no operation provided") {
 				numIgnored++
 			}
 		}
