@@ -65,10 +65,13 @@ func countIgnoredErrors(errorList gqlerror.List) int {
 				numIgnored++
 			}
 
-			// Ignore "input: no operation provided" errors
-			if strings.Contains(err.Message, "no operation provided") {
-				numIgnored++
+			if err.Extensions["code"] == "GRAPHQL_VALIDATION_FAILED" {
+				// Ignore "input: no operation provided" errors
+				if strings.Contains(err.Message, "no operation provided") {
+					numIgnored++
+				}
 			}
+
 		}
 	}
 	return numIgnored
