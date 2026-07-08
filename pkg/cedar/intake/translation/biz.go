@@ -36,12 +36,12 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
 		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
-		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
-		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
-		Status:                 string(bc.Status),
-		CollaborationNeeded:    bc.CollaborationNeeded.Ptr(),
-		ProjectAcronym:         bc.ProjectAcronym.Ptr(),
-		ResponseToGRTFeedback:  bc.ResponseToGRTFeedback.Ptr(),
+		// PriorityAlignment:      bc.PriorityAlignment.Ptr(), TODO: need to move this to the system intake object
+		SuccessIndicators:     bc.SuccessIndicators.Ptr(),
+		Status:                string(bc.Status),
+		CollaborationNeeded:   bc.CollaborationNeeded.Ptr(),
+		ProjectAcronym:        bc.ProjectAcronym.Ptr(),
+		ResponseToGRTFeedback: bc.ResponseToGRTFeedback.Ptr(),
 
 		ArchivedAt: pStr(strDateTime(bc.ArchivedAt)),
 
