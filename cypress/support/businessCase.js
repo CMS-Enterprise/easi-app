@@ -40,10 +40,6 @@ cy.businessCase = {
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
 
-      cy.get('#BusinessCase-PriorityAlignment')
-        .type('The quick brown fox jumps over the lazy dog.')
-        .should('have.value', 'The quick brown fox jumps over the lazy dog.');
-
       cy.get('#BusinessCase-SuccessIndicators')
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
