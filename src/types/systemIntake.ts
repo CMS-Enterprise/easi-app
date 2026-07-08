@@ -49,6 +49,7 @@ export type SystemIntakeForm = {
   };
   businessNeed: string;
   businessSolution: string;
+  priorityAlignment: string;
   currentStage: string;
   needsEaSupport: boolean | null;
   digitalServiceInteraction: YesNoNotSure | null;

@@ -22,6 +22,7 @@ RETURNING
     funding_source,
     business_need,
     solution,
+    priority_alignment,
     process_status,
     ea_support_request,
     existing_contract,

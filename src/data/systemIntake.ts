@@ -59,6 +59,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   businessNeed: '',
   businessSolution: '',
+  priorityAlignment: '',
   currentStage: '',
   needsEaSupport: null,
   digitalServiceInteraction: null,

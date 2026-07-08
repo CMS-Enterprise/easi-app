@@ -113,6 +113,7 @@ type SystemIntake struct {
 	ProjectAcronym                                    null.String                   `json:"projectAcronym" db:"project_acronym"`
 	BusinessNeed                                      null.String                   `json:"businessNeed" db:"business_need"`
 	Solution                                          null.String                   `json:"solution"`
+	PriorityAlignment                                 null.String                   `json:"priorityAlignment" db:"priority_alignment"`
 	ProcessStatus                                     null.String                   `json:"processStatus" db:"process_status"`
 	EASupportRequest                                  null.Bool                     `json:"eaSupportRequest" db:"ea_support_request"`
 	ExistingContract                                  null.String                   `json:"existingContract" db:"existing_contract"`

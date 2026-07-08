@@ -55,15 +55,6 @@ const RequestDescriptionReview = ({
       </ReviewRow>
       <ReviewRow className="margin-bottom-3">
         <div className="line-height-body-3">
-          <DescriptionTerm term="How does this effort align with organizational priorities?" />
-          <DescriptionDefinition
-            className="text-pre-wrap"
-            definition={values.priorityAlignment}
-          />
-        </div>
-      </ReviewRow>
-      <ReviewRow className="margin-bottom-3">
-        <div className="line-height-body-3">
           <DescriptionTerm term="How will you determine whether or not this effort is successful?" />
           <DescriptionDefinition
             className="text-pre-wrap"

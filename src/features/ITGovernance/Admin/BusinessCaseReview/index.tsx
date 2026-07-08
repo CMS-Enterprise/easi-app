@@ -73,7 +73,6 @@ const BusinessCaseReview = ({
             cmsBenefit: businessCase.cmsBenefit,
             collaborationNeeded: businessCase.collaborationNeeded,
             currentSolutionSummary: businessCase.currentSolutionSummary,
-            priorityAlignment: businessCase.priorityAlignment,
             successIndicators: businessCase.successIndicators,
             responseToGRTFeedback: businessCase.responseToGRTFeedback
           }}

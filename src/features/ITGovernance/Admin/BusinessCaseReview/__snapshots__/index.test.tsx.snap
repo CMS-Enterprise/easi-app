@@ -217,24 +217,6 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
-              How does this effort align with organizational priorities?
-            </dt>
-            <dd
-              class="description-definition margin-0 text-pre-wrap"
-            >
-              Mock priority alignment
-            </dd>
-          </div>
-        </div>
-        <div
-          class="easi-review-row margin-bottom-3"
-        >
-          <div
-            class="line-height-body-3"
-          >
-            <dt
-              class="text-bold margin-bottom-05"
-            >
               How will you determine whether or not this effort is successful?
             </dt>
             <dd

@@ -85,6 +85,7 @@ export default gql(/* GraphQL */ `
 
       businessNeed
       businessSolution
+      priorityAlignment
       currentStage
       needsEaSupport
       grtDate

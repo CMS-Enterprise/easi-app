@@ -161,11 +161,6 @@ export const BusinessCaseFinalValidationSchema = {
     cmsBenefit: Yup.string()
       .trim()
       .required('Tell us how CMS will benefit from this effort'),
-    priorityAlignment: Yup.string()
-      .trim()
-      .required(
-        'Tell us how this effort aligns with organizational priorities'
-      ),
     successIndicators: Yup.string()
       .trim()
       .required(

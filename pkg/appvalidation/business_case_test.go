@@ -292,7 +292,6 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"PreferredPros":"is required",` +
 			`"PreferredSummary":"is required",` +
 			`"PreferredTitle":"is required",` +
-			`"PriorityAlignment":"is required",` +
 			`"ProjectName":"is required",` +
 			`"Requester":"is required",` +
 			`"RequesterPhoneNumber":"is required",` +

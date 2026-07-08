@@ -6,6 +6,7 @@ export default gql(/* GraphQL */ `
     adminLead
     businessNeed
     businessSolution
+    priorityAlignment
     businessOwner {
       component
       name

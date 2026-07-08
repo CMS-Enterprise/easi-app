@@ -515,7 +515,6 @@ type BusinessCase {
   id: UUID!
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
-  priorityAlignment: String
   projectAcronym: String
   projectName: String
   requester: String
@@ -700,6 +699,7 @@ type SystemIntake {
   businessNeed: String
   businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
+  priorityAlignment: String
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
@@ -1051,6 +1051,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   projectAcronym: String
   businessNeed: String
   businessSolution: String
+  priorityAlignment: String
   currentStage: String
   needsEaSupport: Boolean
   digitalServiceInteraction: YesNoNotSure

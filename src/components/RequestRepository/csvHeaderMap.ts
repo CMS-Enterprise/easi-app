@@ -74,6 +74,10 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.businessSolution')
   },
   {
+    key: 'priorityAlignment',
+    label: t('intake:csvHeadings.priorityAlignment')
+  },
+  {
     key: 'currentStage',
     label: t('intake:csvHeadings.currentStage')
   },
