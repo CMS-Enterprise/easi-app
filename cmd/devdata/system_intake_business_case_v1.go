@@ -19,7 +19,6 @@ func makeFinalBusinessCaseV1(ctx context.Context, name string, store *storage.St
 	return makeBusinessCaseV1(ctx, name, store, intake, func(b *models.BusinessCaseWithCosts) {
 		b.CurrentSolutionSummary = null.StringFrom("It's gonna cost a lot")
 		b.CMSBenefit = null.StringFrom("Better Medicare")
-		b.PriorityAlignment = null.StringFrom("It's all gonna make sense later")
 		b.SuccessIndicators = null.StringFrom("First, we see progress, then success.")
 		b.PreferredTitle = null.StringFrom("Preferred Solution")
 		b.PreferredSummary = null.StringFrom("This is a summary")
@@ -101,7 +100,6 @@ func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, 
 		BusinessNeed:           null.StringFrom("business need"),
 		CurrentSolutionSummary: null.StringFrom(""),
 		CMSBenefit:             null.StringFrom(""),
-		PriorityAlignment:      null.StringFrom(""),
 		SuccessIndicators:      null.StringFrom(""),
 
 		AlternativeATitle:       null.StringFrom(""),
