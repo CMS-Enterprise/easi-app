@@ -114,7 +114,6 @@ export const businessCaseInitialData: BusinessCaseModel = {
   collaborationNeeded: '',
   currentSolutionSummary: '',
   cmsBenefit: '',
-  priorityAlignment: '',
   successIndicators: '',
   responseToGRTFeedback: '',
   // proposedSolutions: [cloneDeep(defaultProposedSolution)],
@@ -250,7 +249,6 @@ export const prepareBusinessCaseForApp = (
     collaborationNeeded: businessCase.collaborationNeeded || '',
     currentSolutionSummary: businessCase.currentSolutionSummary || '',
     cmsBenefit: businessCase.cmsBenefit || '',
-    priorityAlignment: businessCase.priorityAlignment || '',
     successIndicators: businessCase.successIndicators || '',
     responseToGRTFeedback: businessCase.responseToGRTFeedback || '',
     // proposedSolutions: [],
@@ -425,7 +423,6 @@ export const prepareBusinessCaseForApi = (
     collaborationNeeded: businessCase.collaborationNeeded || null,
     currentSolutionSummary: businessCase.currentSolutionSummary || null,
     cmsBenefit: businessCase.cmsBenefit || null,
-    priorityAlignment: businessCase.priorityAlignment || null,
     successIndicators: businessCase.successIndicators || null,
     responseToGRTFeedback: businessCase.responseToGRTFeedback || null,
 

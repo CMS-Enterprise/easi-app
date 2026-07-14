@@ -40,6 +40,7 @@ func NewSystemIntake() models.SystemIntake {
 		},
 		BusinessNeed:       null.StringFrom("Test Business Need"),
 		Solution:           null.StringFrom("Test Solution"),
+		PriorityAlignment:  null.StringFrom("Test Priority Alignment"),
 		ProcessStatus:      null.StringFrom("Just an idea"),
 		EASupportRequest:   null.BoolFrom(false),
 		ExistingContract:   null.StringFrom("NOT_NEEDED"),

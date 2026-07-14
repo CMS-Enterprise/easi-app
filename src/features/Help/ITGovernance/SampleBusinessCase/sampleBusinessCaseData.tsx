@@ -22,8 +22,6 @@ const sampleBusinessCaseData: BusinessCaseModel = {
     'Currently ICPG has a manual process to track the number of widgets used in the IT capital planning process. This requires a team of five people to count, identify, and invoice for the widgets, taking approximately 30 hours per person, per week. When the FORM Act doubles our workload, 150 new FTE hours per week will be needed, necessitating four new FTEs.',
   cmsBenefit:
     'The IT capital planning process is the agency’s means of ensuring that our IT investments are a wise use of CMS resources, meeting business needs at acceptable costs and without duplication. The capital planning process relies on widgets as an input to the process in order to inform decision makers. Due to our manual processes, there is a widget tracking backlog, meaning CMS decision makers do not have the information that they need to make capital planning decisions. Meeting this business need will allow CMS to make better decisions and manage our IT portfolio more cost effectively, saving the agency money.',
-  priorityAlignment:
-    'This effort aligns with the Agency modernization initiative and also supports FITARA and Form Act implementation.',
   successIndicators:
     'With our preferred solution, we expect that the number of FTE hours required to track widgets will decrease our current workload by 75%. Even with the FORM Act doubling our workload, this would still equate to a total FTE hour reduction of 50%, if the process is fully automated.',
   responseToGRTFeedback: '',

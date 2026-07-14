@@ -49,7 +49,6 @@ export type RequestDescriptionForm = {
   collaborationNeeded: string;
   currentSolutionSummary: string;
   cmsBenefit: string;
-  priorityAlignment: string;
   successIndicators: string;
   responseToGRTFeedback: string;
 };

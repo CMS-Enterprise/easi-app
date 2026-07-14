@@ -1014,6 +1014,7 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	ProjectAcronym                             *string                                  `json:"projectAcronym,omitempty"`
 	BusinessNeed                               *string                                  `json:"businessNeed,omitempty"`
 	BusinessSolution                           *string                                  `json:"businessSolution,omitempty"`
+	PriorityAlignment                          *string                                  `json:"priorityAlignment,omitempty"`
 	CurrentStage                               *string                                  `json:"currentStage,omitempty"`
 	NeedsEaSupport                             *bool                                    `json:"needsEaSupport,omitempty"`
 	DigitalServiceInteraction                  *YesNoNotSure                            `json:"digitalServiceInteraction,omitempty"`

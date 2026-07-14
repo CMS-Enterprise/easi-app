@@ -54,6 +54,12 @@ describe('System intake form - Request details', () => {
     ).toBeInTheDocument();
 
     expect(
+      within(errorSummary).getByText(
+        'Tell us how this effort aligns with organizational priorities'
+      )
+    ).toBeInTheDocument();
+
+    expect(
       within(errorSummary).getByText('Tell us where you are in the process')
     ).toBeInTheDocument();
 

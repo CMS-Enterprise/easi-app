@@ -98,7 +98,6 @@ type ComplexityRoot struct {
 		ID                     func(childComplexity int) int
 		LifecycleCostLines     func(childComplexity int) int
 		PreferredSolution      func(childComplexity int) int
-		PriorityAlignment      func(childComplexity int) int
 		ProjectAcronym         func(childComplexity int) int
 		ProjectName            func(childComplexity int) int
 		Requester              func(childComplexity int) int
@@ -824,6 +823,7 @@ type ComplexityRoot struct {
 		Notes                                             func(childComplexity int) int
 		OITSecurityCollaborator                           func(childComplexity int) int
 		OITSecurityCollaboratorName                       func(childComplexity int) int
+		PriorityAlignment                                 func(childComplexity int) int
 		ProductManager                                    func(childComplexity int) int
 		ProjectAcronym                                    func(childComplexity int) int
 		ProtectedCmsDataAccessedOutside                   func(childComplexity int) int
@@ -1533,6 +1533,7 @@ type SystemIntakeResolver interface {
 
 	BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeBusinessOwner, error)
 	BusinessSolution(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
 	Contract(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContract, error)
 	Costs(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeCosts, error)
 	AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeAnnualSpending, error)
@@ -1813,12 +1814,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.BusinessCase.PreferredSolution(childComplexity), true
-	case "BusinessCase.priorityAlignment":
-		if e.complexity.BusinessCase.PriorityAlignment == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.PriorityAlignment(childComplexity), true
 	case "BusinessCase.projectAcronym":
 		if e.complexity.BusinessCase.ProjectAcronym == nil {
 			break
@@ -5996,6 +5991,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.OITSecurityCollaboratorName(childComplexity), true
+	case "SystemIntake.priorityAlignment":
+		if e.complexity.SystemIntake.PriorityAlignment == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.PriorityAlignment(childComplexity), true
 	case "SystemIntake.productManager":
 		if e.complexity.SystemIntake.ProductManager == nil {
 			break
@@ -8935,7 +8936,6 @@ type BusinessCase {
   id: UUID!
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
-  priorityAlignment: String
   projectAcronym: String
   projectName: String
   requester: String
@@ -9120,6 +9120,7 @@ type SystemIntake {
   businessNeed: String
   businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
+  priorityAlignment: String
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
@@ -9471,6 +9472,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   projectAcronym: String
   businessNeed: String
   businessSolution: String
+  priorityAlignment: String
   currentStage: String
   needsEaSupport: Boolean
   digitalServiceInteraction: YesNoNotSure
@@ -14395,35 +14397,6 @@ func (ec *executionContext) fieldContext_BusinessCase_preferredSolution(_ contex
 	return fc, nil
 }
 
-func (ec *executionContext) _BusinessCase_priorityAlignment(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	return graphql.ResolveField(
-		ctx,
-		ec.OperationContext,
-		field,
-		ec.fieldContext_BusinessCase_priorityAlignment,
-		func(ctx context.Context) (any, error) {
-			return obj.PriorityAlignment, nil
-		},
-		nil,
-		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
-		true,
-		false,
-	)
-}
-
-func (ec *executionContext) fieldContext_BusinessCase_priorityAlignment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _BusinessCase_projectAcronym(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -14665,6 +14638,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -21291,6 +21266,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -23780,6 +23757,8 @@ func (ec *executionContext) fieldContext_CedarSystemWorkspaceSystem_linkedSystem
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -27309,6 +27288,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -27576,6 +27557,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -29769,6 +29752,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -33537,6 +33522,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -33786,6 +33773,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -34034,6 +34023,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -34271,6 +34262,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -34508,6 +34501,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -37617,8 +37612,6 @@ func (ec *executionContext) fieldContext_SystemIntake_businessCase(_ context.Con
 				return ec.fieldContext_BusinessCase_lifecycleCostLines(ctx, field)
 			case "preferredSolution":
 				return ec.fieldContext_BusinessCase_preferredSolution(ctx, field)
-			case "priorityAlignment":
-				return ec.fieldContext_BusinessCase_priorityAlignment(ctx, field)
 			case "projectAcronym":
 				return ec.fieldContext_BusinessCase_projectAcronym(ctx, field)
 			case "projectName":
@@ -37730,6 +37723,35 @@ func (ec *executionContext) fieldContext_SystemIntake_businessSolution(_ context
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_priorityAlignment(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SystemIntake_priorityAlignment,
+		func(ctx context.Context) (any, error) {
+			return obj.PriorityAlignment, nil
+		},
+		nil,
+		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_priorityAlignment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -40386,6 +40408,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -41190,6 +41214,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -49129,6 +49155,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -51218,6 +51246,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -51832,6 +51862,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
 			case "businessSolution":
 				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "priorityAlignment":
+				return ec.fieldContext_SystemIntake_priorityAlignment(ctx, field)
 			case "contract":
 				return ec.fieldContext_SystemIntake_contract(ctx, field)
 			case "costs":
@@ -57448,7 +57480,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "digitalServiceInteraction", "digitalServiceInteractionDescription", "protectedCmsDataAccessedOutside", "protectedCmsDataAccessedOutsideDescription", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
+	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "priorityAlignment", "currentStage", "needsEaSupport", "digitalServiceInteraction", "digitalServiceInteractionDescription", "protectedCmsDataAccessedOutside", "protectedCmsDataAccessedOutsideDescription", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -57490,6 +57522,13 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.BusinessSolution = data
+		case "priorityAlignment":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priorityAlignment"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PriorityAlignment = data
 		case "currentStage":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentStage"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -58711,8 +58750,6 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "priorityAlignment":
-			out.Values[i] = ec._BusinessCase_priorityAlignment(ctx, field, obj)
 		case "projectAcronym":
 			out.Values[i] = ec._BusinessCase_projectAcronym(ctx, field, obj)
 		case "projectName":
@@ -63531,6 +63568,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "priorityAlignment":
+			out.Values[i] = ec._SystemIntake_priorityAlignment(ctx, field, obj)
 		case "contract":
 			field := field
 

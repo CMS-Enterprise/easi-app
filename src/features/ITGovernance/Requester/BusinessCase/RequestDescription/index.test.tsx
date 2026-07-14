@@ -105,14 +105,6 @@ describe('Business case request description form', () => {
       expect(currentSolutionSummaryField).toHaveValue('Current Solution');
     });
 
-    const priorityAlignmentField = screen.getByRole('textbox', {
-      name: /organizational priorities/i
-    });
-    await user.type(priorityAlignmentField, 'Organizational priorities');
-    await waitFor(() => {
-      expect(priorityAlignmentField).toHaveValue('Organizational priorities');
-    });
-
     const successIndicatorsField = screen.getByRole('textbox', {
       name: /effort is successful/i
     });

@@ -202,7 +202,6 @@ func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCaseWithCosts {
 		CollaborationNeeded:                 null.StringFrom("Test Collaboration Needed"),
 		CurrentSolutionSummary:              null.StringFrom("Test Current Solution Summary"),
 		CMSBenefit:                          null.StringFrom("Test CMS Benefit"),
-		PriorityAlignment:                   null.StringFrom("Test Priority Alignment"),
 		SuccessIndicators:                   null.StringFrom("Test Success Indicators"),
 		ResponseToGRTFeedback:               null.StringFrom("Test Response to GRT Feedback"),
 		PreferredTitle:                      null.StringFrom("Test Preferred Title"),

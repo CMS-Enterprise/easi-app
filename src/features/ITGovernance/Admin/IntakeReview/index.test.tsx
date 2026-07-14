@@ -46,6 +46,35 @@ describe('The GRT intake review view', () => {
     expect(screen.getByTestId('intake-review')).toBeInTheDocument();
   });
 
+  it('displays no data fallback when priority alignment is missing', async () => {
+    const systemIntakeWithoutPriorityAlignment = {
+      ...systemIntake,
+      priorityAlignment: null
+    };
+
+    render(
+      <MemoryRouter>
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
+        >
+          <MessageProvider>
+            <IntakeReview systemIntake={systemIntakeWithoutPriorityAlignment} />
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+
+    const priorityAlignmentTerm = screen.getByText(
+      /How does this effort align with HHS\/CMS policies/
+    );
+
+    expect(priorityAlignmentTerm.nextElementSibling).toHaveTextContent(
+      'No data available'
+    );
+  });
+
   it('matches the snapshot', async () => {
     const { asFragment } = render(
       <MemoryRouter
