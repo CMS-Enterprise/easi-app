@@ -9,6 +9,7 @@ export default gql(/* GraphQL */ `
       grbDate
       grtDate
       lcid
+      lcidDisplay
       lcidRetiresAt
       relationType
       requestType

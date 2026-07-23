@@ -54,7 +54,6 @@ describe('The Business Case reducer', () => {
         businessNeed: 'Test Business Need',
         cmsBenefit: 'CMS Benefit',
         currentSolutionSummary: 'Current Solution',
-        priorityAlignment: 'Mah Priorities',
         successIndicators: 'Im successful',
         preferredTitle: '',
         preferredSummary: '',
@@ -149,7 +148,6 @@ describe('The Business Case reducer', () => {
           businessNeed: '',
           cmsBenefit: '',
           currentSolutionSummary: '',
-          priorityAlignment: '',
           successIndicators: '',
           preferredTitle: '',
           preferredSummary: '',
@@ -237,7 +235,6 @@ describe('The Business Case reducer', () => {
           businessNeed: 'The quick brown fox jumps over the lazy dog',
           cmsBenefit: 'The quick brown fox jumps over the lazy dog',
           currentSolutionSummary: 'The quick brown fox jumps over the lazy dog',
-          priorityAlignment: 'The quick brown fox jumps over the lazy dog',
           successIndicators: 'The quick brown fox jumps over the lazy dog'
         }
       };
@@ -249,7 +246,6 @@ describe('The Business Case reducer', () => {
           businessNeed: 'The quick brown fox jumps over the lazy dog',
           cmsBenefit: 'The quick brown fox jumps over the lazy dog',
           currentSolutionSummary: 'The quick brown fox jumps over the lazy dog',
-          priorityAlignment: 'The quick brown fox jumps over the lazy dog',
           successIndicators: 'The quick brown fox jumps over the lazy dog'
         },
         isLoading: null,

@@ -27,6 +27,7 @@ type CloseRequestFields = NonNullableProps<
 
 interface CloseRequestProps extends ResolutionProps {
   lcid: string | null | undefined;
+  lcidDisplay?: string | null | undefined;
   lcidStatus: SystemIntakeLCIDStatus | null | undefined;
 }
 
@@ -35,6 +36,7 @@ const CloseRequest = ({
   state,
   decisionState,
   lcid,
+  lcidDisplay,
   lcidStatus
 }: CloseRequestProps) => {
   const { t } = useTranslation('action');
@@ -77,13 +79,13 @@ const CloseRequest = ({
 
     if (lcidStatus === SystemIntakeLCIDStatus.ISSUED) {
       return {
-        title: t('closeRequest.modal.title', { lcid }),
+        title: t('closeRequest.modal.title', { lcid: lcidDisplay ?? lcid }),
         content: t('closeRequest.modal.content')
       };
     }
 
     return undefined;
-  }, [editsRequestedKey, lcid, lcidStatus, t]);
+  }, [editsRequestedKey, lcid, lcidDisplay, lcidStatus, t]);
 
   return (
     <FormProvider<CloseRequestFields> {...form}>

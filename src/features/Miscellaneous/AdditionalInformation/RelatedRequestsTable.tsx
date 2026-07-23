@@ -119,7 +119,8 @@ const RelatedRequestsTable = ({
             ? relatedIntake.statusAdmin
             : relatedIntake.statusRequester,
         submissionDate: relatedIntake.submittedAt || '',
-        lcid: relatedIntake.lcid || null
+        lcid: relatedIntake.lcid || null,
+        lcidDisplay: relatedIntake.lcidDisplay || null
       });
     });
 
@@ -199,7 +200,7 @@ const RelatedRequestsTable = ({
           if (isTRBAdmin || isITGovAdmin) {
             return t<string>(
               `governanceReviewTeam:systemIntakeStatusAdmin.${request.status}`,
-              { lcid: request.lcid }
+              { lcid: request.lcidDisplay || request.lcid }
             );
           }
 

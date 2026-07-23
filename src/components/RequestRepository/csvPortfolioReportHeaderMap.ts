@@ -46,6 +46,10 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.businessSolution')
   },
   {
+    key: 'priorityAlignment',
+    label: t('intake:csvHeadings.priorityAlignment')
+  },
+  {
     key: 'currentStage',
     label: t('intake:csvHeadings.currentStage')
   },
@@ -128,6 +132,22 @@ const csvHeaderMap = (t: TFunction) => [
   {
     key: 'lcid',
     label: t('intake:csvHeadings.lcid')
+  },
+  {
+    key: 'lcidType',
+    label: t('intake:csvHeadings.lcidType')
+  },
+  {
+    key: 'lcidComponent',
+    label: t('intake:csvHeadings.lcidComponent')
+  },
+  {
+    key: 'lcidIsShortened',
+    label: t('intake:csvHeadings.lcidIsShortened')
+  },
+  {
+    key: 'lcidIsLowIt',
+    label: t('intake:csvHeadings.lcidIsLowIt')
   },
   {
     key: 'lcidScope',

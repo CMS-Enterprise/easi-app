@@ -6,6 +6,7 @@ export default gql(/* GraphQL */ `
     adminLead
     businessNeed
     businessSolution
+    priorityAlignment
     businessOwner {
       component
       name
@@ -69,11 +70,16 @@ export default gql(/* GraphQL */ `
       ...FundingSourceFragment
     }
     lcid
+    lcidDisplay
     lcidIssuedAt
     lcidExpiresAt
     lcidRetiresAt
     lcidScope
     lcidCostBaseline
+    lcidType
+    lcidComponent
+    lcidIsLowIt
+    lcidIsShortened
     lcidStatus
     needsEaSupport
     productManager {

@@ -56,6 +56,7 @@ type RequestDetailsForm = {
   projectAcronym: string | null;
   businessNeed: string;
   businessSolution: string;
+  priorityAlignment: string;
   currentStage: string;
   needsEaSupport: boolean | null;
   digitalServiceInteraction: YesNoNotSure | null;
@@ -81,6 +82,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     projectAcronym,
     businessNeed,
     businessSolution,
+    priorityAlignment,
     currentStage,
     needsEaSupport,
     digitalServiceInteraction,
@@ -111,6 +113,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       projectAcronym: projectAcronym || '',
       businessNeed: businessNeed || '',
       businessSolution: businessSolution || '',
+      priorityAlignment: priorityAlignment || '',
       currentStage: currentStage || '',
       needsEaSupport,
       digitalServiceInteraction: digitalServiceInteraction || null,
@@ -381,6 +384,39 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             id="businessSolution"
             maxLength={10000}
             aria-describedby="businessSolutionHelpText"
+          />
+        </FieldGroup>
+
+        <FieldGroup
+          scrollElement="priorityAlignment"
+          error={!!errors.priorityAlignment}
+        >
+          <Label htmlFor="priorityAlignment" className="maxw-none" required>
+            {t('requestDetails.priorityAlignment')}
+          </Label>
+          <HelpText id="priorityAlignmentHelpText" className="margin-top-1">
+            {t('requestDetails.priorityAlignmentHelpText')}
+          </HelpText>
+          <CollapsableLink
+            id="priorityAlignmentExample"
+            label={t('requestDetails.viewExampleAnswer')}
+            className="margin-y-2"
+          >
+            <p className="margin-y-0">
+              {t('requestDetails.priorityAlignmentExampleAnswer')}
+            </p>
+          </CollapsableLink>
+          <ErrorMessage
+            errors={errors}
+            name="priorityAlignment"
+            as={FieldErrorMsg}
+          />
+          <Textarea
+            {...register('priorityAlignment')}
+            ref={null}
+            id="priorityAlignment"
+            maxLength={10000}
+            aria-describedby="priorityAlignmentHelpText"
           />
         </FieldGroup>
 

@@ -103,7 +103,6 @@ type BusinessCase struct {
 	CollaborationNeeded                 null.String        `json:"collaborationNeeded" db:"collaboration_needed"`
 	CurrentSolutionSummary              null.String        `json:"currentSolutionSummary" db:"current_solution_summary"`
 	CMSBenefit                          null.String        `json:"cmsBenefit" db:"cms_benefit"`
-	PriorityAlignment                   null.String        `json:"priorityAlignment" db:"priority_alignment"`
 	SuccessIndicators                   null.String        `json:"successIndicators" db:"success_indicators"`
 	ResponseToGRTFeedback               null.String        `json:"responseToGRTFeedback" db:"response_to_grt_feedback"`
 	PreferredTitle                      null.String        `json:"preferredTitle" db:"preferred_title"`

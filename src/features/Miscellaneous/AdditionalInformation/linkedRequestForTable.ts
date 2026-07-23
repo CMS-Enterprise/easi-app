@@ -6,4 +6,5 @@ export interface LinkedRequestForTable {
   status: string;
   submissionDate: string;
   lcid: string | null;
+  lcidDisplay?: string | null;
 }

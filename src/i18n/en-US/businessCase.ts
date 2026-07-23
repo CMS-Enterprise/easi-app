@@ -44,15 +44,6 @@ const businessCase = {
     'How will CMS benefit from this effort? Support your response with relevant data and facts and outline your project timeline and any key milestones.',
   cmsBenefitHelpText:
     "Provide a summary of how this effort benefits CMS. Include any information on how it supports CMS' mission and strategic goals, creates efficiencies and/or cost savings, or reduces risk",
-  priorityAlignment:
-    'How does this effort align with HHS/CMS policies, strategies, or organizational priorities? Elaborate on the value the proposed solution will bring to the government.',
-  priorityAlignmentHelpText:
-    'Does this effort support any Administrator priorities or new legislative or regulatory mandates? Include any relevant deadlines. See below for an example answer.',
-  priorityAlignmentExample: {
-    label: 'View an example answer',
-    description:
-      'To comply with the Making Electronic Government Accountable by Yielding Tangible Efficiencies MEGABYTE Act, the Office of Information Technology (OIT) is seeking to continue the XYZ Enterprise License Agreement (ELA). XYZ licenses provide a variety of services for CMS including customer service management, service desk support, service desk ticket tracking, catalog orders and asset management.'
-  },
   successIndicators:
     'How will you determine whether or not this effort is successful?',
   successIndicatorsHelpText:

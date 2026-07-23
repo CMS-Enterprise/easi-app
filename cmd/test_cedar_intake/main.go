@@ -181,7 +181,6 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 
 		CMSBenefit:             null.StringFrom("Reduce FTE hours and generate better end products"),
 		CurrentSolutionSummary: null.StringFrom("Nothing good"),
-		PriorityAlignment:      null.StringFrom("Aligns with CMS' automation push"),
 		SuccessIndicators:      null.StringFrom("95% on rotten tomatoes"),
 
 		// business solution - preferred

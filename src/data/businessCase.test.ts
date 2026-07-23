@@ -671,7 +671,6 @@ describe('The Business Case data', () => {
       businessNeed: 'My business need',
       cmsBenefit: 'asdf',
       currentSolutionSummary: 'asdf',
-      priorityAlignment: 'asdf',
       successIndicators: 'asdf',
       preferredTitle: 'Preferred title',
       preferredSummary: 'Preferred summary',

@@ -515,7 +515,6 @@ type BusinessCase {
   id: UUID!
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
-  priorityAlignment: String
   projectAcronym: String
   projectName: String
   requester: String
@@ -700,6 +699,7 @@ type SystemIntake {
   businessNeed: String
   businessOwner: SystemIntakeBusinessOwner!
   businessSolution: String
+  priorityAlignment: String
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
@@ -739,11 +739,16 @@ type SystemIntake {
   grbVotingInformation: GRBVotingInformation!
   id: UUID!
   lcid: String
+  lcidDisplay: String
   lcidIssuedAt: Time
   lcidExpiresAt: Time
   lcidScope: HTML
   lcidCostBaseline: String
   lcidRetiresAt: Time
+  lcidType: SystemIntakeLCIDType
+  lcidComponent: SystemIntakeContactComponent
+  lcidIsLowIt: Boolean
+  lcidIsShortened: Boolean
   needsEaSupport: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
@@ -1046,6 +1051,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   projectAcronym: String
   businessNeed: String
   businessSolution: String
+  priorityAlignment: String
   currentStage: String
   needsEaSupport: Boolean
   digitalServiceInteraction: YesNoNotSure
@@ -1240,6 +1246,7 @@ type SystemIntakeAction {
   step: SystemIntakeStep
   feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
+  lcidMetadataChange: SystemIntakeLCIDMetadataChange
   previousRetirementDate: Time # purposely nullable, unlike previousDate in lcidExpirationChange - not all intakes will have a retirement date
   newRetirementDate: Time # purposely nullable, unlike newDate in lcidExpirationChange - not all intakes will have a retirement date
   createdAt: Time!
@@ -1257,6 +1264,20 @@ type SystemIntakeLCIDExpirationChange {
   newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
+}
+
+"""
+Contains metadata changes for a system request's lifecycle ID
+"""
+type SystemIntakeLCIDMetadataChange {
+  previousType: SystemIntakeLCIDType
+  newType: SystemIntakeLCIDType
+  previousComponent: SystemIntakeContactComponent
+  newComponent: SystemIntakeContactComponent
+  previousIsShortened: Boolean
+  newIsShortened: Boolean
+  previousIsLowIt: Boolean
+  newIsLowIt: Boolean
 }
 
 type RequesterUpdateEmailData {
@@ -1598,6 +1619,10 @@ input SystemIntakeUpdateLCIDInput {
   scope: HTML
   nextSteps: HTML
   costBaseline: String
+  lcidType: SystemIntakeLCIDType
+  lcidComponent: SystemIntakeContactComponent
+  lcidIsLowIt: Boolean
+  lcidIsShortened: Boolean
   reason: HTML
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
@@ -1614,6 +1639,10 @@ input SystemIntakeConfirmLCIDInput {
   nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
+  lcidType: SystemIntakeLCIDType!
+  lcidComponent: SystemIntakeContactComponent!
+  lcidIsLowIt: Boolean!
+  lcidIsShortened: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
@@ -1629,6 +1658,14 @@ input SystemIntakeRequestEditsInput {
   emailFeedback: HTML!
   additionalInfo: HTML
   adminNote: HTML
+}
+
+"""
+Different options for the type of LCID being issued
+"""
+enum SystemIntakeLCIDType {
+  NEW_SYSTEM
+  RECOMPETE
 }
 
 """
@@ -1651,6 +1688,10 @@ input SystemIntakeIssueLCIDInput {
   nextSteps: HTML!
   trbFollowUp: SystemIntakeTRBFollowUp!
   costBaseline: String
+  lcidType: SystemIntakeLCIDType!
+  lcidComponent: SystemIntakeContactComponent!
+  lcidIsLowIt: Boolean!
+  lcidIsShortened: Boolean!
   additionalInfo: HTML
   notificationRecipients: EmailNotificationRecipients
   adminNote: HTML

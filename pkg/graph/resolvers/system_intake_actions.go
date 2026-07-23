@@ -460,6 +460,10 @@ func IssueLCID(
 	intake.DecisionNextSteps = &input.NextSteps
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	intake.LCIDType = &input.LcidType
+	intake.LCIDComponent = &input.LcidComponent
+	intake.LCIDIsLowIT = &input.LcidIsLowIt
+	intake.LCIDIsShortened = &input.LcidIsShortened
 
 	// update other fields
 	intake.UpdatedAt = &currTime
@@ -485,12 +489,16 @@ func IssueLCID(
 	// save action (including additional info for email, if any)
 	errGroup.Go(func() error {
 		action := models.Action{
-			IntakeID:       &input.SystemIntakeID,
-			ActionType:     models.ActionTypeISSUELCID,
-			ActorName:      adminUserInfo.DisplayName,
-			ActorEmail:     adminUserInfo.Email,
-			ActorEUAUserID: adminEUAID,
-			Step:           &intake.Step,
+			IntakeID:                      &input.SystemIntakeID,
+			ActionType:                    models.ActionTypeISSUELCID,
+			ActorName:                     adminUserInfo.DisplayName,
+			ActorEmail:                    adminUserInfo.Email,
+			ActorEUAUserID:                adminEUAID,
+			Step:                          &intake.Step,
+			LCIDTypeChangeNewValue:        &input.LcidType,
+			LCIDComponentChangeNewValue:   &input.LcidComponent,
+			LCIDIsLowITChangeNewValue:     &input.LcidIsLowIt,
+			LCIDIsShortenedChangeNewValue: &input.LcidIsShortened,
 		}
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
@@ -812,6 +820,9 @@ func UpdateLCID(
 	if err != nil {
 		return nil, err
 	}
+	if adminUserInfo == nil {
+		return nil, fmt.Errorf("admin user info not found for EUA ID %s", adminEUAID)
+	}
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil || intake == nil {
@@ -824,7 +835,7 @@ func UpdateLCID(
 	// input.Reason //TODO: The reason field will be retained in the DB in a future ticket
 
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+	action := lcidactions.GetUpdateLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidComponent, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -868,6 +879,18 @@ func UpdateLCID(
 	if input.CostBaseline != nil {
 		newCostBaseline = *input.CostBaseline
 		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
+	}
+	if input.LcidType != nil {
+		intake.LCIDType = input.LcidType
+	}
+	if input.LcidComponent != nil {
+		intake.LCIDComponent = input.LcidComponent
+	}
+	if input.LcidIsLowIt != nil {
+		intake.LCIDIsLowIT = input.LcidIsLowIt
+	}
+	if input.LcidIsShortened != nil {
+		intake.LCIDIsShortened = input.LcidIsShortened
 	}
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
@@ -969,6 +992,9 @@ func ConfirmLCID(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+	if adminUserInfo == nil {
+		return nil, fmt.Errorf("admin user info not found for EUA ID %s", adminEUAID)
+	}
 
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil || intake == nil {
@@ -979,7 +1005,7 @@ func ConfirmLCID(ctx context.Context,
 		return nil, err
 	}
 	// action is populated first as it serves to audit the changes to the relevant LCID fields on an intake. Intake is saved later after the action fields are populated
-	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, *adminUserInfo)
+	action := lcidactions.GetConfirmLCIDAction(*intake, input.ExpiresAt, input.NextSteps, input.Scope, input.CostBaseline, input.LcidType, input.LcidComponent, input.LcidIsShortened, input.LcidIsLowIt, *adminUserInfo)
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -1000,6 +1026,10 @@ func ConfirmLCID(ctx context.Context,
 	if input.CostBaseline != nil {
 		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 	}
+	intake.LCIDType = &input.LcidType
+	intake.LCIDComponent = &input.LcidComponent
+	intake.LCIDIsLowIT = &input.LcidIsLowIt
+	intake.LCIDIsShortened = &input.LcidIsShortened
 
 	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
 

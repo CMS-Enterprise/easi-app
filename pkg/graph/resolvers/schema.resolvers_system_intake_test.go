@@ -880,6 +880,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				ID                                         string
 				RequestName                                string
 				BusinessSolution                           string
+				PriorityAlignment                          string
 				BusinessNeed                               string
 				CurrentStage                               string
 				NeedsEaSupport                             bool
@@ -903,6 +904,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 				id: "%s",
 				requestName: "My request",
 				businessSolution: "My solution",
+				priorityAlignment: "My priority alignment",
 				businessNeed: "My need",
 				currentStage:  "Just an idea",
 				needsEaSupport: false,
@@ -919,6 +921,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 					id
 					requestName
 					businessSolution
+					priorityAlignment
 					businessNeed
 					currentStage
 					needsEaSupport
@@ -939,6 +942,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	respIntake := resp.UpdateSystemIntakeRequestDetails.SystemIntake
 	s.Equal(respIntake.RequestName, "My request")
 	s.Equal(respIntake.BusinessSolution, "My solution")
+	s.Equal(respIntake.PriorityAlignment, "My priority alignment")
 	s.Equal(respIntake.BusinessNeed, "My need")
 	s.Equal(respIntake.CurrentStage, "Just an idea")
 	s.False(respIntake.NeedsEaSupport)

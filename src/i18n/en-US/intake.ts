@@ -283,6 +283,7 @@ const intake = {
     fundingSource: 'Funding Number and Source',
     businessNeed: 'Business Need',
     businessSolution: 'Business Solution',
+    priorityAlignment: 'Priority Alignment',
     currentStage: 'Process Status',
     usesAiTech: 'AI Tech Involved',
     digitalServiceInteraction: 'Enables Digital Service Interaction',
@@ -314,6 +315,10 @@ const intake = {
     cmsSystem: 'CMS System',
     status: 'Status',
     lcid: 'LCID',
+    lcidType: 'LCID Type',
+    lcidComponent: 'LCID Component',
+    lcidIsShortened: 'Shortened LCID',
+    lcidIsLowIt: 'Low IT LCID',
     lcidScope: 'LCID Scope',
     lcidIssuedAt: 'LCID Issued Date',
     lcidExpiresAt: 'LCID Expiration Date',
@@ -510,6 +515,12 @@ const intake = {
       'Let us know if you have a solution in mind. Please be brief.',
     businessSolutionExampleAnswer:
       'To automate the onboarding process and create more efficient workflows, HR would like to hire a contractor to implement a machine learning system within the CMS enterprise cloud that will analyze and score resumes to bring the best matches forward for each job opening.',
+    priorityAlignment:
+      'How does this effort align with HHS/CMS policies, strategies, or organizational priorities? Elaborate on the value the proposed solution will bring to the government.',
+    priorityAlignmentHelpText:
+      'Does this effort support any Administrator priorities or new legislative or regulatory mandates? Include any relevant deadlines.',
+    priorityAlignmentExampleAnswer:
+      'To comply with the Making Electronic Government Accountable by Yielding Tangible Efficiencies MEGABYTE Act, the Office of Information Technology (OIT) is seeking to continue the XYZ Enterprise License Agreement (ELA). XYZ licenses provide a variety of services for CMS including customer service management, service desk support, service desk ticket tracking, catalog orders and asset management.',
     currentStage: 'What is your project status?',
     currentStageHelpText:
       'Please choose the option that best matches the status of the work in the scope of this intake. This helps the governance team provide the right type of guidance for your request. Some options in this dropdown will have follow-up questions.',
@@ -652,6 +663,8 @@ const intake = {
     businessNeed:
       'What is your business need that this contract/request will meet?',
     solving: 'How are you thinking of solving it?',
+    priorityAlignment:
+      'How does this effort align with HHS/CMS policies, strategies, or organizational priorities?',
     process: 'What is your project status?',
     eaSupport: 'Does your request need Enterprise Architecture support?',
     usesAiTech: 'Does this project plan to use AI technologies?',

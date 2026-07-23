@@ -16,6 +16,7 @@ export default gql(/* GraphQL */ `
 
           status: statusRequester
           lcid # lcid is part of the intake's status display value
+          lcidDisplay
           # nextMeetingDate # tbd
 
           requester {

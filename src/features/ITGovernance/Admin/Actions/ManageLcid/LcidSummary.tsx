@@ -2,36 +2,72 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
+import {
+  SystemIntakeContactComponent,
+  SystemIntakeLCIDStatus,
+  SystemIntakeLCIDType
+} from 'gql/generated/graphql';
 
 import LcidStatusTag from 'components/LcidStatusTag';
 import { RichTextViewer } from 'components/RichTextEditor';
+import { getComponentByEnum } from 'constants/cmsComponentsMap';
 import { formatDateLocal } from 'utils/date';
 
 export type LcidSummaryProps = {
   lcid: string | null | undefined;
+  lcidDisplay?: string | null | undefined;
   lcidIssuedAt?: string | null | undefined;
   lcidExpiresAt?: string | null | undefined;
   lcidRetiresAt?: string | null | undefined;
   lcidScope?: string | null | undefined;
   decisionNextSteps?: string | null | undefined;
   lcidCostBaseline?: string | null | undefined;
+  lcidType?: SystemIntakeLCIDType | null | undefined;
+  lcidComponent?: SystemIntakeContactComponent | null | undefined;
+  lcidIsLowIt?: boolean | null | undefined;
+  lcidIsShortened?: boolean | null | undefined;
   lcidStatus?: SystemIntakeLCIDStatus | null | undefined;
 };
 
 const LcidSummary = ({
   lcidStatus,
   lcid,
+  lcidDisplay,
   lcidIssuedAt,
   lcidExpiresAt,
   lcidRetiresAt,
   lcidScope,
   decisionNextSteps,
   lcidCostBaseline,
+  lcidType,
+  lcidComponent,
+  lcidIsLowIt,
+  lcidIsShortened,
   className
 }: LcidSummaryProps & { className?: string }) => {
   const { t } = useTranslation('action');
 
+  let lcidIsShortenedLabel = t(
+    'governanceReviewTeam:notes.extendLcid.notSpecified'
+  );
+  if (lcidIsShortened === true) {
+    lcidIsShortenedLabel = t('issueLCID.lcidIsShortened.yes');
+  } else if (lcidIsShortened === false) {
+    lcidIsShortenedLabel = t('issueLCID.lcidIsShortened.no');
+  }
+
+  let lcidIsLowItLabel = t(
+    'governanceReviewTeam:notes.extendLcid.notSpecified'
+  );
+  if (lcidIsLowIt === true) {
+    lcidIsLowItLabel = t('issueLCID.lcidIsLowIt.yes');
+  } else if (lcidIsLowIt === false) {
+    lcidIsLowItLabel = t('issueLCID.lcidIsLowIt.no');
+  }
+
+  const lcidComponentLabel = lcidComponent
+    ? t(getComponentByEnum(lcidComponent).labelKey)
+    : t('governanceReviewTeam:notes.extendLcid.notSpecified');
   return (
     <div
       className={classNames(
@@ -57,7 +93,7 @@ const LcidSummary = ({
           {t('updateLcid.currentLcid')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {lcid}
+          {lcidDisplay ?? lcid}
         </dd>
 
         <Grid row>
@@ -113,6 +149,36 @@ const LcidSummary = ({
               t('governanceReviewTeam:notes.extendLcid.noCostBaseline')
             }
           />
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidType')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidType
+            ? t(`issueLCID.lcidType.${lcidType}`)
+            : t('governanceReviewTeam:notes.extendLcid.notSpecified')}
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidComponent')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidComponentLabel}
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidIsShortened')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidIsShortenedLabel}
+        </dd>
+
+        <dt className="text-bold margin-top-2">
+          {t('updateLcid.currentLcidIsLowIt')}
+        </dt>
+        <dd className="margin-left-0 font-body-md line-height-body-5">
+          {lcidIsLowItLabel}
         </dd>
       </dl>
     </div>

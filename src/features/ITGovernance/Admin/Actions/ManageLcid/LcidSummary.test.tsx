@@ -1,6 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
+import {
+  SystemIntakeContactComponent,
+  SystemIntakeLCIDStatus,
+  SystemIntakeLCIDType
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
 import { formatDateLocal } from 'utils/date';
@@ -13,22 +17,35 @@ describe('LCID summary box', () => {
   it('Renders LCID information', () => {
     const props: LcidSummaryProps = {
       lcid: '123456',
+      lcidDisplay: '123456-OIT-NEW-S',
       lcidIssuedAt: currentDate.minus({ days: 7 }).toISO(),
       lcidExpiresAt: currentDate.plus({ year: 1 }).toISO(),
       lcidRetiresAt: null,
       decisionNextSteps: 'Test next steps',
       lcidScope: 'Test scope',
       lcidCostBaseline: 'Test cost baseline',
+      lcidType: SystemIntakeLCIDType.NEW_SYSTEM,
+      lcidComponent:
+        SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT,
+      lcidIsShortened: true,
+      lcidIsLowIt: false,
       lcidStatus: SystemIntakeLCIDStatus.ISSUED
     };
 
     render(<LcidSummary {...props} />);
 
-    expect(screen.getByText(props.lcid!));
+    expect(screen.getByText(props.lcidDisplay!));
 
     expect(screen.getByText(props.decisionNextSteps!));
     expect(screen.getByText(props.lcidScope!));
     expect(screen.getByText(props.lcidCostBaseline!));
+    expect(screen.getByText('New system'));
+    expect(screen.getByText('Current LCID component'));
+    expect(screen.getByText('Office of Information Technology'));
+    expect(screen.getByText('Is this a shortened LCID?'));
+    expect(screen.getByText('Is this LCID low IT?'));
+    expect(screen.getByText('Yes'));
+    expect(screen.getByText('No'));
 
     expect(
       screen.getByText(formatDateLocal(props.lcidIssuedAt!, 'MM/dd/yyyy'))

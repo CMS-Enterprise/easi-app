@@ -135,6 +135,11 @@ const SystemIntakeValidationSchema = {
     businessSolution: Yup.string()
       .trim()
       .required('Tell us how you think of solving your business need'),
+    priorityAlignment: Yup.string()
+      .trim()
+      .required(
+        'Tell us how this effort aligns with organizational priorities'
+      ),
     currentStage: Yup.string().required('Tell us where you are in the process'),
     needsEaSupport: Yup.boolean()
       .nullable()

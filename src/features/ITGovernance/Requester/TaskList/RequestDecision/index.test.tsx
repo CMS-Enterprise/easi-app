@@ -46,6 +46,8 @@ describe('RequestDecision', () => {
         ...systemIntake,
         id,
         decisionState: SystemIntakeDecisionState.LCID_ISSUED,
+        lcid: '123456',
+        lcidDisplay: '123456-OIT-NEW-S-L',
         decisionNextSteps: 'Do the thing',
         decidedAt: '2025-09-29T12:00:00Z',
         trbFollowUpRecommendation:
@@ -78,6 +80,8 @@ describe('RequestDecision', () => {
         'governanceReviewTeam:decision.requesterDecisionState_LCID_ISSUED'
       )
     );
+    screen.getByText('123456');
+    expect(screen.queryByText('123456-OIT-NEW-S-L')).not.toBeInTheDocument();
 
     // Rich text displays provided steps
     screen.getByText('Do the thing');

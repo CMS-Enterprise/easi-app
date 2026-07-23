@@ -1,9 +1,13 @@
 import {
   ITGovIntakeFormStatus,
+  SystemIntakeContactComponent,
+  SystemIntakeLCIDType,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
+import i18next from 'i18next';
 
 import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
+import { getComponentByEnum } from 'constants/cmsComponentsMap';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatDateLocal } from 'utils/date';
@@ -55,6 +59,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   businessNeed: '',
   businessSolution: '',
+  priorityAlignment: '',
   currentStage: '',
   needsEaSupport: null,
   digitalServiceInteraction: null,
@@ -83,6 +88,19 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   usingSoftware: null,
   acquisitionMethods: [],
   hasUiChanges: null
+};
+
+const formatLCIDType = (lcidType: SystemIntakeLCIDType | null | undefined) => {
+  return lcidType ? i18next.t(`action:issueLCID.lcidType.${lcidType}`) : '';
+};
+
+const formatLCIDComponent = (
+  lcidComponent: SystemIntakeContactComponent | null | undefined
+) => {
+  if (!lcidComponent) return '';
+
+  const component = getComponentByEnum(lcidComponent);
+  return component.acronym || lcidComponent;
 };
 
 export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
@@ -127,6 +145,14 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
   const usingSoftware = intake?.usingSoftware;
   const acquisitionMethods = intake?.acquisitionMethods;
+  const lcidType = formatLCIDType(intake?.lcidType);
+  const lcidComponent = formatLCIDComponent(intake?.lcidComponent);
+  const lcidIsLowIt = convertBoolToYesNo(intake?.lcidIsLowIt);
+  const lcidIsShortened = convertBoolToYesNo(intake?.lcidIsShortened);
+  const status =
+    intake.lcid && intake.lcidDisplay
+      ? intake.status.replace(intake.lcidDisplay, intake.lcid)
+      : intake.status;
 
   const contractNumber = formatContractNumbers(intake.contractNumbers);
   const cmsSystem = intake.systems.map(v => v.name).join(', ');
@@ -137,6 +163,7 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
     contractNumber,
     cmsSystem,
     lastAdminNote,
+    status,
     // Formatted booleans
     existingFunding,
     usesAiTech,
@@ -148,6 +175,10 @@ export const prepareIntakeToCSV = (intake: SystemIntakeForTable) => {
     hasUiChanges,
     usingSoftware,
     acquisitionMethods,
+    lcidType,
+    lcidComponent,
+    lcidIsLowIt,
+    lcidIsShortened,
     // Formatted dates
     createdAt,
     submittedAt,

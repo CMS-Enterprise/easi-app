@@ -80,15 +80,19 @@ func issueLCID(
 	// The %06d adds leading 0s to the fake LCID so it's 6 digits
 	lcidStr := fmt.Sprintf("%06d", lcidToIssue)
 	input := models.SystemIntakeIssueLCIDInput{
-		SystemIntakeID: intake.ID,
-		Lcid:           &lcidStr,
-		Scope:          scope,
-		NextSteps:      nextSteps,
-		ExpiresAt:      expiresAt,
-		TrbFollowUp:    trbFollowUp,
-		CostBaseline:   &costBaseline,
-		AdditionalInfo: &additionalInfo,
-		AdminNote:      &adminNote,
+		SystemIntakeID:  intake.ID,
+		Lcid:            &lcidStr,
+		Scope:           scope,
+		NextSteps:       nextSteps,
+		ExpiresAt:       expiresAt,
+		TrbFollowUp:     trbFollowUp,
+		CostBaseline:    &costBaseline,
+		LcidType:        models.LCIDTypeNewSystem,
+		LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+		LcidIsLowIt:     false,
+		LcidIsShortened: false,
+		AdditionalInfo:  &additionalInfo,
+		AdminNote:       &adminNote,
 	}
 
 	intake, err := resolvers.IssueLCID(ctx, store, nil, mock.FetchUserInfoMock, input)
@@ -141,14 +145,18 @@ func confirmLCID(
 	adminNote := models.HTML("admin note about confirming this LCID")
 
 	input := models.SystemIntakeConfirmLCIDInput{
-		SystemIntakeID: intake.ID,
-		Scope:          scope,
-		NextSteps:      nextSteps,
-		ExpiresAt:      expiresAt,
-		TrbFollowUp:    trbFollowUp,
-		CostBaseline:   &costBaseline,
-		AdditionalInfo: &additionalInfo,
-		AdminNote:      &adminNote,
+		SystemIntakeID:  intake.ID,
+		Scope:           scope,
+		NextSteps:       nextSteps,
+		ExpiresAt:       expiresAt,
+		TrbFollowUp:     trbFollowUp,
+		CostBaseline:    &costBaseline,
+		LcidType:        models.LCIDTypeNewSystem,
+		LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+		LcidIsLowIt:     false,
+		LcidIsShortened: false,
+		AdditionalInfo:  &additionalInfo,
+		AdminNote:       &adminNote,
 	}
 
 	intake, err := resolvers.ConfirmLCID(ctx, store, nil, mock.FetchUserInfoMock, input)

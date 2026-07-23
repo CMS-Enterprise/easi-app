@@ -8,56 +8,86 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
+type baseLCIDActionArgs struct {
+	intake   models.SystemIntake
+	userInfo models.UserInfo
+
+	expirationDate *time.Time
+	nextSteps      *models.HTML
+	scope          *models.HTML
+	costBaseline   *string
+	retirementDate *time.Time
+
+	lcidType        *models.SystemIntakeLCIDType
+	lcidComponent   *models.SystemIntakeContactComponent
+	lcidIsShortened *bool
+	lcidIsLowIT     *bool
+}
+
 // getBaseLCIDAction returns an action with basic entries related to LCID operations set. Action type is handled by the calling action
-func getBaseLCIDAction(
-	intake models.SystemIntake,
-	expirationDate *time.Time,
-	nextSteps *models.HTML,
-	scope *models.HTML,
-	costBaseline *string,
-	userInfo models.UserInfo,
-	retirementDate *time.Time,
-) models.Action {
+func getBaseLCIDAction(args baseLCIDActionArgs) models.Action {
 
 	// action field values are set based on if the value was set or not. If not set, the new value and the old are the same.
 	// this follows the existing paradigm for the legacy extend LCID action
 	action := models.Action{
-		IntakeID:       &intake.ID,
-		ActorName:      userInfo.DisplayName,
-		ActorEmail:     userInfo.Email,
-		ActorEUAUserID: userInfo.Username,
-		Step:           &intake.Step,
+		IntakeID:       &args.intake.ID,
+		ActorName:      args.userInfo.DisplayName,
+		ActorEmail:     args.userInfo.Email,
+		ActorEUAUserID: args.userInfo.Username,
+		Step:           &args.intake.Step,
 
-		LCIDExpirationChangeNewDate:      intake.LifecycleExpiresAt,
-		LCIDExpirationChangePreviousDate: intake.LifecycleExpiresAt,
+		LCIDExpirationChangeNewDate:      args.intake.LifecycleExpiresAt,
+		LCIDExpirationChangePreviousDate: args.intake.LifecycleExpiresAt,
 
-		LCIDExpirationChangeNewScope:      intake.LifecycleScope,
-		LCIDExpirationChangePreviousScope: intake.LifecycleScope,
+		LCIDExpirationChangeNewScope:      args.intake.LifecycleScope,
+		LCIDExpirationChangePreviousScope: args.intake.LifecycleScope,
 
-		LCIDExpirationChangeNewNextSteps:      intake.DecisionNextSteps,
-		LCIDExpirationChangePreviousNextSteps: intake.DecisionNextSteps,
+		LCIDExpirationChangeNewNextSteps:      args.intake.DecisionNextSteps,
+		LCIDExpirationChangePreviousNextSteps: args.intake.DecisionNextSteps,
 
-		LCIDExpirationChangeNewCostBaseline:      intake.LifecycleCostBaseline,
-		LCIDExpirationChangePreviousCostBaseline: intake.LifecycleCostBaseline,
+		LCIDExpirationChangeNewCostBaseline:      args.intake.LifecycleCostBaseline,
+		LCIDExpirationChangePreviousCostBaseline: args.intake.LifecycleCostBaseline,
 
-		LCIDRetirementChangeNewDate:      intake.LifecycleRetiresAt,
-		LCIDRetirementChangePreviousDate: intake.LifecycleRetiresAt,
+		LCIDRetirementChangeNewDate:      args.intake.LifecycleRetiresAt,
+		LCIDRetirementChangePreviousDate: args.intake.LifecycleRetiresAt,
+
+		LCIDTypeChangeNewValue:             args.intake.LCIDType,
+		LCIDTypeChangePreviousValue:        args.intake.LCIDType,
+		LCIDComponentChangeNewValue:        args.intake.LCIDComponent,
+		LCIDComponentChangePreviousValue:   args.intake.LCIDComponent,
+		LCIDIsShortenedChangeNewValue:      args.intake.LCIDIsShortened,
+		LCIDIsShortenedChangePreviousValue: args.intake.LCIDIsShortened,
+		LCIDIsLowITChangeNewValue:          args.intake.LCIDIsLowIT,
+		LCIDIsLowITChangePreviousValue:     args.intake.LCIDIsLowIT,
 	}
 
-	if expirationDate != nil {
-		action.LCIDExpirationChangeNewDate = expirationDate
+	if args.expirationDate != nil {
+		action.LCIDExpirationChangeNewDate = args.expirationDate
 	}
-	if scope != nil {
-		action.LCIDExpirationChangeNewScope = scope
+	if args.scope != nil {
+		action.LCIDExpirationChangeNewScope = args.scope
 	}
-	if nextSteps != nil {
-		action.LCIDExpirationChangeNewNextSteps = nextSteps
+	if args.nextSteps != nil {
+		action.LCIDExpirationChangeNewNextSteps = args.nextSteps
 	}
-	if costBaseline != nil {
-		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(costBaseline)
+	if args.costBaseline != nil {
+		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(args.costBaseline)
 	}
-	if retirementDate != nil {
-		action.LCIDRetirementChangeNewDate = retirementDate
+	if args.retirementDate != nil {
+		action.LCIDRetirementChangeNewDate = args.retirementDate
+	}
+
+	if args.lcidType != nil {
+		action.LCIDTypeChangeNewValue = args.lcidType
+	}
+	if args.lcidComponent != nil {
+		action.LCIDComponentChangeNewValue = args.lcidComponent
+	}
+	if args.lcidIsShortened != nil {
+		action.LCIDIsShortenedChangeNewValue = args.lcidIsShortened
+	}
+	if args.lcidIsLowIT != nil {
+		action.LCIDIsLowITChangeNewValue = args.lcidIsLowIT
 	}
 
 	return action

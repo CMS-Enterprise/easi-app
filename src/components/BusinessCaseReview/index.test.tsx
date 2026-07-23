@@ -35,7 +35,6 @@ describe('The Business Case Review Component', () => {
     collaborationNeeded: 'Test collaboration needed',
     cmsBenefit: 'Test CMS benefit',
     currentSolutionSummary: 'Test current solution summary',
-    priorityAlignment: 'Test priority alignment',
     successIndicators: 'Test success indicators',
     responseToGRTFeedback: 'Test response to GRT feedback',
     preferredSolution: {

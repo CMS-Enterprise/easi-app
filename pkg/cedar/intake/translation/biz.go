@@ -36,7 +36,6 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
 		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
-		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
 		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
 		Status:                 string(bc.Status),
 		CollaborationNeeded:    bc.CollaborationNeeded.Ptr(),

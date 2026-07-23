@@ -36,7 +36,6 @@ describe('The GRT Business Case review', () => {
     businessNeed: 'Mock business need',
     cmsBenefit: 'Mock CMS benefit',
     currentSolutionSummary: 'Mock current solution summary',
-    priorityAlignment: 'Mock priority alignment',
     successIndicators: 'Mock success indicators',
     preferredSolution: {
       title: 'Mock Preferred solution',

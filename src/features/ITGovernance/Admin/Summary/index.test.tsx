@@ -98,6 +98,7 @@ describe('The GRT Review page', () => {
 
   it('shows life cycle id if it exists', async () => {
     const lcid = '123456';
+    const lcidDisplay = '123456-OIT-NEW-S';
 
     render(
       <MemoryRouter>
@@ -107,6 +108,7 @@ describe('The GRT Review page', () => {
             statusAdmin={SystemIntakeStatusAdmin.LCID_ISSUED}
             state={SystemIntakeState.CLOSED}
             lcid={lcid}
+            lcidDisplay={lcidDisplay}
           />
         </MockedProvider>
       </MemoryRouter>
@@ -114,7 +116,7 @@ describe('The GRT Review page', () => {
 
     expect(
       within(screen.getByTestId('grt-current-status')).getByText(
-        `LCID issued: ${lcid}`
+        `LCID issued: ${lcidDisplay}`
       )
     ).toBeInTheDocument();
   });

@@ -22,6 +22,7 @@ import { yesNoMap } from 'data/common';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import { showSystemVal } from 'utils/showVal';
 import translateRequestType from 'utils/systemIntake';
 
 import SystemIntakeAnnualSpending from './SystemIntakeAnnualCosts';
@@ -214,6 +215,15 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.businessSolution}
+            />
+          </div>
+        </div>
+        <div className="margin-bottom-205 line-height-body-3">
+          <div>
+            <DescriptionTerm term={t('review.priorityAlignment')} />
+            <DescriptionDefinition
+              className="text-pre-wrap"
+              definition={showSystemVal(systemIntake.priorityAlignment)}
             />
           </div>
         </div>

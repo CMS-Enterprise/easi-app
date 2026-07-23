@@ -529,11 +529,15 @@ func (s *ResolverSuite) TestSystemIntakeAdminWorkflowPermissions() {
 			},
 			func(ctx context.Context) error {
 				_, err := mutationResolver.CreateSystemIntakeActionIssueLcid(ctx, models.SystemIntakeIssueLCIDInput{
-					SystemIntakeID: intake.ID,
-					ExpiresAt:      now.AddDate(1, 0, 0),
-					Scope:          "scope",
-					NextSteps:      nextSteps,
-					TrbFollowUp:    models.TRBFRStronglyRecommended,
+					SystemIntakeID:  intake.ID,
+					ExpiresAt:       now.AddDate(1, 0, 0),
+					Scope:           "scope",
+					NextSteps:       nextSteps,
+					TrbFollowUp:     models.TRBFRStronglyRecommended,
+					LcidType:        models.LCIDTypeNewSystem,
+					LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+					LcidIsLowIt:     true,
+					LcidIsShortened: false,
 				})
 				return err
 			},
@@ -706,11 +710,15 @@ func (s *ResolverSuite) TestSystemIntakeAdminLCIDActionPermissions() {
 			},
 			createCall: func(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
 				return mutationResolver.CreateSystemIntakeActionConfirmLcid(ctx, models.SystemIntakeConfirmLCIDInput{
-					SystemIntakeID: intakeID,
-					ExpiresAt:      now.AddDate(1, 0, 0),
-					Scope:          models.HTML("Confirmed LCID scope"),
-					NextSteps:      models.HTML("Confirmed LCID next steps"),
-					TrbFollowUp:    models.TRBFRStronglyRecommended,
+					SystemIntakeID:  intakeID,
+					ExpiresAt:       now.AddDate(1, 0, 0),
+					Scope:           models.HTML("Confirmed LCID scope"),
+					NextSteps:       models.HTML("Confirmed LCID next steps"),
+					TrbFollowUp:     models.TRBFRStronglyRecommended,
+					LcidType:        models.LCIDTypeNewSystem,
+					LcidComponent:   models.SystemIntakeContactComponentOfficeOfInformationTechnologyOit,
+					LcidIsLowIt:     true,
+					LcidIsShortened: false,
 				})
 			},
 			assert: func(payload *models.UpdateSystemIntakePayload) {

@@ -85,15 +85,21 @@ export default gql(/* GraphQL */ `
 
       businessNeed
       businessSolution
+      priorityAlignment
       currentStage
       needsEaSupport
       grtDate
       grbDate
 
       lcid
+      lcidDisplay
       lcidScope
       lcidIssuedAt
       lcidExpiresAt
+      lcidType
+      lcidComponent
+      lcidIsShortened
+      lcidIsLowIt
 
       adminLead
 

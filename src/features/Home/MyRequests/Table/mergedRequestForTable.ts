@@ -10,5 +10,6 @@ export interface MergedRequestsForTable {
   systems: string[];
   nextMeetingDate: string | null | undefined;
   lcid: string | null | undefined;
+  lcidDisplay?: string | null | undefined;
   statusRequester?: SystemIntakeStatusRequester;
 }

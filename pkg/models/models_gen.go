@@ -547,6 +547,7 @@ type SystemIntakeAction struct {
 	Step                   *SystemIntakeStep                 `json:"step,omitempty"`
 	Feedback               *HTML                             `json:"feedback,omitempty"`
 	LcidExpirationChange   *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange,omitempty"`
+	LcidMetadataChange     *SystemIntakeLCIDMetadataChange   `json:"lcidMetadataChange,omitempty"`
 	PreviousRetirementDate *time.Time                        `json:"previousRetirementDate,omitempty"`
 	NewRetirementDate      *time.Time                        `json:"newRetirementDate,omitempty"`
 	CreatedAt              time.Time                         `json:"createdAt"`
@@ -623,6 +624,10 @@ type SystemIntakeConfirmLCIDInput struct {
 	NextSteps              HTML                         `json:"nextSteps"`
 	TrbFollowUp            SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
+	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
+	LcidComponent          SystemIntakeContactComponent `json:"lcidComponent"`
+	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
+	LcidIsShortened        bool                         `json:"lcidIsShortened"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -726,6 +731,10 @@ type SystemIntakeIssueLCIDInput struct {
 	NextSteps              HTML                         `json:"nextSteps"`
 	TrbFollowUp            SystemIntakeTRBFollowUp      `json:"trbFollowUp"`
 	CostBaseline           *string                      `json:"costBaseline,omitempty"`
+	LcidType               SystemIntakeLCIDType         `json:"lcidType"`
+	LcidComponent          SystemIntakeContactComponent `json:"lcidComponent"`
+	LcidIsLowIt            bool                         `json:"lcidIsLowIt"`
+	LcidIsShortened        bool                         `json:"lcidIsShortened"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
@@ -741,6 +750,18 @@ type SystemIntakeLCIDExpirationChange struct {
 	NewNextSteps         *HTML     `json:"newNextSteps,omitempty"`
 	PreviousCostBaseline *string   `json:"previousCostBaseline,omitempty"`
 	NewCostBaseline      *string   `json:"newCostBaseline,omitempty"`
+}
+
+// Contains metadata changes for a system request's lifecycle ID
+type SystemIntakeLCIDMetadataChange struct {
+	PreviousType        *SystemIntakeLCIDType         `json:"previousType,omitempty"`
+	NewType             *SystemIntakeLCIDType         `json:"newType,omitempty"`
+	PreviousComponent   *SystemIntakeContactComponent `json:"previousComponent,omitempty"`
+	NewComponent        *SystemIntakeContactComponent `json:"newComponent,omitempty"`
+	PreviousIsShortened *bool                         `json:"previousIsShortened,omitempty"`
+	NewIsShortened      *bool                         `json:"newIsShortened,omitempty"`
+	PreviousIsLowIt     *bool                         `json:"previousIsLowIt,omitempty"`
+	NewIsLowIt          *bool                         `json:"newIsLowIt,omitempty"`
 }
 
 // Input for creating a Not an IT Governance Request Action in Admin Actions v2
@@ -848,15 +869,19 @@ type SystemIntakeUnretireLCIDInput struct {
 
 // Input for updating an intake's LCID in IT Gov v2
 type SystemIntakeUpdateLCIDInput struct {
-	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
-	ExpiresAt              *time.Time                   `json:"expiresAt,omitempty"`
-	Scope                  *HTML                        `json:"scope,omitempty"`
-	NextSteps              *HTML                        `json:"nextSteps,omitempty"`
-	CostBaseline           *string                      `json:"costBaseline,omitempty"`
-	Reason                 *HTML                        `json:"reason,omitempty"`
-	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
-	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
-	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+	SystemIntakeID         uuid.UUID                     `json:"systemIntakeID"`
+	ExpiresAt              *time.Time                    `json:"expiresAt,omitempty"`
+	Scope                  *HTML                         `json:"scope,omitempty"`
+	NextSteps              *HTML                         `json:"nextSteps,omitempty"`
+	CostBaseline           *string                       `json:"costBaseline,omitempty"`
+	LcidType               *SystemIntakeLCIDType         `json:"lcidType,omitempty"`
+	LcidComponent          *SystemIntakeContactComponent `json:"lcidComponent,omitempty"`
+	LcidIsLowIt            *bool                         `json:"lcidIsLowIt,omitempty"`
+	LcidIsShortened        *bool                         `json:"lcidIsShortened,omitempty"`
+	Reason                 *HTML                         `json:"reason,omitempty"`
+	AdditionalInfo         *HTML                         `json:"additionalInfo,omitempty"`
+	NotificationRecipients *EmailNotificationRecipients  `json:"notificationRecipients,omitempty"`
+	AdminNote              *HTML                         `json:"adminNote,omitempty"`
 }
 
 // Status of a locked section of the system profile form
@@ -989,6 +1014,7 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	ProjectAcronym                             *string                                  `json:"projectAcronym,omitempty"`
 	BusinessNeed                               *string                                  `json:"businessNeed,omitempty"`
 	BusinessSolution                           *string                                  `json:"businessSolution,omitempty"`
+	PriorityAlignment                          *string                                  `json:"priorityAlignment,omitempty"`
 	CurrentStage                               *string                                  `json:"currentStage,omitempty"`
 	NeedsEaSupport                             *bool                                    `json:"needsEaSupport,omitempty"`
 	DigitalServiceInteraction                  *YesNoNotSure                            `json:"digitalServiceInteraction,omitempty"`

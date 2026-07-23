@@ -84,13 +84,6 @@ describe('The Business Case Form', () => {
         'CMS Benefit: The quick brown fox jumps over the lazy dog.'
       );
 
-    cy.get('#BusinessCase-PriorityAlignment')
-      .type('Priority Alignment: The quick brown fox jumps over the lazy dog.')
-      .should(
-        'have.value',
-        'Priority Alignment: The quick brown fox jumps over the lazy dog.'
-      );
-
     cy.get('#BusinessCase-SuccessIndicators')
       .type('Success Indicators: The quick brown fox jumps over the lazy dog.')
       .should(
@@ -152,8 +145,6 @@ describe('The Business Case Form', () => {
         currentSolutionSummary:
           'Current Solution Summary: The quick brown fox jumps over the lazy dog.',
         cmsBenefit: 'CMS Benefit: The quick brown fox jumps over the lazy dog.',
-        priorityAlignment:
-          'Priority Alignment: The quick brown fox jumps over the lazy dog.',
         successIndicators:
           'Success Indicators: The quick brown fox jumps over the lazy dog.',
         responseToGRTFeedback:

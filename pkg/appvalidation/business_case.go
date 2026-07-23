@@ -229,9 +229,6 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCaseWithCosts) error {
 	if validate.RequireNullString(businessCase.CMSBenefit) {
 		expectedErr.WithValidation("CMSBenefit", "is required")
 	}
-	if validate.RequireNullString(businessCase.PriorityAlignment) {
-		expectedErr.WithValidation("PriorityAlignment", "is required")
-	}
 	if validate.RequireNullString(businessCase.SuccessIndicators) {
 		expectedErr.WithValidation("SuccessIndicators", "is required")
 	}

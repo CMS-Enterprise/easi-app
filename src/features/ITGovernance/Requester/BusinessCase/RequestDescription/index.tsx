@@ -41,7 +41,6 @@ const RequestDescription = ({
     collaborationNeeded: businessCase.collaborationNeeded,
     currentSolutionSummary: businessCase.currentSolutionSummary,
     cmsBenefit: businessCase.cmsBenefit,
-    priorityAlignment: businessCase.priorityAlignment,
     successIndicators: businessCase.successIndicators,
     responseToGRTFeedback: businessCase.responseToGRTFeedback
   };
@@ -200,42 +199,6 @@ const RequestDescription = ({
                   maxLength={2000}
                   name="cmsBenefit"
                   aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
-                />
-              </FieldGroup>
-              <FieldGroup
-                scrollElement="priorityAlignment"
-                error={!!flatErrors.priorityAlignment}
-              >
-                <Label
-                  htmlFor="BusinessCase-PriorityAlignment"
-                  className="maxw-none"
-                >
-                  {t('priorityAlignment')}
-                  <RequiredAsterisk />
-                </Label>
-                <HelpText
-                  id="BusinessCase-PriorityAlignmentHelp"
-                  className="margin-top-1"
-                >
-                  {t('priorityAlignmentHelpText')}
-                </HelpText>
-                <CollapsableLink
-                  id="BusinessCase-examplePriorityAlignment"
-                  label={t('priorityAlignmentExample.label')}
-                  className="margin-top-1 margin-bottom-1"
-                >
-                  <div className="line-height-sans-4">
-                    {t('priorityAlignmentExample.description')}
-                  </div>
-                </CollapsableLink>
-                <FieldErrorMsg>{flatErrors.priorityAlignment}</FieldErrorMsg>
-                <Field
-                  as={TextAreaField}
-                  error={!!flatErrors.priorityAlignment}
-                  id="BusinessCase-PriorityAlignment"
-                  maxLength={2000}
-                  name="priorityAlignment"
-                  aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                 />
               </FieldGroup>
               <FieldGroup

@@ -124,7 +124,7 @@ const RequestOverview = () => {
             data-testid="lcid-retiring-soon-alert"
           >
             {t('lcidAlertMessage', {
-              lcid: systemIntake?.lcid,
+              lcid: systemIntake?.lcidDisplay ?? systemIntake?.lcid,
               date: formatDateUtc(systemIntake?.lcidRetiresAt, 'MM/dd/yyyy')
             })}
           </Alert>

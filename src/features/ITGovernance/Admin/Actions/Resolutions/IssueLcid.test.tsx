@@ -7,7 +7,11 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SystemIntakeDecisionState } from 'gql/generated/graphql';
+import {
+  SystemIntakeContactComponent,
+  SystemIntakeDecisionState,
+  SystemIntakeLCIDType
+} from 'gql/generated/graphql';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
@@ -25,8 +29,8 @@ import { EditsRequestedContext } from '..';
 
 import IssueLcid from './IssueLcid';
 
-/** Checks field default values when lcid is selected */
-const checkFieldDefaults = async () => {
+/** Checks saved LCID metadata default values when confirming an LCID */
+const checkConfirmFieldDefaults = async () => {
   await waitFor(() => {
     expect(
       screen.getByRole('textbox', { name: 'Expiration date *' })
@@ -60,6 +64,24 @@ const checkFieldDefaults = async () => {
       screen.getByRole('textbox', { name: 'Project cost baseline' })
     ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
   });
+
+  await waitFor(() => {
+    expect(screen.getByRole('combobox', { name: 'LCID type *' })).toHaveValue(
+      systemIntakeWithLcid.lcidType!
+    );
+  });
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole('combobox', { name: 'LCID component *' })
+    ).toHaveValue(systemIntakeWithLcid.lcidComponent!);
+  });
+
+  await waitFor(() => {
+    const noOptions = screen.getAllByRole('radio', { name: 'No' });
+    expect(noOptions[0]).toBeChecked();
+    expect(noOptions[1]).toBeChecked();
+  });
 };
 
 describe('Issue LCID form', async () => {
@@ -67,7 +89,7 @@ describe('Issue LCID form', async () => {
   beforeEach(() => {
     user = userEvent.setup();
   });
-  it('Populates fields when existing LCID is selected', async () => {
+  it('does not copy metadata when an existing LCID is selected', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
@@ -99,7 +121,19 @@ describe('Issue LCID form', async () => {
     await user.selectOptions(selectLcid, [systemIntakeWithLcid.lcid!]);
     expect(selectLcid).toHaveValue(systemIntakeWithLcid.lcid);
 
-    checkFieldDefaults();
+    expect(screen.getByRole('combobox', { name: 'LCID type *' })).toHaveValue(
+      ''
+    );
+    expect(
+      screen.getByRole('combobox', { name: 'LCID component *' })
+    ).toHaveValue(systemIntake.requester?.component);
+    expect(
+      screen.getByRole('textbox', { name: 'Project cost baseline' })
+    ).toHaveValue('');
+    expect(document.querySelector('#lcidIsShortenedTrue')).not.toBeChecked();
+    expect(document.querySelector('#lcidIsShortenedFalse')).not.toBeChecked();
+    expect(document.querySelector('#lcidIsLowItTrue')).not.toBeChecked();
+    expect(document.querySelector('#lcidIsLowItFalse')).not.toBeChecked();
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
@@ -145,9 +179,29 @@ describe('Issue LCID form', async () => {
       })
     );
 
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'LCID type *' }),
+      SystemIntakeLCIDType.NEW_SYSTEM
+    );
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'LCID component *' }),
+      SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT
+    );
+
+    const noOptions = screen.getAllByRole('radio', { name: 'No' });
+    await user.click(noOptions[1]);
+
     const submitButton = screen.getByRole('button', {
       name: 'Complete action'
     });
+
+    await user.click(submitButton);
+    expect(
+      await screen.findByText('Please make a selection')
+    ).toBeInTheDocument();
+
+    await user.click(noOptions[0]);
 
     expect(submitButton).not.toBeDisabled();
 
@@ -201,6 +255,43 @@ describe('Issue LCID form', async () => {
       )
     ).toBeInTheDocument();
 
-    checkFieldDefaults();
+    await checkConfirmFieldDefaults();
+  });
+
+  it('renders LCID type and component options', async () => {
+    render(
+      <VerboseMockedProvider
+        mocks={[
+          getSystemIntakeContactsQuery(),
+          getSystemIntakeQuery(),
+          getSystemIntakesWithLcidsQuery
+        ]}
+      >
+        <MemoryRouter>
+          <MessageProvider>
+            <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
+          </MessageProvider>
+        </MemoryRouter>
+      </VerboseMockedProvider>
+    );
+
+    await screen.findByText('Issue a Life Cycle ID');
+
+    const lcidTypeSelect = screen.getByRole('combobox', {
+      name: 'LCID type *'
+    });
+
+    expect(lcidTypeSelect).toHaveTextContent('New system');
+    expect(lcidTypeSelect).toHaveTextContent('Recompete');
+    expect(lcidTypeSelect).not.toHaveTextContent('Shortened LCID');
+
+    const lcidComponentSelect = screen.getByRole('combobox', {
+      name: 'LCID component *'
+    });
+
+    expect(lcidComponentSelect).toHaveValue(systemIntake.requester?.component);
+    expect(lcidComponentSelect).toHaveTextContent('OIT');
+    expect(lcidComponentSelect).toHaveTextContent('CM');
+    expect(lcidComponentSelect).toHaveTextContent('OTHER');
   });
 });

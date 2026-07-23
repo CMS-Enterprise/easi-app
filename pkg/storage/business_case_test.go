@@ -173,7 +173,6 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 				Status:               models.BusinessCaseStatusOPEN,
 				ProjectName:          expectedProjectName,
 				RequesterPhoneNumber: expectedPhoneNumber,
-				PriorityAlignment:    null.String{},
 			},
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
@@ -192,7 +191,6 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		s.NoError(err)
 		s.Equal(expectedPhoneNumber, updated.RequesterPhoneNumber)
 		s.Equal(expectedProjectName, updated.ProjectName)
-		s.Equal(null.String{}, updated.PriorityAlignment)
 		s.Equal(3, len(updated.LifecycleCostLines))
 	})
 
