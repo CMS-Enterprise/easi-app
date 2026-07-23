@@ -73,7 +73,6 @@ repos:
       language: node
       additional_dependencies: [dockerfilelint]
       files: Dockerfile.*
-      exclude: Dockerfile.cedarproxy
 
   - repo: local
     hooks:
@@ -92,14 +91,6 @@ repos:
         language: script
         files: \.(js|jsx|ts|tsx)$
         pass_filenames: false
-
-  - repo: local
-    hooks:
-      - id: nginx-lint
-        name: Run nginx config lint and check
-        entry: scripts/pre-commit-nginx-lint
-        language: script
-        files: "cedarproxy/nginx\\.conf|cedarproxy/Dockerfile\\.cedarproxy|cedarproxy/modules/cachepurge/source"
 
   - repo: local
     hooks:

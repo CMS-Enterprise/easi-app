@@ -4,11 +4,6 @@ resources:
   - ../../../base/easi
 
 patches:
-# Patches to remove cedarproxy resources in EKS VPC
-- path: ignore_cedarproxy_configmap.yaml
-- path: ignore_cedarproxy_deployment.yaml
-- path: ignore_cedarproxy_service.yaml
-
 # Patches for configmap changes
 - path: easi-backend_configmap.yaml
   target:

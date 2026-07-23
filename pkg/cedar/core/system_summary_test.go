@@ -29,7 +29,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
 		resp, err := c.GetSystemSummary(ctx)
 		s.NoError(err)
 
@@ -41,7 +41,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	})
 
 	s.Run("Retrieves filtered list when EUA filter is present", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
 		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithEuaIDFilter("ABCD"))
 		s.NoError(err)
 
@@ -53,7 +53,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	})
 
 	s.Run("Retrieves filtered list when Sub-System filter is present", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
 		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithSubSystems(uuid.New()))
 		s.NoError(err)
 
@@ -69,7 +69,7 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
 		_, err := c.GetSystem(ctx, uuid.New())
 		s.NoError(err)
 

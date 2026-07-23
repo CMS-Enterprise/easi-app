@@ -108,9 +108,6 @@ export APPLICATION_TS
 
     echo "🐋 Building db-migrate:${NAMESPACE} image 🐋"
     docker build -f ../Dockerfile.db_migrations --build-arg TAG=9.10-alpine -t db-migrate:"$NAMESPACE" ../.
-
-    echo "🐋 Building cedarproxy:${NAMESPACE} image 🐋"
-    docker build -f ../cedarproxy/Dockerfile.cedarproxy -t cedarproxy:"$NAMESPACE" ../cedarproxy/.
 )
 
 echo "❄️  Deploying EASi via Kustomize  ❄️"
@@ -144,7 +141,6 @@ echo "❄️  Deploying EASi via Kustomize  ❄️"
     kustomize build > manifest-easi.yaml
     sed -i'' -E "s/easi-frontend:latest/easi-frontend:${NAMESPACE}/" manifest-easi.yaml
     sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest-easi.yaml
-    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest-easi.yaml
     sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest-easi.yaml
     kubectl apply -f manifest-easi.yaml
 )

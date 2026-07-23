@@ -141,7 +141,7 @@ func (s *ResolverSuite) TestSystemIntakeByIDLoaderReturnsPerKeyErrors() {
 	intake := s.createNewIntake()
 	missingID := uuid.New()
 
-	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true, true)
+	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true)
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
 		return coreClient.GetSystemSummary(ctx)
 	}
