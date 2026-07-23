@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/url"
 	"strings"
 
 	"github.com/google/uuid"
@@ -194,15 +193,6 @@ func (c *Client) getRolesByObjectID(ctx context.Context, cedarSystemID uuid.UUID
 	return retVal, nil
 }
 
-func (c *Client) PurgeRoleCache(ctx context.Context, cedarSystemID uuid.UUID) error {
-	if err := c.PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID.String())); err == nil {
-		return nil
-	}
-
-	// try original method with uuid surrounded by `{}` - the cache will retain old data for a while, and eventually this can be removed
-	return c.PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(fmt.Sprintf("{%s}", cedarSystemID.String())))
-}
-
 // GetRoleTypes queries CEDAR for the list of supported role types
 func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
 	if c.mockEnabled {
@@ -386,14 +376,6 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID uuid.UUID, e
 		return roleType.Name.String
 	})
 
-	err = c.PurgeRoleCache(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-	err = c.PurgeSystemCacheByEUA(ctx, euaUserID)
-	if err != nil {
-		return nil, err
-	}
 	// re-populate the cache for "My Systems"
 	_, err = c.GetSystemSummary(ctx, SystemSummaryOpts.WithEuaIDFilter(euaUserID))
 	if err != nil {
@@ -462,10 +444,6 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID uuid.UUID, newRoles
 			return errors.New(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
 		}
 		return fmt.Errorf("unknown error")
-	}
-	err = c.PurgeRoleCache(ctx, cedarSystemID)
-	if err != nil {
-		return err
 	}
 
 	return nil

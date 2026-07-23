@@ -328,7 +328,7 @@ func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs ...string) []*authentica
 // update that thing, and load it again to confirm updates worked, caching the first version breaks that flow
 func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
 
-	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true, true)
+	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true)
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
 		return coreClient.GetSystemSummary(ctx)
 	}

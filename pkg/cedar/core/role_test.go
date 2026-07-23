@@ -26,7 +26,7 @@ func TestRoleTestSuite(t *testing.T) {
 
 func (s *RoleTestSuite) TestSetRolesForUser() {
 	ctx := context.Background()
-	c := NewClient(ctx, "fake", "fake", "1.0.0", true, true)
+	c := NewClient(ctx, "fake", "fake", "1.0.0", true)
 	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	s.NoError(err)

@@ -2,6 +2,8 @@
 
 **User Story:** [EASI-4129](https://jiraent.cms.gov/browse/EASI-4129)
 
+**Superseded:** The nginx caching proxy described below was decommissioned in 2026 ([EASI-5051](https://jiraent.cms.gov/browse/EASI-5051)). It had been bypassed via a runtime flag for about a year and carried no real production traffic. EASi now calls CEDAR directly; this ADR is kept for historical context.
+
 EASi heavily relies on CEDAR core data for most system-centric and system profile views. However, CEDAR API responses can range from a few hundred milliseconds to multiple seconds, causing considerable wait times in the EASi application. As CEDAR relies on a low/no-code solution with limited caching options, we need to create a caching solution on our end to expedite calls to CEDAR for data.
 
 A number of solutions listed below were considered. The main decision factors revolve around:

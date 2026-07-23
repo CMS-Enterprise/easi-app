@@ -8,7 +8,7 @@ import (
 )
 
 func GetCedarMockClient(ctx context.Context) *cedarcore.Client {
-	return cedarcore.NewClient(ctx, "", "", "", true, true)
+	return cedarcore.NewClient(ctx, "", "", "", true)
 }
 
 func StubGetCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
