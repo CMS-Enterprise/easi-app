@@ -13,7 +13,7 @@ import (
 func (s *ResolverSuite) TestCedarSetRolesForUser() {
 	okta := local.NewOktaAPIClient()
 	actingCtx, _ := s.getTestContextWithPrincipal("ABCD", false)
-	cedarClient := cedarcore.NewClient(actingCtx, "fake", "fake", "1.0.0", true, true)
+	cedarClient := cedarcore.NewClient(actingCtx, "fake", "fake", "1.0.0", true)
 
 	currentUserEUA := "ABCD"
 	notCurrentUserEUA := "USR1"

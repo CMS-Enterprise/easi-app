@@ -41,37 +41,8 @@ func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-// PurgeCacheByPath purges the Proxy Cache by URL using a given path
-func (c *Client) PurgeCacheByPath(ctx context.Context, path string) error {
-	if c.mockEnabled || c.skipPurge {
-		return nil
-	}
-	req, err := http.NewRequest("PURGE", c.cedarPath+path, nil)
-	logger := appcontext.ZLogger(ctx)
-	if err != nil {
-		return err
-	}
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-	var cacheIsPurged bool
-	if res.StatusCode == 200 {
-		cacheIsPurged = true
-	}
-	logger.Info(
-		"Cache Purge",
-		zap.String("pathArg", path),
-		zap.String("path", req.URL.Path),
-		zap.String("queryParams", req.URL.RawQuery),
-		zap.Int("status", res.StatusCode),
-		zap.Bool("success", cacheIsPurged),
-	)
-	return nil
-}
-
 // NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, skipProxy bool, mockEnabled bool) *Client {
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, mockEnabled bool) *Client {
 	hc := http.Client{
 		Transport: &loggingTransport{
 			logger: appcontext.ZLogger(ctx),
@@ -98,9 +69,6 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 		),
 		hc: &hc,
 	}
-	if skipProxy {
-		client.skipPurge = true
-	}
 	return client
 }
 
@@ -111,5 +79,4 @@ type Client struct {
 	auth        runtime.ClientAuthInfoWriter
 	sdk         *apiclient.CEDARCoreAPI
 	hc          *http.Client
-	skipPurge   bool
 }
