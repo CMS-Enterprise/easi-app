@@ -39,7 +39,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v7
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6.2.0
+        uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
@@ -85,7 +85,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v7
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6.2.0
+        uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
@@ -120,7 +120,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v7
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6.2.0
+        uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
