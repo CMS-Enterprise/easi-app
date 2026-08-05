@@ -114,14 +114,6 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	return retVal, nil
 }
 
-func (c *Client) PurgeSystemCacheByEUA(ctx context.Context, euaID string) error {
-	err := c.PurgeCacheByPath(ctx, "/system/summary?includeInSurvey=true&state=active&userName="+euaID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 // GetSystem retrieves a CEDAR system by ID (IctObjectID)
 func (c *Client) GetSystem(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 	if c.mockEnabled {

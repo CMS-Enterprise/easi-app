@@ -26,8 +26,6 @@ services:
       - CEDAR_INTAKE_PUBLISHER_ENABLED
       - CEDAR_API_KEY
       - CEDAR_API_URL
-      - CEDAR_PROXY_URL=cedarproxy:8001
-      - CEDAR_CORE_SKIP_PROXY
       - CEDAR_CORE_API_VERSION
       - CEDAR_EMAIL_ADDRESS
       - HTTP_PROXY
@@ -84,17 +82,6 @@ services:
         condition: service_completed_successfully # Only start if migrations completed successfully
     labels:
       - "dev.dozzle.name=Backend"
-      - "dev.dozzle.group=EASI"
-  cedarproxy:
-    image: cedarproxy:latest
-    environment:
-      - CEDAR_API_URL
-      - CEDAR_CACHE_EXPIRE_TIME
-    build:
-      dockerfile: Dockerfile.cedarproxy
-      context: ./cedarproxy/
-    labels:
-      - "dev.dozzle.name=CEDAR Proxy"
       - "dev.dozzle.group=EASI"
   easi_client:
     image: easi_client:latest

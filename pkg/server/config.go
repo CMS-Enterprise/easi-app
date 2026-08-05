@@ -108,7 +108,6 @@ func (s Server) NewS3Config() upload.Config {
 // NewCEDARClientCheck checks if CEDAR clients are not connectable
 func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIURL)
-	s.checkRequiredConfig(appconfig.CEDARPROXYURL)
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
 	s.checkRequiredConfig(appconfig.CEDARCoreAPIVersion)
 }

@@ -34,7 +34,6 @@ func TestCedarReadQueryResolversRejectNonEASIUsers(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -154,7 +153,6 @@ func TestCedarSystemsAllowsGRTWithoutEASI(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -191,7 +189,6 @@ func TestCedarSystemsAllowsTRBAdminWithoutEASI(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -228,7 +225,6 @@ func TestCedarContactLookupAllowsTRBAdminWithoutEASI(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -260,7 +256,6 @@ func TestCedarContactLookupAllowsTeamMemberWithoutEASI(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -286,7 +281,6 @@ func TestCedarSystemWorkspaceAuthorizationIgnoresCapabilityFallback(t *testing.T
 		"fake",
 		"fake",
 		"1.0.0",
-		false,
 		true,
 	)
 
@@ -318,7 +312,6 @@ func TestSystemProfileSectionLocksAllowProfileOnlyEASIUsers(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -328,7 +321,6 @@ func TestSystemProfileSectionLocksAllowProfileOnlyEASIUsers(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -377,7 +369,6 @@ func TestCedarSystemProfileQueriesRequireEASI(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -479,7 +470,6 @@ func TestCedarSystemWorkspaceAllowsTeamMemberWithoutEASI(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -515,7 +505,6 @@ func TestMyCedarSystemsAllowsTeamMemberWithoutEASI(t *testing.T) {
 			"fake",
 			"fake",
 			"1.0.0",
-			false,
 			true,
 		),
 	}}
@@ -538,7 +527,6 @@ func TestCedarSystemViewerCapabilitiesAccessMatrix(t *testing.T) {
 		"fake",
 		"fake",
 		"1.0.0",
-		false,
 		true,
 	)
 	queryResolver := &queryResolver{&Resolver{cedarCoreClient: cedarCoreClient}}
@@ -625,7 +613,6 @@ func TestPreAuthorizedMyCedarSystemsBypassMembershipLookupForCapabilities(t *tes
 		"fake",
 		"fake",
 		"1.0.0",
-		false,
 		true,
 	)
 	queryResolver := &queryResolver{&Resolver{cedarCoreClient: cedarCoreClient}}
@@ -672,7 +659,6 @@ func TestPreAuthorizedWorkspaceSystemBypassesMembershipLookupForProfile(t *testi
 		"fake",
 		"fake",
 		"1.0.0",
-		false,
 		true,
 	)
 	typeResolver := &cedarSystemWorkspaceSystemResolver{&Resolver{cedarCoreClient: cedarCoreClient}}

@@ -25,7 +25,6 @@ func (s *ResolverSuite) cedarMutationResolver() *mutationResolver {
 		"fake",
 		"fake",
 		"1.0.0",
-		false,
 		true,
 	)
 
@@ -48,7 +47,6 @@ func (s *ResolverSuite) cedarQueryResolver() *queryResolver {
 		"fake",
 		"fake",
 		"1.0.0",
-		false,
 		true,
 	)
 
@@ -69,7 +67,6 @@ func (s *ResolverSuite) cedarTypeResolver() *cedarSystemResolver {
 		"fake",
 		"fake",
 		"1.0.0",
-		false,
 		true,
 	)
 
