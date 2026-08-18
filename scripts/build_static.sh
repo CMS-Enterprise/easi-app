@@ -9,18 +9,23 @@ case "$APP_ENV" in
     export VITE_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
     export VITE_OKTA_REDIRECT_URI="http://localhost:3000/implicit/callback"
     export VITE_LOCAL_AUTH_ENABLED=true
+    # TODO (EASI-5058): remove flag plumbing after Okta redirect login is permanent
+    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=true
     ;;
   "dev")
     EASI_URL="https://dev.easi.cms.gov"
     export VITE_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
+    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=false
     ;;
   "impl")
     EASI_URL="https://impl.easi.cms.gov"
     export VITE_OKTA_DOMAIN="https://impl.idp.idm.cms.gov"
+    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=false
     ;;
   "prod")
     EASI_URL="https://easi.cms.gov"
     export VITE_OKTA_DOMAIN="https://idm.cms.gov"
+    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=false
     ;;
   *)
     echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
