@@ -79,7 +79,7 @@ const Login = () => {
     );
   }
 
-  // TODO (EASI-XXXX): remove widget branch after Okta redirect login is permanent
+  // TODO (EASI-5058): remove widget branch after Okta redirect login is permanent
   return (
     <MainContent className="grid-container">
       {isLocalAuthEnabled() && (

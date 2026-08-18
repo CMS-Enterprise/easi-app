@@ -12,6 +12,7 @@
 
 // Vendor Styles
 @forward '../../node_modules/font-awesome/css/font-awesome.min.css';
+// TODO (EASI-5058): remove after Okta redirect login is permanent
 @forward '@okta/okta-signin-widget/css/okta-sign-in.min.css'; // use path /css instead of /dist/css because that's what the package exports (even though it doesn't match the filesystem)
 @forward '@trussworks/react-uswds/lib/index.css';
 
