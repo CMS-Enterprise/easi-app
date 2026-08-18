@@ -39,7 +39,10 @@ module.exports = (on, config) => {
   on('file:preprocessor', wp(options));
 
   const newConfig = config;
-  newConfig.env.oktaDomain = process.env.OKTA_DOMAIN;
+  newConfig.env.oktaDomain =
+    process.env.OKTA_DOMAIN ||
+    process.env.VITE_OKTA_DOMAIN ||
+    'https://test.idp.idm.cms.gov';
   newConfig.env.username = process.env.OKTA_TEST_USERNAME;
   newConfig.env.password = process.env.OKTA_TEST_PASSWORD;
   newConfig.env.otpSecret = process.env.OKTA_TEST_SECRET;

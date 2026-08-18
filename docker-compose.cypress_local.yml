@@ -60,6 +60,7 @@ services:
       dockerfile: Dockerfile.cypress
     image: easi-cypress:latest
     environment:
+      - OKTA_DOMAIN
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
