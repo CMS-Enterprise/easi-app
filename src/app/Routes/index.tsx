@@ -8,7 +8,7 @@ import {
   useLocation
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { LoginCallback, SecureRoute } from '@okta/okta-react';
+import { SecureRoute } from '@okta/okta-react';
 import { GovBanner, GridContainer } from '@trussworks/react-uswds';
 import Help from 'features/Help';
 import Home from 'features/Home';
@@ -28,6 +28,7 @@ import RequestDecision from 'features/ITGovernance/Requester/TaskList/RequestDec
 import LinkedSystems from 'features/LinkedSystems';
 import LinkedSystemsForm from 'features/LinkedSystems/LinkedSystemsForm';
 import Login from 'features/Login';
+import LoginCallbackWrapper from 'features/Login/LoginCallbackWrapper';
 import AccessibilityStatement from 'features/Miscellaneous/AccessibilityStatement';
 import Cookies from 'features/Miscellaneous/Cookies';
 import Navigation from 'features/Miscellaneous/Navigation';
@@ -254,7 +255,7 @@ export const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
-      <Route path="/implicit/callback" component={LoginCallback} />
+      <Route path="/implicit/callback" component={LoginCallbackWrapper} />
       {/* 404 */}
       <SecureRoute path="*" component={NotFound} />
     </Switch>
