@@ -6,6 +6,7 @@ const header = {
   navigation: 'Navigation Bar',
   returnHome: 'EASi home',
   signIn: 'Sign In',
+  signInLocal: 'Use local auth',
   signOut: 'Sign Out',
   systems: 'Systems',
   allCMSSystems: 'All CMS systems',
