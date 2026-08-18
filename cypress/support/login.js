@@ -4,27 +4,63 @@ Cypress.Commands.add('login', () => {
 
   cy.visit('/signin');
 
-  cy.get('#okta-signin-username').type(Cypress.env('username'), { log: false });
-  cy.get('#okta-signin-password').type(Cypress.env('password'), {
-    log: false,
-    parseSpecialCharSequences: false
-  });
-  cy.get('#okta-signin-submit').click();
+  cy.get('[data-testid="okta-redirect-login"]').should('exist');
+  cy.get('#okta-signin-username').should('not.exist');
 
-  cy.get('.beacon-loading').should('not.exist');
-  cy.get('body').then($body => {
-    if ($body.find('input[name="answer"]').length) {
-      cy.get('input[name="answer"]').then(() => {
-        cy.task('generateOTP', Cypress.env('otpSecret'), { log: false }).then(
-          token => {
-            cy.get('input[name="answer"]').type(token, { log: false });
-            cy.get('input[name="rememberDevice"]').check({ force: true });
-            cy.get('input[value="Verify"]').click();
+  cy.task('generateOTP', Cypress.env('otpSecret'), { log: false }).then(
+    otpToken => {
+      cy.origin(
+        Cypress.env('oktaDomain'),
+        {
+          args: {
+            username: Cypress.env('username'),
+            password: Cypress.env('password'),
+            otpToken
           }
-        );
-      });
+        },
+        ({ username, password, otpToken: token }) => {
+          Cypress.on('uncaught:exception', err => {
+            if (
+              !err.message ||
+              err.message === 'Script error.' ||
+              err.message === 'null'
+            ) {
+              return false;
+            }
+
+            return true;
+          });
+
+          cy.get('body', { timeout: 30000 }).then($body => {
+            // CMS ELP chooser may appear before the EUA/IDM form.
+            // Selectors may need adjustment against the live test IDP.
+            if ($body.find('[data-se="okta-idp-anchor"]').length) {
+              cy.get('[data-se="okta-idp-anchor"]').first().click();
+            }
+          });
+
+          cy.get('#okta-signin-username', { timeout: 30000 }).type(username, {
+            log: false
+          });
+          cy.get('#okta-signin-password').type(password, {
+            log: false,
+            parseSpecialCharSequences: false
+          });
+          cy.get('#okta-signin-submit').click();
+
+          cy.get('.beacon-loading').should('not.exist');
+          cy.get('body').then($body => {
+            if ($body.find('input[name="answer"]').length) {
+              cy.get('input[name="answer"]').type(token, { log: false });
+              cy.get('input[name="rememberDevice"]').check({ force: true });
+              cy.get('input[value="Verify"]').click();
+            }
+          });
+        }
+      );
     }
-  });
+  );
+
   cy.url({ timeout: 20000 }).should('eq', 'http://localhost:3000/');
 });
 
@@ -56,9 +92,8 @@ Cypress.Commands.add('localLogin', ({ name, role, allowEasi = true }) => {
     return;
   }
 
-  cy.visit('/login');
+  cy.visit('/signin?local=true');
 
-  cy.get('[data-testid="LocalAuth-Visit"]').click();
   cy.get('[data-testid="LocalAuth-EUA"]').type(name);
   if (roles.length) {
     roles.forEach(jobCode => {
