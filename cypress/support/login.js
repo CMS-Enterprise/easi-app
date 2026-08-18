@@ -77,10 +77,9 @@ const completeHostedElpLogin = ({ username, password, otpSecret }) => {
         }
       });
 
-      cy.get(
-        'input[name="identifier"], #okta-signin-username',
-        { timeout: 15000 }
-      )
+      cy.get('input[name="identifier"], #okta-signin-username', {
+        timeout: 15000
+      })
         .filter(':visible')
         .first()
         .clear()
@@ -159,10 +158,9 @@ const completeHostedElpLogin = ({ username, password, otpSecret }) => {
         }
 
         cy.task('generateOTP', secret, { log: false }).then(token => {
-          cy.get(
-            'input[name="credentials.passcode"], input[name="answer"]',
-            { timeout: 15000 }
-          )
+          cy.get('input[name="credentials.passcode"], input[name="answer"]', {
+            timeout: 15000
+          })
             .filter(':visible')
             .first()
             .clear()
@@ -200,10 +198,9 @@ Cypress.Commands.add('login', () => {
 
   // Flag off: embedded widget stays on localhost (username field).
   // Flag on: spinner, then hosted ELP via cy.origin.
-  cy.get(
-    '#okta-signin-username, [data-testid="okta-redirect-login"]',
-    { timeout: 30000 }
-  ).should('exist');
+  cy.get('#okta-signin-username, [data-testid="okta-redirect-login"]', {
+    timeout: 30000
+  }).should('exist');
 
   cy.get('body').then($body => {
     if ($body.find('#okta-signin-username').length) {
