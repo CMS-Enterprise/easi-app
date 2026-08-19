@@ -14,6 +14,7 @@ import { IconList, IconListItem } from 'components/IconList';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import useOktaSession from 'hooks/useOktaSession';
+import { isOktaRedirectLoginEnabled } from 'utils/auth';
 
 import './index.scss';
 
@@ -106,7 +107,7 @@ const WelcomeText = () => {
           </CardGroup>
 
           {/* If a user has an active okta session, replace router link with a button that automicatally authenticates the user for EASI.  Bypasses /signin */}
-          {hasSession ? (
+          {hasSession || isOktaRedirectLoginEnabled() ? (
             <Button
               type="button"
               className="usa-button width-auto"

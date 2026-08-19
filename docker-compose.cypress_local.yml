@@ -48,6 +48,7 @@ services:
         - VITE_OKTA_REDIRECT_URI
         - VITE_OKTA_SERVER_ID
         - VITE_LOCAL_AUTH_ENABLED=true
+        - VITE_OKTA_REDIRECT_LOGIN_ENABLED
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     entrypoint: ['serve', '-s', '-l', '3000']
@@ -59,6 +60,7 @@ services:
       dockerfile: Dockerfile.cypress
     image: easi-cypress:latest
     environment:
+      - OKTA_DOMAIN
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET

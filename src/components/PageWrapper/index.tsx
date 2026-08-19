@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
+import { isOktaRedirectLoginEnabled } from 'utils/auth';
+
 import './index.scss';
 
 type PageWrapperProps = {
@@ -17,7 +19,8 @@ const PageWrapper = ({ className, children, ...props }: PageWrapperProps) => {
   const classes = classnames('easi-page-wrapper', className, {
     'easi-page-wrapper__pre-auth-home':
       pathname === '/' && !authState?.isAuthenticated,
-    'display-none': pathname === '/implicit/callback' // Hide the app/page wrapper on the implicit callback route
+    'display-none':
+      pathname === '/implicit/callback' && !isOktaRedirectLoginEnabled()
   });
 
   return (

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { setUser } from 'stores/reducers/authReducer';
 
@@ -20,6 +21,7 @@ type oktaUserProps = {
 const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
+  const { pathname } = useLocation();
 
   const { hasSession } = useOktaSession();
 
@@ -56,6 +58,7 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
 
   // Return null until we know if the user is authenticated.  This prevents unwanted UX flicker. Does not trigger condition for local auth/non okta development
   if (
+    pathname !== '/implicit/callback' &&
     !window.localStorage[localAuthStorageKey] &&
     oktaAuth.authStateManager.getAuthState() === null &&
     !hasSession
