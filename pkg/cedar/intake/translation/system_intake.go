@@ -109,12 +109,12 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 	if err != nil {
 		return nil, fmt.Errorf("error getting core contact information for system intake %s: %w", si.ID.String(), err)
 	}
-	si.Requester = coreContacts.Requester
-	si.Component = coreContacts.Component
-	si.BusinessOwner = coreContacts.BusinessOwner
-	si.BusinessOwnerComponent = coreContacts.BusinessOwnerComponent
-	si.ProductManager = coreContacts.ProductManager
-	si.ProductManagerComponent = coreContacts.ProductManagerComponent
+	obj.Requester = coreContacts.Requester
+	obj.Component = coreContacts.Component.String
+	obj.BusinessOwner = coreContacts.BusinessOwner.String
+	obj.BusinessOwnerComponent = coreContacts.BusinessOwnerComponent.String
+	obj.ProductManager = coreContacts.ProductManager.String
+	obj.ProductManagerComponent = coreContacts.ProductManagerComponent.String
 
 	blob, err := json.Marshal(&obj)
 	if err != nil {
