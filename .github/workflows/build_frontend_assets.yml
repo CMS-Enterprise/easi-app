@@ -36,6 +36,7 @@ jobs:
           LD_CLIENT_ID: ${{ secrets.LD_CLIENT_ID }}
           OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
           OKTA_SERVER_ID: ${{ secrets.OKTA_SERVER_ID }}
+          VITE_OKTA_REDIRECT_LOGIN_ENABLED: ${{ vars.VITE_OKTA_REDIRECT_LOGIN_ENABLED }}
         run: |
           ./scripts/build_static.sh
       - name: Upload Frontend assets

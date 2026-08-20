@@ -9,23 +9,18 @@ case "$APP_ENV" in
     export VITE_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
     export VITE_OKTA_REDIRECT_URI="http://localhost:3000/implicit/callback"
     export VITE_LOCAL_AUTH_ENABLED=true
-    # TODO (EASI-5058): remove flag plumbing after Okta redirect login is permanent
-    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=true
     ;;
   "dev")
     EASI_URL="https://dev.easi.cms.gov"
     export VITE_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
-    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=false
     ;;
   "impl")
     EASI_URL="https://impl.easi.cms.gov"
     export VITE_OKTA_DOMAIN="https://impl.idp.idm.cms.gov"
-    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=false
     ;;
   "prod")
     EASI_URL="https://easi.cms.gov"
     export VITE_OKTA_DOMAIN="https://idm.cms.gov"
-    export VITE_OKTA_REDIRECT_LOGIN_ENABLED=false
     ;;
   *)
     echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
@@ -41,6 +36,9 @@ export VITE_APP_ENV="$APP_ENV"
 export VITE_OKTA_ISSUER="${VITE_OKTA_DOMAIN}/oauth2/${VITE_OKTA_SERVER_ID}"
 export VITE_API_ADDRESS="${EASI_URL}/api/v1"
 export VITE_GRAPHQL_ADDRESS="${EASI_URL}/api/graph/query"
+# Default off so deployed envs keep the widget until the redirect path is explicitly enabled.
+# TODO (EASI-5058): remove after Okta redirect login is permanent
+export VITE_OKTA_REDIRECT_LOGIN_ENABLED="${VITE_OKTA_REDIRECT_LOGIN_ENABLED:-false}"
 
 # Only set VITE_OKTA_REDIRECT_URI if APP_ENV is not "test"
 if [ "$APP_ENV" != "test" ]; then
