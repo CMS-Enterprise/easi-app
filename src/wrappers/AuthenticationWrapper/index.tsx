@@ -19,6 +19,7 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
     issuer: import.meta.env.VITE_OKTA_ISSUER,
     clientId: import.meta.env.VITE_OKTA_CLIENT_ID,
     redirectUri: import.meta.env.VITE_OKTA_REDIRECT_URI,
+    scopes: ['openid', 'profile', 'email'],
     tokenManager: {
       autoRenew: false
     }

@@ -43,6 +43,7 @@ jobs:
           echo "VITE_OKTA_ISSUER=${VITE_OKTA_ISSUER}" >> $GITHUB_OUTPUT
           echo "VITE_OKTA_DOMAIN=${VITE_OKTA_DOMAIN}" >> $GITHUB_OUTPUT
           echo "VITE_OKTA_REDIRECT_URI=${VITE_OKTA_REDIRECT_URI}" >> $GITHUB_OUTPUT
+          echo "VITE_OKTA_REDIRECT_LOGIN_ENABLED=${VITE_OKTA_REDIRECT_LOGIN_ENABLED:-false}" >> $GITHUB_OUTPUT
       - name: Build, tag, and push image to Amazon ECR
         uses: docker/build-push-action@v7
         with:
@@ -59,3 +60,4 @@ jobs:
             VITE_OKTA_ISSUER=${{ steps.calculate-build-args.outputs.VITE_OKTA_ISSUER }}
             VITE_OKTA_DOMAIN=${{ steps.calculate-build-args.outputs.VITE_OKTA_DOMAIN }}
             VITE_OKTA_REDIRECT_URI=${{ steps.calculate-build-args.outputs.VITE_OKTA_REDIRECT_URI }}
+            VITE_OKTA_REDIRECT_LOGIN_ENABLED=${{ steps.calculate-build-args.outputs.VITE_OKTA_REDIRECT_LOGIN_ENABLED }}

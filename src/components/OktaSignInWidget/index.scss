@@ -1,5 +1,6 @@
 @use 'uswds-core' as *;
 
+// TODO (EASI-5058): remove after Okta redirect login is permanent
 #easi-okta-sign-in {
   position: relative;
 

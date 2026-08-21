@@ -7,6 +7,7 @@ import { Button } from '@trussworks/react-uswds';
 import { localAuthStorageKey } from 'constants/localAuth';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useOktaSession from 'hooks/useOktaSession';
+import { isLocalAuthEnabled, isOktaRedirectLoginEnabled } from 'utils/auth';
 
 import './index.scss';
 
@@ -74,12 +75,21 @@ export const Header = () => {
             </div>
           </div>
         ) : (
-          <div>
+          <div className="display-flex flex-align-center">
             {/* If a user has an active okta session, replace router link with a button that automicatally authenticates the user for EASI.  Bypasses /signin */}
-            {hasSession ? (
+            {isOktaRedirectLoginEnabled() && isLocalAuthEnabled() && (
+              <Link
+                className="easi-header__nav-link margin-left-0 margin-right-2"
+                to="/signin?local=true"
+                data-testid="LocalAuth-Home"
+              >
+                {t('header:signInLocal')}
+              </Link>
+            )}
+            {hasSession || isOktaRedirectLoginEnabled() ? (
               <Button
                 type="button"
-                className="easi-header__nav-link bg-transparent margin-right-0"
+                className="easi-header__nav-link bg-transparent margin-x-0"
                 onClick={() => oktaAuth.signInWithRedirect()}
               >
                 {t('header:signIn')}

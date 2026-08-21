@@ -98,7 +98,8 @@ export APPLICATION_TS
     --build-arg VITE_OKTA_SERVER_ID=aus2e96etlbFPnBHt297 \
     --build-arg VITE_OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297 \
     --build-arg VITE_OKTA_DOMAIN=https://test.idp.idm.cms.gov \
-    --build-arg VITE_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
+    --build-arg VITE_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback \
+    --build-arg VITE_OKTA_REDIRECT_LOGIN_ENABLED=false
 
     echo "🐋 Building easi-backend:${NAMESPACE} image 🐋"
     docker build -f ../Dockerfile -t easi-backend:"$NAMESPACE" ../. \

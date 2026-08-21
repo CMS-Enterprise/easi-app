@@ -1,5 +1,6 @@
 // src/OktaSignInWidget.js
 // okta-signin-widget has no typescript support yet.  If becomes available, install and remove disable
+// TODO (EASI-5058): remove after Okta redirect login is permanent
 
 import React, { useEffect, useRef } from 'react';
 import OktaSignIn from '@okta/okta-signin-widget';

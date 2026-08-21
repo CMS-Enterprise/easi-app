@@ -1,5 +1,6 @@
 import { Flags } from '../types/flags';
 
+// TODO (EASI-5058): remove after Okta redirect login is permanent
 declare module '@okta/okta-signin-widget';
 declare module '@okta/okta-signin-widget/dist/js/okta-sign-in.min';
 declare module 'launchdarkly-js-sdk-common' {

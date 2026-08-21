@@ -1,25 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import DevLogin from 'wrappers/AuthenticationWrapper/DevLogin';
 
 import MainContent from 'components/MainContent';
 import OktaSignInWidget from 'components/OktaSignInWidget';
 import PageHeading from 'components/PageHeading';
+import Spinner from 'components/Spinner';
 import { localAuthStorageKey } from 'constants/localAuth';
-import { isLocalAuthEnabled } from 'utils/auth';
+import { isLocalAuthEnabled, isOktaRedirectLoginEnabled } from 'utils/auth';
 
 const Login = () => {
   let defaultAuth = false;
   const { oktaAuth, authState } = useOktaAuth();
   const history = useHistory();
+  const location = useLocation();
+  const redirectInitiated = useRef(false);
+
+  const queryParams = new URLSearchParams(location.search);
+  const localAuthRequested = queryParams.get('local') === 'true';
 
   if (isLocalAuthEnabled() && window.localStorage[localAuthStorageKey]) {
     defaultAuth = JSON.parse(
       window.localStorage[localAuthStorageKey]
     ).favorLocalAuth;
   }
-  const [isLocalAuth, setIsLocalAuth] = useState(defaultAuth);
+  const [isLocalAuth, setIsLocalAuth] = useState(
+    defaultAuth || (isLocalAuthEnabled() && localAuthRequested)
+  );
 
   const handleUseLocalAuth = () => {
     setIsLocalAuth(true);
@@ -40,6 +48,19 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState?.isAuthenticated]);
 
+  useEffect(() => {
+    if (
+      isOktaRedirectLoginEnabled() &&
+      !isLocalAuth &&
+      authState &&
+      !authState.isAuthenticated &&
+      !redirectInitiated.current
+    ) {
+      redirectInitiated.current = true;
+      oktaAuth.signInWithRedirect();
+    }
+  }, [authState, isLocalAuth, oktaAuth]);
+
   if (isLocalAuthEnabled() && isLocalAuth) {
     return (
       <MainContent className="grid-container margin-top-4">
@@ -48,6 +69,17 @@ const Login = () => {
     );
   }
 
+  if (isOktaRedirectLoginEnabled()) {
+    return (
+      <MainContent className="grid-container margin-top-4">
+        <div className="display-flex flex-justify-center">
+          <Spinner size="large" data-testid="okta-redirect-login" />
+        </div>
+      </MainContent>
+    );
+  }
+
+  // TODO (EASI-5058): remove widget branch after Okta redirect login is permanent
   return (
     <MainContent className="grid-container">
       {isLocalAuthEnabled() && (
