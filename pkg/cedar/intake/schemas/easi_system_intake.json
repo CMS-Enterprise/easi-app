@@ -52,7 +52,13 @@
         "solution",
         "status",
         "submittedAt",
-        "userEUA"
+        "userEUA",
+        "decisionState",
+        "draftBusinessCaseState",
+        "finalBusinessCaseState",
+        "requestFormState",
+        "state",
+        "step"
       ],
       "properties": {
         "intakeId": {
@@ -428,6 +434,202 @@
           "description": "Scheduled production date for the request",
           "examples": [
             "2025-10-20"
+          ]
+        },
+        "currentEstimatedCost": {
+          "type": "string",
+          "description": "Current estimated annual contract cost for the request",
+          "examples": [
+            "Less than $1 million"
+          ]
+        },
+        "currentEstimatedCostITPortion": {
+          "type": "string",
+          "description": "IT portion of the current estimated annual contract cost for the request",
+          "examples": [
+            "25%"
+          ]
+        },
+        "decisionState": {
+          "type": "string",
+          "description": "Current decision state for this request",
+          "examples": [
+            "NO_DECISION",
+            "LCID_ISSUED",
+            "NOT_APPROVED",
+            "NOT_GOVERNANCE"
+          ]
+        },
+        "digitalServiceInteraction": {
+          "type": "string",
+          "description": "Does the request involve interaction with a digital service",
+          "examples": [
+            "YES",
+            "NO",
+            "NOT_SURE"
+          ]
+        },
+        "digitalServiceInteractionDescription": {
+          "type": "string",
+          "description": "Description of the request's digital service interaction",
+          "examples": [
+            "Users will submit enrollment updates through a public-facing web form"
+          ]
+        },
+        "doesNotSupportSystems": {
+          "type": "boolean",
+          "description": "Does this request not support any CEDAR systems"
+        },
+        "draftBusinessCaseState": {
+          "type": "string",
+          "description": "Current state of the draft Business Case form",
+          "examples": [
+            "NOT_STARTED",
+            "IN_PROGRESS",
+            "EDITS_REQUESTED",
+            "SUBMITTED"
+          ]
+        },
+        "estimatedTotalContractValue": {
+          "type": "string",
+          "description": "Estimated total contract value for the request",
+          "examples": [
+            "Between $1 million and $5 million"
+          ]
+        },
+        "estimatedTotalContractValueITPortion": {
+          "type": "string",
+          "description": "IT portion of the estimated total contract value for the request",
+          "examples": [
+            "30%"
+          ]
+        },
+        "finalBusinessCaseState": {
+          "type": "string",
+          "description": "Current state of the final Business Case form",
+          "examples": [
+            "NOT_STARTED",
+            "IN_PROGRESS",
+            "EDITS_REQUESTED",
+            "SUBMITTED"
+          ]
+        },
+        "governanceTeamsIsPresent": {
+          "type": "boolean",
+          "description": "Whether governance team contacts are present for this request"
+        },
+        "lcidType": {
+          "type": "string",
+          "description": "Type of LCID issued for this request",
+          "examples": [
+            "NEW_SYSTEM",
+            "RECOMPETE"
+          ]
+        },
+        "lcidComponent": {
+          "type": "string",
+          "description": "CMS component associated with the LCID",
+          "examples": [
+            "OFFICE_OF_INFORMATION_TECHNOLOGY_OIT"
+          ]
+        },
+        "lcidIsLowIt": {
+          "type": "boolean",
+          "description": "Whether the LCID is marked as low IT"
+        },
+        "lcidIsShortened": {
+          "type": "boolean",
+          "description": "Whether the LCID duration was shortened"
+        },
+        "lcidExpirationAlertTS": {
+          "type": "string",
+          "description": "Timestamp of the last LCID expiration alert for this request",
+          "format": "date-time",
+          "examples": [
+            "2025-10-20T14:34:43Z"
+          ]
+        },
+        "lcidRetiresAt": {
+          "type": "string",
+          "description": "Retirement date for the LCID associated with this request",
+          "format": "date-time",
+          "examples": [
+            "2030-12-23T14:34:43Z"
+          ]
+        },
+        "lcidIssuedAt": {
+          "type": "string",
+          "description": "Timestamp of when the LCID associated with this request was issued",
+          "format": "date-time",
+          "examples": [
+            "2025-10-20T14:34:43Z"
+          ]
+        },
+        "priorityAlignment": {
+          "type": "string",
+          "description": "The ways this effort aligns with organizational priorities",
+          "examples": [
+            "Aligns with CMS modernization goals"
+          ]
+        },
+        "protectedCmsDataAccessedOutside": {
+          "type": "string",
+          "description": "Will protected CMS data be accessed outside CMS systems",
+          "examples": [
+            "YES",
+            "NO",
+            "NOT_SURE"
+          ]
+        },
+        "protectedCmsDataAccessedOutsideDescription": {
+          "type": "string",
+          "description": "Description of protected CMS data accessed outside CMS systems",
+          "examples": [
+            "Contractor staff will access beneficiary data through approved secure tooling"
+          ]
+        },
+        "requestFormState": {
+          "type": "string",
+          "description": "Current state of the intake request form",
+          "examples": [
+            "NOT_STARTED",
+            "IN_PROGRESS",
+            "EDITS_REQUESTED",
+            "SUBMITTED"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "description": "Whether the intake request is open or closed",
+          "examples": [
+            "OPEN",
+            "CLOSED"
+          ]
+        },
+        "step": {
+          "type": "string",
+          "description": "Current step in the intake workflow",
+          "examples": [
+            "INITIAL_REQUEST_FORM",
+            "DRAFT_BUSINESS_CASE",
+            "DECISION_AND_NEXT_STEPS"
+          ]
+        },
+        "trbFollowUpRecommendation": {
+          "type": "string",
+          "description": "Recommendation for whether the requester should follow up with TRB",
+          "examples": [
+            "STRONGLY_RECOMMENDED",
+            "RECOMMENDED_BUT_NOT_CRITICAL",
+            "NOT_RECOMMENDED"
+          ]
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of when request was last updated",
+          "format": "date-time",
+          "examples": [
+            "2025-10-20T14:34:43Z"
           ]
         }
       },
