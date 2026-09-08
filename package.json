@@ -47,7 +47,7 @@
     "@uswds/uswds": "^3.13.0",
     "apollo-upload-client": "^17.0.0",
     "axios": "^1.17.0",
-    "browserslist": "^4.28.2",
+    "browserslist": "^4.28.7",
     "classnames": "^2.5.1",
     "cross-fetch": "^3.1.5",
     "cypress-file-upload": "^5.0.8",
