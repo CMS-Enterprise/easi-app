@@ -15,8 +15,7 @@ COPY pkg ./pkg
 FROM cypress/base:20.14.0
 
 # mc - minio client, used for tagging uploaded files
-RUN apt-get update && apt-get install --no-install-recommends -y wget && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
-RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
+COPY --from=quay.io/minio/mc:latest /usr/bin/mc /mc
 
 COPY package.json yarn.lock /
 # RUN npm install -g yarn
