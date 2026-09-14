@@ -17,7 +17,7 @@ spec:
             name: minio-mc-config
       containers:
       - name: minio-mc
-        image: minio/mc:latest
+        image: quay.io/minio/mc:latest
         volumeMounts:
           - mountPath: /root/.mc/config.json
             name: minio-mc-config

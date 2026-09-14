@@ -16,12 +16,12 @@ services:
       - db
   minio:
     restart: always
-    image: minio/minio:latest
+    image: quay.io/minio/minio:latest
     ports:
       - '9004:9004'
     entrypoint: minio server --address :9004 /data
   minio_mc:
-    image: minio/mc:latest
+    image: quay.io/minio/mc:latest
     depends_on:
       - minio
     volumes:
@@ -30,5 +30,5 @@ services:
       /bin/sh -c "
       /usr/bin/mc rb --force local/easi-app-file-uploads/;
       /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
-      /usr/bin/mc policy set public local/easi-app-file-uploads;
+      /usr/bin/mc anonymous set public local/easi-app-file-uploads;
       "
