@@ -41,6 +41,15 @@ func pStr(s string) *string {
 	return &s
 }
 
+func pStringEnum[T ~string](value *T) *string {
+	if value == nil {
+		return nil
+	}
+
+	str := string(*value)
+	return &str
+}
+
 func versionStr(version SchemaVersion) *string {
 	return pStr(string(version))
 }

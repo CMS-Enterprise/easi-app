@@ -1,5 +1,9 @@
 package models
 
+import (
+	"time"
+)
+
 // NOTE: this type is used to create a schema used by the CEDAR Intake API
 // When changing this type, update the version for it in pkg/cedar/intake/translation/constants.go (IntakeInputSchemaEASIIntakeVersion)
 
@@ -62,6 +66,33 @@ type EASIIntake struct {
 	PlannedYearOneSpending          *string              `json:"plannedYearOneSpending,omitempty" jsonschema:"description=Planned year one spending for the request,example=Less than $1 million"`
 	PlannedYearOneSpendingITPortion *string              `json:"plannedYearOneSpendingITPortion,omitempty" jsonschema:"description=Planned year one spending IT portion for the request,example=30%"`
 	ScheduledProductionDate         *string              `json:"scheduledProductionDate,omitempty" jsonschema:"description=Scheduled production date for the request,example=2025-10-20"`
+
+	CurrentEstimatedCost                       *string    `json:"currentEstimatedCost,omitempty" jsonschema:"description=Current estimated annual contract cost for the request,example=Less than $1 million"`
+	CurrentEstimatedCostITPortion              *string    `json:"currentEstimatedCostITPortion,omitempty" jsonschema:"description=IT portion of the current estimated annual contract cost for the request,example=25%"`
+	DecisionState                              string     `json:"decisionState" jsonschema:"description=Current decision state for this request,example=NO_DECISION,example=LCID_ISSUED,example=NOT_APPROVED,example=NOT_GOVERNANCE"`
+	DigitalServiceInteraction                  *string    `json:"digitalServiceInteraction,omitempty" jsonschema:"description=Does the request involve interaction with a digital service,example=YES,example=NO,example=NOT_SURE"`
+	DigitalServiceInteractionDescription       *string    `json:"digitalServiceInteractionDescription,omitempty" jsonschema:"description=Description of the request's digital service interaction,example=Users will submit enrollment updates through a public-facing web form"`
+	DoesNotSupportSystems                      *bool      `json:"doesNotSupportSystems,omitempty" jsonschema:"description=Does this request not support any CEDAR systems,example=false"`
+	DraftBusinessCaseState                     string     `json:"draftBusinessCaseState" jsonschema:"description=Current state of the draft Business Case form,example=NOT_STARTED,example=IN_PROGRESS,example=EDITS_REQUESTED,example=SUBMITTED"`
+	EstimatedTotalContractValue                *string    `json:"estimatedTotalContractValue,omitempty" jsonschema:"description=Estimated total contract value for the request,example=Between $1 million and $5 million"`
+	EstimatedTotalContractValueITPortion       *string    `json:"estimatedTotalContractValueITPortion,omitempty" jsonschema:"description=IT portion of the estimated total contract value for the request,example=30%"`
+	FinalBusinessCaseState                     string     `json:"finalBusinessCaseState" jsonschema:"description=Current state of the final Business Case form,example=NOT_STARTED,example=IN_PROGRESS,example=EDITS_REQUESTED,example=SUBMITTED"`
+	GovernanceTeamsIsPresent                   *bool      `json:"governanceTeamsIsPresent,omitempty" jsonschema:"description=Whether governance team contacts are present for this request,example=true"`
+	LCIDType                                   *string    `json:"lcidType,omitempty" jsonschema:"description=Type of LCID issued for this request,example=NEW_SYSTEM,example=RECOMPETE"`
+	LCIDComponent                              *string    `json:"lcidComponent,omitempty" jsonschema:"description=CMS component associated with the LCID,example=OFFICE_OF_INFORMATION_TECHNOLOGY_OIT"`
+	LCIDIsLowIT                                *bool      `json:"lcidIsLowIt,omitempty" jsonschema:"description=Whether the LCID is marked as low IT,example=false"`
+	LCIDIsShortened                            *bool      `json:"lcidIsShortened,omitempty" jsonschema:"description=Whether the LCID duration was shortened,example=false"`
+	LifecycleExpirationAlertTS                 *time.Time `json:"lcidExpirationAlertTS,omitempty" jsonschema:"description=Timestamp of the last LCID expiration alert for this request,example=2025-10-20T14:34:43Z"`
+	LifecycleRetiresAt                         *time.Time `json:"lcidRetiresAt,omitempty" jsonschema:"description=Retirement date for the LCID associated with this request,example=2030-12-23T14:34:43Z"`
+	LifecycleIssuedAt                          *time.Time `json:"lcidIssuedAt,omitempty" jsonschema:"description=Timestamp of when the LCID associated with this request was issued,example=2025-10-20T14:34:43Z"`
+	PriorityAlignment                          *string    `json:"priorityAlignment,omitempty" jsonschema:"description=The ways this effort aligns with organizational priorities,example=Aligns with CMS modernization goals"`
+	ProtectedCmsDataAccessedOutside            *string    `json:"protectedCmsDataAccessedOutside,omitempty" jsonschema:"description=Will protected CMS data be accessed outside CMS systems,example=YES,example=NO,example=NOT_SURE"`
+	ProtectedCmsDataAccessedOutsideDescription *string    `json:"protectedCmsDataAccessedOutsideDescription,omitempty" jsonschema:"description=Description of protected CMS data accessed outside CMS systems,example=Contractor staff will access beneficiary data through approved secure tooling"`
+	RequestFormState                           string     `json:"requestFormState" jsonschema:"description=Current state of the intake request form,example=NOT_STARTED,example=IN_PROGRESS,example=EDITS_REQUESTED,example=SUBMITTED"`
+	State                                      string     `json:"state" jsonschema:"description=Whether the intake request is open or closed,example=OPEN,example=CLOSED"`
+	Step                                       string     `json:"step" jsonschema:"description=Current step in the intake workflow,example=INITIAL_REQUEST_FORM,example=DRAFT_BUSINESS_CASE,example=DECISION_AND_NEXT_STEPS"`
+	TRBFollowUpRecommendation                  *string    `json:"trbFollowUpRecommendation,omitempty" jsonschema:"description=Recommendation for whether the requester should follow up with TRB,example=STRONGLY_RECOMMENDED,example=RECOMMENDED_BUT_NOT_CRITICAL,example=NOT_RECOMMENDED"`
+	UpdatedAt                                  *time.Time `json:"updatedAt,omitempty" jsonschema:"description=Timestamp of when request was last updated,example=2025-10-20T14:34:43Z"`
 }
 
 // EASIFundingSource represents a source of funding for a system intake
