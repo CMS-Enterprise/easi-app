@@ -1,8 +1,7 @@
 export default function powerPlatformLink(id?: string): string {
-  let env: string = process.env.APP_ENV || '';
-  if (import.meta?.env?.APP_ENV?.length > 0) {
-    env = import.meta.env.APP_ENV;
-  }
+  // Vite exposes client-side environment variables through import.meta.env,
+  // and only variables prefixed with VITE_ are available in the browser.
+  const env = import.meta.env.VITE_APP_ENV || '';
 
   if (env.length < 1) {
     return '';
