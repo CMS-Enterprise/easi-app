@@ -24,7 +24,7 @@ spec:
         # Docker's `entrypoint:`) - only `args:` (Kubernetes' equivalent of Docker's `command:`) is
         # set, matching pgsty's documented usage and what's actually been verified to work.
         - args: ['server', '/data', '--console-address', ':9001', '--address', ':9004']
-          image: docker.io/pgsty/silo:latest
+          image: docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z
           imagePullPolicy: Always
           name: minio
           ports:

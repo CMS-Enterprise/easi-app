@@ -18,7 +18,7 @@ FROM cypress/base:20.14.0
 # quay.io/minio/mc lost anonymous pull access (Sep 2026) and MinIO's own GitHub repo is now
 # archived; pgsty/mc is an actively-maintained, CLI-compatible fork (still ships the `mc` binary
 # at the same path) freely published to Docker Hub.
-COPY --from=docker.io/pgsty/mc:latest /usr/bin/mc /mc
+COPY --from=docker.io/pgsty/mc:RELEASE.2026-09-16T00-00-00Z /usr/bin/mc /mc
 
 COPY package.json yarn.lock /
 # RUN npm install -g yarn

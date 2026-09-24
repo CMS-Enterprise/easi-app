@@ -22,14 +22,14 @@ services:
     # CLI-compatible fork, still freely published to Docker Hub. Uses the image's own
     # docker-entrypoint.sh (not a custom entrypoint override) - `command:` alone matches pgsty's
     # documented usage and is what's actually been verified to work.
-    image: docker.io/pgsty/silo:latest
+    image: docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z
     ports:
       - '9004:9004'
     command: server --address :9004 /data
   minio_mc:
     # pgsty/mc is the companion client image (ships the `mc` binary, "mcli" upstream) for
     # pgsty/silo - see the minio service above for why we're not on quay.io/minio/mc anymore.
-    image: docker.io/pgsty/mc:latest
+    image: docker.io/pgsty/mc:RELEASE.2026-09-16T00-00-00Z
     depends_on:
       - minio
     volumes:
