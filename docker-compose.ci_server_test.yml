@@ -16,12 +16,20 @@ services:
       - db
   minio:
     restart: always
-    image: quay.io/minio/minio:latest
+    # quay.io stopped allowing anonymous pulls of minio/minio (Sep 2026), the same way Docker Hub
+    # did before it (Oct 2025) - MinIO's own GitHub repo is now archived entirely, so there's no
+    # official image left to pull from at all. pgsty/silo is an actively-maintained, S3-API- and
+    # CLI-compatible fork, still freely published to Docker Hub. Uses the image's own
+    # docker-entrypoint.sh (not a custom entrypoint override) - `command:` alone matches pgsty's
+    # documented usage and is what's actually been verified to work.
+    image: docker.io/pgsty/silo:latest
     ports:
       - '9004:9004'
-    entrypoint: minio server --address :9004 /data
+    command: server --address :9004 /data
   minio_mc:
-    image: quay.io/minio/mc:latest
+    # pgsty/mc is the companion client image (ships the `mc` binary, "mcli" upstream) for
+    # pgsty/silo - see the minio service above for why we're not on quay.io/minio/mc anymore.
+    image: docker.io/pgsty/mc:latest
     depends_on:
       - minio
     volumes:

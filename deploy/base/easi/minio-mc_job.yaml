@@ -17,7 +17,9 @@ spec:
             name: minio-mc-config
       containers:
       - name: minio-mc
-        image: quay.io/minio/mc:latest
+        # pgsty/mc is the companion client image (ships the `mc` binary, "mcli" upstream) for
+        # pgsty/silo - see minio_deployment.yaml for why we're not on quay.io/minio/mc anymore.
+        image: docker.io/pgsty/mc:latest
         volumeMounts:
           - mountPath: /root/.mc/config.json
             name: minio-mc-config
