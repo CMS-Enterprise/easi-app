@@ -55,6 +55,8 @@ linters:
     paths:
       - "pkg/graph/generated/generated.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically
       - "pkg/models/models_gen.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically
+      - "pkg/cedar/core/gen/" # go-swagger generated CEDAR Core client/models; calls deprecated go-openapi/swag functions until go-swagger's templates are updated (regenerating with go-swagger v0.34+ fixes this but requires a go-openapi/runtime bump for ContextualTransport)
+      - "pkg/cedar/intake/gen/" # go-swagger generated CEDAR Intake client/models; same go-swagger/swag deprecation issue as pkg/cedar/core/gen
 
 run:
   timeout: 8m
