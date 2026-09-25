@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "baseUrl": "src",
+    "rootDir": "./src",
     "paths": {
-      "utils/*": ["utils/*"],
-      "i18n/*": ["i18n/*"],
-      "components/*": ["components/*"],
-      "*": ["*"]
+      "*": ["./src/*"]
     },
     "lib": [
       "dom",
@@ -20,9 +17,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "downlevelIteration": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -33,4 +29,3 @@
     "src"
   ]
 }
-

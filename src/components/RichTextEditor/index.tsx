@@ -231,29 +231,31 @@ DOMPurify.addHook('afterSanitizeAttributes', node => {
  */
 function showLinkUnderSelection(toastEditor: ToastuiEditor) {
   toastEditor.eventEmitter.removeEventHandler('query');
-  toastEditor.eventEmitter.listen('query', (query, payload = {}) => {
-    if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
-      const range = toastEditor.getSelection() as [number, number];
-      const info = toastEditor.getRangeInfoOfNode(
-        Math.floor((range[0] + range[1]) / 2)
-      );
-      if (info.type === 'link') {
-        toastEditor.setSelection(info.range[0], info.range[1]);
-        let link = window.getSelection()?.getRangeAt(0).commonAncestorContainer
-          .parentElement as HTMLAnchorElement;
-        link = link?.closest('a') || link?.querySelector('a') || link;
+  toastEditor.eventEmitter.listen(
+    'query',
+    (query: string, payload: { popupName?: string } = {}) => {
+      if (query === 'getPopupInitialValues' && payload.popupName === 'link') {
+        const range = toastEditor.getSelection() as [number, number];
+        const info = toastEditor.getRangeInfoOfNode(
+          Math.floor((range[0] + range[1]) / 2)
+        );
+        if (info.type === 'link') {
+          toastEditor.setSelection(info.range[0], info.range[1]);
+          let link = window.getSelection()?.getRangeAt(0)
+            .commonAncestorContainer.parentElement as HTMLAnchorElement;
+          link = link?.closest('a') || link?.querySelector('a') || link;
+          return {
+            linkUrl: link?.href,
+            linkText: link?.innerText
+          };
+        }
         return {
-          linkUrl: link?.href,
-          linkText: link?.innerText
+          linkText: toastEditor.getSelectedText()
         };
       }
-      return {
-        linkText: toastEditor.getSelectedText()
-      };
+      return null;
     }
-
-    return null;
-  });
+  );
 }
 
 // Link attributes should match pkg/sanitization/html.go#createHTMLPolicy()

@@ -131,7 +131,7 @@ function Homepage() {
     setGlobalFilter,
     setPageSize,
     state
-  } = useTable(
+  } = useTable<TRBRequestType>(
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
