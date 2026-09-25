@@ -174,7 +174,7 @@ function TeamTable({
     setGlobalFilter,
     setPageSize,
     state
-  } = useTable(
+  } = useTable<UsernameWithRoles>(
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
