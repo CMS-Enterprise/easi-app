@@ -208,7 +208,7 @@ function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
     rows,
     setPageSize,
     state
-  } = useTable(
+  } = useTable<TrbAdminTeamHomeRequest>(
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),
@@ -452,7 +452,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
     setPageSize,
     state,
     setSortBy
-  } = useTable(
+  } = useTable<TrbAdminTeamHomeRequest>(
     {
       columns,
       globalFilter: useMemo(() => globalFilterCellText, []),

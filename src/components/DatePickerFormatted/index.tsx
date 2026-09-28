@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@trussworks/react-uswds';
-// eslint-disable-next-line import/no-unresolved
-import { DatePickerProps } from '@trussworks/react-uswds/lib/components/forms/DatePicker/DatePicker';
 import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import { DateTime } from 'luxon';
 
@@ -15,7 +13,10 @@ function defaultFormat(
   return dt.toUTC().toISO({ suppressMilliseconds });
 }
 
-type DatePickerFormattedProps = Omit<DatePickerProps, 'value'> & {
+type DatePickerFormattedProps = Omit<
+  React.ComponentProps<typeof DatePicker>,
+  'value'
+> & {
   format?: (dt: DateTime) => string | null;
   value?: string;
   dateInPastWarning?: boolean;

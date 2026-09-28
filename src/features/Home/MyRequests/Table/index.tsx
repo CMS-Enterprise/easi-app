@@ -315,7 +315,7 @@ const Table = ({
     setGlobalFilter,
     state,
     prepareRow
-  } = useTable(
+  } = useTable<MergedRequestsForTable>(
     {
       columns,
       data,

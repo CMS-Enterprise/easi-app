@@ -1,8 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
-// eslint-disable-next-line import/no-unresolved
-import { IconProps } from '@trussworks/react-uswds/lib/components/Icon/Icon';
 import classnames from 'classnames';
 
 import { AtoStatus } from 'types/systemProfile';
@@ -11,6 +9,8 @@ import { formatDateUtc } from 'utils/date';
 import Tag from '../Tag';
 
 import getAtoStatus from './getAtoStatus';
+
+type IconProps = React.ComponentProps<typeof Icon.Check>;
 
 const atoStatusTagClassNames: Record<AtoStatus, string> = {
   Active: 'text-white bg-success-dark',
