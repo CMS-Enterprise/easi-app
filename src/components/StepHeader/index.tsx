@@ -5,13 +5,13 @@ import {
   StepIndicator,
   StepIndicatorStep
 } from '@trussworks/react-uswds';
-// eslint-disable-next-line import/no-unresolved
-import { StepIndicatorStepProps } from '@trussworks/react-uswds/lib/components/stepindicator/StepIndicatorStep/StepIndicatorStep';
 import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 
 import './index.scss';
+
+type StepIndicatorStepProps = React.ComponentProps<typeof StepIndicatorStep>;
 
 export type StepHeaderStepProps = {
   key: string;

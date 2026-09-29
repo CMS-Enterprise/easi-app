@@ -16,9 +16,15 @@ spec:
         app: minio
     spec:
       containers:
-        - command: ["minio", "server", "/data"]
-          args: ['--console-address', ':9001', '--address', ':9004']
-          image: quay.io/minio/minio:latest
+        # quay.io stopped allowing anonymous pulls of minio/minio (Sep 2026), the same way Docker
+        # Hub did before it (Oct 2025) - MinIO's own GitHub repo is now archived entirely, so
+        # there's no official image left to pull from at all. pgsty/silo is an actively-maintained,
+        # S3-API- and CLI-compatible fork, still freely published to Docker Hub. Uses the image's
+        # own docker-entrypoint.sh (no `command:` override, which is Kubernetes' equivalent of
+        # Docker's `entrypoint:`) - only `args:` (Kubernetes' equivalent of Docker's `command:`) is
+        # set, matching pgsty's documented usage and what's actually been verified to work.
+        - args: ['server', '/data', '--console-address', ':9001', '--address', ':9004']
+          image: docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z
           imagePullPolicy: Always
           name: minio
           ports:
