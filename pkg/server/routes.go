@@ -215,7 +215,7 @@ func (s *Server) routes() {
 	}}
 	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
 	clientAddress := s.Config.GetString(appconfig.ClientAddressKey)
-	graphqlServer := newGQLServer(generated.NewExecutableSchema(gqlConfig), oktaMiddlewareFactory, store, clientAddress)
+	graphqlServer := newGQLServer(generated.NewExecutableSchema(gqlConfig), oktaMiddlewareFactory, store, clientAddress, s.NewLocalAuthIsEnabled())
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundOperations(authorization.NewRequirePrincipalOperationMiddleware())
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
@@ -382,7 +382,7 @@ func (s *Server) routes() {
 
 }
 
-func newGQLServer(es graphql.ExecutableSchema, oktaMiddlewareFactory *okta.OktaMiddlewareFactory, store *storage.Store, clientAddress string) *handler.Server {
+func newGQLServer(es graphql.ExecutableSchema, oktaMiddlewareFactory *okta.OktaMiddlewareFactory, store *storage.Store, clientAddress string, localAuthEnabled bool) *handler.Server {
 	srv := handler.New(es)
 
 	srv.AddTransport(transport.Websocket{
@@ -394,7 +394,7 @@ func newGQLServer(es graphql.ExecutableSchema, oktaMiddlewareFactory *okta.OktaM
 			},
 			Subprotocols: []string{"graphql-transport-ws"},
 		},
-		InitFunc: HandleLocalOrOktaWebSocketAuth(oktaMiddlewareFactory, store),
+		InitFunc: HandleLocalOrOktaWebSocketAuth(oktaMiddlewareFactory, store, localAuthEnabled),
 	})
 	srv.AddTransport(transport.Options{})
 	srv.AddTransport(transport.GET{})

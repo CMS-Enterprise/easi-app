@@ -14,14 +14,14 @@ import (
 
 // HandleLocalOrOktaWebSocketAuth returns a websocket InitFunc that authenticates connections
 // using either Local or Okta authentication based on the authToken prefix.
-func HandleLocalOrOktaWebSocketAuth(oktaMiddlewareFactory *okta.OktaMiddlewareFactory, store *storage.Store) transport.WebsocketInitFunc {
+func HandleLocalOrOktaWebSocketAuth(oktaMiddlewareFactory *okta.OktaMiddlewareFactory, store *storage.Store, localAuthEnabled bool) transport.WebsocketInitFunc {
 	return func(ctx context.Context, initPayload transport.InitPayload) (context.Context, *transport.InitPayload, error) {
 		token, ok := initPayload["authToken"].(string)
 		if !ok || token == "" {
 			return nil, &initPayload, errors.New("authToken not found in transport payload")
 		}
 
-		if strings.HasPrefix(token, "Local ") {
+		if localAuthEnabled && strings.HasPrefix(token, "Local ") {
 			return local.NewLocalWebSocketAuthenticationMiddleware(store)(ctx, initPayload)
 		}
 		return oktaMiddlewareFactory.NewOktaWebSocketAuthenticationMiddleware()(ctx, initPayload)
