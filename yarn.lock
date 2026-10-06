@@ -2262,9 +2262,9 @@
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
 "@fastify/busboy@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-3.1.1.tgz"
-  integrity sha512-5DGmA8FTdB2XbDeEwc/5ZXBl6UbBAyBOOLlPuBnZ/N1SwdH9Ii+cOX3tBROlDgcTXxjOYnLMVoKk9+FXAw0CJw==
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-3.2.2.tgz#c35ca0fac4b644f5f56a7e179360568a5d7c997e"
+  integrity sha512-yXSS27qPExaXeuLvMRMXOLtpipzfQYNjG3FkunDWKGfMYjKuhFXko9CVzqxm8jcF+lmtS9Fd89QNdh9XDjnbNg==
 
 "@floating-ui/core@^1.7.0":
   version "1.7.0"
