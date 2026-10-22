@@ -1,4 +1,4 @@
-FROM golang:1.27.1 AS base
+FROM golang:1.27.3 AS base
 
 WORKDIR /easi/
 
@@ -12,7 +12,16 @@ FROM modules AS build
 COPY cmd ./cmd
 COPY pkg ./pkg
 
-FROM cypress/base:20.14.0
+# TODO(EASI-5064): bump to cypress/base:24.22.1 once Cypress publishes it.
+FROM cypress/base:24.22.0
+
+# Node 24.22.0's bundled CA store still trusts the compromised eMudhra
+# intermediates (https://we-have-a-problem.com), so upgrade Debian's patched
+# ca-certificates and have yarn install (which also downloads the Cypress
+# binary) use it via --use-openssl-ca instead of Node's bundled store.
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends ca-certificates && \
+	rm -rf /var/lib/apt/lists/*
 
 # mc - minio client, used for tagging uploaded files
 # quay.io/minio/mc lost anonymous pull access (Sep 2026) and MinIO's own GitHub repo is now
@@ -22,7 +31,7 @@ COPY --from=docker.io/pgsty/mc:RELEASE.2026-09-16T00-00-00Z /usr/bin/mc /mc
 
 COPY package.json yarn.lock /
 # RUN npm install -g yarn
-RUN yarn install --immutable
+RUN NODE_OPTIONS=--use-openssl-ca yarn install --immutable
 
 COPY cypress /cypress
 COPY cypress.config.ts /
