@@ -7,14 +7,20 @@
 # when the dependencies change.
 
 # Start with the official Node.js image to install dependencies
-FROM node:20.12.2-alpine AS modules
+# TODO: move to node:24.22.1-alpine once Docker Hub publishes it (tag exists but has
+# no images yet). 24.22.0's bundled CA store still trusts the compromised eMudhra
+# intermediates (https://we-have-a-problem.com), so upgrade the distro's patched
+# ca-certificates and have yarn use it via --use-openssl-ca.
+FROM node:24.22.0-alpine AS modules
+
+RUN apk add --no-cache --upgrade ca-certificates
 
 WORKDIR /app
 # ENV PATH /app/node_modules/.bin:$PATH
 
 # Copy in package.json and yarn.lock to install dependencies
 COPY package.json yarn.lock ./
-RUN yarn install --immutable
+RUN NODE_OPTIONS=--use-openssl-ca yarn install --immutable
 
 FROM modules AS local_dev
 

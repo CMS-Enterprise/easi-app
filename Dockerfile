@@ -1,9 +1,15 @@
-FROM golang:1.27.1 AS base
+FROM golang:1.27.3 AS base
 
 WORKDIR /easi/
 
+# The final image copies this stage's CA bundle (not distroless's), so upgrade
+# ca-certificates explicitly to pick up trust store fixes even if this base
+# image tag is stale, then add our custom CAs on top.
 COPY config/tls/*.crt /usr/local/share/ca-certificates/
-RUN update-ca-certificates
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends ca-certificates && \
+	update-ca-certificates && \
+	rm -rf /var/lib/apt/lists/*
 
 COPY go.mod go.sum ./
 RUN go mod download
