@@ -51,6 +51,9 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		return nil, fmt.Errorf("error getting core contact information for system intake %s: %w", bc.SystemIntakeID.String(), err)
 	}
 	obj.Requester = coreContacts.Requester
+	if obj.Requester == "" {
+		obj.Requester = bc.Requester.ValueOrZero()
+	}
 	obj.BusinessOwner = coreContacts.BusinessOwner.String
 
 	// Build the collection of embedded objects

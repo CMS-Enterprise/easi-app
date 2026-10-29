@@ -33,7 +33,7 @@ func GetCoreTranslatableContactInfo(ctx context.Context, systemIntakeID uuid.UUI
 	if requester != nil {
 		reqAccount, _ := requester.UserAccount(ctx)
 		if reqAccount != nil {
-			retContacts.Requester = reqAccount.Username
+			retContacts.Requester = reqAccount.CommonName
 		}
 		retContacts.Component = null.StringFrom(string(requester.Component))
 	}
