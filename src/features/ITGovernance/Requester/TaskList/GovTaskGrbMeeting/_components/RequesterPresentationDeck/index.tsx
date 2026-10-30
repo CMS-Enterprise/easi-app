@@ -18,9 +18,7 @@ interface RequesterPresentationDeckProps {
   grbMeetingStatus: ITGovGRBStatus;
   grbReviewType: SystemIntakeGRBReviewType;
   grbPresentationLinks:
-    | SystemIntakeGRBPresentationLinksFragment
-    | null
-    | undefined;
+    SystemIntakeGRBPresentationLinksFragment | null | undefined;
 }
 
 /**

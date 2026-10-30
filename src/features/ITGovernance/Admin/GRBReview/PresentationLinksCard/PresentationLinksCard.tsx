@@ -132,14 +132,10 @@ export type PresentationLinksCardProps = {
   grbReviewStartedAt: string | null | undefined;
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
   grbReviewStandardStatus:
-    | SystemIntakeGRBReviewStandardStatusType
-    | null
-    | undefined;
+    SystemIntakeGRBReviewStandardStatusType | null | undefined;
   grbReviewAsyncRecordingTime: string | null | undefined;
   grbPresentationLinks:
-    | SystemIntakeGRBPresentationLinksFragmentFragment
-    | null
-    | undefined;
+    SystemIntakeGRBPresentationLinksFragmentFragment | null | undefined;
 };
 
 function PresentationLinksCard({

@@ -13,11 +13,7 @@ import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStat
 import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 
 export type RequestType =
-  | 'NEW'
-  | 'MAJOR_CHANGES'
-  | 'RECOMPETE'
-  | 'SHUTDOWN'
-  | 'OTHER';
+  'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN' | 'OTHER';
 
 /**
  * Type for SystemIntakeForm
