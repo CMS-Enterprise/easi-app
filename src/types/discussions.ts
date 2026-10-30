@@ -5,15 +5,12 @@ import { AlertProps } from 'components/Alert';
 
 /** Error and success alerts for the discussion form */
 export type DiscussionAlert =
-  | (Omit<AlertProps, 'Children'> & { message: string })
-  | null;
+  (Omit<AlertProps, 'Children'> & { message: string }) | null;
 
 export type MentionSuggestion =
   | {
       tagType:
-        | TagType.GROUP_IT_GOV
-        | TagType.GROUP_GRB_REVIEWERS
-        | TagType.REQUESTER;
+        TagType.GROUP_IT_GOV | TagType.GROUP_GRB_REVIEWERS | TagType.REQUESTER;
       displayName: string;
     }
   | {

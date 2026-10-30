@@ -274,9 +274,7 @@ const SystemIntakeValidationSchema = {
               'End date must be on or after the start date',
               (endVal, ctx) => {
                 const startVal = ctx.parent?.startDate as
-                  | string
-                  | null
-                  | undefined;
+                  string | null | undefined;
                 if (
                   !endVal ||
                   !startVal ||

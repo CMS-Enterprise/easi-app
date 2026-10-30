@@ -72,11 +72,7 @@ export type TrbAdminPath =
   | 'notes';
 
 export type GuidanceFormStepKey =
-  | 'summary'
-  | 'insights'
-  | 'next-steps'
-  | 'internal-review'
-  | 'review';
+  'summary' | 'insights' | 'next-steps' | 'internal-review' | 'review';
 
 export type TrbAdminPage = {
   /** Label translation key */
