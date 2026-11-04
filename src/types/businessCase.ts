@@ -54,9 +54,7 @@ export type RequestDescriptionForm = {
 };
 
 export type SolutionLabelType =
-  | 'preferredSolution'
-  | 'alternativeA'
-  | 'alternativeB';
+  'preferredSolution' | 'alternativeA' | 'alternativeB';
 
 export type AlternativeAnalysisForm = {
   // proposedSolutions: ProposedBusinessCaseSolution[];

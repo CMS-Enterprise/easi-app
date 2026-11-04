@@ -25,8 +25,7 @@ const AdditionalInformation = ({
   type
 }: {
   request:
-    | GetTRBRequestSummaryQuery['trbRequest']
-    | SystemIntakeFragmentFragment;
+    GetTRBRequestSummaryQuery['trbRequest'] | SystemIntakeFragmentFragment;
   type: RequestType;
 }) => {
   const { t: adminT } = useTranslation('admin');

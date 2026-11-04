@@ -20,8 +20,7 @@ type ActionButtonsProps = {
   state: TRBRequestState | undefined;
   assignLeadModalRef: React.RefObject<ModalRef> | undefined;
   assignLeadModalTrbRequestIdRef:
-    | React.MutableRefObject<TrbRequestIdRef>
-    | undefined;
+    React.MutableRefObject<TrbRequestIdRef> | undefined;
   openNotes: Dispatch<SetStateAction<boolean>>;
 };
 

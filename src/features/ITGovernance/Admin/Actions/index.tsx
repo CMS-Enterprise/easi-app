@@ -75,10 +75,7 @@ export type ActionsProps = {
 };
 
 export type EditsRequestedKey =
-  | 'intakeRequest'
-  | 'draftBusinessCase'
-  | 'finalBusinessCase'
-  | undefined;
+  'intakeRequest' | 'draftBusinessCase' | 'finalBusinessCase' | undefined;
 
 /**
  * Edits requested context - returns form key if edits have been requested on a form

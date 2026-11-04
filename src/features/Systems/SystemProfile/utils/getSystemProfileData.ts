@@ -57,9 +57,11 @@ function getPlannedRetirement(
     cedarSystemDetails?.systemMaintainerInformation || {};
 
   // Return null if none of the original properties are truthy
-  if (
-    !(plansToRetireReplace || quarterToRetireReplace || yearToRetireReplace)
-  ) {
+  if (!(
+    plansToRetireReplace ||
+    quarterToRetireReplace ||
+    yearToRetireReplace
+  )) {
     return null;
   }
 

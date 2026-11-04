@@ -74,9 +74,7 @@ type CedarSystem = Pick<
 };
 
 export type SystemTableType =
-  | 'all-systems'
-  | 'my-systems'
-  | 'bookmarked-systems';
+  'all-systems' | 'my-systems' | 'bookmarked-systems';
 
 type TableProps = {
   systems?: CedarSystem[];
