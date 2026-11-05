@@ -62,8 +62,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 			httptransport.New(
 				cedarHost,
 				basePath,
-				[]string{"http"},
-				// apiclient.DefaultSchemes,
+				apiclient.DefaultSchemes,
 			),
 			strfmt.Default,
 		),
