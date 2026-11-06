@@ -41,8 +41,13 @@ func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-// NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, mockEnabled bool) *Client {
+// NewClient builds the type that holds a connection to the CEDAR Core API.
+// The optional scheme lets HTTP-only test servers override the HTTPS default.
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, mockEnabled bool, schemes ...string) *Client {
+	if len(schemes) == 0 {
+		schemes = apiclient.DefaultSchemes
+	}
+
 	hc := http.Client{
 		Transport: &loggingTransport{
 			logger: appcontext.ZLogger(ctx),
@@ -51,7 +56,6 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 
 	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
 	client := &Client{
-		cedarPath:   "http://" + cedarHost + basePath,
 		mockEnabled: mockEnabled,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
@@ -62,7 +66,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 			httptransport.New(
 				cedarHost,
 				basePath,
-				apiclient.DefaultSchemes,
+				schemes,
 			),
 			strfmt.Default,
 		),
@@ -73,7 +77,6 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 
 // Client represents a connection to the CEDAR Core API
 type Client struct {
-	cedarPath   string
 	mockEnabled bool
 	auth        runtime.ClientAuthInfoWriter
 	sdk         *apiclient.CEDARCoreAPI

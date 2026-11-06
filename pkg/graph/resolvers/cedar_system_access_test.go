@@ -68,6 +68,7 @@ func TestGetCedarSystemWorkspaceGracefullyHandlesRoleLookupFailure(t *testing.T)
 		"fake",
 		"1.0.0",
 		false,
+		"http",
 	)
 
 	ctx := appcontext.WithPrincipal(context.Background(), &authentication.EUAPrincipal{
