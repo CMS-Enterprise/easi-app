@@ -15,6 +15,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
@@ -158,6 +159,7 @@ func (s *ClientTestSuite) TestTranslation() {
 
 		// Check that the ID of the Intake is Correct
 		s.EqualValues(si.ID.String(), intakeBody.IntakeID)
+		s.Equal("Test Requester", intakeBody.Requester)
 
 		// Check that the Funding Source ID is being pulled from the FundingSources array of the Intake
 		s.EqualValues(si.FundingSources[0].ID.String(), intakeBody.FundingSources[0].FundingSourceID)
@@ -178,6 +180,10 @@ func (s *ClientTestSuite) TestTranslation() {
 		ii, err := bc.CreateIntakeModel(s.ctx)
 		s.NoError(err)
 		s.NotNil(ii)
+		bizCaseBody := &intakemodels.EASIBizCase{}
+		err = json.Unmarshal([]byte(*ii.Body), bizCaseBody)
+		s.NoError(err)
+		s.Equal("Test Requester", bizCaseBody.Requester)
 	})
 
 	// s.Run("feedback", func() {
@@ -187,6 +193,47 @@ func (s *ClientTestSuite) TestTranslation() {
 	// 	s.NoError(err)
 	// 	s.NotNil(ii)
 	// })
+}
+
+func (s *ClientTestSuite) TestTranslationUsesRequesterFullName() {
+	username := testhelpers.RandomEUAID()
+	account, err := storage.UserAccountCreate(s.ctx, s.store, &authentication.UserAccount{
+		Username:   username,
+		CommonName: "Alex Example",
+		Locale:     "en_US",
+		Email:      username + "@example.com",
+		GivenName:  "Alex",
+		FamilyName: "Example",
+		ZoneInfo:   "America/Phoenix",
+	})
+	s.Require().NoError(err)
+
+	intake := testhelpers.NewSystemIntake()
+	intake.Requester = "Legacy Requester"
+	_, err = storage.CreateSystemIntake(s.ctx, s.store, &intake)
+	s.Require().NoError(err)
+
+	contact := models.NewSystemIntakeContact(account.ID, account.ID)
+	contact.SystemIntakeID = intake.ID
+	contact.Component = models.SystemIntakeContactComponentCmsWide
+	contact.Roles = models.EnumArray[models.SystemIntakeContactRole]{models.SystemIntakeContactRolePLACEHOLDER}
+	contact.IsRequester = true
+	_, err = storage.CreateSystemIntakeContact(s.ctx, s.store, contact)
+	s.Require().NoError(err)
+
+	ctx := appcontext.WithUserAccountService(s.ctx, dataloaders.GetUserAccountByID)
+	intakeInput, err := (*translation.TranslatableSystemIntake)(&intake).CreateIntakeModel(ctx)
+	s.Require().NoError(err)
+	var intakeBody intakemodels.EASIIntake
+	s.Require().NoError(json.Unmarshal([]byte(*intakeInput.Body), &intakeBody))
+	s.Equal("Alex Example", intakeBody.Requester)
+
+	businessCase := testhelpers.NewBusinessCase(intake.ID)
+	bcInput, err := (*translation.TranslatableBusinessCase)(&businessCase).CreateIntakeModel(ctx)
+	s.Require().NoError(err)
+	var bcBody intakemodels.EASIBizCase
+	s.Require().NoError(json.Unmarshal([]byte(*bcInput.Body), &bcBody))
+	s.Equal("Alex Example", bcBody.Requester)
 }
 
 func (s *ClientTestSuite) TestGetDurationUntilNextWeekdayAndTime() {
