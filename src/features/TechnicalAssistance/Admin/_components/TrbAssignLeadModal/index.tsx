@@ -99,30 +99,38 @@ function TrbAssignLeadModal({
 
   const [mutate] = useUpdateTRBRequestLeadMutation();
 
-  const submit = handleSubmit(formData => {
-    if (!trbRequestIdRef.current) return;
+  // Async and awaited so `isSubmitting` stays true for the whole request,
+  // keeping the submit button disabled until the mutation settles
+  const submit = handleSubmit(async formData => {
+    const requestId = trbRequestIdRef.current;
+    if (!requestId) return;
 
-    mutate({
+    const result = await mutate({
       variables: {
         input: {
-          trbRequestId: trbRequestIdRef.current,
+          trbRequestId: requestId,
           trbLead: formData.trbLead
         }
       }
-    }).then(result => {
-      // Prefer the name returned by the mutation, then the loaded options.
-      // Fall back to the EUA id so the toast never renders without a name.
-      const name =
-        result.data?.updateTRBRequestTRBLead.trbLeadInfo?.commonName ||
-        data?.trbLeadOptions.find(e => e.euaUserId === formData.trbLead)
-          ?.commonName ||
-        formData.trbLead;
-
-      toastSuccess(t(`assignTrbLeadModal.success`, { name }));
-
-      // Closing the modal also resets the form via the mutation observer below
-      modalRef.current?.toggleModal(undefined, false);
     });
+
+    // Prefer the name returned by the mutation, then the loaded options.
+    // Fall back to the EUA id so the toast never renders without a name.
+    const name =
+      result.data?.updateTRBRequestTRBLead.trbLeadInfo?.commonName ||
+      data?.trbLeadOptions.find(e => e.euaUserId === formData.trbLead)
+        ?.commonName ||
+      formData.trbLead;
+
+    toastSuccess(t(`assignTrbLeadModal.success`, { name }));
+
+    // The modal is shared across requests. Only close it if it is still
+    // open for the request this mutation was submitted for, otherwise we
+    // would dismiss a different request's modal session.
+    // Closing the modal also resets the form via the mutation observer below
+    if (trbRequestIdRef.current === requestId) {
+      modalRef.current?.toggleModal(undefined, false);
+    }
   });
 
   // Reset the form state when the modal is closed
