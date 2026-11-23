@@ -109,17 +109,20 @@ function TrbAssignLeadModal({
           trbLead: formData.trbLead
         }
       }
-    }).then(() => {
-      toastSuccess(
-        t(`assignTrbLeadModal.success`, {
-          name: data?.trbLeadOptions.find(
-            e => e.euaUserId === formData.trbLead
-          )!.commonName
-        })
-      );
-    });
+    }).then(result => {
+      // Prefer the name returned by the mutation, then the loaded options.
+      // Fall back to the EUA id so the toast never renders without a name.
+      const name =
+        result.data?.updateTRBRequestTRBLead.trbLeadInfo?.commonName ||
+        data?.trbLeadOptions.find(e => e.euaUserId === formData.trbLead)
+          ?.commonName ||
+        formData.trbLead;
 
-    reset();
+      toastSuccess(t(`assignTrbLeadModal.success`, { name }));
+
+      // Closing the modal also resets the form via the mutation observer below
+      modalRef.current?.toggleModal(undefined, false);
+    });
   });
 
   // Reset the form state when the modal is closed
@@ -212,7 +215,6 @@ function TrbAssignLeadModal({
         <ButtonGroup>
           <Button
             type="button"
-            data-close-modal="true"
             disabled={isSubmitting || !isDirty}
             onClick={submit}
           >
