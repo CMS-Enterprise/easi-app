@@ -210,7 +210,7 @@ jobs:
           chmod +x swagger
       - uses: actions/setup-python@v7 # Python is required for pre-commit/action
         with:
-          python-version: '3.9'
+          python-version: '3.12'
       - name: Pre-commit checks
         uses: pre-commit/action@v3.0.1
         with:
