@@ -86,6 +86,7 @@ func submitToCEDAR() {
 		)
 	}
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
+	ctx = appcontext.WithUserAccountService(ctx, dataloaders.GetUserAccountByID)
 
 	// Fetch all intakes
 	fmt.Println("Fetching all system intakes")
