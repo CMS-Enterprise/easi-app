@@ -8670,10 +8670,10 @@ glob@^10.0.0, glob@^10.4.1:
     package-json-from-dist "^1.0.0"
     path-scurry "^1.11.1"
 
-glob@^14.0.0:
-  version "14.0.0"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-14.0.0.tgz#45a5fb9f21154b23078e72d15f51430b143cf51e"
-  integrity sha512-13Y78zdf6sGBFq7IXYL0hyEv1cOwfPGTuU0/9XYPPVTxw1SEXKC/7+oD9uJNVb4jgxdZR1U3BgB95hT5ZDRnvQ==
+glob@^14.0.2:
+  version "14.0.2"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-14.0.2.tgz#17a9838fb6502b6a32d2125fe55bff6a0960e2b7"
+  integrity sha512-vfMgTR2djMHPUchsJMLpZlYQvtjVL+mHpEr5wPpoCbQs2vr/FBNK+3Gnl9Ara1DSs4Aeg4eG9HiADb5/rkY/ZA==
   dependencies:
     minimatch "^11.0.0"
     minipass "^7.1.3"
