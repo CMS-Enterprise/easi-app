@@ -58,7 +58,7 @@
     "formik": "^2.4.9",
     "glob": "^14.0.2",
     "graphql-ws": "^6.4.1",
-    "i18next": "^19.8.5",
+    "i18next": "^26.3.4",
     "i18next-browser-languagedetector": "^5.0.0",
     "istanbul-lib-coverage": "^3.2.2",
     "launchdarkly-react-client-sdk": "^3.9.4",
